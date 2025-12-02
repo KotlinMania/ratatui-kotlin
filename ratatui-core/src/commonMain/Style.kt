@@ -1,1031 +1,990 @@
-//! `style` contains the primitives used to control how your user interface will look.
-//!
-//! There are two ways to set styles:
-//! - Creating and using the [`Style`] struct. (e.g. `Style::new().fg(Color::Red)`).
-//! - Using style shorthands. (e.g. `"hello".red()`).
-//!
-//! # Using the `Style` struct
-//!
-//! This is the original approach to styling and likely the most common. This is useful when
-//! creating style variables to reuse, however the shorthands are often more convenient and
-//! readable for most use cases.
-//!
-//! ## Example
-//!
-//! ```
-//! use ratatui_core::style::{Color, Modifier, Style};
-//! use ratatui_core::text::Span;
-//!
-//! let heading_style = Style::new()
-//!     .fg(Color::Black)
-//!     .bg(Color::Green)
-//!     .add_modifier(Modifier::ITALIC | Modifier::BOLD);
-//! let span = Span::styled("hello", heading_style);
-//! ```
-//!
-//! # Using style shorthands
-//!
-//! Originally Ratatui only had the ability to set styles using the `Style` struct. This is still
-//! supported, but there are now shorthands for all the styles that can be set. These save you from
-//! having to create a `Style` struct every time you want to set a style.
-//!
-//! The shorthands are implemented in the [`Stylize`] trait which is automatically implemented for
-//! many types via the [`Styled`] trait. This means that you can use the shorthands on any type
-//! that implements [`Styled`]. E.g.:
-//! - Strings and string slices when styled return a [`Span`]
-//! - [`Span`]s can be styled again, which will merge the styles.
-//! - Many widget types can be styled directly rather than calling their `style()` method.
-//!
-//! See the [`Stylize`] and [`Styled`] traits for more information.
-//!
-//! ## Example
-//!
-//! ```
-//! use ratatui_core::style::{Color, Modifier, Style, Stylize};
-//! use ratatui_core::text::{Span, Text};
-//!
-//! assert_eq!(
-//!     "hello".red().on_blue().bold(),
-//!     Span::styled(
-//!         "hello",
-//!         Style::default()
-//!             .fg(Color::Red)
-//!             .bg(Color::Blue)
-//!             .add_modifier(Modifier::BOLD)
-//!     )
-//! );
-//!
-//! assert_eq!(
-//!     Text::from("hello").red().on_blue().bold(),
-//!     Text::from("hello").style(
-//!         Style::default()
-//!             .fg(Color::Red)
-//!             .bg(Color::Blue)
-//!             .add_modifier(Modifier::BOLD)
-//!     )
-//! );
-//! ```
-//!
-//! [`Span`]: crate::text::Span
+/**
+ * `style` contains the primitives used to control how your user interface will look.
+ *
+ * There are two ways to set styles:
+ * - Creating and using the [Style] class. (e.g. `Style.new().fg(Color.Red)`).
+ * - Using style shorthands. (e.g. `"hello".red()`).
+ *
+ * ## Using the Style class
+ *
+ * This is the original approach to styling and likely the most common. This is useful when
+ * creating style variables to reuse, however the shorthands are often more convenient and
+ * readable for most use cases.
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * val headingStyle = Style.new()
+ *     .fg(Color.Black)
+ *     .bg(Color.Green)
+ *     .addModifier(Modifier.ITALIC or Modifier.BOLD)
+ * val span = Span.styled("hello", headingStyle)
+ * ```
+ *
+ * ## Using style shorthands
+ *
+ * Originally Ratatui only had the ability to set styles using the `Style` struct. This is still
+ * supported, but there are now shorthands for all the styles that can be set. These save you from
+ * having to create a `Style` struct every time you want to set a style.
+ *
+ * The shorthands are implemented in the [Stylize] interface which is automatically implemented for
+ * many types via the [Styled] interface. This means that you can use the shorthands on any type
+ * that implements [Styled]. E.g.:
+ * - Strings when styled return a [Span]
+ * - [Span]s can be styled again, which will merge the styles.
+ * - Many widget types can be styled directly rather than calling their `style()` method.
+ *
+ * See the [Stylize] and [Styled] interfaces for more information.
+ *
+ * ### Example
+ *
+ * ```kotlin
+ * assertEquals(
+ *     "hello".red().onBlue().bold(),
+ *     Span.styled(
+ *         "hello",
+ *         Style.default()
+ *             .fg(Color.Red)
+ *             .bg(Color.Blue)
+ *             .addModifier(Modifier.BOLD)
+ *     )
+ * )
+ *
+ * assertEquals(
+ *     Text.from("hello").red().onBlue().bold(),
+ *     Text.from("hello").style(
+ *         Style.default()
+ *             .fg(Color.Red)
+ *             .bg(Color.Blue)
+ *             .addModifier(Modifier.BOLD)
+ *     )
+ * )
+ * ```
+ *
+ * [Span]: ratatui.text.Span
+ */
+package ratatui.style
 
-use core::fmt;
+/**
+ * Modifier changes the way a piece of text is displayed.
+ *
+ * They are bitflags so they can easily be composed using [or] (bitwise OR).
+ *
+ * [Style.Companion.from] with Modifier is implemented so you can use `Modifier` anywhere that accepts
+ * `Style`.
+ *
+ * ## Examples
+ *
+ * ```kotlin
+ * val m = Modifier.BOLD or Modifier.ITALIC
+ * ```
+ */
+/**
+ * Value class wrapper for modifier bit flags.
+ * Note: In Kotlin/Native, value classes don't have the same inline optimization as JVM,
+ * but they still provide type safety and a clean API.
+ */
+value class Modifier(val bits: UShort) {
 
-use bitflags::bitflags;
-pub use color::{Color, ParseColorError};
-use stylize::ColorDebugKind;
-pub use stylize::{Styled, Stylize};
+    /** Check if the modifier is empty (no flags set) */
+    fun isEmpty(): Boolean = bits == 0.toUShort()
 
-#[cfg(feature = "anstyle")]
-mod anstyle;
-mod color;
-pub mod palette;
-#[cfg(feature = "palette")]
-mod palette_conversion;
-#[macro_use]
-mod stylize;
+    /** Check if the modifier contains all flags */
+    fun isAll(): Boolean = bits == ALL_BITS
 
-bitflags! {
-    /// Modifier changes the way a piece of text is displayed.
-    ///
-    /// They are bitflags so they can easily be composed.
-    ///
-    /// `From<Modifier> for Style` is implemented so you can use `Modifier` anywhere that accepts
-    /// `Into<Style>`.
-    ///
-    /// ## Examples
-    ///
-    /// ```rust
-    /// use ratatui_core::style::Modifier;
-    ///
-    /// let m = Modifier::BOLD | Modifier::ITALIC;
-    /// ```
-    #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-    #[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
-    pub struct Modifier: u16 {
-        const BOLD              = 0b0000_0000_0001;
-        const DIM               = 0b0000_0000_0010;
-        const ITALIC            = 0b0000_0000_0100;
-        const UNDERLINED        = 0b0000_0000_1000;
-        const SLOW_BLINK        = 0b0000_0001_0000;
-        const RAPID_BLINK       = 0b0000_0010_0000;
-        const REVERSED          = 0b0000_0100_0000;
-        const HIDDEN            = 0b0000_1000_0000;
-        const CROSSED_OUT       = 0b0001_0000_0000;
-    }
-}
+    /** Check if this modifier contains the given modifier */
+    fun contains(other: Modifier): Boolean = (bits and other.bits) == other.bits
 
-/// Implement the `Debug` trait for `Modifier` manually.
-///
-/// This will avoid printing the empty modifier as 'Borders(0x0)' and instead print it as 'NONE'.
-impl fmt::Debug for Modifier {
-    /// Format the modifier as `NONE` if the modifier is empty or as a list of flags separated by
-    /// `|` otherwise.
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if self.is_empty() {
-            return write!(f, "NONE");
-        }
-        write!(f, "{}", self.0)
-    }
-}
+    /** Union of two modifiers (bitwise OR) */
+    infix fun or(other: Modifier): Modifier = Modifier((bits.toInt() or other.bits.toInt()).toUShort())
 
-/// Style lets you control the main characteristics of the displayed elements.
-///
-/// ```rust
-/// use ratatui_core::style::{Color, Modifier, Style};
-///
-/// Style::default()
-///     .fg(Color::Black)
-///     .bg(Color::Green)
-///     .add_modifier(Modifier::ITALIC | Modifier::BOLD);
-/// ```
-///
-/// Styles can also be created with a [shorthand notation](crate::style#using-style-shorthands).
-///
-/// ```rust
-/// use ratatui_core::style::{Style, Stylize};
-///
-/// Style::new().black().on_green().italic().bold();
-/// ```
-///
-/// For more information about the style shorthands, see the [`Stylize`] trait.
-///
-/// We implement conversions from [`Color`] and [`Modifier`] to [`Style`] so you can use them
-/// anywhere that accepts `Into<Style>`.
-///
-/// ```rust
-/// use ratatui_core::style::{Color, Modifier, Style};
-/// use ratatui_core::text::Line;
-///
-/// Line::styled("hello", Style::new().fg(Color::Red));
-/// // simplifies to
-/// Line::styled("hello", Color::Red);
-///
-/// Line::styled("hello", Style::new().add_modifier(Modifier::BOLD));
-/// // simplifies to
-/// Line::styled("hello", Modifier::BOLD);
-/// ```
-///
-/// Styles represents an incremental change. If you apply the styles S1, S2, S3 to a cell of the
-/// terminal buffer, the style of this cell will be the result of the merge of S1, S2 and S3, not
-/// just S3.
-///
-/// ```rust
-/// use ratatui_core::buffer::Buffer;
-/// use ratatui_core::layout::Rect;
-/// use ratatui_core::style::{Color, Modifier, Style};
-///
-/// let styles = [
-///     Style::default()
-///         .fg(Color::Blue)
-///         .add_modifier(Modifier::BOLD | Modifier::ITALIC),
-///     Style::default()
-///         .bg(Color::Red)
-///         .add_modifier(Modifier::UNDERLINED),
-///     #[cfg(feature = "underline-color")]
-///     Style::default().underline_color(Color::Green),
-///     Style::default()
-///         .fg(Color::Yellow)
-///         .remove_modifier(Modifier::ITALIC),
-/// ];
-/// let mut buffer = Buffer::empty(Rect::new(0, 0, 1, 1));
-/// for style in &styles {
-///     buffer[(0, 0)].set_style(*style);
-/// }
-/// assert_eq!(
-///     Style {
-///         fg: Some(Color::Yellow),
-///         bg: Some(Color::Red),
-///         #[cfg(feature = "underline-color")]
-///         underline_color: Some(Color::Green),
-///         add_modifier: Modifier::BOLD | Modifier::UNDERLINED,
-///         sub_modifier: Modifier::empty(),
-///     },
-///     buffer[(0, 0)].style(),
-/// );
-/// ```
-///
-/// The default implementation returns a `Style` that does not modify anything. If you wish to
-/// reset all properties until that point use [`Style::reset`].
-///
-/// ```
-/// use ratatui_core::buffer::Buffer;
-/// use ratatui_core::layout::Rect;
-/// use ratatui_core::style::{Color, Modifier, Style};
-///
-/// let styles = [
-///     Style::default()
-///         .fg(Color::Blue)
-///         .add_modifier(Modifier::BOLD | Modifier::ITALIC),
-///     Style::reset().fg(Color::Yellow),
-/// ];
-/// let mut buffer = Buffer::empty(Rect::new(0, 0, 1, 1));
-/// for style in &styles {
-///     buffer[(0, 0)].set_style(*style);
-/// }
-/// assert_eq!(
-///     Style {
-///         fg: Some(Color::Yellow),
-///         bg: Some(Color::Reset),
-///         #[cfg(feature = "underline-color")]
-///         underline_color: Some(Color::Reset),
-///         add_modifier: Modifier::empty(),
-///         sub_modifier: Modifier::empty(),
-///     },
-///     buffer[(0, 0)].style(),
-/// );
-/// ```
-#[derive(Default, Clone, Copy, Eq, PartialEq, Hash)]
-#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
-pub struct Style {
-    /// The foreground color.
-    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
-    pub fg: Option<Color>,
-    /// The background color.
-    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
-    pub bg: Option<Color>,
-    /// The underline color.
-    #[cfg(feature = "underline-color")]
-    #[cfg_attr(feature = "serde", serde(skip_serializing_if = "Option::is_none"))]
-    pub underline_color: Option<Color>,
-    /// The modifiers to add.
-    #[cfg_attr(
-        feature = "serde",
-        serde(
-            default,
-            skip_serializing_if = "Modifier::is_empty",
-            deserialize_with = "deserialize_modifier"
-        )
-    )]
-    pub add_modifier: Modifier,
-    /// The modifiers to remove.
-    #[cfg_attr(
-        feature = "serde",
-        serde(
-            default,
-            skip_serializing_if = "Modifier::is_empty",
-            deserialize_with = "deserialize_modifier"
-        )
-    )]
-    pub sub_modifier: Modifier,
-}
+    /** Alias for [or] */
+    fun union(other: Modifier): Modifier = this or other
 
-#[cfg(feature = "serde")]
-/// Deserialize a [`Modifier`] while treating missing or `null` values as empty.
-///
-/// This helper is used with serde to coerce absent or `null` modifier fields to
-/// [`Modifier::empty`], allowing configuration files to omit these fields
-/// without triggering deserialization errors.
-fn deserialize_modifier<'de, D>(deserializer: D) -> Result<Modifier, D::Error>
-where
-    D: serde::Deserializer<'de>,
-{
-    use serde::Deserialize;
+    /** Intersection of two modifiers (bitwise AND) */
+    infix fun and(other: Modifier): Modifier = Modifier((bits.toInt() and other.bits.toInt()).toUShort())
 
-    Option::<Modifier>::deserialize(deserializer)
-        .map(|modifier| modifier.unwrap_or_else(Modifier::empty))
-}
+    /** Alias for [and] */
+    fun intersection(other: Modifier): Modifier = this and other
 
-/// A custom debug implementation that prints only the fields that are not the default, and unwraps
-/// the `Option`s.
-impl fmt::Debug for Style {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        f.write_str("Style::new()")?;
-        self.fmt_stylize(f)?;
-        Ok(())
-    }
-}
+    /** Difference of two modifiers (this AND NOT other) */
+    fun difference(other: Modifier): Modifier = Modifier((bits.toInt() and other.bits.toInt().inv()).toUShort())
 
-impl Style {
-    /// Returns a `Style` with default properties.
-    pub const fn new() -> Self {
-        Self {
-            fg: None,
-            bg: None,
-            #[cfg(feature = "underline-color")]
-            underline_color: None,
-            add_modifier: Modifier::empty(),
-            sub_modifier: Modifier::empty(),
-        }
-    }
+    /** Insert flags from another modifier */
+    fun insert(other: Modifier): Modifier = this or other
 
-    /// Returns a `Style` resetting all properties.
-    pub const fn reset() -> Self {
-        Self {
-            fg: Some(Color::Reset),
-            bg: Some(Color::Reset),
-            #[cfg(feature = "underline-color")]
-            underline_color: Some(Color::Reset),
-            add_modifier: Modifier::empty(),
-            sub_modifier: Modifier::all(),
-        }
-    }
+    /** Remove flags from another modifier */
+    fun remove(other: Modifier): Modifier = difference(other)
 
-    /// Changes the foreground color.
-    ///
-    /// ## Examples
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Color, Style};
-    ///
-    /// let style = Style::default().fg(Color::Blue);
-    /// let diff = Style::default().fg(Color::Red);
-    /// assert_eq!(style.patch(diff), Style::default().fg(Color::Red));
-    /// ```
-    #[must_use = "`fg` returns the modified style without modifying the original"]
-    pub const fn fg(mut self, color: Color) -> Self {
-        self.fg = Some(color);
-        self
-    }
+    /** Iterate over all set flags */
+    fun iter(): List<Modifier> = ALL_FLAGS.filter { contains(it) }
 
-    /// Changes the background color.
-    ///
-    /// ## Examples
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Color, Style};
-    ///
-    /// let style = Style::default().bg(Color::Blue);
-    /// let diff = Style::default().bg(Color::Red);
-    /// assert_eq!(style.patch(diff), Style::default().bg(Color::Red));
-    /// ```
-    #[must_use = "`bg` returns the modified style without modifying the original"]
-    pub const fn bg(mut self, color: Color) -> Self {
-        self.bg = Some(color);
-        self
-    }
-
-    /// Changes the underline color. The text must be underlined with a modifier for this to work.
-    ///
-    /// This uses a non-standard ANSI escape sequence. It is supported by most terminal emulators,
-    /// but is only implemented in the crossterm backend and enabled by the `underline-color`
-    /// feature flag.
-    ///
-    /// See
-    /// [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters)
-    /// code `58` and `59` for more information.
-    ///
-    /// ## Examples
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Color, Modifier, Style};
-    ///
-    /// let style = Style::default()
-    ///     .underline_color(Color::Blue)
-    ///     .add_modifier(Modifier::UNDERLINED);
-    /// let diff = Style::default()
-    ///     .underline_color(Color::Red)
-    ///     .add_modifier(Modifier::UNDERLINED);
-    /// assert_eq!(
-    ///     style.patch(diff),
-    ///     Style::default()
-    ///         .underline_color(Color::Red)
-    ///         .add_modifier(Modifier::UNDERLINED)
-    /// );
-    /// ```
-    #[cfg(feature = "underline-color")]
-    #[must_use = "`underline_color` returns the modified style without modifying the original"]
-    pub const fn underline_color(mut self, color: Color) -> Self {
-        self.underline_color = Some(color);
-        self
-    }
-
-    /// Changes the text emphasis.
-    ///
-    /// When applied, it adds the given modifier to the `Style` modifiers.
-    ///
-    /// ## Examples
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Modifier, Style};
-    ///
-    /// let style = Style::default().add_modifier(Modifier::BOLD);
-    /// let diff = Style::default().add_modifier(Modifier::ITALIC);
-    /// let patched = style.patch(diff);
-    /// assert_eq!(patched.add_modifier, Modifier::BOLD | Modifier::ITALIC);
-    /// assert_eq!(patched.sub_modifier, Modifier::empty());
-    /// ```
-    #[must_use = "`add_modifier` returns the modified style without modifying the original"]
-    pub const fn add_modifier(mut self, modifier: Modifier) -> Self {
-        self.sub_modifier = self.sub_modifier.difference(modifier);
-        self.add_modifier = self.add_modifier.union(modifier);
-        self
-    }
-
-    /// Changes the text emphasis.
-    ///
-    /// When applied, it removes the given modifier from the `Style` modifiers.
-    ///
-    /// ## Examples
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Modifier, Style};
-    ///
-    /// let style = Style::default().add_modifier(Modifier::BOLD | Modifier::ITALIC);
-    /// let diff = Style::default().remove_modifier(Modifier::ITALIC);
-    /// let patched = style.patch(diff);
-    /// assert_eq!(patched.add_modifier, Modifier::BOLD);
-    /// assert_eq!(patched.sub_modifier, Modifier::ITALIC);
-    /// ```
-    #[must_use = "`remove_modifier` returns the modified style without modifying the original"]
-    pub const fn remove_modifier(mut self, modifier: Modifier) -> Self {
-        self.add_modifier = self.add_modifier.difference(modifier);
-        self.sub_modifier = self.sub_modifier.union(modifier);
-        self
-    }
-
-    /// Results in a combined style that is equivalent to applying the two individual styles to
-    /// a style one after the other.
-    ///
-    /// `style` accepts any type that is convertible to [`Style`] (e.g. [`Style`], [`Color`], or
-    /// your own type that implements [`Into<Style>`]).
-    ///
-    /// ## Examples
-    /// ```
-    /// use ratatui_core::style::{Color, Modifier, Style};
-    ///
-    /// let style_1 = Style::default().fg(Color::Yellow);
-    /// let style_2 = Style::default().bg(Color::Red);
-    /// let combined = style_1.patch(style_2);
-    /// assert_eq!(
-    ///     Style::default().patch(style_1).patch(style_2),
-    ///     Style::default().patch(combined)
-    /// );
-    /// ```
-    #[must_use = "`patch` returns the modified style without modifying the original"]
-    pub fn patch<S: Into<Self>>(mut self, other: S) -> Self {
-        let other = other.into();
-        self.fg = other.fg.or(self.fg);
-        self.bg = other.bg.or(self.bg);
-
-        #[cfg(feature = "underline-color")]
-        {
-            self.underline_color = other.underline_color.or(self.underline_color);
-        }
-
-        self.add_modifier.remove(other.sub_modifier);
-        self.add_modifier.insert(other.add_modifier);
-        self.sub_modifier.remove(other.add_modifier);
-        self.sub_modifier.insert(other.sub_modifier);
-
-        self
-    }
-
-    /// Formats the style in a way that can be copy-pasted into code using the style shorthands.
-    ///
-    /// This is useful for debugging and for generating code snippets.
-    pub(crate) fn fmt_stylize(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        use fmt::Debug;
-        if let Some(fg) = self.fg {
-            fg.stylize_debug(ColorDebugKind::Foreground).fmt(f)?;
-        }
-        if let Some(bg) = self.bg {
-            bg.stylize_debug(ColorDebugKind::Background).fmt(f)?;
-        }
-        #[cfg(feature = "underline-color")]
-        if let Some(underline_color) = self.underline_color {
-            underline_color
-                .stylize_debug(ColorDebugKind::Underline)
-                .fmt(f)?;
-        }
-        for modifier in self.add_modifier.iter() {
-            match modifier {
-                Modifier::BOLD => f.write_str(".bold()")?,
-                Modifier::DIM => f.write_str(".dim()")?,
-                Modifier::ITALIC => f.write_str(".italic()")?,
-                Modifier::UNDERLINED => f.write_str(".underlined()")?,
-                Modifier::SLOW_BLINK => f.write_str(".slow_blink()")?,
-                Modifier::RAPID_BLINK => f.write_str(".rapid_blink()")?,
-                Modifier::REVERSED => f.write_str(".reversed()")?,
-                Modifier::HIDDEN => f.write_str(".hidden()")?,
-                Modifier::CROSSED_OUT => f.write_str(".crossed_out()")?,
-                _ => f.write_fmt(format_args!(".add_modifier(Modifier::{modifier:?})"))?,
+    /**
+     * Format the modifier as `NONE` if the modifier is empty or as a list of flags separated by
+     * `|` otherwise.
+     */
+    override fun toString(): String {
+        if (isEmpty()) return "NONE"
+        return iter().joinToString(" | ") { flag ->
+            when (flag) {
+                BOLD -> "BOLD"
+                DIM -> "DIM"
+                ITALIC -> "ITALIC"
+                UNDERLINED -> "UNDERLINED"
+                SLOW_BLINK -> "SLOW_BLINK"
+                RAPID_BLINK -> "RAPID_BLINK"
+                REVERSED -> "REVERSED"
+                HIDDEN -> "HIDDEN"
+                CROSSED_OUT -> "CROSSED_OUT"
+                else -> "0x${flag.bits.toString(16)}"
             }
         }
-        for modifier in self.sub_modifier.iter() {
-            match modifier {
-                Modifier::BOLD => f.write_str(".not_bold()")?,
-                Modifier::DIM => f.write_str(".not_dim()")?,
-                Modifier::ITALIC => f.write_str(".not_italic()")?,
-                Modifier::UNDERLINED => f.write_str(".not_underlined()")?,
-                Modifier::SLOW_BLINK => f.write_str(".not_slow_blink()")?,
-                Modifier::RAPID_BLINK => f.write_str(".not_rapid_blink()")?,
-                Modifier::REVERSED => f.write_str(".not_reversed()")?,
-                Modifier::HIDDEN => f.write_str(".not_hidden()")?,
-                Modifier::CROSSED_OUT => f.write_str(".not_crossed_out()")?,
-                _ => f.write_fmt(format_args!(".remove_modifier(Modifier::{modifier:?})"))?,
-            }
+    }
+
+    companion object {
+        /** Bold text modifier */
+        val BOLD = Modifier(0b0000_0000_0001u)
+        /** Dim/faint text modifier */
+        val DIM = Modifier(0b0000_0000_0010u)
+        /** Italic text modifier */
+        val ITALIC = Modifier(0b0000_0000_0100u)
+        /** Underlined text modifier */
+        val UNDERLINED = Modifier(0b0000_0000_1000u)
+        /** Slow blink text modifier */
+        val SLOW_BLINK = Modifier(0b0000_0001_0000u)
+        /** Rapid blink text modifier */
+        val RAPID_BLINK = Modifier(0b0000_0010_0000u)
+        /** Reversed (inverse) text modifier */
+        val REVERSED = Modifier(0b0000_0100_0000u)
+        /** Hidden text modifier */
+        val HIDDEN = Modifier(0b0000_1000_0000u)
+        /** Crossed out (strikethrough) text modifier */
+        val CROSSED_OUT = Modifier(0b0001_0000_0000u)
+
+        private const val ALL_BITS: UShort = 0b0001_1111_1111u
+
+        /** All flags set */
+        fun all(): Modifier = Modifier(ALL_BITS)
+
+        /** No flags set (empty modifier) */
+        fun empty(): Modifier = Modifier(0u)
+
+        /** Default modifier (empty) */
+        fun default(): Modifier = empty()
+
+        /** List of all individual modifier flags */
+        private val ALL_FLAGS = listOf(
+            BOLD, DIM, ITALIC, UNDERLINED, SLOW_BLINK,
+            RAPID_BLINK, REVERSED, HIDDEN, CROSSED_OUT
+        )
+    }
+}
+
+/**
+ * Style lets you control the main characteristics of the displayed elements.
+ *
+ * ```kotlin
+ * Style.default()
+ *     .fg(Color.Black)
+ *     .bg(Color.Green)
+ *     .addModifier(Modifier.ITALIC or Modifier.BOLD)
+ * ```
+ *
+ * Styles can also be created with a shorthand notation.
+ *
+ * ```kotlin
+ * Style.new().black().onGreen().italic().bold()
+ * ```
+ *
+ * For more information about the style shorthands, see the [Stylize] interface.
+ *
+ * We implement factory functions from [Color] and [Modifier] to [Style] so you can use them
+ * anywhere that accepts `Style`.
+ *
+ * ```kotlin
+ * Line.styled("hello", Style.new().fg(Color.Red))
+ * // simplifies to
+ * Line.styled("hello", Style.from(Color.Red))
+ *
+ * Line.styled("hello", Style.new().addModifier(Modifier.BOLD))
+ * // simplifies to
+ * Line.styled("hello", Style.from(Modifier.BOLD))
+ * ```
+ *
+ * Styles represents an incremental change. If you apply the styles S1, S2, S3 to a cell of the
+ * terminal buffer, the style of this cell will be the result of the merge of S1, S2 and S3, not
+ * just S3.
+ *
+ * ```kotlin
+ * val styles = listOf(
+ *     Style.default()
+ *         .fg(Color.Blue)
+ *         .addModifier(Modifier.BOLD or Modifier.ITALIC),
+ *     Style.default()
+ *         .bg(Color.Red)
+ *         .addModifier(Modifier.UNDERLINED),
+ *     Style.default()
+ *         .fg(Color.Yellow)
+ *         .removeModifier(Modifier.ITALIC),
+ * )
+ * val buffer = Buffer.empty(Rect(0, 0, 1, 1))
+ * for (style in styles) {
+ *     buffer[0, 0].setStyle(style)
+ * }
+ * assertEquals(
+ *     Style(
+ *         fg = Color.Yellow,
+ *         bg = Color.Red,
+ *         addModifier = Modifier.BOLD or Modifier.UNDERLINED,
+ *         subModifier = Modifier.empty(),
+ *     ),
+ *     buffer[0, 0].style(),
+ * )
+ * ```
+ *
+ * The default implementation returns a `Style` that does not modify anything. If you wish to
+ * reset all properties until that point use [Style.reset].
+ *
+ * ```kotlin
+ * val styles = listOf(
+ *     Style.default()
+ *         .fg(Color.Blue)
+ *         .addModifier(Modifier.BOLD or Modifier.ITALIC),
+ *     Style.reset().fg(Color.Yellow),
+ * )
+ * val buffer = Buffer.empty(Rect(0, 0, 1, 1))
+ * for (style in styles) {
+ *     buffer[0, 0].setStyle(style)
+ * }
+ * assertEquals(
+ *     Style(
+ *         fg = Color.Yellow,
+ *         bg = Color.Reset,
+ *         addModifier = Modifier.empty(),
+ *         subModifier = Modifier.empty(),
+ *     ),
+ *     buffer[0, 0].style(),
+ * )
+ * ```
+ */
+data class Style(
+    /** The foreground color. */
+    val fg: Color? = null,
+    /** The background color. */
+    val bg: Color? = null,
+    /** The underline color (requires underline modifier to be visible). */
+    val underlineColor: Color? = null,
+    /** The modifiers to add. */
+    val addModifier: Modifier = Modifier.empty(),
+    /** The modifiers to remove. */
+    val subModifier: Modifier = Modifier.empty()
+) {
+
+    /**
+     * Returns a copy with the foreground color changed.
+     *
+     * ## Examples
+     *
+     * ```kotlin
+     * val style = Style.default().fg(Color.Blue)
+     * val diff = Style.default().fg(Color.Red)
+     * assertEquals(style.patch(diff), Style.default().fg(Color.Red))
+     * ```
+     */
+    fun fg(color: Color): Style = copy(fg = color)
+
+    /**
+     * Returns a copy with the background color changed.
+     *
+     * ## Examples
+     *
+     * ```kotlin
+     * val style = Style.default().bg(Color.Blue)
+     * val diff = Style.default().bg(Color.Red)
+     * assertEquals(style.patch(diff), Style.default().bg(Color.Red))
+     * ```
+     */
+    fun bg(color: Color): Style = copy(bg = color)
+
+    /**
+     * Changes the underline color. The text must be underlined with a modifier for this to work.
+     *
+     * This uses a non-standard ANSI escape sequence. It is supported by most terminal emulators,
+     * but is only implemented in the crossterm backend.
+     *
+     * See [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters)
+     * code `58` and `59` for more information.
+     *
+     * ## Examples
+     *
+     * ```kotlin
+     * val style = Style.default()
+     *     .underlineColor(Color.Blue)
+     *     .addModifier(Modifier.UNDERLINED)
+     * val diff = Style.default()
+     *     .underlineColor(Color.Red)
+     *     .addModifier(Modifier.UNDERLINED)
+     * assertEquals(
+     *     style.patch(diff),
+     *     Style.default()
+     *         .underlineColor(Color.Red)
+     *         .addModifier(Modifier.UNDERLINED)
+     * )
+     * ```
+     */
+    fun underlineColor(color: Color): Style = copy(underlineColor = color)
+
+    /**
+     * Changes the text emphasis.
+     *
+     * When applied, it adds the given modifier to the `Style` modifiers.
+     *
+     * ## Examples
+     *
+     * ```kotlin
+     * val style = Style.default().addModifier(Modifier.BOLD)
+     * val diff = Style.default().addModifier(Modifier.ITALIC)
+     * val patched = style.patch(diff)
+     * assertEquals(patched.addModifier, Modifier.BOLD or Modifier.ITALIC)
+     * assertEquals(patched.subModifier, Modifier.empty())
+     * ```
+     */
+    fun addModifier(modifier: Modifier): Style = copy(
+        subModifier = subModifier.difference(modifier),
+        addModifier = addModifier.union(modifier)
+    )
+
+    /**
+     * Changes the text emphasis.
+     *
+     * When applied, it removes the given modifier from the `Style` modifiers.
+     *
+     * ## Examples
+     *
+     * ```kotlin
+     * val style = Style.default().addModifier(Modifier.BOLD or Modifier.ITALIC)
+     * val diff = Style.default().removeModifier(Modifier.ITALIC)
+     * val patched = style.patch(diff)
+     * assertEquals(patched.addModifier, Modifier.BOLD)
+     * assertEquals(patched.subModifier, Modifier.ITALIC)
+     * ```
+     */
+    fun removeModifier(modifier: Modifier): Style = copy(
+        addModifier = addModifier.difference(modifier),
+        subModifier = subModifier.union(modifier)
+    )
+
+    /**
+     * Results in a combined style that is equivalent to applying the two individual styles to
+     * a style one after the other.
+     *
+     * ## Examples
+     * ```kotlin
+     * val style1 = Style.default().fg(Color.Yellow)
+     * val style2 = Style.default().bg(Color.Red)
+     * val combined = style1.patch(style2)
+     * assertEquals(
+     *     Style.default().patch(style1).patch(style2),
+     *     Style.default().patch(combined)
+     * )
+     * ```
+     */
+    fun patch(other: Style): Style {
+        var newAddModifier = addModifier.remove(other.subModifier)
+        newAddModifier = newAddModifier.insert(other.addModifier)
+        var newSubModifier = subModifier.remove(other.addModifier)
+        newSubModifier = newSubModifier.insert(other.subModifier)
+
+        return Style(
+            fg = other.fg ?: fg,
+            bg = other.bg ?: bg,
+            underlineColor = other.underlineColor ?: underlineColor,
+            addModifier = newAddModifier,
+            subModifier = newSubModifier
+        )
+    }
+
+    // -------------------------------------------------------------------------
+    // Color shorthand methods (foreground)
+    // -------------------------------------------------------------------------
+
+    /** Set foreground to black */
+    fun black(): Style = fg(Color.Black)
+    /** Set foreground to red */
+    fun red(): Style = fg(Color.Red)
+    /** Set foreground to green */
+    fun green(): Style = fg(Color.Green)
+    /** Set foreground to yellow */
+    fun yellow(): Style = fg(Color.Yellow)
+    /** Set foreground to blue */
+    fun blue(): Style = fg(Color.Blue)
+    /** Set foreground to magenta */
+    fun magenta(): Style = fg(Color.Magenta)
+    /** Set foreground to cyan */
+    fun cyan(): Style = fg(Color.Cyan)
+    /** Set foreground to gray */
+    fun gray(): Style = fg(Color.Gray)
+    /** Set foreground to dark gray */
+    fun darkGray(): Style = fg(Color.DarkGray)
+    /** Set foreground to light red */
+    fun lightRed(): Style = fg(Color.LightRed)
+    /** Set foreground to light green */
+    fun lightGreen(): Style = fg(Color.LightGreen)
+    /** Set foreground to light yellow */
+    fun lightYellow(): Style = fg(Color.LightYellow)
+    /** Set foreground to light blue */
+    fun lightBlue(): Style = fg(Color.LightBlue)
+    /** Set foreground to light magenta */
+    fun lightMagenta(): Style = fg(Color.LightMagenta)
+    /** Set foreground to light cyan */
+    fun lightCyan(): Style = fg(Color.LightCyan)
+    /** Set foreground to white */
+    fun white(): Style = fg(Color.White)
+
+    // -------------------------------------------------------------------------
+    // Color shorthand methods (background)
+    // -------------------------------------------------------------------------
+
+    /** Set background to black */
+    fun onBlack(): Style = bg(Color.Black)
+    /** Set background to red */
+    fun onRed(): Style = bg(Color.Red)
+    /** Set background to green */
+    fun onGreen(): Style = bg(Color.Green)
+    /** Set background to yellow */
+    fun onYellow(): Style = bg(Color.Yellow)
+    /** Set background to blue */
+    fun onBlue(): Style = bg(Color.Blue)
+    /** Set background to magenta */
+    fun onMagenta(): Style = bg(Color.Magenta)
+    /** Set background to cyan */
+    fun onCyan(): Style = bg(Color.Cyan)
+    /** Set background to gray */
+    fun onGray(): Style = bg(Color.Gray)
+    /** Set background to dark gray */
+    fun onDarkGray(): Style = bg(Color.DarkGray)
+    /** Set background to light red */
+    fun onLightRed(): Style = bg(Color.LightRed)
+    /** Set background to light green */
+    fun onLightGreen(): Style = bg(Color.LightGreen)
+    /** Set background to light yellow */
+    fun onLightYellow(): Style = bg(Color.LightYellow)
+    /** Set background to light blue */
+    fun onLightBlue(): Style = bg(Color.LightBlue)
+    /** Set background to light magenta */
+    fun onLightMagenta(): Style = bg(Color.LightMagenta)
+    /** Set background to light cyan */
+    fun onLightCyan(): Style = bg(Color.LightCyan)
+    /** Set background to white */
+    fun onWhite(): Style = bg(Color.White)
+
+    // -------------------------------------------------------------------------
+    // Modifier shorthand methods (add)
+    // -------------------------------------------------------------------------
+
+    /** Add bold modifier */
+    fun bold(): Style = addModifier(Modifier.BOLD)
+    /** Add dim modifier */
+    fun dim(): Style = addModifier(Modifier.DIM)
+    /** Add italic modifier */
+    fun italic(): Style = addModifier(Modifier.ITALIC)
+    /** Add underlined modifier */
+    fun underlined(): Style = addModifier(Modifier.UNDERLINED)
+    /** Add slow blink modifier */
+    fun slowBlink(): Style = addModifier(Modifier.SLOW_BLINK)
+    /** Add rapid blink modifier */
+    fun rapidBlink(): Style = addModifier(Modifier.RAPID_BLINK)
+    /** Add reversed modifier */
+    fun reversed(): Style = addModifier(Modifier.REVERSED)
+    /** Add hidden modifier */
+    fun hidden(): Style = addModifier(Modifier.HIDDEN)
+    /** Add crossed out modifier */
+    fun crossedOut(): Style = addModifier(Modifier.CROSSED_OUT)
+
+    // -------------------------------------------------------------------------
+    // Modifier shorthand methods (remove)
+    // -------------------------------------------------------------------------
+
+    /** Remove bold modifier */
+    fun notBold(): Style = removeModifier(Modifier.BOLD)
+    /** Remove dim modifier */
+    fun notDim(): Style = removeModifier(Modifier.DIM)
+    /** Remove italic modifier */
+    fun notItalic(): Style = removeModifier(Modifier.ITALIC)
+    /** Remove underlined modifier */
+    fun notUnderlined(): Style = removeModifier(Modifier.UNDERLINED)
+    /** Remove slow blink modifier */
+    fun notSlowBlink(): Style = removeModifier(Modifier.SLOW_BLINK)
+    /** Remove rapid blink modifier */
+    fun notRapidBlink(): Style = removeModifier(Modifier.RAPID_BLINK)
+    /** Remove reversed modifier */
+    fun notReversed(): Style = removeModifier(Modifier.REVERSED)
+    /** Remove hidden modifier */
+    fun notHidden(): Style = removeModifier(Modifier.HIDDEN)
+    /** Remove crossed out modifier */
+    fun notCrossedOut(): Style = removeModifier(Modifier.CROSSED_OUT)
+
+    /**
+     * Formats the style in a way that can be copy-pasted into code using the style shorthands.
+     *
+     * This is useful for debugging and for generating code snippets.
+     */
+    override fun toString(): String {
+        val parts = mutableListOf("Style.new()")
+        fg?.let { parts.add(".${colorToFgMethod(it)}") }
+        bg?.let { parts.add(".${colorToBgMethod(it)}") }
+        underlineColor?.let { parts.add(".underlineColor($it)") }
+        for (modifier in addModifier.iter()) {
+            parts.add(".${modifierToAddMethod(modifier)}")
         }
-        Ok(())
+        for (modifier in subModifier.iter()) {
+            parts.add(".${modifierToRemoveMethod(modifier)}")
+        }
+        return parts.joinToString("")
     }
 
-    color!(pub const Color::Black, black(), on_black() -> Self);
-    color!(pub const Color::Red, red(), on_red() -> Self);
-    color!(pub const Color::Green, green(), on_green() -> Self);
-    color!(pub const Color::Yellow, yellow(), on_yellow() -> Self);
-    color!(pub const Color::Blue, blue(), on_blue() -> Self);
-    color!(pub const Color::Magenta, magenta(), on_magenta() -> Self);
-    color!(pub const Color::Cyan, cyan(), on_cyan() -> Self);
-    color!(pub const Color::Gray, gray(), on_gray() -> Self);
-    color!(pub const Color::DarkGray, dark_gray(), on_dark_gray() -> Self);
-    color!(pub const Color::LightRed, light_red(), on_light_red() -> Self);
-    color!(pub const Color::LightGreen, light_green(), on_light_green() -> Self);
-    color!(pub const Color::LightYellow, light_yellow(), on_light_yellow() -> Self);
-    color!(pub const Color::LightBlue, light_blue(), on_light_blue() -> Self);
-    color!(pub const Color::LightMagenta, light_magenta(), on_light_magenta() -> Self);
-    color!(pub const Color::LightCyan, light_cyan(), on_light_cyan() -> Self);
-    color!(pub const Color::White, white(), on_white() -> Self);
+    companion object {
+        /** Returns a `Style` with default properties (no modifications). */
+        fun new(): Style = Style()
 
-    modifier!(pub const Modifier::BOLD, bold(), not_bold() -> Self);
-    modifier!(pub const Modifier::DIM, dim(), not_dim() -> Self);
-    modifier!(pub const Modifier::ITALIC, italic(), not_italic() -> Self);
-    modifier!(pub const Modifier::UNDERLINED, underlined(), not_underlined() -> Self);
-    modifier!(pub const Modifier::SLOW_BLINK, slow_blink(), not_slow_blink() -> Self);
-    modifier!(pub const Modifier::RAPID_BLINK, rapid_blink(), not_rapid_blink() -> Self);
-    modifier!(pub const Modifier::REVERSED, reversed(), not_reversed() -> Self);
-    modifier!(pub const Modifier::HIDDEN, hidden(), not_hidden() -> Self);
-    modifier!(pub const Modifier::CROSSED_OUT, crossed_out(), not_crossed_out() -> Self);
-}
+        /** Returns a `Style` with default properties (no modifications). */
+        fun default(): Style = Style()
 
-impl From<Color> for Style {
-    /// Creates a new `Style` with the given foreground color.
-    ///
-    /// To specify a foreground and background color, use the `from((fg, bg))` constructor.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Color, Style};
-    ///
-    /// let style = Style::from(Color::Red);
-    /// ```
-    fn from(color: Color) -> Self {
-        Self::new().fg(color)
-    }
-}
+        /**
+         * Returns a `Style` resetting all properties.
+         *
+         * When applied to a cell, this will reset all style properties to their defaults.
+         */
+        fun reset(): Style = Style(
+            fg = Color.Reset,
+            bg = Color.Reset,
+            underlineColor = Color.Reset,
+            addModifier = Modifier.empty(),
+            subModifier = Modifier.all()
+        )
 
-impl From<(Color, Color)> for Style {
-    /// Creates a new `Style` with the given foreground and background colors.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Color, Style};
-    ///
-    /// // red foreground, blue background
-    /// let style = Style::from((Color::Red, Color::Blue));
-    /// // default foreground, blue background
-    /// let style = Style::from((Color::Reset, Color::Blue));
-    /// ```
-    fn from((fg, bg): (Color, Color)) -> Self {
-        Self::new().fg(fg).bg(bg)
-    }
-}
+        // -------------------------------------------------------------------------
+        // Factory methods from various types
+        // -------------------------------------------------------------------------
 
-impl From<Modifier> for Style {
-    /// Creates a new `Style` with the given modifier added.
-    ///
-    /// To specify multiple modifiers, use the `|` operator.
-    ///
-    /// To specify modifiers to add and remove, use the `from((add_modifier, sub_modifier))`
-    /// constructor.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Style, Modifier};
-    ///
-    /// // add bold and italic
-    /// let style = Style::from(Modifier::BOLD|Modifier::ITALIC);
-    fn from(modifier: Modifier) -> Self {
-        Self::new().add_modifier(modifier)
-    }
-}
+        /**
+         * Creates a new `Style` with the given foreground color.
+         *
+         * To specify a foreground and background color, use [from] with a Pair.
+         *
+         * ## Example
+         *
+         * ```kotlin
+         * val style = Style.from(Color.Red)
+         * ```
+         */
+        fun from(color: Color): Style = new().fg(color)
 
-impl From<(Modifier, Modifier)> for Style {
-    /// Creates a new `Style` with the given modifiers added and removed.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Modifier, Style};
-    ///
-    /// // add bold and italic, remove dim
-    /// let style = Style::from((Modifier::BOLD | Modifier::ITALIC, Modifier::DIM));
-    /// ```
-    fn from((add_modifier, sub_modifier): (Modifier, Modifier)) -> Self {
-        Self::new()
-            .add_modifier(add_modifier)
-            .remove_modifier(sub_modifier)
-    }
-}
+        /**
+         * Creates a new `Style` with the given foreground and background colors.
+         *
+         * ## Example
+         *
+         * ```kotlin
+         * // red foreground, blue background
+         * val style = Style.from(Color.Red, Color.Blue)
+         * // default foreground, blue background
+         * val style = Style.from(Color.Reset, Color.Blue)
+         * ```
+         */
+        fun from(fg: Color, bg: Color): Style = new().fg(fg).bg(bg)
 
-impl From<(Color, Modifier)> for Style {
-    /// Creates a new `Style` with the given foreground color and modifier added.
-    ///
-    /// To specify multiple modifiers, use the `|` operator.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Color, Modifier, Style};
-    ///
-    /// // red foreground, add bold and italic
-    /// let style = Style::from((Color::Red, Modifier::BOLD | Modifier::ITALIC));
-    /// ```
-    fn from((fg, modifier): (Color, Modifier)) -> Self {
-        Self::new().fg(fg).add_modifier(modifier)
-    }
-}
+        /**
+         * Creates a new `Style` with the given modifier added.
+         *
+         * To specify multiple modifiers, use the `or` operator.
+         *
+         * ## Example
+         *
+         * ```kotlin
+         * // add bold and italic
+         * val style = Style.from(Modifier.BOLD or Modifier.ITALIC)
+         * ```
+         */
+        fun from(modifier: Modifier): Style = new().addModifier(modifier)
 
-impl From<(Color, Color, Modifier)> for Style {
-    /// Creates a new `Style` with the given foreground and background colors and modifier added.
-    ///
-    /// To specify multiple modifiers, use the `|` operator.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Color, Modifier, Style};
-    ///
-    /// // red foreground, blue background, add bold and italic
-    /// let style = Style::from((Color::Red, Color::Blue, Modifier::BOLD | Modifier::ITALIC));
-    /// ```
-    fn from((fg, bg, modifier): (Color, Color, Modifier)) -> Self {
-        Self::new().fg(fg).bg(bg).add_modifier(modifier)
+        /**
+         * Creates a new `Style` with the given modifiers added and removed.
+         *
+         * ## Example
+         *
+         * ```kotlin
+         * // add bold and italic, remove dim
+         * val style = Style.from(
+         *     addModifier = Modifier.BOLD or Modifier.ITALIC,
+         *     subModifier = Modifier.DIM
+         * )
+         * ```
+         */
+        fun from(addModifier: Modifier, subModifier: Modifier): Style =
+            new().addModifier(addModifier).removeModifier(subModifier)
+
+        /**
+         * Creates a new `Style` with the given foreground color and modifier added.
+         *
+         * ## Example
+         *
+         * ```kotlin
+         * // red foreground, add bold and italic
+         * val style = Style.from(Color.Red, Modifier.BOLD or Modifier.ITALIC)
+         * ```
+         */
+        fun from(fg: Color, modifier: Modifier): Style = new().fg(fg).addModifier(modifier)
+
+        /**
+         * Creates a new `Style` with the given foreground and background colors and modifier added.
+         *
+         * ## Example
+         *
+         * ```kotlin
+         * // red foreground, blue background, add bold and italic
+         * val style = Style.from(Color.Red, Color.Blue, Modifier.BOLD or Modifier.ITALIC)
+         * ```
+         */
+        fun from(fg: Color, bg: Color, modifier: Modifier): Style =
+            new().fg(fg).bg(bg).addModifier(modifier)
+
+        /**
+         * Creates a new `Style` with the given foreground and background colors and modifiers
+         * added and removed.
+         *
+         * ## Example
+         *
+         * ```kotlin
+         * // red foreground, blue background, add bold and italic, remove dim
+         * val style = Style.from(
+         *     fg = Color.Red,
+         *     bg = Color.Blue,
+         *     addModifier = Modifier.BOLD or Modifier.ITALIC,
+         *     subModifier = Modifier.DIM
+         * )
+         * ```
+         */
+        fun from(fg: Color, bg: Color, addModifier: Modifier, subModifier: Modifier): Style =
+            new().fg(fg).bg(bg).addModifier(addModifier).removeModifier(subModifier)
     }
 }
 
-impl From<(Color, Color, Modifier, Modifier)> for Style {
-    /// Creates a new `Style` with the given foreground and background colors and modifiers added
-    /// and removed.
-    ///
-    /// # Example
-    ///
-    /// ```rust
-    /// use ratatui_core::style::{Color, Modifier, Style};
-    ///
-    /// // red foreground, blue background, add bold and italic, remove dim
-    /// let style = Style::from((
-    ///     Color::Red,
-    ///     Color::Blue,
-    ///     Modifier::BOLD | Modifier::ITALIC,
-    ///     Modifier::DIM,
-    /// ));
-    /// ```
-    fn from((fg, bg, add_modifier, sub_modifier): (Color, Color, Modifier, Modifier)) -> Self {
-        Self::new()
-            .fg(fg)
-            .bg(bg)
-            .add_modifier(add_modifier)
-            .remove_modifier(sub_modifier)
-    }
+// =============================================================================
+// Helper functions for toString formatting
+// =============================================================================
+
+private fun colorToFgMethod(color: Color): String = when (color) {
+    is Color.Black -> "black()"
+    is Color.Red -> "red()"
+    is Color.Green -> "green()"
+    is Color.Yellow -> "yellow()"
+    is Color.Blue -> "blue()"
+    is Color.Magenta -> "magenta()"
+    is Color.Cyan -> "cyan()"
+    is Color.Gray -> "gray()"
+    is Color.DarkGray -> "darkGray()"
+    is Color.LightRed -> "lightRed()"
+    is Color.LightGreen -> "lightGreen()"
+    is Color.LightYellow -> "lightYellow()"
+    is Color.LightBlue -> "lightBlue()"
+    is Color.LightMagenta -> "lightMagenta()"
+    is Color.LightCyan -> "lightCyan()"
+    is Color.White -> "white()"
+    is Color.Reset -> "fg(Color.Reset)"
+    is Color.Rgb -> "fg(Color.Rgb(${color.r}u, ${color.g}u, ${color.b}u))"
+    is Color.Indexed -> "fg(Color.Indexed(${color.index}u))"
 }
 
-#[cfg(test)]
-mod tests {
-    use alloc::format;
+private fun colorToBgMethod(color: Color): String = when (color) {
+    is Color.Black -> "onBlack()"
+    is Color.Red -> "onRed()"
+    is Color.Green -> "onGreen()"
+    is Color.Yellow -> "onYellow()"
+    is Color.Blue -> "onBlue()"
+    is Color.Magenta -> "onMagenta()"
+    is Color.Cyan -> "onCyan()"
+    is Color.Gray -> "onGray()"
+    is Color.DarkGray -> "onDarkGray()"
+    is Color.LightRed -> "onLightRed()"
+    is Color.LightGreen -> "onLightGreen()"
+    is Color.LightYellow -> "onLightYellow()"
+    is Color.LightBlue -> "onLightBlue()"
+    is Color.LightMagenta -> "onLightMagenta()"
+    is Color.LightCyan -> "onLightCyan()"
+    is Color.White -> "onWhite()"
+    is Color.Reset -> "bg(Color.Reset)"
+    is Color.Rgb -> "bg(Color.Rgb(${color.r}u, ${color.g}u, ${color.b}u))"
+    is Color.Indexed -> "bg(Color.Indexed(${color.index}u))"
+}
 
-    use rstest::rstest;
+private fun modifierToAddMethod(modifier: Modifier): String = when (modifier) {
+    Modifier.BOLD -> "bold()"
+    Modifier.DIM -> "dim()"
+    Modifier.ITALIC -> "italic()"
+    Modifier.UNDERLINED -> "underlined()"
+    Modifier.SLOW_BLINK -> "slowBlink()"
+    Modifier.RAPID_BLINK -> "rapidBlink()"
+    Modifier.REVERSED -> "reversed()"
+    Modifier.HIDDEN -> "hidden()"
+    Modifier.CROSSED_OUT -> "crossedOut()"
+    else -> "addModifier($modifier)"
+}
 
-    use super::*;
+private fun modifierToRemoveMethod(modifier: Modifier): String = when (modifier) {
+    Modifier.BOLD -> "notBold()"
+    Modifier.DIM -> "notDim()"
+    Modifier.ITALIC -> "notItalic()"
+    Modifier.UNDERLINED -> "notUnderlined()"
+    Modifier.SLOW_BLINK -> "notSlowBlink()"
+    Modifier.RAPID_BLINK -> "notRapidBlink()"
+    Modifier.REVERSED -> "notReversed()"
+    Modifier.HIDDEN -> "notHidden()"
+    Modifier.CROSSED_OUT -> "notCrossedOut()"
+    else -> "removeModifier($modifier)"
+}
 
-    #[rstest]
-    #[case(Style::new(), "Style::new()")]
-    #[case(Style::default(), "Style::new()")]
-    #[case(Style::new().red(), "Style::new().red()")]
-    #[case(Style::new().on_blue(), "Style::new().on_blue()")]
-    #[case(Style::new().bold(), "Style::new().bold()")]
-    #[case(Style::new().not_italic(), "Style::new().not_italic()")]
-    #[case(
-        Style::new().red().on_blue().bold().italic().not_dim().not_hidden(),
-        "Style::new().red().on_blue().bold().italic().not_dim().not_hidden()"
-    )]
-    fn debug(#[case] style: Style, #[case] expected: &'static str) {
-        assert_eq!(format!("{style:?}"), expected);
+// =============================================================================
+// Tests
+// =============================================================================
+
+/**
+ * Unit tests for Style and Modifier.
+ *
+ * In Kotlin, tests would typically be in a separate test source set.
+ * These are included here as reference implementations matching the Rust tests.
+ */
+internal object StyleTests {
+
+    // -------------------------------------------------------------------------
+    // toString (debug) tests
+    // -------------------------------------------------------------------------
+
+    fun testDebug() {
+        check(Style.new().toString() == "Style.new()")
+        check(Style.default().toString() == "Style.new()")
+        check(Style.new().red().toString() == "Style.new().red()")
+        check(Style.new().onBlue().toString() == "Style.new().onBlue()")
+        check(Style.new().bold().toString() == "Style.new().bold()")
+        check(Style.new().notItalic().toString() == "Style.new().notItalic()")
+        check(
+            Style.new().red().onBlue().bold().italic().notDim().notHidden().toString() ==
+            "Style.new().red().onBlue().bold().italic().notDim().notHidden()"
+        )
     }
 
-    #[test]
-    fn combined_patch_gives_same_result_as_individual_patch() {
-        let styles = [
-            Style::new(),
-            Style::new().fg(Color::Yellow),
-            Style::new().bg(Color::Yellow),
-            Style::new().add_modifier(Modifier::BOLD),
-            Style::new().remove_modifier(Modifier::BOLD),
-            Style::new().add_modifier(Modifier::ITALIC),
-            Style::new().remove_modifier(Modifier::ITALIC),
-            Style::new().add_modifier(Modifier::ITALIC | Modifier::BOLD),
-            Style::new().remove_modifier(Modifier::ITALIC | Modifier::BOLD),
-        ];
-        for &a in &styles {
-            for &b in &styles {
-                for &c in &styles {
-                    for &d in &styles {
-                        assert_eq!(
-                            Style::new().patch(a).patch(b).patch(c).patch(d),
-                            Style::new().patch(a.patch(b.patch(c.patch(d))))
-                        );
+    // -------------------------------------------------------------------------
+    // Patch combination tests
+    // -------------------------------------------------------------------------
+
+    fun testCombinedPatchGivesSameResultAsIndividualPatch() {
+        val styles = listOf(
+            Style.new(),
+            Style.new().fg(Color.Yellow),
+            Style.new().bg(Color.Yellow),
+            Style.new().addModifier(Modifier.BOLD),
+            Style.new().removeModifier(Modifier.BOLD),
+            Style.new().addModifier(Modifier.ITALIC),
+            Style.new().removeModifier(Modifier.ITALIC),
+            Style.new().addModifier(Modifier.ITALIC or Modifier.BOLD),
+            Style.new().removeModifier(Modifier.ITALIC or Modifier.BOLD),
+        )
+        for (a in styles) {
+            for (b in styles) {
+                for (c in styles) {
+                    for (d in styles) {
+                        check(
+                            Style.new().patch(a).patch(b).patch(c).patch(d) ==
+                            Style.new().patch(a.patch(b.patch(c.patch(d))))
+                        )
                     }
                 }
             }
         }
     }
 
-    #[test]
-    fn combine_individual_modifiers() {
-        use crate::buffer::Buffer;
-        use crate::layout::Rect;
+    // -------------------------------------------------------------------------
+    // Modifier tests
+    // -------------------------------------------------------------------------
 
-        let mods = [
-            Modifier::BOLD,
-            Modifier::DIM,
-            Modifier::ITALIC,
-            Modifier::UNDERLINED,
-            Modifier::SLOW_BLINK,
-            Modifier::RAPID_BLINK,
-            Modifier::REVERSED,
-            Modifier::HIDDEN,
-            Modifier::CROSSED_OUT,
-        ];
-
-        let mut buffer = Buffer::empty(Rect::new(0, 0, 1, 1));
-
-        for m in mods {
-            buffer[(0, 0)].set_style(Style::reset());
-            buffer[(0, 0)].set_style(Style::new().add_modifier(m));
-            let style = buffer[(0, 0)].style();
-            assert!(style.add_modifier.contains(m));
-            assert!(!style.sub_modifier.contains(m));
-        }
+    fun testModifierDebug() {
+        check(Modifier.empty().toString() == "NONE")
+        check(Modifier.BOLD.toString() == "BOLD")
+        check(Modifier.DIM.toString() == "DIM")
+        check(Modifier.ITALIC.toString() == "ITALIC")
+        check(Modifier.UNDERLINED.toString() == "UNDERLINED")
+        check(Modifier.SLOW_BLINK.toString() == "SLOW_BLINK")
+        check(Modifier.RAPID_BLINK.toString() == "RAPID_BLINK")
+        check(Modifier.REVERSED.toString() == "REVERSED")
+        check(Modifier.HIDDEN.toString() == "HIDDEN")
+        check(Modifier.CROSSED_OUT.toString() == "CROSSED_OUT")
+        check((Modifier.BOLD or Modifier.DIM).toString() == "BOLD | DIM")
+        check(Modifier.all().toString() ==
+            "BOLD | DIM | ITALIC | UNDERLINED | SLOW_BLINK | RAPID_BLINK | REVERSED | HIDDEN | CROSSED_OUT")
     }
 
-    #[rstest]
-    #[case(Modifier::empty(), "NONE")]
-    #[case(Modifier::BOLD, "BOLD")]
-    #[case(Modifier::DIM, "DIM")]
-    #[case(Modifier::ITALIC, "ITALIC")]
-    #[case(Modifier::UNDERLINED, "UNDERLINED")]
-    #[case(Modifier::SLOW_BLINK, "SLOW_BLINK")]
-    #[case(Modifier::RAPID_BLINK, "RAPID_BLINK")]
-    #[case(Modifier::REVERSED, "REVERSED")]
-    #[case(Modifier::HIDDEN, "HIDDEN")]
-    #[case(Modifier::CROSSED_OUT, "CROSSED_OUT")]
-    #[case(Modifier::BOLD | Modifier::DIM, "BOLD | DIM")]
-    #[case(
-        Modifier::all(),
-        "BOLD | DIM | ITALIC | UNDERLINED | SLOW_BLINK | RAPID_BLINK | REVERSED | HIDDEN | CROSSED_OUT"
-    )]
-    fn modifier_debug(#[case] modifier: Modifier, #[case] expected: &str) {
-        assert_eq!(format!("{modifier:?}"), expected);
+    // -------------------------------------------------------------------------
+    // Foreground color shorthand tests
+    // -------------------------------------------------------------------------
+
+    fun testFgCanBeStylized() {
+        check(Style.new().black() == Style.new().fg(Color.Black))
+        check(Style.new().red() == Style.new().fg(Color.Red))
+        check(Style.new().green() == Style.new().fg(Color.Green))
+        check(Style.new().yellow() == Style.new().fg(Color.Yellow))
+        check(Style.new().blue() == Style.new().fg(Color.Blue))
+        check(Style.new().magenta() == Style.new().fg(Color.Magenta))
+        check(Style.new().cyan() == Style.new().fg(Color.Cyan))
+        check(Style.new().white() == Style.new().fg(Color.White))
+        check(Style.new().gray() == Style.new().fg(Color.Gray))
+        check(Style.new().darkGray() == Style.new().fg(Color.DarkGray))
+        check(Style.new().lightRed() == Style.new().fg(Color.LightRed))
+        check(Style.new().lightGreen() == Style.new().fg(Color.LightGreen))
+        check(Style.new().lightYellow() == Style.new().fg(Color.LightYellow))
+        check(Style.new().lightBlue() == Style.new().fg(Color.LightBlue))
+        check(Style.new().lightMagenta() == Style.new().fg(Color.LightMagenta))
+        check(Style.new().lightCyan() == Style.new().fg(Color.LightCyan))
     }
 
-    #[test]
-    fn style_can_be_const() {
-        const RED: Color = Color::Red;
-        const BLACK: Color = Color::Black;
-        const BOLD: Modifier = Modifier::BOLD;
-        const ITALIC: Modifier = Modifier::ITALIC;
+    // -------------------------------------------------------------------------
+    // Background color shorthand tests
+    // -------------------------------------------------------------------------
 
-        const _RESET: Style = Style::reset();
-        const _RED_FG: Style = Style::new().fg(RED);
-        const _RED_FG_SHORT: Style = Style::new().red();
-        const _BLACK_BG: Style = Style::new().bg(BLACK);
-        const _BLACK_BG_SHORT: Style = Style::new().on_black();
-        const _ADD_BOLD: Style = Style::new().add_modifier(BOLD);
-        const _ADD_BOLD_SHORT: Style = Style::new().bold();
-        const _REMOVE_ITALIC: Style = Style::new().remove_modifier(ITALIC);
-        const _REMOVE_ITALIC_SHORT: Style = Style::new().not_italic();
-        const ALL: Style = Style::new()
-            .fg(RED)
-            .bg(BLACK)
-            .add_modifier(BOLD)
-            .remove_modifier(ITALIC);
-        const ALL_SHORT: Style = Style::new().red().on_black().bold().not_italic();
-        assert_eq!(
-            ALL,
-            Style::new()
-                .fg(Color::Red)
-                .bg(Color::Black)
-                .add_modifier(Modifier::BOLD)
-                .remove_modifier(Modifier::ITALIC)
-        );
-        assert_eq!(ALL, ALL_SHORT);
+    fun testBgCanBeStylized() {
+        check(Style.new().onBlack() == Style.new().bg(Color.Black))
+        check(Style.new().onRed() == Style.new().bg(Color.Red))
+        check(Style.new().onGreen() == Style.new().bg(Color.Green))
+        check(Style.new().onYellow() == Style.new().bg(Color.Yellow))
+        check(Style.new().onBlue() == Style.new().bg(Color.Blue))
+        check(Style.new().onMagenta() == Style.new().bg(Color.Magenta))
+        check(Style.new().onCyan() == Style.new().bg(Color.Cyan))
+        check(Style.new().onWhite() == Style.new().bg(Color.White))
+        check(Style.new().onGray() == Style.new().bg(Color.Gray))
+        check(Style.new().onDarkGray() == Style.new().bg(Color.DarkGray))
+        check(Style.new().onLightRed() == Style.new().bg(Color.LightRed))
+        check(Style.new().onLightGreen() == Style.new().bg(Color.LightGreen))
+        check(Style.new().onLightYellow() == Style.new().bg(Color.LightYellow))
+        check(Style.new().onLightBlue() == Style.new().bg(Color.LightBlue))
+        check(Style.new().onLightMagenta() == Style.new().bg(Color.LightMagenta))
+        check(Style.new().onLightCyan() == Style.new().bg(Color.LightCyan))
     }
 
-    #[rstest]
-    #[case(Style::new().black(), Color::Black)]
-    #[case(Style::new().red(), Color::Red)]
-    #[case(Style::new().green(), Color::Green)]
-    #[case(Style::new().yellow(), Color::Yellow)]
-    #[case(Style::new().blue(), Color::Blue)]
-    #[case(Style::new().magenta(), Color::Magenta)]
-    #[case(Style::new().cyan(), Color::Cyan)]
-    #[case(Style::new().white(), Color::White)]
-    #[case(Style::new().gray(), Color::Gray)]
-    #[case(Style::new().dark_gray(), Color::DarkGray)]
-    #[case(Style::new().light_red(), Color::LightRed)]
-    #[case(Style::new().light_green(), Color::LightGreen)]
-    #[case(Style::new().light_yellow(), Color::LightYellow)]
-    #[case(Style::new().light_blue(), Color::LightBlue)]
-    #[case(Style::new().light_magenta(), Color::LightMagenta)]
-    #[case(Style::new().light_cyan(), Color::LightCyan)]
-    #[case(Style::new().white(), Color::White)]
-    fn fg_can_be_stylized(#[case] stylized: Style, #[case] expected: Color) {
-        assert_eq!(stylized, Style::new().fg(expected));
+    // -------------------------------------------------------------------------
+    // Add modifier shorthand tests
+    // -------------------------------------------------------------------------
+
+    fun testAddModifierCanBeStylized() {
+        check(Style.new().bold() == Style.new().addModifier(Modifier.BOLD))
+        check(Style.new().dim() == Style.new().addModifier(Modifier.DIM))
+        check(Style.new().italic() == Style.new().addModifier(Modifier.ITALIC))
+        check(Style.new().underlined() == Style.new().addModifier(Modifier.UNDERLINED))
+        check(Style.new().slowBlink() == Style.new().addModifier(Modifier.SLOW_BLINK))
+        check(Style.new().rapidBlink() == Style.new().addModifier(Modifier.RAPID_BLINK))
+        check(Style.new().reversed() == Style.new().addModifier(Modifier.REVERSED))
+        check(Style.new().hidden() == Style.new().addModifier(Modifier.HIDDEN))
+        check(Style.new().crossedOut() == Style.new().addModifier(Modifier.CROSSED_OUT))
     }
 
-    #[rstest]
-    #[case(Style::new().on_black(), Color::Black)]
-    #[case(Style::new().on_red(), Color::Red)]
-    #[case(Style::new().on_green(), Color::Green)]
-    #[case(Style::new().on_yellow(), Color::Yellow)]
-    #[case(Style::new().on_blue(), Color::Blue)]
-    #[case(Style::new().on_magenta(), Color::Magenta)]
-    #[case(Style::new().on_cyan(), Color::Cyan)]
-    #[case(Style::new().on_white(), Color::White)]
-    #[case(Style::new().on_gray(), Color::Gray)]
-    #[case(Style::new().on_dark_gray(), Color::DarkGray)]
-    #[case(Style::new().on_light_red(), Color::LightRed)]
-    #[case(Style::new().on_light_green(), Color::LightGreen)]
-    #[case(Style::new().on_light_yellow(), Color::LightYellow)]
-    #[case(Style::new().on_light_blue(), Color::LightBlue)]
-    #[case(Style::new().on_light_magenta(), Color::LightMagenta)]
-    #[case(Style::new().on_light_cyan(), Color::LightCyan)]
-    #[case(Style::new().on_white(), Color::White)]
-    fn bg_can_be_stylized(#[case] stylized: Style, #[case] expected: Color) {
-        assert_eq!(stylized, Style::new().bg(expected));
+    // -------------------------------------------------------------------------
+    // Remove modifier shorthand tests
+    // -------------------------------------------------------------------------
+
+    fun testRemoveModifierCanBeStylized() {
+        check(Style.new().notBold() == Style.new().removeModifier(Modifier.BOLD))
+        check(Style.new().notDim() == Style.new().removeModifier(Modifier.DIM))
+        check(Style.new().notItalic() == Style.new().removeModifier(Modifier.ITALIC))
+        check(Style.new().notUnderlined() == Style.new().removeModifier(Modifier.UNDERLINED))
+        check(Style.new().notSlowBlink() == Style.new().removeModifier(Modifier.SLOW_BLINK))
+        check(Style.new().notRapidBlink() == Style.new().removeModifier(Modifier.RAPID_BLINK))
+        check(Style.new().notReversed() == Style.new().removeModifier(Modifier.REVERSED))
+        check(Style.new().notHidden() == Style.new().removeModifier(Modifier.HIDDEN))
+        check(Style.new().notCrossedOut() == Style.new().removeModifier(Modifier.CROSSED_OUT))
     }
 
-    #[rstest]
-    #[case(Style::new().bold(), Modifier::BOLD)]
-    #[case(Style::new().dim(), Modifier::DIM)]
-    #[case(Style::new().italic(), Modifier::ITALIC)]
-    #[case(Style::new().underlined(), Modifier::UNDERLINED)]
-    #[case(Style::new().slow_blink(), Modifier::SLOW_BLINK)]
-    #[case(Style::new().rapid_blink(), Modifier::RAPID_BLINK)]
-    #[case(Style::new().reversed(), Modifier::REVERSED)]
-    #[case(Style::new().hidden(), Modifier::HIDDEN)]
-    #[case(Style::new().crossed_out(), Modifier::CROSSED_OUT)]
-    fn add_modifier_can_be_stylized(#[case] stylized: Style, #[case] expected: Modifier) {
-        assert_eq!(stylized, Style::new().add_modifier(expected));
+    // -------------------------------------------------------------------------
+    // From factory tests
+    // -------------------------------------------------------------------------
+
+    fun testFromColor() {
+        check(Style.from(Color.Red) == Style.new().fg(Color.Red))
     }
 
-    #[rstest]
-    #[case(Style::new().not_bold(), Modifier::BOLD)]
-    #[case(Style::new().not_dim(), Modifier::DIM)]
-    #[case(Style::new().not_italic(), Modifier::ITALIC)]
-    #[case(Style::new().not_underlined(), Modifier::UNDERLINED)]
-    #[case(Style::new().not_slow_blink(), Modifier::SLOW_BLINK)]
-    #[case(Style::new().not_rapid_blink(), Modifier::RAPID_BLINK)]
-    #[case(Style::new().not_reversed(), Modifier::REVERSED)]
-    #[case(Style::new().not_hidden(), Modifier::HIDDEN)]
-    #[case(Style::new().not_crossed_out(), Modifier::CROSSED_OUT)]
-    fn remove_modifier_can_be_stylized(#[case] stylized: Style, #[case] expected: Modifier) {
-        assert_eq!(stylized, Style::new().remove_modifier(expected));
+    fun testFromColorColor() {
+        check(Style.from(Color.Red, Color.Blue) == Style.new().fg(Color.Red).bg(Color.Blue))
     }
 
-    #[test]
-    fn from_color() {
-        assert_eq!(Style::from(Color::Red), Style::new().fg(Color::Red));
+    fun testFromModifier() {
+        check(
+            Style.from(Modifier.BOLD or Modifier.ITALIC) ==
+            Style.new().addModifier(Modifier.BOLD).addModifier(Modifier.ITALIC)
+        )
     }
 
-    #[test]
-    fn from_color_color() {
-        assert_eq!(
-            Style::from((Color::Red, Color::Blue)),
-            Style::new().fg(Color::Red).bg(Color::Blue)
-        );
+    fun testFromModifierModifier() {
+        check(
+            Style.from(Modifier.BOLD or Modifier.ITALIC, Modifier.DIM) ==
+            Style.new()
+                .addModifier(Modifier.BOLD)
+                .addModifier(Modifier.ITALIC)
+                .removeModifier(Modifier.DIM)
+        )
     }
 
-    #[test]
-    fn from_modifier() {
-        assert_eq!(
-            Style::from(Modifier::BOLD | Modifier::ITALIC),
-            Style::new()
-                .add_modifier(Modifier::BOLD)
-                .add_modifier(Modifier::ITALIC)
-        );
+    fun testFromColorModifier() {
+        check(
+            Style.from(Color.Red, Modifier.BOLD or Modifier.ITALIC) ==
+            Style.new()
+                .fg(Color.Red)
+                .addModifier(Modifier.BOLD)
+                .addModifier(Modifier.ITALIC)
+        )
     }
 
-    #[test]
-    fn from_modifier_modifier() {
-        assert_eq!(
-            Style::from((Modifier::BOLD | Modifier::ITALIC, Modifier::DIM)),
-            Style::new()
-                .add_modifier(Modifier::BOLD)
-                .add_modifier(Modifier::ITALIC)
-                .remove_modifier(Modifier::DIM)
-        );
+    fun testFromColorColorModifier() {
+        check(
+            Style.from(Color.Red, Color.Blue, Modifier.BOLD or Modifier.ITALIC) ==
+            Style.new()
+                .fg(Color.Red)
+                .bg(Color.Blue)
+                .addModifier(Modifier.BOLD)
+                .addModifier(Modifier.ITALIC)
+        )
     }
 
-    #[test]
-    fn from_color_modifier() {
-        assert_eq!(
-            Style::from((Color::Red, Modifier::BOLD | Modifier::ITALIC)),
-            Style::new()
-                .fg(Color::Red)
-                .add_modifier(Modifier::BOLD)
-                .add_modifier(Modifier::ITALIC)
-        );
+    fun testFromColorColorModifierModifier() {
+        check(
+            Style.from(Color.Red, Color.Blue, Modifier.BOLD or Modifier.ITALIC, Modifier.DIM) ==
+            Style.new()
+                .fg(Color.Red)
+                .bg(Color.Blue)
+                .addModifier(Modifier.BOLD)
+                .addModifier(Modifier.ITALIC)
+                .removeModifier(Modifier.DIM)
+        )
     }
 
-    #[test]
-    fn from_color_color_modifier() {
-        assert_eq!(
-            Style::from((Color::Red, Color::Blue, Modifier::BOLD | Modifier::ITALIC)),
-            Style::new()
-                .fg(Color::Red)
-                .bg(Color::Blue)
-                .add_modifier(Modifier::BOLD)
-                .add_modifier(Modifier::ITALIC)
-        );
-    }
+    // -------------------------------------------------------------------------
+    // Run all tests
+    // -------------------------------------------------------------------------
 
-    #[test]
-    fn from_color_color_modifier_modifier() {
-        assert_eq!(
-            Style::from((
-                Color::Red,
-                Color::Blue,
-                Modifier::BOLD | Modifier::ITALIC,
-                Modifier::DIM
-            )),
-            Style::new()
-                .fg(Color::Red)
-                .bg(Color::Blue)
-                .add_modifier(Modifier::BOLD)
-                .add_modifier(Modifier::ITALIC)
-                .remove_modifier(Modifier::DIM)
-        );
-    }
-
-    #[cfg(feature = "serde")]
-    #[test]
-    fn serialize_then_deserialize() {
-        let style = Style {
-            fg: Some(Color::Rgb(255, 0, 255)),
-            bg: Some(Color::White),
-            #[cfg(feature = "underline-color")]
-            underline_color: Some(Color::Indexed(3)),
-            add_modifier: Modifier::UNDERLINED,
-            sub_modifier: Modifier::CROSSED_OUT,
-        };
-
-        let json_str = serde_json::to_string(&style).unwrap();
-        let json_value: serde_json::Value = serde_json::from_str(&json_str).unwrap();
-
-        let mut expected_json = serde_json::json!({
-            "fg": "#FF00FF",
-            "bg": "White",
-            "add_modifier": "UNDERLINED",
-            "sub_modifier": "CROSSED_OUT"
-        });
-
-        #[cfg(feature = "underline-color")]
-        {
-            expected_json
-                .as_object_mut()
-                .unwrap()
-                .insert("underline_color".into(), "3".into());
-        }
-
-        assert_eq!(json_value, expected_json);
-
-        let deserialized: Style = serde_json::from_str(&json_str).unwrap();
-        assert_eq!(deserialized, style);
-    }
-
-    #[cfg(feature = "serde")]
-    #[test]
-    fn deserialize_defaults() {
-        let style = Style {
-            fg: None,
-            bg: None,
-            #[cfg(feature = "underline-color")]
-            underline_color: None,
-            add_modifier: Modifier::empty(),
-            sub_modifier: Modifier::empty(),
-        };
-
-        let json_str = serde_json::to_string(&style).unwrap();
-        assert_eq!(json_str, "{}");
-
-        let deserialized: Style = serde_json::from_str(&json_str).unwrap();
-        assert_eq!(deserialized, style);
-    }
-
-    #[cfg(feature = "serde")]
-    #[test]
-    fn deserialize_null_modifiers() {
-        let json_value = serde_json::json!({
-            "add_modifier": serde_json::Value::Null,
-            "sub_modifier": serde_json::Value::Null
-        });
-        let json_str = serde_json::to_string(&json_value).unwrap();
-
-        let style: Style = serde_json::from_str(&json_str).unwrap();
-
-        assert!(style.add_modifier.is_empty());
-        assert!(style.sub_modifier.is_empty());
+    fun runAll() {
+        testDebug()
+        testCombinedPatchGivesSameResultAsIndividualPatch()
+        testModifierDebug()
+        testFgCanBeStylized()
+        testBgCanBeStylized()
+        testAddModifierCanBeStylized()
+        testRemoveModifierCanBeStylized()
+        testFromColor()
+        testFromColorColor()
+        testFromModifier()
+        testFromModifierModifier()
+        testFromColorModifier()
+        testFromColorColorModifier()
+        testFromColorColorModifierModifier()
+        println("All Style tests passed!")
     }
 }
+
+// Note: Serde serialization tests are not ported as Kotlin/Native uses different serialization
+// libraries (kotlinx.serialization). Serialization support can be added separately if needed.
