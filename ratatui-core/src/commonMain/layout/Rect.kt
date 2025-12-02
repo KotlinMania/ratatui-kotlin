@@ -43,7 +43,7 @@
  *
  * For comprehensive layout documentation and examples, see the layout module.
  */
-package ai.solace.coder.tui.layout
+package ratatui.layout
 
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -279,6 +279,18 @@ data class Rect(
     fun toPair(): Pair<Position, Size> = Pair(asPosition(), asSize())
 
     override fun toString(): String = "${width}x${height}+${x}+${y}"
+
+    /**
+     * Returns a new Rect with the x coordinate indented by the given width.
+     *
+     * The width is reduced by the indent amount. If the indent is larger than the width,
+     * the width becomes 0.
+     */
+    fun indentX(indent: UShort): Rect {
+        val newX = (x + indent).coerceAtMost(UShort.MAX_VALUE.toUInt()).toUShort()
+        val newWidth = if (indent >= width) 0u else (width - indent).toUShort()
+        return copy(x = newX, width = newWidth)
+    }
 }
 
 // Operator extensions for Rect + Offset

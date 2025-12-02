@@ -1,668 +1,436 @@
-use alloc::borrow::Cow;
-use alloc::string::{String, ToString};
-use core::fmt;
+package ratatui.style
 
-use crate::style::{Color, Modifier, Style};
-use crate::text::Span;
+import ratatui.text.Span
 
-/// A trait for objects that have a `Style`.
-///
-/// This trait enables generic code to be written that can interact with any object that has a
-/// `Style`. This is used by the `Stylize` trait to allow generic code to be written that can
-/// interact with any object that can be styled.
-pub trait Styled {
-    type Item;
+/**
+ * A trait for objects that have a [Style].
+ *
+ * This trait enables generic code to be written that can interact with any object that has a
+ * `Style`. This is used by the [Stylize] interface to allow generic code to be written that can
+ * interact with any object that can be styled.
+ */
+interface Styled<T> {
+    /**
+     * Returns the style of the object.
+     */
+    fun getStyle(): Style
 
-    /// Returns the style of the object.
-    fn style(&self) -> Style;
-
-    /// Sets the style of the object.
-    ///
-    /// `style` accepts any type that is convertible to [`Style`] (e.g. [`Style`], [`Color`], or
-    /// your own type that implements [`Into<Style>`]).
-    fn set_style<S: Into<Style>>(self, style: S) -> Self::Item;
+    /**
+     * Sets the style of the object.
+     *
+     * `style` accepts any type that is convertible to [Style] (e.g. [Style], [Color], or
+     * your own type that implements conversion to Style).
+     */
+    fun setStyle(style: Style): T
 }
 
-/// A helper struct to make it easy to debug using the `Stylize` method names
-pub(crate) struct ColorDebug {
-    pub kind: ColorDebugKind,
-    pub color: Color,
-}
-
-#[derive(Debug, Clone, Copy, Eq, PartialEq, Hash)]
-pub(crate) enum ColorDebugKind {
+/**
+ * A helper enum to make it easy to debug using the `Stylize` method names.
+ */
+enum class ColorDebugKind {
     Foreground,
     Background,
-    #[cfg(feature = "underline-color")]
-    Underline,
+    Underline
 }
 
-impl fmt::Debug for ColorDebug {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        #[cfg(feature = "underline-color")]
-        let is_underline = self.kind == ColorDebugKind::Underline;
-        #[cfg(not(feature = "underline-color"))]
-        let is_underline = false;
-        if is_underline
-            || matches!(
-                self.color,
-                Color::Reset | Color::Indexed(_) | Color::Rgb(_, _, _)
-            )
-        {
-            match self.kind {
-                ColorDebugKind::Foreground => write!(f, ".fg(")?,
-                ColorDebugKind::Background => write!(f, ".bg(")?,
-                #[cfg(feature = "underline-color")]
-                ColorDebugKind::Underline => write!(f, ".underline_color(")?,
+/**
+ * A helper class to make it easy to debug using the `Stylize` method names.
+ */
+data class ColorDebug(
+    val kind: ColorDebugKind,
+    val color: Color
+) {
+    override fun toString(): String {
+        val isUnderline = kind == ColorDebugKind.Underline
+        if (isUnderline || color is Color.Reset || color is Color.Indexed || color is Color.Rgb) {
+            val prefix = when (kind) {
+                ColorDebugKind.Foreground -> ".fg("
+                ColorDebugKind.Background -> ".bg("
+                ColorDebugKind.Underline -> ".underlineColor("
             }
-            write!(f, "Color::{:?}", self.color)?;
-            write!(f, ")")?;
-            return Ok(());
+            return "${prefix}Color.${colorDebugName(color)})"
         }
 
-        match self.kind {
-            ColorDebugKind::Foreground => write!(f, ".")?,
-            ColorDebugKind::Background => write!(f, ".on_")?,
-            // TODO: .underline_color_xxx is not implemented on Stylize yet, but it should be
-            #[cfg(feature = "underline-color")]
-            ColorDebugKind::Underline => {
-                unreachable!("covered by the first part of the if statement")
-            }
+        val prefix = when (kind) {
+            ColorDebugKind.Foreground -> "."
+            ColorDebugKind.Background -> ".on_"
+            ColorDebugKind.Underline -> error("covered by the first part of the if statement")
         }
-        match self.color {
-            Color::Black => write!(f, "black")?,
-            Color::Red => write!(f, "red")?,
-            Color::Green => write!(f, "green")?,
-            Color::Yellow => write!(f, "yellow")?,
-            Color::Blue => write!(f, "blue")?,
-            Color::Magenta => write!(f, "magenta")?,
-            Color::Cyan => write!(f, "cyan")?,
-            Color::Gray => write!(f, "gray")?,
-            Color::DarkGray => write!(f, "dark_gray")?,
-            Color::LightRed => write!(f, "light_red")?,
-            Color::LightGreen => write!(f, "light_green")?,
-            Color::LightYellow => write!(f, "light_yellow")?,
-            Color::LightBlue => write!(f, "light_blue")?,
-            Color::LightMagenta => write!(f, "light_magenta")?,
-            Color::LightCyan => write!(f, "light_cyan")?,
-            Color::White => write!(f, "white")?,
-            _ => unreachable!("covered by the first part of the if statement"),
-        }
-        write!(f, "()")
+        return "$prefix${colorMethodName(color)}()"
+    }
+
+    private fun colorDebugName(color: Color): String = when (color) {
+        is Color.Reset -> "Reset"
+        is Color.Black -> "Black"
+        is Color.Red -> "Red"
+        is Color.Green -> "Green"
+        is Color.Yellow -> "Yellow"
+        is Color.Blue -> "Blue"
+        is Color.Magenta -> "Magenta"
+        is Color.Cyan -> "Cyan"
+        is Color.Gray -> "Gray"
+        is Color.DarkGray -> "DarkGray"
+        is Color.LightRed -> "LightRed"
+        is Color.LightGreen -> "LightGreen"
+        is Color.LightYellow -> "LightYellow"
+        is Color.LightBlue -> "LightBlue"
+        is Color.LightMagenta -> "LightMagenta"
+        is Color.LightCyan -> "LightCyan"
+        is Color.White -> "White"
+        is Color.Indexed -> "Indexed(${color.index})"
+        is Color.Rgb -> "Rgb(${color.r}, ${color.g}, ${color.b})"
+    }
+
+    private fun colorMethodName(color: Color): String = when (color) {
+        is Color.Black -> "black"
+        is Color.Red -> "red"
+        is Color.Green -> "green"
+        is Color.Yellow -> "yellow"
+        is Color.Blue -> "blue"
+        is Color.Magenta -> "magenta"
+        is Color.Cyan -> "cyan"
+        is Color.Gray -> "gray"
+        is Color.DarkGray -> "dark_gray"
+        is Color.LightRed -> "light_red"
+        is Color.LightGreen -> "light_green"
+        is Color.LightYellow -> "light_yellow"
+        is Color.LightBlue -> "light_blue"
+        is Color.LightMagenta -> "light_magenta"
+        is Color.LightCyan -> "light_cyan"
+        is Color.White -> "white"
+        else -> error("covered by the first part of the if statement")
     }
 }
 
-/// Generates two methods for each color, one for setting the foreground color (`red()`, `blue()`,
-/// etc) and one for setting the background color (`on_red()`, `on_blue()`, etc.). Each method sets
-/// the color of the style to the corresponding color.
-///
-/// ```rust,ignore
-/// color!(Color::Black, black(), on_black() -> T);
-///
-/// // generates
-///
-/// #[doc = "Sets the foreground color to [`black`](Color::Black)."]
-/// fn black(self) -> T {
-///     self.fg(Color::Black)
-/// }
-///
-/// #[doc = "Sets the background color to [`black`](Color::Black)."]
-/// fn on_black(self) -> T {
-///     self.bg(Color::Black)
-/// }
-/// ```
-macro_rules! color {
-    ( $variant:expr, $color:ident(), $on_color:ident() -> $ty:ty ) => {
-        #[doc = concat!("Sets the foreground color to [`", stringify!($color), "`](", stringify!($variant), ").")]
-        #[must_use = concat!("`", stringify!($color), "` returns the modified style without modifying the original")]
-        fn $color(self) -> $ty {
-            self.fg($variant)
-        }
+/**
+ * An extension trait for styling objects.
+ *
+ * For any type that implements `Stylize`, the provided methods in this trait can be used to style
+ * the type further. This trait is automatically implemented for any type that implements the
+ * [Styled] trait which e.g.: [String], [Span], [Style] and many Widget types.
+ *
+ * This results in much more ergonomic styling of text and widgets. For example, instead of
+ * writing:
+ *
+ * ```kotlin
+ * val text = Span.styled("Hello", Style.default().fg(Color.Red).bg(Color.Blue))
+ * ```
+ *
+ * You can write:
+ *
+ * ```kotlin
+ * val text = "Hello".red().onBlue()
+ * ```
+ *
+ * This trait implements a provided method for every color as both foreground and background
+ * (prefixed by `on`), and all modifiers as both an additive and subtractive modifier (prefixed
+ * by `not`). The `reset()` method is also provided to reset the style.
+ *
+ * # Examples
+ * ```kotlin
+ * val span = "hello".red().onBlue().bold()
+ * val line = Line.from(listOf(
+ *     "hello".red().onBlue().bold(),
+ *     "world".green().onYellow().notBold(),
+ * ))
+ * val paragraph = Paragraph.new(line).italic().underlined()
+ * val block = Block.bordered().title("Title").onWhite().bold()
+ * ```
+ */
+interface Stylize<T> {
+    fun bg(color: Color): T
+    fun fg(color: Color): T
+    fun reset(): T
+    fun addModifier(modifier: Modifier): T
+    fun removeModifier(modifier: Modifier): T
 
-        #[doc = concat!("Sets the background color to [`", stringify!($color), "`](", stringify!($variant), ").")]
-        #[must_use = concat!("`", stringify!($on_color), "` returns the modified style without modifying the original")]
-        fn $on_color(self) -> $ty {
-            self.bg($variant)
-        }
-    };
+    // Color methods - foreground
+    fun black(): T = fg(Color.Black)
+    fun red(): T = fg(Color.Red)
+    fun green(): T = fg(Color.Green)
+    fun yellow(): T = fg(Color.Yellow)
+    fun blue(): T = fg(Color.Blue)
+    fun magenta(): T = fg(Color.Magenta)
+    fun cyan(): T = fg(Color.Cyan)
+    fun gray(): T = fg(Color.Gray)
+    fun darkGray(): T = fg(Color.DarkGray)
+    fun lightRed(): T = fg(Color.LightRed)
+    fun lightGreen(): T = fg(Color.LightGreen)
+    fun lightYellow(): T = fg(Color.LightYellow)
+    fun lightBlue(): T = fg(Color.LightBlue)
+    fun lightMagenta(): T = fg(Color.LightMagenta)
+    fun lightCyan(): T = fg(Color.LightCyan)
+    fun white(): T = fg(Color.White)
 
-    (pub const $variant:expr, $color:ident(), $on_color:ident() -> $ty:ty ) => {
-        #[doc = concat!("Sets the foreground color to [`", stringify!($color), "`](", stringify!($variant), ").")]
-        #[must_use = concat!("`", stringify!($color), "` returns the modified style without modifying the original")]
-        pub const fn $color(self) -> $ty {
-            self.fg($variant)
-        }
+    // Color methods - background
+    fun onBlack(): T = bg(Color.Black)
+    fun onRed(): T = bg(Color.Red)
+    fun onGreen(): T = bg(Color.Green)
+    fun onYellow(): T = bg(Color.Yellow)
+    fun onBlue(): T = bg(Color.Blue)
+    fun onMagenta(): T = bg(Color.Magenta)
+    fun onCyan(): T = bg(Color.Cyan)
+    fun onGray(): T = bg(Color.Gray)
+    fun onDarkGray(): T = bg(Color.DarkGray)
+    fun onLightRed(): T = bg(Color.LightRed)
+    fun onLightGreen(): T = bg(Color.LightGreen)
+    fun onLightYellow(): T = bg(Color.LightYellow)
+    fun onLightBlue(): T = bg(Color.LightBlue)
+    fun onLightMagenta(): T = bg(Color.LightMagenta)
+    fun onLightCyan(): T = bg(Color.LightCyan)
+    fun onWhite(): T = bg(Color.White)
 
-        #[doc = concat!("Sets the background color to [`", stringify!($color), "`](", stringify!($variant), ").")]
-        #[must_use = concat!("`", stringify!($on_color), "` returns the modified style without modifying the original")]
-        pub const fn $on_color(self) -> $ty {
-            self.bg($variant)
-        }
-    };
+    // Modifier methods - add
+    fun bold(): T = addModifier(Modifier.BOLD)
+    fun dim(): T = addModifier(Modifier.DIM)
+    fun italic(): T = addModifier(Modifier.ITALIC)
+    fun underlined(): T = addModifier(Modifier.UNDERLINED)
+    fun slowBlink(): T = addModifier(Modifier.SLOW_BLINK)
+    fun rapidBlink(): T = addModifier(Modifier.RAPID_BLINK)
+    fun reversed(): T = addModifier(Modifier.REVERSED)
+    fun hidden(): T = addModifier(Modifier.HIDDEN)
+    fun crossedOut(): T = addModifier(Modifier.CROSSED_OUT)
+
+    // Modifier methods - remove
+    fun notBold(): T = removeModifier(Modifier.BOLD)
+    fun notDim(): T = removeModifier(Modifier.DIM)
+    fun notItalic(): T = removeModifier(Modifier.ITALIC)
+    fun notUnderlined(): T = removeModifier(Modifier.UNDERLINED)
+    fun notSlowBlink(): T = removeModifier(Modifier.SLOW_BLINK)
+    fun notRapidBlink(): T = removeModifier(Modifier.RAPID_BLINK)
+    fun notReversed(): T = removeModifier(Modifier.REVERSED)
+    fun notHidden(): T = removeModifier(Modifier.HIDDEN)
+    fun notCrossedOut(): T = removeModifier(Modifier.CROSSED_OUT)
 }
 
-/// Generates a method for a modifier (`bold()`, `italic()`, etc.). Each method sets the modifier
-/// of the style to the corresponding modifier.
-///
-/// # Examples
-///
-/// ```rust,ignore
-/// modifier!(Modifier::BOLD, bold(), not_bold() -> T);
-///
-/// // generates
-///
-/// #[doc = "Adds the [`bold`](Modifier::BOLD) modifier."]
-/// fn bold(self) -> T {
-///     self.add_modifier(Modifier::BOLD)
-/// }
-///
-/// #[doc = "Removes the [`bold`](Modifier::BOLD) modifier."]
-/// fn not_bold(self) -> T {
-///     self.remove_modifier(Modifier::BOLD)
-/// }
-/// ```
-macro_rules! modifier {
-    ( $variant:expr, $modifier:ident(), $not_modifier:ident() -> $ty:ty ) => {
-        #[doc = concat!("Adds the [`", stringify!($modifier), "`](", stringify!($variant), ") modifier.")]
-        #[must_use = concat!("`", stringify!($modifier), "` returns the modified style without modifying the original")]
-        fn $modifier(self) -> $ty {
-            self.add_modifier($variant)
-        }
-
-        #[doc = concat!("Removes the [`", stringify!($modifier), "`](", stringify!($variant), ") modifier.")]
-        #[must_use = concat!("`", stringify!($not_modifier), "` returns the modified style without modifying the original")]
-        fn $not_modifier(self) -> $ty {
-            self.remove_modifier($variant)
-        }
-    };
-
-    (pub const $variant:expr, $modifier:ident(), $not_modifier:ident() -> $ty:ty ) => {
-        #[doc = concat!("Adds the [`", stringify!($modifier), "`](", stringify!($variant), ") modifier.")]
-        #[must_use = concat!("`", stringify!($modifier), "` returns the modified style without modifying the original")]
-        pub const fn $modifier(self) -> $ty {
-            self.add_modifier($variant)
-        }
-
-        #[doc = concat!("Removes the [`", stringify!($modifier), "`](", stringify!($variant), ") modifier.")]
-        #[must_use = concat!("`", stringify!($not_modifier), "` returns the modified style without modifying the original")]
-        pub const fn $not_modifier(self) -> $ty {
-            self.remove_modifier($variant)
-        }
-    };
-}
-
-/// An extension trait for styling objects.
-///
-/// For any type that implements `Stylize`, the provided methods in this trait can be used to style
-/// the type further. This trait is automatically implemented for any type that implements the
-/// [`Styled`] trait which e.g.: [`String`], [`&str`], [`Span`], [`Style`] and many Widget types.
-///
-/// This results in much more ergonomic styling of text and widgets. For example, instead of
-/// writing:
-///
-/// ```rust,ignore
-/// let text = Span::styled("Hello", Style::default().fg(Color::Red).bg(Color::Blue));
-/// ```
-///
-/// You can write:
-///
-/// ```rust,ignore
-/// let text = "Hello".red().on_blue();
-/// ```
-///
-/// This trait implements a provided method for every color as both foreground and background
-/// (prefixed by `on_`), and all modifiers as both an additive and subtractive modifier (prefixed
-/// by `not_`). The `reset()` method is also provided to reset the style.
-///
-/// # Examples
-/// ```ignore
-/// use ratatui_core::{
-///     style::{Color, Modifier, Style, Stylize},
-///     text::Line,
-///     widgets::{Block, Paragraph},
-/// };
-///
-/// let span = "hello".red().on_blue().bold();
-/// let line = Line::from(vec![
-///     "hello".red().on_blue().bold(),
-///     "world".green().on_yellow().not_bold(),
-/// ]);
-/// let paragraph = Paragraph::new(line).italic().underlined();
-/// let block = Block::bordered().title("Title").on_white().bold();
-/// ```
-pub trait Stylize<'a, T>: Sized {
-    #[must_use = "`bg` returns the modified style without modifying the original"]
-    fn bg<C: Into<Color>>(self, color: C) -> T;
-    #[must_use = "`fg` returns the modified style without modifying the original"]
-    fn fg<C: Into<Color>>(self, color: C) -> T;
-    #[must_use = "`reset` returns the modified style without modifying the original"]
-    fn reset(self) -> T;
-    #[must_use = "`add_modifier` returns the modified style without modifying the original"]
-    fn add_modifier(self, modifier: Modifier) -> T;
-    #[must_use = "`remove_modifier` returns the modified style without modifying the original"]
-    fn remove_modifier(self, modifier: Modifier) -> T;
-
-    color!(Color::Black, black(), on_black() -> T);
-    color!(Color::Red, red(), on_red() -> T);
-    color!(Color::Green, green(), on_green() -> T);
-    color!(Color::Yellow, yellow(), on_yellow() -> T);
-    color!(Color::Blue, blue(), on_blue() -> T);
-    color!(Color::Magenta, magenta(), on_magenta() -> T);
-    color!(Color::Cyan, cyan(), on_cyan() -> T);
-    color!(Color::Gray, gray(), on_gray() -> T);
-    color!(Color::DarkGray, dark_gray(), on_dark_gray() -> T);
-    color!(Color::LightRed, light_red(), on_light_red() -> T);
-    color!(Color::LightGreen, light_green(), on_light_green() -> T);
-    color!(Color::LightYellow, light_yellow(), on_light_yellow() -> T);
-    color!(Color::LightBlue, light_blue(), on_light_blue() -> T);
-    color!(Color::LightMagenta, light_magenta(), on_light_magenta() -> T);
-    color!(Color::LightCyan, light_cyan(), on_light_cyan() -> T);
-    color!(Color::White, white(), on_white() -> T);
-
-    modifier!(Modifier::BOLD, bold(), not_bold() -> T);
-    modifier!(Modifier::DIM, dim(), not_dim() -> T);
-    modifier!(Modifier::ITALIC, italic(), not_italic() -> T);
-    modifier!(Modifier::UNDERLINED, underlined(), not_underlined() -> T);
-    modifier!(Modifier::SLOW_BLINK, slow_blink(), not_slow_blink() -> T);
-    modifier!(Modifier::RAPID_BLINK, rapid_blink(), not_rapid_blink() -> T);
-    modifier!(Modifier::REVERSED, reversed(), not_reversed() -> T);
-    modifier!(Modifier::HIDDEN, hidden(), not_hidden() -> T);
-    modifier!(Modifier::CROSSED_OUT, crossed_out(), not_crossed_out() -> T);
-}
-
-impl<T, U> Stylize<'_, T> for U
-where
-    U: Styled<Item = T>,
-{
-    fn bg<C: Into<Color>>(self, color: C) -> T {
-        let style = self.style().bg(color.into());
-        self.set_style(style)
+/**
+ * Default implementation of Stylize for any Styled type.
+ */
+class StylizeImpl<T>(private val styled: Styled<T>) : Stylize<T> {
+    override fun bg(color: Color): T {
+        val style = styled.getStyle().bg(color)
+        return styled.setStyle(style)
     }
 
-    fn fg<C: Into<Color>>(self, color: C) -> T {
-        let style = self.style().fg(color.into());
-        self.set_style(style)
+    override fun fg(color: Color): T {
+        val style = styled.getStyle().fg(color)
+        return styled.setStyle(style)
     }
 
-    fn add_modifier(self, modifier: Modifier) -> T {
-        let style = self.style().add_modifier(modifier);
-        self.set_style(style)
+    override fun addModifier(modifier: Modifier): T {
+        val style = styled.getStyle().addModifier(modifier)
+        return styled.setStyle(style)
     }
 
-    fn remove_modifier(self, modifier: Modifier) -> T {
-        let style = self.style().remove_modifier(modifier);
-        self.set_style(style)
+    override fun removeModifier(modifier: Modifier): T {
+        val style = styled.getStyle().removeModifier(modifier)
+        return styled.setStyle(style)
     }
 
-    fn reset(self) -> T {
-        self.set_style(Style::reset())
+    override fun reset(): T {
+        return styled.setStyle(Style.reset())
     }
 }
 
-impl<'a> Styled for &'a str {
-    type Item = Span<'a>;
+// Extension functions for String to enable styling
+fun String.toStyled(): StringStyled = StringStyled(this)
 
-    fn style(&self) -> Style {
-        Style::default()
-    }
+/**
+ * Wrapper class to make String implement Styled.
+ */
+class StringStyled(private val content: String) : Styled<Span> {
+    override fun getStyle(): Style = Style.default()
 
-    fn set_style<S: Into<Style>>(self, style: S) -> Self::Item {
-        Span::styled(self, style)
-    }
+    override fun setStyle(style: Style): Span = Span.styled(content, style)
 }
 
-impl<'a> Styled for Cow<'a, str> {
-    type Item = Span<'a>;
+// String extension functions for styling
+fun String.fg(color: Color): Span = Span.styled(this, Style.default().fg(color))
+fun String.bg(color: Color): Span = Span.styled(this, Style.default().bg(color))
+fun String.addModifier(modifier: Modifier): Span = Span.styled(this, Style.default().addModifier(modifier))
+fun String.removeModifier(modifier: Modifier): Span = Span.styled(this, Style.default().removeModifier(modifier))
+fun String.styleReset(): Span = Span.styled(this, Style.reset())
 
-    fn style(&self) -> Style {
-        Style::default()
-    }
+// Foreground color shortcuts for String
+fun String.black(): Span = fg(Color.Black)
+fun String.red(): Span = fg(Color.Red)
+fun String.green(): Span = fg(Color.Green)
+fun String.yellow(): Span = fg(Color.Yellow)
+fun String.blue(): Span = fg(Color.Blue)
+fun String.magenta(): Span = fg(Color.Magenta)
+fun String.cyan(): Span = fg(Color.Cyan)
+fun String.gray(): Span = fg(Color.Gray)
+fun String.darkGray(): Span = fg(Color.DarkGray)
+fun String.lightRed(): Span = fg(Color.LightRed)
+fun String.lightGreen(): Span = fg(Color.LightGreen)
+fun String.lightYellow(): Span = fg(Color.LightYellow)
+fun String.lightBlue(): Span = fg(Color.LightBlue)
+fun String.lightMagenta(): Span = fg(Color.LightMagenta)
+fun String.lightCyan(): Span = fg(Color.LightCyan)
+fun String.white(): Span = fg(Color.White)
 
-    fn set_style<S: Into<Style>>(self, style: S) -> Self::Item {
-        Span::styled(self, style)
-    }
-}
+// Background color shortcuts for String
+fun String.onBlack(): Span = bg(Color.Black)
+fun String.onRed(): Span = bg(Color.Red)
+fun String.onGreen(): Span = bg(Color.Green)
+fun String.onYellow(): Span = bg(Color.Yellow)
+fun String.onBlue(): Span = bg(Color.Blue)
+fun String.onMagenta(): Span = bg(Color.Magenta)
+fun String.onCyan(): Span = bg(Color.Cyan)
+fun String.onGray(): Span = bg(Color.Gray)
+fun String.onDarkGray(): Span = bg(Color.DarkGray)
+fun String.onLightRed(): Span = bg(Color.LightRed)
+fun String.onLightGreen(): Span = bg(Color.LightGreen)
+fun String.onLightYellow(): Span = bg(Color.LightYellow)
+fun String.onLightBlue(): Span = bg(Color.LightBlue)
+fun String.onLightMagenta(): Span = bg(Color.LightMagenta)
+fun String.onLightCyan(): Span = bg(Color.LightCyan)
+fun String.onWhite(): Span = bg(Color.White)
 
-impl Styled for String {
-    type Item = Span<'static>;
+// Modifier shortcuts for String
+fun String.bold(): Span = addModifier(Modifier.BOLD)
+fun String.dim(): Span = addModifier(Modifier.DIM)
+fun String.italic(): Span = addModifier(Modifier.ITALIC)
+fun String.underlined(): Span = addModifier(Modifier.UNDERLINED)
+fun String.slowBlink(): Span = addModifier(Modifier.SLOW_BLINK)
+fun String.rapidBlink(): Span = addModifier(Modifier.RAPID_BLINK)
+fun String.reversed(): Span = addModifier(Modifier.REVERSED)
+fun String.hidden(): Span = addModifier(Modifier.HIDDEN)
+fun String.crossedOut(): Span = addModifier(Modifier.CROSSED_OUT)
 
-    fn style(&self) -> Style {
-        Style::default()
-    }
+fun String.notBold(): Span = removeModifier(Modifier.BOLD)
+fun String.notDim(): Span = removeModifier(Modifier.DIM)
+fun String.notItalic(): Span = removeModifier(Modifier.ITALIC)
+fun String.notUnderlined(): Span = removeModifier(Modifier.UNDERLINED)
+fun String.notSlowBlink(): Span = removeModifier(Modifier.SLOW_BLINK)
+fun String.notRapidBlink(): Span = removeModifier(Modifier.RAPID_BLINK)
+fun String.notReversed(): Span = removeModifier(Modifier.REVERSED)
+fun String.notHidden(): Span = removeModifier(Modifier.HIDDEN)
+fun String.notCrossedOut(): Span = removeModifier(Modifier.CROSSED_OUT)
 
-    fn set_style<S: Into<Style>>(self, style: S) -> Self::Item {
-        Span::styled(self, style)
-    }
-}
+// Extension functions for Span to chain styles
+fun Span.fg(color: Color): Span = patchStyle(Style.default().fg(color))
+fun Span.bg(color: Color): Span = patchStyle(Style.default().bg(color))
+fun Span.addModifier(modifier: Modifier): Span = patchStyle(Style.default().addModifier(modifier))
+fun Span.removeModifier(modifier: Modifier): Span = patchStyle(Style.default().removeModifier(modifier))
 
-macro_rules! styled {
-    ($impl_type:ty) => {
-        impl Styled for $impl_type {
-            type Item = Span<'static>;
+// Foreground color shortcuts for Span
+fun Span.black(): Span = fg(Color.Black)
+fun Span.red(): Span = fg(Color.Red)
+fun Span.green(): Span = fg(Color.Green)
+fun Span.yellow(): Span = fg(Color.Yellow)
+fun Span.blue(): Span = fg(Color.Blue)
+fun Span.magenta(): Span = fg(Color.Magenta)
+fun Span.cyan(): Span = fg(Color.Cyan)
+fun Span.gray(): Span = fg(Color.Gray)
+fun Span.darkGray(): Span = fg(Color.DarkGray)
+fun Span.lightRed(): Span = fg(Color.LightRed)
+fun Span.lightGreen(): Span = fg(Color.LightGreen)
+fun Span.lightYellow(): Span = fg(Color.LightYellow)
+fun Span.lightBlue(): Span = fg(Color.LightBlue)
+fun Span.lightMagenta(): Span = fg(Color.LightMagenta)
+fun Span.lightCyan(): Span = fg(Color.LightCyan)
+fun Span.white(): Span = fg(Color.White)
 
-            fn style(&self) -> Style {
-                Style::default()
-            }
+// Background color shortcuts for Span
+fun Span.onBlack(): Span = bg(Color.Black)
+fun Span.onRed(): Span = bg(Color.Red)
+fun Span.onGreen(): Span = bg(Color.Green)
+fun Span.onYellow(): Span = bg(Color.Yellow)
+fun Span.onBlue(): Span = bg(Color.Blue)
+fun Span.onMagenta(): Span = bg(Color.Magenta)
+fun Span.onCyan(): Span = bg(Color.Cyan)
+fun Span.onGray(): Span = bg(Color.Gray)
+fun Span.onDarkGray(): Span = bg(Color.DarkGray)
+fun Span.onLightRed(): Span = bg(Color.LightRed)
+fun Span.onLightGreen(): Span = bg(Color.LightGreen)
+fun Span.onLightYellow(): Span = bg(Color.LightYellow)
+fun Span.onLightBlue(): Span = bg(Color.LightBlue)
+fun Span.onLightMagenta(): Span = bg(Color.LightMagenta)
+fun Span.onLightCyan(): Span = bg(Color.LightCyan)
+fun Span.onWhite(): Span = bg(Color.White)
 
-            fn set_style<S: Into<Style>>(self, style: S) -> Self::Item {
-                Span::styled(self.to_string(), style)
-            }
-        }
-    };
-}
+// Modifier shortcuts for Span
+fun Span.bold(): Span = addModifier(Modifier.BOLD)
+fun Span.dim(): Span = addModifier(Modifier.DIM)
+fun Span.italic(): Span = addModifier(Modifier.ITALIC)
+fun Span.underlined(): Span = addModifier(Modifier.UNDERLINED)
+fun Span.slowBlink(): Span = addModifier(Modifier.SLOW_BLINK)
+fun Span.rapidBlink(): Span = addModifier(Modifier.RAPID_BLINK)
+fun Span.reversed(): Span = addModifier(Modifier.REVERSED)
+fun Span.hidden(): Span = addModifier(Modifier.HIDDEN)
+fun Span.crossedOut(): Span = addModifier(Modifier.CROSSED_OUT)
 
-styled!(bool);
-styled!(char);
-styled!(f32);
-styled!(f64);
-styled!(i8);
-styled!(i16);
-styled!(i32);
-styled!(i64);
-styled!(i128);
-styled!(isize);
-styled!(u8);
-styled!(u16);
-styled!(u32);
-styled!(u64);
-styled!(u128);
-styled!(usize);
+fun Span.notBold(): Span = removeModifier(Modifier.BOLD)
+fun Span.notDim(): Span = removeModifier(Modifier.DIM)
+fun Span.notItalic(): Span = removeModifier(Modifier.ITALIC)
+fun Span.notUnderlined(): Span = removeModifier(Modifier.UNDERLINED)
+fun Span.notSlowBlink(): Span = removeModifier(Modifier.SLOW_BLINK)
+fun Span.notRapidBlink(): Span = removeModifier(Modifier.RAPID_BLINK)
+fun Span.notReversed(): Span = removeModifier(Modifier.REVERSED)
+fun Span.notHidden(): Span = removeModifier(Modifier.HIDDEN)
+fun Span.notCrossedOut(): Span = removeModifier(Modifier.CROSSED_OUT)
 
-#[cfg(test)]
-mod tests {
-    use alloc::format;
+// Extension functions for primitive types to create styled spans
+fun Boolean.red(): Span = this.toString().red()
+fun Boolean.green(): Span = this.toString().green()
+fun Boolean.blue(): Span = this.toString().blue()
+fun Boolean.yellow(): Span = this.toString().yellow()
+fun Boolean.cyan(): Span = this.toString().cyan()
+fun Boolean.magenta(): Span = this.toString().magenta()
+fun Boolean.white(): Span = this.toString().white()
+fun Boolean.black(): Span = this.toString().black()
+fun Boolean.gray(): Span = this.toString().gray()
 
-    use itertools::Itertools;
-    use rstest::rstest;
+fun Char.red(): Span = this.toString().red()
+fun Char.green(): Span = this.toString().green()
+fun Char.blue(): Span = this.toString().blue()
+fun Char.yellow(): Span = this.toString().yellow()
+fun Char.cyan(): Span = this.toString().cyan()
+fun Char.magenta(): Span = this.toString().magenta()
+fun Char.white(): Span = this.toString().white()
+fun Char.black(): Span = this.toString().black()
+fun Char.gray(): Span = this.toString().gray()
 
-    use super::*;
+fun Int.red(): Span = this.toString().red()
+fun Int.green(): Span = this.toString().green()
+fun Int.blue(): Span = this.toString().blue()
+fun Int.yellow(): Span = this.toString().yellow()
+fun Int.cyan(): Span = this.toString().cyan()
+fun Int.magenta(): Span = this.toString().magenta()
+fun Int.white(): Span = this.toString().white()
+fun Int.black(): Span = this.toString().black()
+fun Int.gray(): Span = this.toString().gray()
 
-    #[test]
-    fn str_styled() {
-        assert_eq!("hello".style(), Style::default());
-        assert_eq!(
-            "hello".set_style(Style::new().cyan()),
-            Span::styled("hello", Style::new().cyan())
-        );
-        assert_eq!("hello".black(), Span::from("hello").black());
-        assert_eq!("hello".red(), Span::from("hello").red());
-        assert_eq!("hello".green(), Span::from("hello").green());
-        assert_eq!("hello".yellow(), Span::from("hello").yellow());
-        assert_eq!("hello".blue(), Span::from("hello").blue());
-        assert_eq!("hello".magenta(), Span::from("hello").magenta());
-        assert_eq!("hello".cyan(), Span::from("hello").cyan());
-        assert_eq!("hello".gray(), Span::from("hello").gray());
-        assert_eq!("hello".dark_gray(), Span::from("hello").dark_gray());
-        assert_eq!("hello".light_red(), Span::from("hello").light_red());
-        assert_eq!("hello".light_green(), Span::from("hello").light_green());
-        assert_eq!("hello".light_yellow(), Span::from("hello").light_yellow());
-        assert_eq!("hello".light_blue(), Span::from("hello").light_blue());
-        assert_eq!("hello".light_magenta(), Span::from("hello").light_magenta());
-        assert_eq!("hello".light_cyan(), Span::from("hello").light_cyan());
-        assert_eq!("hello".white(), Span::from("hello").white());
+fun Long.red(): Span = this.toString().red()
+fun Long.green(): Span = this.toString().green()
+fun Long.blue(): Span = this.toString().blue()
+fun Long.yellow(): Span = this.toString().yellow()
+fun Long.cyan(): Span = this.toString().cyan()
+fun Long.magenta(): Span = this.toString().magenta()
+fun Long.white(): Span = this.toString().white()
+fun Long.black(): Span = this.toString().black()
+fun Long.gray(): Span = this.toString().gray()
 
-        assert_eq!("hello".on_black(), Span::from("hello").on_black());
-        assert_eq!("hello".on_red(), Span::from("hello").on_red());
-        assert_eq!("hello".on_green(), Span::from("hello").on_green());
-        assert_eq!("hello".on_yellow(), Span::from("hello").on_yellow());
-        assert_eq!("hello".on_blue(), Span::from("hello").on_blue());
-        assert_eq!("hello".on_magenta(), Span::from("hello").on_magenta());
-        assert_eq!("hello".on_cyan(), Span::from("hello").on_cyan());
-        assert_eq!("hello".on_gray(), Span::from("hello").on_gray());
-        assert_eq!("hello".on_dark_gray(), Span::from("hello").on_dark_gray());
-        assert_eq!("hello".on_light_red(), Span::from("hello").on_light_red());
-        assert_eq!(
-            "hello".on_light_green(),
-            Span::from("hello").on_light_green()
-        );
-        assert_eq!(
-            "hello".on_light_yellow(),
-            Span::from("hello").on_light_yellow()
-        );
-        assert_eq!("hello".on_light_blue(), Span::from("hello").on_light_blue());
-        assert_eq!(
-            "hello".on_light_magenta(),
-            Span::from("hello").on_light_magenta()
-        );
-        assert_eq!("hello".on_light_cyan(), Span::from("hello").on_light_cyan());
-        assert_eq!("hello".on_white(), Span::from("hello").on_white());
+fun Float.red(): Span = this.toString().red()
+fun Float.green(): Span = this.toString().green()
+fun Float.blue(): Span = this.toString().blue()
+fun Float.yellow(): Span = this.toString().yellow()
+fun Float.cyan(): Span = this.toString().cyan()
+fun Float.magenta(): Span = this.toString().magenta()
+fun Float.white(): Span = this.toString().white()
+fun Float.black(): Span = this.toString().black()
+fun Float.gray(): Span = this.toString().gray()
 
-        assert_eq!("hello".bold(), Span::from("hello").bold());
-        assert_eq!("hello".dim(), Span::from("hello").dim());
-        assert_eq!("hello".italic(), Span::from("hello").italic());
-        assert_eq!("hello".underlined(), Span::from("hello").underlined());
-        assert_eq!("hello".slow_blink(), Span::from("hello").slow_blink());
-        assert_eq!("hello".rapid_blink(), Span::from("hello").rapid_blink());
-        assert_eq!("hello".reversed(), Span::from("hello").reversed());
-        assert_eq!("hello".hidden(), Span::from("hello").hidden());
-        assert_eq!("hello".crossed_out(), Span::from("hello").crossed_out());
+fun Double.red(): Span = this.toString().red()
+fun Double.green(): Span = this.toString().green()
+fun Double.blue(): Span = this.toString().blue()
+fun Double.yellow(): Span = this.toString().yellow()
+fun Double.cyan(): Span = this.toString().cyan()
+fun Double.magenta(): Span = this.toString().magenta()
+fun Double.white(): Span = this.toString().white()
+fun Double.black(): Span = this.toString().black()
+fun Double.gray(): Span = this.toString().gray()
 
-        assert_eq!("hello".not_bold(), Span::from("hello").not_bold());
-        assert_eq!("hello".not_dim(), Span::from("hello").not_dim());
-        assert_eq!("hello".not_italic(), Span::from("hello").not_italic());
-        assert_eq!(
-            "hello".not_underlined(),
-            Span::from("hello").not_underlined()
-        );
-        assert_eq!(
-            "hello".not_slow_blink(),
-            Span::from("hello").not_slow_blink()
-        );
-        assert_eq!(
-            "hello".not_rapid_blink(),
-            Span::from("hello").not_rapid_blink()
-        );
-        assert_eq!("hello".not_reversed(), Span::from("hello").not_reversed());
-        assert_eq!("hello".not_hidden(), Span::from("hello").not_hidden());
-        assert_eq!(
-            "hello".not_crossed_out(),
-            Span::from("hello").not_crossed_out()
-        );
-
-        assert_eq!("hello".reset(), Span::from("hello").reset());
-    }
-
-    #[test]
-    fn string_styled() {
-        let s = String::from("hello");
-        assert_eq!(s.style(), Style::default());
-        assert_eq!(
-            s.clone().set_style(Style::new().cyan()),
-            Span::styled("hello", Style::new().cyan())
-        );
-        assert_eq!(s.clone().black(), Span::from("hello").black());
-        assert_eq!(s.clone().on_black(), Span::from("hello").on_black());
-        assert_eq!(s.clone().bold(), Span::from("hello").bold());
-        assert_eq!(s.clone().not_bold(), Span::from("hello").not_bold());
-        assert_eq!(s.clone().reset(), Span::from("hello").reset());
-    }
-
-    #[test]
-    fn cow_string_styled() {
-        let s = Cow::Borrowed("a");
-        assert_eq!(s.red(), "a".red());
-    }
-
-    #[test]
-    fn temporary_string_styled() {
-        // to_string() is used to create a temporary String, which is then styled. Without the
-        // `Styled` trait impl for `String`, this would fail to compile with the error: "temporary
-        // value dropped while borrowed"
-        let s = "hello".to_string().red();
-        assert_eq!(s, Span::from("hello").red());
-
-        // format!() is used to create a temporary String inside a closure, which suffers the same
-        // issue as above without the `Styled` trait impl for `String`
-        let items = [String::from("a"), String::from("b")];
-        let sss = items.iter().map(|s| format!("{s}{s}").red()).collect_vec();
-        assert_eq!(sss, [Span::from("aa").red(), Span::from("bb").red()]);
-    }
-
-    #[test]
-    fn other_primitives_styled() {
-        assert_eq!(true.red(), "true".red());
-        assert_eq!('a'.red(), "a".red());
-        assert_eq!(0.1f32.red(), "0.1".red());
-        assert_eq!(0.1f64.red(), "0.1".red());
-        assert_eq!(0i8.red(), "0".red());
-        assert_eq!(0i16.red(), "0".red());
-        assert_eq!(0i32.red(), "0".red());
-        assert_eq!(0i64.red(), "0".red());
-        assert_eq!(0i128.red(), "0".red());
-        assert_eq!(0isize.red(), "0".red());
-        assert_eq!(0u8.red(), "0".red());
-        assert_eq!(0u16.red(), "0".red());
-        assert_eq!(0u32.red(), "0".red());
-        assert_eq!(0u64.red(), "0".red());
-        assert_eq!(0u64.red(), "0".red());
-        assert_eq!(0usize.red(), "0".red());
-    }
-
-    #[test]
-    fn reset() {
-        assert_eq!(
-            "hello".on_cyan().light_red().bold().underlined().reset(),
-            Span::styled("hello", Style::reset())
-        );
-    }
-
-    #[test]
-    fn fg() {
-        let cyan_fg = Style::default().fg(Color::Cyan);
-
-        assert_eq!("hello".cyan(), Span::styled("hello", cyan_fg));
-    }
-
-    #[test]
-    fn bg() {
-        let cyan_bg = Style::default().bg(Color::Cyan);
-
-        assert_eq!("hello".on_cyan(), Span::styled("hello", cyan_bg));
-    }
-
-    #[test]
-    fn color_modifier() {
-        let cyan_bold = Style::default()
-            .fg(Color::Cyan)
-            .add_modifier(Modifier::BOLD);
-
-        assert_eq!("hello".cyan().bold(), Span::styled("hello", cyan_bold));
-    }
-
-    #[test]
-    fn fg_bg() {
-        let cyan_fg_bg = Style::default().bg(Color::Cyan).fg(Color::Cyan);
-
-        assert_eq!("hello".cyan().on_cyan(), Span::styled("hello", cyan_fg_bg));
-    }
-
-    #[test]
-    fn repeated_attributes() {
-        let bg = Style::default().bg(Color::Cyan);
-        let fg = Style::default().fg(Color::Cyan);
-
-        // Behavior: the last one set is the definitive one
-        assert_eq!("hello".on_red().on_cyan(), Span::styled("hello", bg));
-        assert_eq!("hello".red().cyan(), Span::styled("hello", fg));
-    }
-
-    #[test]
-    fn all_chained() {
-        let all_modifier_black = Style::default()
-            .bg(Color::Black)
-            .fg(Color::Black)
-            .add_modifier(
-                Modifier::UNDERLINED
-                    | Modifier::BOLD
-                    | Modifier::DIM
-                    | Modifier::SLOW_BLINK
-                    | Modifier::REVERSED
-                    | Modifier::CROSSED_OUT,
-            );
-        assert_eq!(
-            "hello"
-                .on_black()
-                .black()
-                .bold()
-                .underlined()
-                .dim()
-                .slow_blink()
-                .crossed_out()
-                .reversed(),
-            Span::styled("hello", all_modifier_black)
-        );
-    }
-
-    #[rstest]
-    #[case(Color::Black, ".black()")]
-    #[case(Color::Red, ".red()")]
-    #[case(Color::Green, ".green()")]
-    #[case(Color::Yellow, ".yellow()")]
-    #[case(Color::Blue, ".blue()")]
-    #[case(Color::Magenta, ".magenta()")]
-    #[case(Color::Cyan, ".cyan()")]
-    #[case(Color::Gray, ".gray()")]
-    #[case(Color::DarkGray, ".dark_gray()")]
-    #[case(Color::LightRed, ".light_red()")]
-    #[case(Color::LightGreen, ".light_green()")]
-    #[case(Color::LightYellow, ".light_yellow()")]
-    #[case(Color::LightBlue, ".light_blue()")]
-    #[case(Color::LightMagenta, ".light_magenta()")]
-    #[case(Color::LightCyan, ".light_cyan()")]
-    #[case(Color::White, ".white()")]
-    #[case(Color::Indexed(10), ".fg(Color::Indexed(10))")]
-    #[case(Color::Rgb(255, 0, 0), ".fg(Color::Rgb(255, 0, 0))")]
-    fn stylize_debug_foreground(#[case] color: Color, #[case] expected: &str) {
-        let debug = color.stylize_debug(ColorDebugKind::Foreground);
-        assert_eq!(format!("{debug:?}"), expected);
-    }
-
-    #[rstest]
-    #[case(Color::Black, ".on_black()")]
-    #[case(Color::Red, ".on_red()")]
-    #[case(Color::Green, ".on_green()")]
-    #[case(Color::Yellow, ".on_yellow()")]
-    #[case(Color::Blue, ".on_blue()")]
-    #[case(Color::Magenta, ".on_magenta()")]
-    #[case(Color::Cyan, ".on_cyan()")]
-    #[case(Color::Gray, ".on_gray()")]
-    #[case(Color::DarkGray, ".on_dark_gray()")]
-    #[case(Color::LightRed, ".on_light_red()")]
-    #[case(Color::LightGreen, ".on_light_green()")]
-    #[case(Color::LightYellow, ".on_light_yellow()")]
-    #[case(Color::LightBlue, ".on_light_blue()")]
-    #[case(Color::LightMagenta, ".on_light_magenta()")]
-    #[case(Color::LightCyan, ".on_light_cyan()")]
-    #[case(Color::White, ".on_white()")]
-    #[case(Color::Indexed(10), ".bg(Color::Indexed(10))")]
-    #[case(Color::Rgb(255, 0, 0), ".bg(Color::Rgb(255, 0, 0))")]
-    fn stylize_debug_background(#[case] color: Color, #[case] expected: &str) {
-        let debug = color.stylize_debug(ColorDebugKind::Background);
-        assert_eq!(format!("{debug:?}"), expected);
-    }
-
-    #[cfg(feature = "underline-color")]
-    #[rstest]
-    #[case(Color::Black, ".underline_color(Color::Black)")]
-    #[case(Color::Red, ".underline_color(Color::Red)")]
-    #[case(Color::Green, ".underline_color(Color::Green)")]
-    #[case(Color::Yellow, ".underline_color(Color::Yellow)")]
-    #[case(Color::Blue, ".underline_color(Color::Blue)")]
-    #[case(Color::Magenta, ".underline_color(Color::Magenta)")]
-    #[case(Color::Cyan, ".underline_color(Color::Cyan)")]
-    #[case(Color::Gray, ".underline_color(Color::Gray)")]
-    #[case(Color::DarkGray, ".underline_color(Color::DarkGray)")]
-    #[case(Color::LightRed, ".underline_color(Color::LightRed)")]
-    #[case(Color::LightGreen, ".underline_color(Color::LightGreen)")]
-    #[case(Color::LightYellow, ".underline_color(Color::LightYellow)")]
-    #[case(Color::LightBlue, ".underline_color(Color::LightBlue)")]
-    #[case(Color::LightMagenta, ".underline_color(Color::LightMagenta)")]
-    #[case(Color::LightCyan, ".underline_color(Color::LightCyan)")]
-    #[case(Color::White, ".underline_color(Color::White)")]
-    #[case(Color::Indexed(10), ".underline_color(Color::Indexed(10))")]
-    #[case(Color::Rgb(255, 0, 0), ".underline_color(Color::Rgb(255, 0, 0))")]
-    fn stylize_debug_underline(#[case] color: Color, #[case] expected: &str) {
-        let debug = color.stylize_debug(ColorDebugKind::Underline);
-        assert_eq!(format!("{debug:?}"), expected);
-    }
-}
+// Color helper extension for stylize debug
+fun Color.stylizeDebug(kind: ColorDebugKind): ColorDebug = ColorDebug(kind, this)
