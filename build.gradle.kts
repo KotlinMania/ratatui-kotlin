@@ -2,19 +2,31 @@ plugins {
     kotlin("multiplatform") version "2.2.21"
 }
 
+group = "ai.solace.ratatui"
+version = "0.1.0-SNAPSHOT"
+
 kotlin {
     applyDefaultHierarchyTemplate()
 
+    // Native targets
     macosArm64()
     macosX64()
     linuxX64()
     mingwX64()
 
     sourceSets {
-        val nativeMain by getting {
+        val commonMain by getting {
+            // Uses standard src/commonMain/kotlin layout
+        }
+
+        val commonTest by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
+                implementation(kotlin("test"))
             }
+        }
+
+        val nativeMain by getting {
+            // No external dependencies - ratatui-kotlin is a pure Kotlin library
         }
 
         val nativeTest by getting {
