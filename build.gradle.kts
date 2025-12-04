@@ -1,5 +1,5 @@
 plugins {
-    kotlin("multiplatform") version "2.2.21"
+    kotlin("multiplatform") version "2.2.10"
 }
 
 group = "ai.solace.ratatui"
