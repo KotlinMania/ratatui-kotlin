@@ -59,6 +59,18 @@ data class Cell(
         return this
     }
 
+    /** Sets the foreground color of the cell */
+    fun setFg(color: ratatui.style.Color): Cell {
+        this.fg = color
+        return this
+    }
+
+    /** Sets the background color of the cell */
+    fun setBg(color: ratatui.style.Color): Cell {
+        this.bg = color
+        return this
+    }
+
     /**
      * Merges the symbol of the cell with the one already on the cell, using the provided
      * [MergeStrategy].
@@ -245,5 +257,34 @@ class Buffer(
         for (cell in content) {
             cell.reset()
         }
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || this::class != other::class) return false
+        other as Buffer
+        if (area != other.area) return false
+        if (content != other.content) return false
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = area.hashCode()
+        result = 31 * result + content.hashCode()
+        return result
+    }
+
+    override fun toString(): String {
+        val sb = StringBuilder()
+        sb.append("Buffer { area: $area, content: [\n")
+        for (y in area.top() until area.bottom()) {
+            sb.append("  \"")
+            for (x in area.left() until area.right()) {
+                sb.append(this[x, y].symbol)
+            }
+            sb.append("\"\n")
+        }
+        sb.append("]}")
+        return sb.toString()
     }
 }

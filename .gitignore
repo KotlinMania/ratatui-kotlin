@@ -4,3 +4,10 @@
 .env
 /build/
 /.kotlin/metadata/
+/.gradle/9.2.1/checksums/
+/.gradle/9.2.1/executionHistory/
+/.gradle/file-system.probe
+*.lock
+*.bin
+
+
