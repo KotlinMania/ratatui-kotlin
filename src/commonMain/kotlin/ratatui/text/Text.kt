@@ -427,18 +427,18 @@ data class Text(
     override fun render(area: Rect, buf: Buffer) {
         // Simple implementation: render each line at consecutive y positions
         val lineIterator = lines.iterator()
-        var y = area.y.toInt()
-        while (lineIterator.hasNext() && y < area.bottom().toInt()) {
+        var y = area.y
+        while (lineIterator.hasNext() && y < area.bottom()) {
             val line = lineIterator.next()
             // Apply text's style and alignment to the line
             val effectiveAlignment = line.alignment ?: alignment ?: Alignment.Left
             val lineWidth = line.width()
             val x = when (effectiveAlignment) {
-                Alignment.Left -> area.x.toInt()
-                Alignment.Center -> area.x.toInt() + ((area.width.toInt() - lineWidth) / 2).coerceAtLeast(0)
-                Alignment.Right -> (area.right().toInt() - lineWidth).coerceAtLeast(area.x.toInt())
+                Alignment.Left -> area.x
+                Alignment.Center -> area.x + ((area.width - lineWidth) / 2).coerceAtLeast(0)
+                Alignment.Right -> (area.right() - lineWidth).coerceAtLeast(area.x)
             }
-            buf.setLine(x.toUShort(), y.toUShort(), line.style(style.patch(line.style)), area.width)
+            buf.setLine(x, y, line.style(style.patch(line.style)), area.width)
             y++
         }
     }

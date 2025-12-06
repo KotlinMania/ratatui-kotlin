@@ -37,8 +37,8 @@
  * ## Examples
  *
  * ```kotlin
- * val rect = Rect.new(1u, 2u, 3u, 4u)
- * assertEquals(rect, Rect(x = 1u, y = 2u, width = 3u, height = 4u))
+ * val rect = Rect.new(1, 2, 3, 4)
+ * assertEquals(rect, Rect(x = 1, y = 2, width = 3, height = 4))
  * ```
  *
  * For comprehensive layout documentation and examples, see the layout module.
@@ -54,33 +54,33 @@ package ratatui.layout
  * @property height The height of the Rect.
  */
 data class Rect(
-    val x: UShort,
-    val y: UShort,
-    val width: UShort,
-    val height: UShort
+    val x: Int,
+    val y: Int,
+    val width: Int,
+    val height: Int
 ) {
 
     companion object {
         /** A zero sized Rect at position 0,0 */
-        val ZERO: Rect = Rect(0u, 0u, 0u, 0u)
+        val ZERO: Rect = Rect(0, 0, 0, 0)
 
         /** The minimum possible Rect */
         val MIN: Rect = ZERO
 
         /** The maximum possible Rect */
-        val MAX: Rect = new(0u, 0u, UShort.MAX_VALUE, UShort.MAX_VALUE)
+        val MAX: Rect = new(0, 0, Int.MAX_VALUE, Int.MAX_VALUE)
 
         /**
-         * Creates a new Rect, with width and height limited to keep both bounds within UShort.
+         * Creates a new Rect, with width and height limited to keep both bounds within Int.
          *
          * If the width or height would cause the right or bottom coordinate to be larger than the
-         * maximum value of UShort, the width or height will be clamped to keep the right or bottom
-         * coordinate within UShort.
+         * maximum value of Int, the width or height will be clamped to keep the right or bottom
+         * coordinate within Int.
          */
-        fun new(x: UShort, y: UShort, width: UShort, height: UShort): Rect {
-            val clampedWidth = ((x + width).coerceAtMost(UShort.MAX_VALUE.toUInt()) - x).toUShort()
-            val clampedHeight = ((y + height).coerceAtMost(UShort.MAX_VALUE.toUInt()) - y).toUShort()
-            return Rect(x, y, clampedWidth, clampedHeight)
+        fun new(x: Int, y: Int, width: Int, height: Int): Rect {
+            val clampedWidth = (x.toLong() + width).coerceAtMost(Int.MAX_VALUE.toLong()) - x
+            val clampedHeight = (y.toLong() + height).coerceAtMost(Int.MAX_VALUE.toLong()) - y
+            return Rect(x, y, clampedWidth.toInt(), clampedHeight.toInt())
         }
 
         /** Create a Rect from a Position and Size */
@@ -93,8 +93,8 @@ data class Rect(
 
         /** Create a Rect from a Size at origin (0, 0) */
         fun from(size: Size): Rect = Rect(
-            x = 0u,
-            y = 0u,
+            x = 0,
+            y = 0,
             width = size.width,
             height = size.height
         )
@@ -104,32 +104,32 @@ data class Rect(
     }
 
     /** The area of the Rect */
-    fun area(): UInt = width.toUInt() * height.toUInt()
+    fun area(): Long = width.toLong() * height.toLong()
 
     /** Returns true if the Rect has no area */
-    fun isEmpty(): Boolean = width.toInt() == 0 || height.toInt() == 0
+    fun isEmpty(): Boolean = width == 0 || height == 0
 
     /** Returns the left coordinate of the Rect */
-    fun left(): UShort = x
+    fun left(): Int = x
 
     /**
      * Returns the right coordinate of the Rect. This is the first coordinate outside of the Rect.
      *
-     * If the right coordinate is larger than the maximum value of UShort, it will be clamped to
-     * UShort.MAX_VALUE.
+     * If the right coordinate is larger than the maximum value of Int, it will be clamped to
+     * Int.MAX_VALUE.
      */
-    fun right(): UShort = (x + width).coerceAtMost(UShort.MAX_VALUE.toUInt()).toUShort()
+    fun right(): Int = (x.toLong() + width).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
 
     /** Returns the top coordinate of the Rect */
-    fun top(): UShort = y
+    fun top(): Int = y
 
     /**
      * Returns the bottom coordinate of the Rect. This is the first coordinate outside of the Rect.
      *
-     * If the bottom coordinate is larger than the maximum value of UShort, it will be clamped to
-     * UShort.MAX_VALUE.
+     * If the bottom coordinate is larger than the maximum value of Int, it will be clamped to
+     * Int.MAX_VALUE.
      */
-    fun bottom(): UShort = (y + height).coerceAtMost(UShort.MAX_VALUE.toUInt()).toUShort()
+    fun bottom(): Int = (y.toLong() + height).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
 
     /**
      * Returns a new Rect inside the current one, with the given margin on each side.
@@ -137,17 +137,17 @@ data class Rect(
      * If the margin is larger than the Rect, the returned Rect will have no area.
      */
     fun inner(margin: Margin): Rect {
-        val doubledMarginHorizontal = (margin.horizontal.toUInt() * 2u).toUShort()
-        val doubledMarginVertical = (margin.vertical.toUInt() * 2u).toUShort()
+        val doubledMarginHorizontal = margin.horizontal * 2
+        val doubledMarginVertical = margin.vertical * 2
 
         return if (width < doubledMarginHorizontal || height < doubledMarginVertical) {
             ZERO
         } else {
             Rect(
-                x = (x + margin.horizontal).toUShort(),
-                y = (y + margin.vertical).toUShort(),
-                width = (width - doubledMarginHorizontal).toUShort(),
-                height = (height - doubledMarginVertical).toUShort()
+                x = x + margin.horizontal,
+                y = y + margin.vertical,
+                width = width - doubledMarginHorizontal,
+                height = height - doubledMarginVertical
             )
         }
     }
@@ -155,16 +155,16 @@ data class Rect(
     /**
      * Returns a new Rect outside the current one, with the given margin applied on each side.
      *
-     * If the margin causes the Rect's bounds to be outside the range of a UShort, the Rect will
-     * be truncated to keep the bounds within UShort.
+     * If the margin causes the Rect's bounds to be outside the range of an Int, the Rect will
+     * be truncated to keep the bounds within Int.
      */
     fun outer(margin: Margin): Rect {
-        val newX = (x.toInt() - margin.horizontal.toInt()).coerceAtLeast(0).toUShort()
-        val newY = (y.toInt() - margin.vertical.toInt()).coerceAtLeast(0).toUShort()
-        val newWidth = ((right().toUInt() + margin.horizontal.toUInt())
-            .coerceAtMost(UShort.MAX_VALUE.toUInt()) - newX.toUInt()).toUShort()
-        val newHeight = ((bottom().toUInt() + margin.vertical.toUInt())
-            .coerceAtMost(UShort.MAX_VALUE.toUInt()) - newY.toUInt()).toUShort()
+        val newX = (x - margin.horizontal).coerceAtLeast(0)
+        val newY = (y - margin.vertical).coerceAtLeast(0)
+        val newWidth = ((right().toLong() + margin.horizontal)
+            .coerceAtMost(Int.MAX_VALUE.toLong()) - newX).toInt()
+        val newHeight = ((bottom().toLong() + margin.vertical)
+            .coerceAtMost(Int.MAX_VALUE.toLong()) - newY).toInt()
         return Rect(newX, newY, newWidth, newHeight)
     }
 
@@ -174,21 +174,21 @@ data class Rect(
      * See [Offset] for details.
      */
     fun offset(offset: Offset): Rect {
-        val newX = (x.toInt() + offset.x).coerceIn(0, UShort.MAX_VALUE.toInt() - width.toInt())
-        val newY = (y.toInt() + offset.y).coerceIn(0, UShort.MAX_VALUE.toInt() - height.toInt())
-        return copy(x = newX.toUShort(), y = newY.toUShort())
+        val newX = (x + offset.x).coerceIn(0, Int.MAX_VALUE - width)
+        val newY = (y + offset.y).coerceIn(0, Int.MAX_VALUE - height)
+        return copy(x = newX, y = newY)
     }
 
     /**
-     * Resizes the Rect, clamping to keep the right and bottom within UShort.MAX_VALUE.
+     * Resizes the Rect, clamping to keep the right and bottom within Int.MAX_VALUE.
      *
      * The position is preserved.
      */
     fun resize(size: Size): Rect {
-        val newWidth = ((x.toUInt() + size.width.toUInt())
-            .coerceAtMost(UShort.MAX_VALUE.toUInt()) - x.toUInt()).toUShort()
-        val newHeight = ((y.toUInt() + size.height.toUInt())
-            .coerceAtMost(UShort.MAX_VALUE.toUInt()) - y.toUInt()).toUShort()
+        val newWidth = ((x.toLong() + size.width)
+            .coerceAtMost(Int.MAX_VALUE.toLong()) - x).toInt()
+        val newHeight = ((y.toLong() + size.height)
+            .coerceAtMost(Int.MAX_VALUE.toLong()) - y).toInt()
         return copy(width = newWidth, height = newHeight)
     }
 
@@ -201,8 +201,8 @@ data class Rect(
         return Rect(
             x = x1,
             y = y1,
-            width = (x2 - x1).toUShort(),
-            height = (y2 - y1).toUShort()
+            width = x2 - x1,
+            height = y2 - y1
         )
     }
 
@@ -219,8 +219,8 @@ data class Rect(
         return Rect(
             x = x1,
             y = y1,
-            width = (x2.toInt() - x1.toInt()).coerceAtLeast(0).toUShort(),
-            height = (y2.toInt() - y1.toInt()).coerceAtLeast(0).toUShort()
+            width = (x2 - x1).coerceAtLeast(0),
+            height = (y2 - y1).coerceAtLeast(0)
         )
     }
 
@@ -253,14 +253,14 @@ data class Rect(
     fun clamp(other: Rect): Rect {
         val newWidth = minOf(width, other.width)
         val newHeight = minOf(height, other.height)
-        val newX = x.toInt().coerceIn(
-            other.x.toInt(),
-            (other.right().toInt() - newWidth.toInt()).coerceAtLeast(other.x.toInt())
-        ).toUShort()
-        val newY = y.toInt().coerceIn(
-            other.y.toInt(),
-            (other.bottom().toInt() - newHeight.toInt()).coerceAtLeast(other.y.toInt())
-        ).toUShort()
+        val newX = x.coerceIn(
+            other.x,
+            (other.right() - newWidth).coerceAtLeast(other.x)
+        )
+        val newY = y.coerceIn(
+            other.y,
+            (other.bottom() - newHeight).coerceAtLeast(other.y)
+        )
         return new(newX, newY, newWidth, newHeight)
     }
 
@@ -281,9 +281,9 @@ data class Rect(
      * The width is reduced by the indent amount. If the indent is larger than the width,
      * the width becomes 0.
      */
-    fun indentX(indent: UShort): Rect {
-        val newX = (x + indent).coerceAtMost(UShort.MAX_VALUE.toUInt()).toUShort()
-        val newWidth = if (indent >= width) 0u else (width - indent).toUShort()
+    fun indentX(indent: Int): Rect {
+        val newX = (x.toLong() + indent).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        val newWidth = if (indent >= width) 0 else width - indent
         return copy(x = newX, width = newWidth)
     }
 }

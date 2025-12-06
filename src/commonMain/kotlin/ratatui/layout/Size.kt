@@ -1,7 +1,7 @@
 /**
  * A simple size struct for representing dimensions in the terminal.
  *
- * The width and height are stored as [UShort] values and represent the number of columns and rows
+ * The width and height are stored as [Int] values and represent the number of columns and rows
  * respectively. This is used throughout the layout system to represent dimensions of rectangular
  * areas and other layout elements.
  *
@@ -15,9 +15,9 @@
  *
  * ## Conversion
  *
- * - [from] with `Pair<UShort, UShort>` - Create from tuple
+ * - [from] with `Pair<Int, Int>` - Create from tuple
  * - [from] with [Rect] - Create from Rect (uses width and height)
- * - [toPair] - Convert to `Pair<UShort, UShort>` tuple
+ * - [toPair] - Convert to `Pair<Int, Int>` tuple
  *
  * ## Computation
  *
@@ -26,11 +26,11 @@
  * ## Examples
  *
  * ```kotlin
- * val size = Size.new(80u, 24u)
- * assertEquals(size.area(), 1920u)
- * val size = Size.from(Pair(80u, 24u))
- * val size = Size.from(Rect.new(0u, 0u, 80u, 24u))
- * assertEquals(size.area(), 1920u)
+ * val size = Size.new(80, 24)
+ * assertEquals(size.area(), 1920)
+ * val size = Size.from(Pair(80, 24))
+ * val size = Size.from(Rect.new(0, 0, 80, 24))
+ * assertEquals(size.area(), 1920)
  * ```
  *
  * For comprehensive layout documentation and examples, see the layout module.
@@ -44,40 +44,39 @@ package ratatui.layout
  * @property height The height in rows
  */
 data class Size(
-    val width: UShort,
-    val height: UShort
+    val width: Int,
+    val height: Int
 ) {
 
     companion object {
         /** A zero sized Size */
-        val ZERO: Size = Size(0u, 0u)
+        val ZERO: Size = Size(0, 0)
 
         /** The minimum possible Size */
         val MIN: Size = ZERO
 
         /** The maximum possible Size */
-        val MAX: Size = Size(UShort.MAX_VALUE, UShort.MAX_VALUE)
+        val MAX: Size = Size(Int.MAX_VALUE, Int.MAX_VALUE)
 
         /** Create a new Size */
-        fun new(width: UShort, height: UShort): Size = Size(width, height)
+        fun new(width: Int, height: Int): Size = Size(width, height)
 
         /** Create a Size from a pair of dimensions */
-        fun from(pair: Pair<UShort, UShort>): Size = Size(pair.first, pair.second)
+        fun from(pair: Pair<Int, Int>): Size = Size(pair.first, pair.second)
 
         /** Create a Size from a Rect (uses width and height) */
         fun from(rect: Rect): Size = rect.asSize()
     }
 
     /**
-     * Compute the total area of the size as a [UInt].
+     * Compute the total area of the size as a [Long].
      *
-     * The multiplication uses [UInt] to avoid overflow when the width and height are at their
-     * [UShort] maximum values.
+     * The multiplication uses [Long] to avoid overflow when the width and height are large.
      */
-    fun area(): UInt = width.toUInt() * height.toUInt()
+    fun area(): Long = width.toLong() * height.toLong()
 
     /** Convert to a pair of dimensions */
-    fun toPair(): Pair<UShort, UShort> = Pair(width, height)
+    fun toPair(): Pair<Int, Int> = Pair(width, height)
 
     override fun toString(): String = "${width}x${height}"
 }

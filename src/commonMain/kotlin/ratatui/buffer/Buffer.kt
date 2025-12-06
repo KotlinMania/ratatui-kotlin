@@ -3,6 +3,7 @@ package ratatui.buffer
 import ratatui.layout.Position
 import ratatui.layout.Rect
 import ratatui.style.Style
+import ratatui.symbols.merge.MergeStrategy
 import ratatui.text.Line
 import ratatui.text.Span
 
@@ -58,6 +59,23 @@ data class Cell(
         return this
     }
 
+    /**
+     * Merges the symbol of the cell with the one already on the cell, using the provided
+     * [MergeStrategy].
+     *
+     * Merges Box Drawing Unicode block characters to create a single character representing
+     * their combination, useful for border collapsing.
+     *
+     * @param newSymbol The symbol to merge with the existing one
+     * @param strategy The merge strategy to use
+     * @return This cell for chaining
+     */
+    fun mergeSymbol(newSymbol: String, strategy: MergeStrategy): Cell {
+        val mergedSymbol = strategy.merge(symbol, newSymbol)
+        symbol = mergedSymbol
+        return this
+    }
+
     /** Resets the cell to empty state */
     fun reset() {
         symbol = " "
@@ -101,11 +119,11 @@ class Buffer(
 
         /** Returns a Buffer containing the given lines */
         fun withLines(lines: List<Line>): Buffer {
-            val height = lines.size.toUShort()
-            val width = lines.maxOfOrNull { it.width() }?.toUShort() ?: 0u
-            val buffer = empty(Rect.new(0u, 0u, width, height))
+            val height = lines.size
+            val width = lines.maxOfOrNull { it.width() } ?: 0
+            val buffer = empty(Rect.new(0, 0, width, height))
             for ((y, line) in lines.withIndex()) {
-                buffer.setLine(0u, y.toUShort(), line, width)
+                buffer.setLine(0, y, line, width)
             }
             return buffer
         }
@@ -123,13 +141,13 @@ class Buffer(
     fun area(): Rect = area
 
     /** Returns the index in the content list for the given coordinates */
-    fun indexOf(x: UShort, y: UShort): Int {
+    fun indexOf(x: Int, y: Int): Int {
         require(area.contains(Position(x, y))) {
             "index outside of buffer: the area is $area but index is ($x, $y)"
         }
-        val relY = (y - area.y).toInt()
-        val relX = (x - area.x).toInt()
-        val width = area.width.toInt()
+        val relY = y - area.y
+        val relX = x - area.x
+        val width = area.width
         return relY * width + relX
     }
 
@@ -144,7 +162,7 @@ class Buffer(
     fun cellMut(position: Position): Cell? = cell(position)
 
     /** Indexing operator for (x, y) pairs */
-    operator fun get(x: UShort, y: UShort): Cell {
+    operator fun get(x: Int, y: Int): Cell {
         val index = indexOf(x, y)
         return content[index]
     }
@@ -153,15 +171,15 @@ class Buffer(
     operator fun get(position: Position): Cell = get(position.x, position.y)
 
     /** Print a string, starting at the position (x, y) */
-    fun setString(x: UShort, y: UShort, string: String, style: Style) {
+    fun setString(x: Int, y: Int, string: String, style: Style) {
         setStringn(x, y, string, Int.MAX_VALUE, style)
     }
 
     /** Print at most the first n characters of a string */
-    fun setStringn(x: UShort, y: UShort, string: String, maxWidth: Int, style: Style): Pair<UShort, UShort> {
+    fun setStringn(x: Int, y: Int, string: String, maxWidth: Int, style: Style): Pair<Int, Int> {
         var currentX = x
         val right = area.right()
-        val remainingWidth = (right - x).toInt().coerceAtMost(maxWidth)
+        val remainingWidth = (right - x).coerceAtMost(maxWidth)
 
         var used = 0
         for (char in string) {
@@ -170,15 +188,15 @@ class Buffer(
 
             val index = indexOf(currentX, y)
             content[index].setSymbol(char.toString()).setStyle(style)
-            currentX = (currentX + 1u).toUShort()
+            currentX++
             used++
         }
         return Pair(currentX, y)
     }
 
     /** Print a line, starting at the position (x, y) */
-    fun setLine(x: UShort, y: UShort, line: Line, maxWidth: UShort): Pair<UShort, UShort> {
-        var remainingWidth = maxWidth.toInt()
+    fun setLine(x: Int, y: Int, line: Line, maxWidth: Int): Pair<Int, Int> {
+        var remainingWidth = maxWidth
         var currentX = x
         for (span in line) {
             if (remainingWidth == 0) break
@@ -189,7 +207,7 @@ class Buffer(
                 remainingWidth,
                 line.style.patch(span.style)
             )
-            val w = (newX - currentX).toInt()
+            val w = newX - currentX
             currentX = newX
             remainingWidth = (remainingWidth - w).coerceAtLeast(0)
         }
@@ -197,16 +215,16 @@ class Buffer(
     }
 
     /** Print a span, starting at the position (x, y) */
-    fun setSpan(x: UShort, y: UShort, span: Span, maxWidth: UShort): Pair<UShort, UShort> {
-        return setStringn(x, y, span.content, maxWidth.toInt(), span.style)
+    fun setSpan(x: Int, y: Int, span: Span, maxWidth: Int): Pair<Int, Int> {
+        return setStringn(x, y, span.content, maxWidth, span.style)
     }
 
     /** Set the style of all cells in the given area */
     fun setStyle(area: Rect, style: Style) {
         val intersection = this.area.intersection(area)
-        for (y in intersection.top().toInt()..<intersection.bottom().toInt()) {
-            for (x in intersection.left().toInt()..<intersection.right().toInt()) {
-                this[x.toUShort(), y.toUShort()].setStyle(style)
+        for (y in intersection.top()..<intersection.bottom()) {
+            for (x in intersection.left()..<intersection.right()) {
+                this[x, y].setStyle(style)
             }
         }
     }

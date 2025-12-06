@@ -341,7 +341,7 @@ data class Line(
         if (clippedArea.isEmpty()) {
             return
         }
-        val renderArea = clippedArea.copy(height = 1u)
+        val renderArea = clippedArea.copy(height = 1)
         val lineWidth = width()
         if (lineWidth == 0) {
             return
@@ -359,7 +359,7 @@ data class Line(
                 Alignment.Right -> areaWidth - lineWidth
                 Alignment.Left, null -> 0
             }
-            val indentedArea = renderArea.indentX(indentWidth.toUShort())
+            val indentedArea = renderArea.indentX(indentWidth)
             renderSpans(spans, indentedArea, buf, 0)
         } else {
             // There is not enough space to render the whole line. As the right side is truncated by
@@ -489,20 +489,20 @@ private fun renderSpans(spans: List<Span>, area: Rect, buf: Buffer, spanSkipWidt
                 val truncated = unicodeTruncateStart(span.content, availableWidth)
                 val actualWidth = unicodeWidth(truncated)
                 val firstGraphemeOffset = availableWidth - actualWidth
-                Span.styled(truncated, span.style).render(currentArea.indentX(firstGraphemeOffset.toUShort()), buf)
+                Span.styled(truncated, span.style).render(currentArea.indentX(firstGraphemeOffset), buf)
                 actualWidth
             } else {
                 span.render(currentArea, buf)
                 spanWidth
             }
-            currentArea = currentArea.indentX(offset.coerceAtMost(UShort.MAX_VALUE.toInt()).toUShort())
+            currentArea = currentArea.indentX(offset)
         } else {
             // Span is only partially visible - truncate the start
             val truncated = unicodeTruncateStart(span.content, availableWidth)
             val actualWidth = unicodeWidth(truncated)
             val firstGraphemeOffset = availableWidth - actualWidth
-            Span.styled(truncated, span.style).render(currentArea.indentX(firstGraphemeOffset.toUShort()), buf)
-            currentArea = currentArea.indentX(actualWidth.coerceAtMost(UShort.MAX_VALUE.toInt()).toUShort())
+            Span.styled(truncated, span.style).render(currentArea.indentX(firstGraphemeOffset), buf)
+            currentArea = currentArea.indentX(actualWidth)
         }
     }
 }

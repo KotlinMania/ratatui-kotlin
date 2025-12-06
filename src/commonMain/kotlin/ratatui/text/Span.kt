@@ -215,34 +215,34 @@ data class Span(
         if (clippedArea.isEmpty()) {
             return
         }
-        var x = clippedArea.x.toUInt()
+        var x = clippedArea.x
         val y = clippedArea.y
         for ((i, grapheme) in styledGraphemes(Style.default()).withIndex()) {
-            val symbolWidth = unicodeWidth(grapheme.symbol).toUInt()
-            val nextX = (x + symbolWidth).coerceAtMost(UShort.MAX_VALUE.toUInt())
-            if (nextX > clippedArea.right().toUInt()) {
+            val symbolWidth = unicodeWidth(grapheme.symbol)
+            val nextX = (x + symbolWidth).coerceAtMost(Int.MAX_VALUE)
+            if (nextX > clippedArea.right()) {
                 break
             }
 
             if (i == 0) {
                 // the first grapheme is always set on the cell
-                buf[x.toUShort(), y]
+                buf[x, y]
                     .setSymbol(grapheme.symbol)
                     .setStyle(grapheme.style)
-            } else if (x == clippedArea.x.toUInt()) {
+            } else if (x == clippedArea.x) {
                 // there is one or more zero-width graphemes in the first cell, so the first cell
                 // must be appended to.
-                buf[x.toUShort(), y]
+                buf[x, y]
                     .appendSymbol(grapheme.symbol)
                     .setStyle(grapheme.style)
-            } else if (symbolWidth == 0u) {
+            } else if (symbolWidth == 0) {
                 // append zero-width graphemes to the previous cell
-                buf[(x - 1u).toUShort(), y]
+                buf[x - 1, y]
                     .appendSymbol(grapheme.symbol)
                     .setStyle(grapheme.style)
             } else {
                 // just a normal grapheme (not first, not zero-width, not overflowing the area)
-                buf[x.toUShort(), y]
+                buf[x, y]
                     .setSymbol(grapheme.symbol)
                     .setStyle(grapheme.style)
             }
@@ -250,10 +250,10 @@ data class Span(
             // multi-width graphemes must clear the cells of characters that are hidden by the
             // grapheme, otherwise the hidden characters will be re-rendered if the grapheme is
             // overwritten.
-            for (xHidden in (x + 1u) until nextX) {
+            for (xHidden in (x + 1) until nextX) {
                 // it may seem odd that the style of the hidden cells are not set to the style of
                 // the grapheme, but this is how the existing buffer.setSpan() method works.
-                buf[xHidden.toUShort(), y].reset()
+                buf[xHidden, y].reset()
             }
             x = nextX
         }
@@ -316,6 +316,23 @@ data class StyledGrapheme(
     val symbol: String,
     val style: Style
 ) {
+    /**
+     * Returns true if the grapheme is whitespace.
+     * A grapheme is considered whitespace if all its characters are whitespace,
+     * or if it's a zero-width space.
+     */
+    fun isWhitespace(): Boolean {
+        if (symbol.isEmpty()) return false
+        // Zero-width space is considered whitespace for word-wrapping purposes
+        if (symbol == "\u200B") return true
+        return symbol.all { it.isWhitespace() }
+    }
+
+    /**
+     * Returns the display width of this grapheme.
+     */
+    fun width(): Int = unicodeWidth(symbol)
+
     companion object {
         fun new(symbol: String, style: Style): StyledGrapheme = StyledGrapheme(symbol, style)
     }

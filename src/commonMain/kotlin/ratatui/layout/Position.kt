@@ -15,18 +15,18 @@
  *
  * ## Conversion
  *
- * - [from] with `Pair<UShort, UShort>` - Create from tuple
+ * - [from] with `Pair<Int, Int>` - Create from tuple
  * - [from] with [Rect] - Create from Rect (uses top-left corner)
- * - [toPair] - Convert to `Pair<UShort, UShort>` tuple
+ * - [toPair] - Convert to `Pair<Int, Int>` tuple
  *
  * ## Examples
  *
  * ```kotlin
  * // the following are all equivalent
- * val position = Position(x = 1u, y = 2u)
- * val position = Position.new(1u, 2u)
- * val position = Position.from(Pair(1u, 2u))
- * val position = Position.from(Rect.new(1u, 2u, 3u, 4u))
+ * val position = Position(x = 1, y = 2)
+ * val position = Position.new(1, 2)
+ * val position = Position.from(Pair(1, 2))
+ * val position = Position.from(Rect.new(1, 2, 3, 4))
  *
  * // position can be converted back into the components when needed
  * val (x, y) = position.toPair()
@@ -46,32 +46,32 @@ package ratatui.layout
  *   The y coordinate is relative to the top edge of the terminal window, with the top edge being 0.
  */
 data class Position(
-    val x: UShort,
-    val y: UShort
+    val x: Int,
+    val y: Int
 ) : Comparable<Position> {
 
     companion object {
         /** Position at the origin, the top left edge at 0,0 */
-        val ORIGIN: Position = Position(0u, 0u)
+        val ORIGIN: Position = Position(0, 0)
 
         /** Position at the minimum x and y values */
         val MIN: Position = ORIGIN
 
         /** Position at the maximum x and y values */
-        val MAX: Position = Position(UShort.MAX_VALUE, UShort.MAX_VALUE)
+        val MAX: Position = Position(Int.MAX_VALUE, Int.MAX_VALUE)
 
         /** Create a new position */
-        fun new(x: UShort, y: UShort): Position = Position(x, y)
+        fun new(x: Int, y: Int): Position = Position(x, y)
 
         /** Create a position from a pair of coordinates */
-        fun from(pair: Pair<UShort, UShort>): Position = Position(pair.first, pair.second)
+        fun from(pair: Pair<Int, Int>): Position = Position(pair.first, pair.second)
 
         /** Create a position from a Rect (uses top-left corner) */
         fun from(rect: Rect): Position = rect.asPosition()
     }
 
     /** Convert to a pair of coordinates */
-    fun toPair(): Pair<UShort, UShort> = Pair(x, y)
+    fun toPair(): Pair<Int, Int> = Pair(x, y)
 
     override fun compareTo(other: Position): Int {
         val yCompare = y.compareTo(other.y)

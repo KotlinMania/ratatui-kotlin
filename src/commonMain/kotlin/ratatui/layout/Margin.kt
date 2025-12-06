@@ -19,14 +19,14 @@
  *
  * ```kotlin
  * // Create a margin of 2 cells horizontally and 1 cell vertically
- * val margin = Margin.new(2u, 1u)
+ * val margin = Margin.new(2, 1)
  *
  * // Apply directly to a rectangle
- * val area = Rect.new(0u, 0u, 80u, 24u)
+ * val area = Rect.new(0, 0, 80, 24)
  * val innerArea = area.inner(margin)
  *
  * // Or use with a layout (which only accepts uniform margins)
- * val layout = Layout.vertical(listOf(Constraint.Fill(1u))).margin(2u)
+ * val layout = Layout.vertical(listOf(Constraint.Fill(1))).margin(2)
  * ```
  *
  * For comprehensive layout documentation and examples, see the layout module.
@@ -41,16 +41,16 @@ package ratatui.layout
  * @property vertical The vertical spacing in cells (applied to top and bottom)
  */
 data class Margin(
-    val horizontal: UShort,
-    val vertical: UShort
+    val horizontal: Int,
+    val vertical: Int
 ) {
 
     companion object {
         /** A zero margin */
-        val ZERO: Margin = Margin(0u, 0u)
+        val ZERO: Margin = Margin(0, 0)
 
         /** Create a new margin */
-        fun new(horizontal: UShort, vertical: UShort): Margin = Margin(horizontal, vertical)
+        fun new(horizontal: Int, vertical: Int): Margin = Margin(horizontal, vertical)
     }
 
     override fun toString(): String = "${horizontal}x${vertical}"

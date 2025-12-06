@@ -34,8 +34,8 @@ data class Offset(
 
         /** Create an Offset from a Position */
         fun from(position: Position): Offset = Offset(
-            x = position.x.toInt(),
-            y = position.y.toInt()
+            x = position.x,
+            y = position.y
         )
     }
 }
