@@ -4,6 +4,11 @@ import ratatui.layout.Alignment
 import ratatui.style.Color
 import ratatui.style.Modifier
 import ratatui.style.Style
+import ratatui.style.blue
+import ratatui.style.green
+import ratatui.style.italic
+import ratatui.style.onGreen
+import ratatui.style.red
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
