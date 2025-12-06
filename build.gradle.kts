@@ -17,7 +17,9 @@ kotlin {
 
     sourceSets {
         val commonMain by getting {
-            // Uses standard src/commonMain/kotlin layout
+            dependencies {
+                api("io.github.kotlinmania:kasuari-kotlin:0.1.0")
+            }
         }
 
         val commonTest by getting {

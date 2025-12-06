@@ -51,6 +51,9 @@ data class Margin(
 
         /** Create a new margin */
         fun new(horizontal: Int, vertical: Int): Margin = Margin(horizontal, vertical)
+
+        /** Create a default (zero) margin */
+        fun default(): Margin = ZERO
     }
 
     override fun toString(): String = "${horizontal}x${vertical}"

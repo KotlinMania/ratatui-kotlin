@@ -34,20 +34,20 @@
  *
  * ```kotlin
  * // Create a layout with specified lengths for each element
- * val constraints = Constraint.fromLengths(listOf(10u, 20u, 10u))
+ * val constraints = Constraint.fromLengths(listOf(10, 20, 10))
  *
  * // Create a centered layout using ratio or percentage constraints
  * val constraints = Constraint.fromRatios(listOf(Pair(1u, 4u), Pair(1u, 2u), Pair(1u, 4u)))
- * val constraints = Constraint.fromPercentages(listOf(25u, 50u, 25u))
+ * val constraints = Constraint.fromPercentages(listOf(25, 50, 25))
  *
  * // Create a centered layout with a minimum size constraint for specific elements
- * val constraints = Constraint.fromMins(listOf(0u, 100u, 0u))
+ * val constraints = Constraint.fromMins(listOf(0, 100, 0))
  *
  * // Create a sidebar layout specifying maximum sizes for the columns
- * val constraints = Constraint.fromMaxes(listOf(30u, 170u))
+ * val constraints = Constraint.fromMaxes(listOf(30, 170))
  *
  * // Create a layout with fill proportional sizes for each element
- * val constraints = Constraint.fromFills(listOf(1u, 2u, 1u))
+ * val constraints = Constraint.fromFills(listOf(1, 2, 1))
  * ```
  *
  * For comprehensive layout documentation and examples, see the layout module.
@@ -65,21 +65,21 @@ sealed class Constraint {
      *
      * The element size is set to at least the specified amount.
      */
-    data class Min(val value: UShort) : Constraint()
+    data class Min(val value: Int) : Constraint()
 
     /**
      * Applies a maximum size constraint to the element.
      *
      * The element size is set to at most the specified amount.
      */
-    data class Max(val value: UShort) : Constraint()
+    data class Max(val value: Int) : Constraint()
 
     /**
      * Applies a length constraint to the element.
      *
      * The element size is set to the specified amount.
      */
-    data class Length(val value: UShort) : Constraint()
+    data class Length(val value: Int) : Constraint()
 
     /**
      * Applies a percentage of the available space to the element.
@@ -87,11 +87,10 @@ sealed class Constraint {
      * Converts the given percentage to a floating-point value and multiplies that with area. This
      * value is rounded back to an integer as part of the layout split calculation.
      *
-     * Note: As this value only accepts a [UShort], certain percentages that cannot be
-     * represented exactly (e.g. 1/3) are not possible. You might want to use
-     * [Constraint.Ratio] or [Constraint.Fill] in such cases.
+     * Note: Certain percentages that cannot be represented exactly (e.g. 1/3) are not possible.
+     * You might want to use [Constraint.Ratio] or [Constraint.Fill] in such cases.
      */
-    data class Percentage(val value: UShort) : Constraint()
+    data class Percentage(val value: Int) : Constraint()
 
     /**
      * Applies a ratio of the available space to the element.
@@ -108,7 +107,7 @@ sealed class Constraint {
      * The element will only expand or fill into excess available space, proportionally matching
      * other [Constraint.Fill] elements while satisfying all other constraints.
      */
-    data class Fill(val value: UShort) : Constraint()
+    data class Fill(val value: Int) : Constraint()
 
     /**
      * Apply the constraint to a length and return the resulting size.
@@ -116,19 +115,19 @@ sealed class Constraint {
      * @deprecated This method will be hidden in the next minor version.
      */
     @Deprecated("This method will be hidden in the next minor version.")
-    fun apply(length: UShort): UShort {
+    fun apply(length: Int): Int {
         return when (this) {
             is Percentage -> {
                 val p = value.toFloat() / 100.0f
                 val len = length.toFloat()
-                minOf(p * len, len).toInt().toUShort()
+                minOf(p * len, len).toInt()
             }
             is Ratio -> {
                 // avoid division by zero by using 1 when denominator is 0
                 // this results in 0/0 -> 0 and x/0 -> x for x != 0
                 val percentage = numerator.toFloat() / maxOf(denominator, 1u).toFloat()
                 val len = length.toFloat()
-                minOf(percentage * len, len).toInt().toUShort()
+                minOf(percentage * len, len).toInt()
             }
             is Length -> minOf(length, value)
             is Fill -> minOf(length, value)
@@ -166,15 +165,15 @@ sealed class Constraint {
 
     companion object {
         /** The default constraint (Percentage(100)) */
-        fun default(): Constraint = Percentage(100u)
+        fun default(): Constraint = Percentage(100)
 
-        /** Create a Length constraint from a UShort */
-        fun from(length: UShort): Constraint = Length(length)
+        /** Create a Length constraint from an Int */
+        fun from(length: Int): Constraint = Length(length)
 
         /**
          * Convert an iterable of lengths into a list of constraints.
          */
-        fun fromLengths(lengths: Iterable<UShort>): List<Constraint> =
+        fun fromLengths(lengths: Iterable<Int>): List<Constraint> =
             lengths.map { Length(it) }
 
         /**
@@ -186,25 +185,25 @@ sealed class Constraint {
         /**
          * Convert an iterable of percentages into a list of constraints.
          */
-        fun fromPercentages(percentages: Iterable<UShort>): List<Constraint> =
+        fun fromPercentages(percentages: Iterable<Int>): List<Constraint> =
             percentages.map { Percentage(it) }
 
         /**
          * Convert an iterable of maxes into a list of constraints.
          */
-        fun fromMaxes(maxes: Iterable<UShort>): List<Constraint> =
+        fun fromMaxes(maxes: Iterable<Int>): List<Constraint> =
             maxes.map { Max(it) }
 
         /**
          * Convert an iterable of mins into a list of constraints.
          */
-        fun fromMins(mins: Iterable<UShort>): List<Constraint> =
+        fun fromMins(mins: Iterable<Int>): List<Constraint> =
             mins.map { Min(it) }
 
         /**
          * Convert an iterable of proportional factors into a list of constraints.
          */
-        fun fromFills(proportionalFactors: Iterable<UShort>): List<Constraint> =
+        fun fromFills(proportionalFactors: Iterable<Int>): List<Constraint> =
             proportionalFactors.map { Fill(it) }
     }
 }

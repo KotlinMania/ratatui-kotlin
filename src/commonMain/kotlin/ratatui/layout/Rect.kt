@@ -276,6 +276,28 @@ data class Rect(
     override fun toString(): String = "${width}x${height}+${x}+${y}"
 
     /**
+     * Returns an iterator over the columns of the Rect.
+     *
+     * Each column is a Rect with width 1 and the same height and y-coordinate as this Rect.
+     */
+    fun columns(): Iterator<Rect> = iterator {
+        for (col in x until right()) {
+            yield(Rect(col, y, 1, height))
+        }
+    }
+
+    /**
+     * Returns an iterator over the rows of the Rect.
+     *
+     * Each row is a Rect with height 1 and the same width and x-coordinate as this Rect.
+     */
+    fun rows(): Iterator<Rect> = iterator {
+        for (row in y until bottom()) {
+            yield(Rect(x, row, width, 1))
+        }
+    }
+
+    /**
      * Returns a new Rect with the x coordinate indented by the given width.
      *
      * The width is reduced by the indent amount. If the indent is larger than the width,
