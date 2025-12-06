@@ -9,6 +9,9 @@ import ratatui.style.green
 import ratatui.style.italic
 import ratatui.style.onGreen
 import ratatui.style.red
+import ratatui.style.fg
+import ratatui.style.bg
+import ratatui.style.addModifier
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

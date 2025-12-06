@@ -1,6 +1,8 @@
 package ratatui.style
 
+import ratatui.text.Line
 import ratatui.text.Span
+import ratatui.text.Text
 
 /**
  * A trait for objects that have a [Style].
@@ -434,3 +436,129 @@ fun Double.gray(): Span = this.toString().gray()
 
 // Color helper extension for stylize debug
 fun Color.stylizeDebug(kind: ColorDebugKind): ColorDebug = ColorDebug(kind, this)
+
+// Extension functions for Line to enable styling
+fun Line.fg(color: Color): Line = patchStyle(Style.default().fg(color))
+fun Line.bg(color: Color): Line = patchStyle(Style.default().bg(color))
+fun Line.addModifier(modifier: Modifier): Line = patchStyle(Style.default().addModifier(modifier))
+fun Line.removeModifier(modifier: Modifier): Line = patchStyle(Style.default().removeModifier(modifier))
+
+// Foreground color shortcuts for Line
+fun Line.black(): Line = fg(Color.Black)
+fun Line.red(): Line = fg(Color.Red)
+fun Line.green(): Line = fg(Color.Green)
+fun Line.yellow(): Line = fg(Color.Yellow)
+fun Line.blue(): Line = fg(Color.Blue)
+fun Line.magenta(): Line = fg(Color.Magenta)
+fun Line.cyan(): Line = fg(Color.Cyan)
+fun Line.gray(): Line = fg(Color.Gray)
+fun Line.darkGray(): Line = fg(Color.DarkGray)
+fun Line.lightRed(): Line = fg(Color.LightRed)
+fun Line.lightGreen(): Line = fg(Color.LightGreen)
+fun Line.lightYellow(): Line = fg(Color.LightYellow)
+fun Line.lightBlue(): Line = fg(Color.LightBlue)
+fun Line.lightMagenta(): Line = fg(Color.LightMagenta)
+fun Line.lightCyan(): Line = fg(Color.LightCyan)
+fun Line.white(): Line = fg(Color.White)
+
+// Background color shortcuts for Line
+fun Line.onBlack(): Line = bg(Color.Black)
+fun Line.onRed(): Line = bg(Color.Red)
+fun Line.onGreen(): Line = bg(Color.Green)
+fun Line.onYellow(): Line = bg(Color.Yellow)
+fun Line.onBlue(): Line = bg(Color.Blue)
+fun Line.onMagenta(): Line = bg(Color.Magenta)
+fun Line.onCyan(): Line = bg(Color.Cyan)
+fun Line.onGray(): Line = bg(Color.Gray)
+fun Line.onDarkGray(): Line = bg(Color.DarkGray)
+fun Line.onLightRed(): Line = bg(Color.LightRed)
+fun Line.onLightGreen(): Line = bg(Color.LightGreen)
+fun Line.onLightYellow(): Line = bg(Color.LightYellow)
+fun Line.onLightBlue(): Line = bg(Color.LightBlue)
+fun Line.onLightMagenta(): Line = bg(Color.LightMagenta)
+fun Line.onLightCyan(): Line = bg(Color.LightCyan)
+fun Line.onWhite(): Line = bg(Color.White)
+
+// Modifier shortcuts for Line
+fun Line.bold(): Line = addModifier(Modifier.BOLD)
+fun Line.dim(): Line = addModifier(Modifier.DIM)
+fun Line.italic(): Line = addModifier(Modifier.ITALIC)
+fun Line.underlined(): Line = addModifier(Modifier.UNDERLINED)
+fun Line.slowBlink(): Line = addModifier(Modifier.SLOW_BLINK)
+fun Line.rapidBlink(): Line = addModifier(Modifier.RAPID_BLINK)
+fun Line.reversed(): Line = addModifier(Modifier.REVERSED)
+fun Line.hidden(): Line = addModifier(Modifier.HIDDEN)
+fun Line.crossedOut(): Line = addModifier(Modifier.CROSSED_OUT)
+
+fun Line.notBold(): Line = removeModifier(Modifier.BOLD)
+fun Line.notDim(): Line = removeModifier(Modifier.DIM)
+fun Line.notItalic(): Line = removeModifier(Modifier.ITALIC)
+fun Line.notUnderlined(): Line = removeModifier(Modifier.UNDERLINED)
+fun Line.notSlowBlink(): Line = removeModifier(Modifier.SLOW_BLINK)
+fun Line.notRapidBlink(): Line = removeModifier(Modifier.RAPID_BLINK)
+fun Line.notReversed(): Line = removeModifier(Modifier.REVERSED)
+fun Line.notHidden(): Line = removeModifier(Modifier.HIDDEN)
+fun Line.notCrossedOut(): Line = removeModifier(Modifier.CROSSED_OUT)
+
+// Extension functions for Text to enable styling
+fun Text.fg(color: Color): Text = patchStyle(Style.default().fg(color))
+fun Text.bg(color: Color): Text = patchStyle(Style.default().bg(color))
+fun Text.addModifier(modifier: Modifier): Text = patchStyle(Style.default().addModifier(modifier))
+fun Text.removeModifier(modifier: Modifier): Text = patchStyle(Style.default().removeModifier(modifier))
+
+// Foreground color shortcuts for Text
+fun Text.black(): Text = fg(Color.Black)
+fun Text.red(): Text = fg(Color.Red)
+fun Text.green(): Text = fg(Color.Green)
+fun Text.yellow(): Text = fg(Color.Yellow)
+fun Text.blue(): Text = fg(Color.Blue)
+fun Text.magenta(): Text = fg(Color.Magenta)
+fun Text.cyan(): Text = fg(Color.Cyan)
+fun Text.gray(): Text = fg(Color.Gray)
+fun Text.darkGray(): Text = fg(Color.DarkGray)
+fun Text.lightRed(): Text = fg(Color.LightRed)
+fun Text.lightGreen(): Text = fg(Color.LightGreen)
+fun Text.lightYellow(): Text = fg(Color.LightYellow)
+fun Text.lightBlue(): Text = fg(Color.LightBlue)
+fun Text.lightMagenta(): Text = fg(Color.LightMagenta)
+fun Text.lightCyan(): Text = fg(Color.LightCyan)
+fun Text.white(): Text = fg(Color.White)
+
+// Background color shortcuts for Text
+fun Text.onBlack(): Text = bg(Color.Black)
+fun Text.onRed(): Text = bg(Color.Red)
+fun Text.onGreen(): Text = bg(Color.Green)
+fun Text.onYellow(): Text = bg(Color.Yellow)
+fun Text.onBlue(): Text = bg(Color.Blue)
+fun Text.onMagenta(): Text = bg(Color.Magenta)
+fun Text.onCyan(): Text = bg(Color.Cyan)
+fun Text.onGray(): Text = bg(Color.Gray)
+fun Text.onDarkGray(): Text = bg(Color.DarkGray)
+fun Text.onLightRed(): Text = bg(Color.LightRed)
+fun Text.onLightGreen(): Text = bg(Color.LightGreen)
+fun Text.onLightYellow(): Text = bg(Color.LightYellow)
+fun Text.onLightBlue(): Text = bg(Color.LightBlue)
+fun Text.onLightMagenta(): Text = bg(Color.LightMagenta)
+fun Text.onLightCyan(): Text = bg(Color.LightCyan)
+fun Text.onWhite(): Text = bg(Color.White)
+
+// Modifier shortcuts for Text
+fun Text.bold(): Text = addModifier(Modifier.BOLD)
+fun Text.dim(): Text = addModifier(Modifier.DIM)
+fun Text.italic(): Text = addModifier(Modifier.ITALIC)
+fun Text.underlined(): Text = addModifier(Modifier.UNDERLINED)
+fun Text.slowBlink(): Text = addModifier(Modifier.SLOW_BLINK)
+fun Text.rapidBlink(): Text = addModifier(Modifier.RAPID_BLINK)
+fun Text.reversed(): Text = addModifier(Modifier.REVERSED)
+fun Text.hidden(): Text = addModifier(Modifier.HIDDEN)
+fun Text.crossedOut(): Text = addModifier(Modifier.CROSSED_OUT)
+
+fun Text.notBold(): Text = removeModifier(Modifier.BOLD)
+fun Text.notDim(): Text = removeModifier(Modifier.DIM)
+fun Text.notItalic(): Text = removeModifier(Modifier.ITALIC)
+fun Text.notUnderlined(): Text = removeModifier(Modifier.UNDERLINED)
+fun Text.notSlowBlink(): Text = removeModifier(Modifier.SLOW_BLINK)
+fun Text.notRapidBlink(): Text = removeModifier(Modifier.RAPID_BLINK)
+fun Text.notReversed(): Text = removeModifier(Modifier.REVERSED)
+fun Text.notHidden(): Text = removeModifier(Modifier.HIDDEN)
+fun Text.notCrossedOut(): Text = removeModifier(Modifier.CROSSED_OUT)
