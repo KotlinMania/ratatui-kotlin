@@ -6,10 +6,6 @@ plugins {
 group = "io.github.kotlinmania"
 version = "0.1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
-
 kotlin {
     applyDefaultHierarchyTemplate()
 
@@ -66,7 +62,7 @@ mavenPublishing {
             developer {
                 id.set("sydneyrenee")
                 name.set("Sydney Renee")
-                email.set("sydney@thesolace.ai")
+                email.set("sydney@solace.ofharmony.ai")
                 url.set("https://github.com/sydneyrenee")
             }
         }
