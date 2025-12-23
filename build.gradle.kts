@@ -9,6 +9,9 @@ plugins {
     id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
+group = "io.github.kotlinmania"
+version = "0.1.2"
+
 // Android setup
 val sdkDir = file(".android-sdk")
 val licensesDir = sdkDir.resolve("licenses")
