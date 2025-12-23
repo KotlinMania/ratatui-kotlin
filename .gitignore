@@ -12,3 +12,6 @@
 
 
 /.android-sdk/
+
+# Tools (binaries built from ASTDistance project)
+/tools/ast_distance
