@@ -1,84 +1,46 @@
-use crate::style::{Style, Styled};
+package ratatui.text
 
-const NBSP: &str = "\u{00a0}";
-const ZWSP: &str = "\u{200b}";
+import ratatui.style.Style
+import ratatui.style.Styled
 
-/// A grapheme associated to a style.
-/// Note that, although `StyledGrapheme` is the smallest divisible unit of text,
-/// it actually is not a member of the text type hierarchy (`Text` -> `Line` -> `Span`).
-/// It is a separate type used mostly for rendering purposes. A `Span` consists of components that
-/// can be split into `StyledGrapheme`s, but it does not contain a collection of `StyledGrapheme`s.
-#[derive(Debug, Default, Clone, Eq, PartialEq, Hash)]
-pub struct StyledGrapheme<'a> {
-    pub symbol: &'a str,
-    pub style: Style,
-}
+/** Non-breaking space character */
+private const val NBSP = "\u00a0"
 
-impl<'a> StyledGrapheme<'a> {
-    /// Creates a new `StyledGrapheme` with the given symbol and style.
-    ///
-    /// `style` accepts any type that is convertible to [`Style`] (e.g. [`Style`], [`Color`], or
-    /// your own type that implements [`Into<Style>`]).
-    ///
-    /// [`Color`]: crate::style::Color
-    pub fn new<S: Into<Style>>(symbol: &'a str, style: S) -> Self {
-        Self {
-            symbol,
-            style: style.into(),
+/** Zero-width space character */
+private const val ZWSP = "\u200b"
+
+/**
+ * A grapheme associated with a style.
+ *
+ * Note that, although [StyledGrapheme] is the smallest divisible unit of text,
+ * it actually is not a member of the text type hierarchy ([Text] -> [Line] -> [Span]).
+ * It is a separate type used mostly for rendering purposes. A [Span] consists of components that
+ * can be split into [StyledGrapheme]s, but it does not contain a collection of [StyledGrapheme]s.
+ */
+data class StyledGrapheme(
+    /** The grapheme symbol */
+    val symbol: String,
+    /** The style to apply to the grapheme */
+    override val style: Style = Style.default()
+) : Styled<StyledGrapheme> {
+
+    /**
+     * Returns true if this grapheme represents whitespace.
+     *
+     * Zero-width space is considered whitespace, but non-breaking space is not.
+     */
+    fun isWhitespace(): Boolean {
+        return symbol == ZWSP || (symbol.all { it.isWhitespace() } && symbol != NBSP)
+    }
+
+    override fun setStyle(style: Style): StyledGrapheme = copy(style = style)
+
+    companion object {
+        /**
+         * Creates a new [StyledGrapheme] with the given symbol and style.
+         */
+        fun new(symbol: String, style: Style = Style.default()): StyledGrapheme {
+            return StyledGrapheme(symbol = symbol, style = style)
         }
-    }
-
-    pub fn is_whitespace(&self) -> bool {
-        let symbol = self.symbol;
-        symbol == ZWSP || symbol.chars().all(char::is_whitespace) && symbol != NBSP
-    }
-}
-
-impl Styled for StyledGrapheme<'_> {
-    type Item = Self;
-
-    fn style(&self) -> Style {
-        self.style
-    }
-
-    fn set_style<S: Into<Style>>(mut self, style: S) -> Self::Item {
-        self.style = style.into();
-        self
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::style::Stylize;
-
-    #[test]
-    fn new() {
-        let style = Style::new().yellow();
-        let sg = StyledGrapheme::new("a", style);
-        assert_eq!(sg.symbol, "a");
-        assert_eq!(sg.style, style);
-    }
-
-    #[test]
-    fn style() {
-        let style = Style::new().yellow();
-        let sg = StyledGrapheme::new("a", style);
-        assert_eq!(sg.style(), style);
-    }
-
-    #[test]
-    fn set_style() {
-        let style = Style::new().yellow().on_red();
-        let style2 = Style::new().green();
-        let sg = StyledGrapheme::new("a", style).set_style(style2);
-        assert_eq!(sg.style, style2);
-    }
-
-    #[test]
-    fn stylize() {
-        let style = Style::new().yellow().on_red();
-        let sg = StyledGrapheme::new("a", style).green();
-        assert_eq!(sg.style, Style::new().green().on_red());
     }
 }

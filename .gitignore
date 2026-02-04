@@ -15,3 +15,9 @@
 
 # Tools (binaries built from ASTDistance project)
 /tools/ast_distance
+
+# Rust reference source files for porting
+**/*.rs
+/ratatui-core/src/*.rs
+/ratatui-widgets/src/*.rs
+tools/port_linter.py
