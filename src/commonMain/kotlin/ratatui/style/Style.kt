@@ -65,6 +65,8 @@
  */
 package ratatui.style
 
+import kotlin.jvm.JvmInline
+
 /**
  * Modifier changes the way a piece of text is displayed.
  *
@@ -84,6 +86,7 @@ package ratatui.style
  * Note: In Kotlin/Native, value classes don't have the same inline optimization as JVM,
  * but they still provide type safety and a clean API.
  */
+@JvmInline
 value class Modifier(val bits: UShort) {
 
     /** Check if the modifier is empty (no flags set) */

@@ -6,6 +6,9 @@ import ratatui.style.Style
 import ratatui.symbols.merge.MergeStrategy
 import ratatui.text.Line
 import ratatui.text.Span
+import ratatui.text.unicodeWidth
+import ratatui.terminal.CellUpdate
+import kotlin.math.max
 
 /**
  * A buffer cell.
@@ -257,6 +260,75 @@ class Buffer(
         for (cell in content) {
             cell.reset()
         }
+    }
+
+    /**
+     * Builds a minimal sequence of updates necessary to update the UI from this buffer to [other].
+     *
+     * Transliteration of `ratatui-core`'s `Buffer::diff` implementation.
+     */
+    fun diff(other: Buffer): List<CellUpdate> {
+        val previousBuffer = content
+        val nextBuffer = other.content
+
+        val updates = mutableListOf<CellUpdate>()
+        var invalidated = 0
+        var toSkip = 0
+
+        val len = minOf(nextBuffer.size, previousBuffer.size)
+        for (i in 0 until len) {
+            val current = nextBuffer[i]
+            val previous = previousBuffer[i]
+
+            if (!current.skip && (current != previous || invalidated > 0) && toSkip == 0) {
+                val (x, y) = posOf(i)
+                updates.add(cellUpdate(x, y, current))
+
+                // If the current cell is multi-width, ensure trailing cells are explicitly cleared
+                // when they previously contained non-blank content. Some terminals do not reliably
+                // clear the trailing cell(s) when printing a wide grapheme, which can result in
+                // visual artifacts.
+                val symbol = current.symbol()
+                val cellWidth = unicodeWidth(symbol)
+                val containsVs16 = symbol.any { c -> c == '\uFE0F' }
+                if (cellWidth > 1 && containsVs16) {
+                    for (k in 1 until cellWidth) {
+                        val j = i + k
+                        if (j >= len) break
+                        val prevTrailing = previousBuffer[j]
+                        val nextTrailing = nextBuffer[j]
+                        if (!nextTrailing.skip && prevTrailing != nextTrailing) {
+                            val (tx, ty) = posOf(j)
+                            updates.add(cellUpdate(tx, ty, nextTrailing))
+                        }
+                    }
+                }
+            }
+
+            toSkip = (unicodeWidth(current.symbol()) - 1).coerceAtLeast(0)
+            val affectedWidth = max(unicodeWidth(current.symbol()), unicodeWidth(previous.symbol()))
+            invalidated = (max(affectedWidth, invalidated) - 1).coerceAtLeast(0)
+        }
+
+        return updates
+    }
+
+    private fun posOf(i: Int): Pair<Int, Int> {
+        val width = area.width
+        val x = area.x + (i % width)
+        val y = area.y + (i / width)
+        return Pair(x, y)
+    }
+
+    private fun cellUpdate(x: Int, y: Int, cell: Cell): CellUpdate {
+        return CellUpdate(
+            x = x,
+            y = y,
+            symbol = cell.symbol,
+            fg = cell.fg,
+            bg = cell.bg,
+            modifiers = cell.modifier
+        )
     }
 
     override fun equals(other: Any?): Boolean {
