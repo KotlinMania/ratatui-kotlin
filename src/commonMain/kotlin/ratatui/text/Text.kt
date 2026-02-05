@@ -1,5 +1,6 @@
 package ratatui.text
 
+import kotlin.jvm.JvmName
 import ratatui.buffer.Buffer
 import ratatui.layout.Alignment
 import ratatui.layout.Rect
@@ -136,6 +137,7 @@ import ratatui.widgets.Widget
  */
 data class Text(
     /** The style of this text. */
+    @get:JvmName("styleValue")
     val style: Style = Style.default(),
 
     /** The alignment of this text. */

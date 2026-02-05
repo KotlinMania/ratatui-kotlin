@@ -10,7 +10,7 @@ plugins {
 }
 
 group = "io.github.kotlinmania"
-version = "0.1.4"
+version = "0.1.5"
 
 // Android setup
 val sdkDir = file(".android-sdk")
