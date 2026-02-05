@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           repository: KotlinMania/kasuari-kotlin
-          path: ../kasuari-kotlin
+          path: kasuari-kotlin
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
