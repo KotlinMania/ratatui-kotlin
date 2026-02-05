@@ -15,6 +15,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout kasuari-kotlin (local includeBuild)
+        uses: actions/checkout@v4
+        with:
+          repository: KotlinMania/kasuari-kotlin
+          path: ../kasuari-kotlin
+
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -34,6 +40,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Checkout kasuari-kotlin (local includeBuild)
+        uses: actions/checkout@v4
+        with:
+          repository: KotlinMania/kasuari-kotlin
+          path: ../kasuari-kotlin
 
       - name: Set up JDK 21
         uses: actions/setup-java@v4
