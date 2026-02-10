@@ -37,7 +37,7 @@ jobs:
 
       - name: Build (dry run)
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.publish }}
-        run: ./gradlew assembleRatatuiXCFramework assembleRelease --no-configuration-cache
+        run: ./gradlew assembleRatatuiReleaseXCFramework assembleAndroidMain androidSourcesJar --no-configuration-cache
 
       - name: Publish to Maven Central
         if: ${{ github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.publish) }}
