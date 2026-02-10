@@ -31,7 +31,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Build and test
-        run: ./gradlew allTests --no-configuration-cache
+        # Don't run `allTests` on macOS: it includes non-Apple Kotlin/Native targets
+        # (e.g. linuxX64Test) which aren't meant to be linked/run here.
+        run: ./gradlew macosArm64Test iosSimulatorArm64Test assembleRatatuiXCFramework --no-configuration-cache
 
   build-linux:
     name: Build and Test (Linux)
@@ -56,5 +58,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Install native dependencies
+        run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
+
       - name: Build and test
-        run: ./gradlew linuxX64Test --no-configuration-cache
+        # Prefer node-based JS/WASM tests in CI to avoid requiring a browser runner.
+        run: ./gradlew jsNodeTest wasmJsNodeTest linuxX64Test --no-configuration-cache
