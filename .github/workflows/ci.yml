@@ -61,6 +61,18 @@ jobs:
       - name: Install native dependencies
         run: sudo apt-get update && sudo apt-get install -y libcurl4-openssl-dev
 
+      - name: Set up Node.js (system)
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Set up Yarn (avoid Gradle downloading from GitHub releases)
+        run: |
+          corepack enable
+          corepack prepare yarn@1.22.17 --activate
+
       - name: Build and test
         # Prefer node-based JS/WASM tests in CI to avoid requiring a browser runner.
+        env:
+          ORG_GRADLE_PROJECT_kotlin_js_yarn_download: "false"
         run: ./gradlew jsNodeTest wasmJsNodeTest linuxX64Test --no-configuration-cache
