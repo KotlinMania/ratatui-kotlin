@@ -21,3 +21,4 @@
 /ratatui-core/src/*.rs
 /ratatui-widgets/src/*.rs
 tools/port_linter.py
+.DS_Store
