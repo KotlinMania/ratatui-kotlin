@@ -26,6 +26,9 @@ import ratatui.terminal.ClearType
  * A [Backend] implementation backed by `crossterm-kotlin`.
  *
  * This backend writes ANSI escape sequences to the provided [writer].
+ *
+ * Note: `crossterm-kotlin` is not available on all targets. This backend is only compiled for
+ * desktop native targets (macOS/Linux/Windows).
  */
 class CrosstermBackend(
     private val writer: Appendable,

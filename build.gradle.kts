@@ -84,7 +84,6 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("io.github.kotlinmania:kasuari-kotlin:0.1.1")
-                api("io.github.kotlinmania:crossterm-kotlin:0.1.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
@@ -109,6 +108,13 @@ kotlin {
             }
         }
 
+        val desktopMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+                api("io.github.kotlinmania:crossterm-kotlin:0.1.2")
+            }
+        }
+
         val nativeMain by getting {
             dependencies {
             }
@@ -120,13 +126,19 @@ kotlin {
             }
         }
 
+        val macosMain by getting {
+            dependsOn(desktopMain)
+        }
+
         val linuxMain by getting {
+            dependsOn(desktopMain)
             dependencies {
                 implementation("io.ktor:ktor-client-curl:3.0.3")
             }
         }
 
         val mingwMain by getting {
+            dependsOn(desktopMain)
             dependencies {
                 implementation("io.ktor:ktor-client-curl:3.0.3")
             }
