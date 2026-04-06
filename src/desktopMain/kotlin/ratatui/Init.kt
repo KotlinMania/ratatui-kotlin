@@ -1,6 +1,5 @@
 package ratatui
 
-import io.github.kotlinmania.crossterm.ansiString
 import io.github.kotlinmania.crossterm.terminal.EnterAlternateScreen
 import io.github.kotlinmania.crossterm.terminal.LeaveAlternateScreen
 import io.github.kotlinmania.crossterm.terminal.sys.disableRawMode
@@ -54,7 +53,7 @@ fun tryInit(): DefaultTerminal {
     enableRawMode()
 
     val stdout = StdoutBuffer()
-    stdout.append(EnterAlternateScreen.ansiString())
+    EnterAlternateScreen.writeAnsi(stdout)
     stdout.flush()
 
     val backend = CrosstermBackend(stdout, stdout::flush)
@@ -83,6 +82,6 @@ fun restore() {
 fun tryRestore() {
     disableRawMode()
     val stdout = StdoutBuffer()
-    stdout.append(LeaveAlternateScreen.ansiString())
+    LeaveAlternateScreen.writeAnsi(stdout)
     stdout.flush()
 }

@@ -1,6 +1,5 @@
 package ratatui.backend
 
-import io.github.kotlinmania.crossterm.ansiString
 import io.github.kotlinmania.crossterm.cursor.Hide
 import io.github.kotlinmania.crossterm.cursor.MoveTo
 import io.github.kotlinmania.crossterm.cursor.Show
@@ -37,30 +36,30 @@ class CrosstermBackend(
 
     override fun draw(updates: List<CellUpdate>) {
         for (update in updates) {
-            writer.append(MoveTo(update.x.toUShort(), update.y.toUShort()).ansiString())
+            MoveTo(update.x.toUShort(), update.y.toUShort()).writeAnsi(writer)
 
             // Reset attributes for each cell to avoid style bleed.
-            writer.append(SetAttribute(Attribute.Reset).ansiString())
+            SetAttribute(Attribute.Reset).writeAnsi(writer)
 
             val fg = update.fg.toCrosstermColor()
             val bg = update.bg.toCrosstermColor()
-            writer.append(SetColors(fg, bg).ansiString())
+            SetColors(fg, bg).writeAnsi(writer)
 
             val attrs = update.modifiers.toCrosstermAttributes()
             if (!attrs.isEmpty()) {
-                writer.append(SetAttributes(attrs).ansiString())
+                SetAttributes(attrs).writeAnsi(writer)
             }
 
-            writer.append(Print(update.symbol).ansiString())
+            Print(update.symbol).writeAnsi(writer)
         }
     }
 
     override fun hideCursor() {
-        writer.append(Hide.ansiString())
+        Hide.writeAnsi(writer)
     }
 
     override fun showCursor() {
-        writer.append(Show.ansiString())
+        Show.writeAnsi(writer)
     }
 
     override fun getCursorPosition(): Position {
@@ -69,7 +68,7 @@ class CrosstermBackend(
     }
 
     override fun setCursorPosition(position: Position) {
-        writer.append(MoveTo(position.x.toUShort(), position.y.toUShort()).ansiString())
+        MoveTo(position.x.toUShort(), position.y.toUShort()).writeAnsi(writer)
     }
 
     override fun clearRegion(clearType: ClearType) {
@@ -80,7 +79,7 @@ class CrosstermBackend(
             ClearType.CurrentLine -> CrosstermClearType.CurrentLine
             ClearType.UntilNewLine -> CrosstermClearType.UntilNewLine
         }
-        writer.append(Clear(ct).ansiString())
+        Clear(ct).writeAnsi(writer)
     }
 
     override fun size(): Size {
@@ -132,4 +131,3 @@ class CrosstermBackend(
         return Attributes.of(*result.toTypedArray())
     }
 }
-
