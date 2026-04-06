@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "io.github.kotlinmania"
-version = "0.1.5"
+version = "0.1.6"
 
 // Setup Android SDK location and licenses automatically (for CI + local builds).
 val sdkDir = file(".android-sdk")
@@ -28,7 +28,8 @@ if (!licenseFile.exists()) {
     )
 }
 val localProperties: File = rootProject.file("local.properties")
-localProperties.writeText("sdk.dir=${sdkDir.absolutePath}")
+val sdkDirPropertyValue = sdkDir.absolutePath.replace("\\", "/")
+localProperties.writeText("sdk.dir=$sdkDirPropertyValue")
 
 kotlin {
     applyDefaultHierarchyTemplate()
