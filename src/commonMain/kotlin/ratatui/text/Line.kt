@@ -318,7 +318,7 @@ data class Line(
     override fun iterator(): Iterator<Span> = spans.iterator()
 
     // Styled implementation
-    override fun getStyle(): Style = style
+    override fun style(): Style = style
 
     override fun setStyle(style: Style): Line = style(style)
 

@@ -413,7 +413,7 @@ data class BarChart(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = chartStyle
+    override fun style(): Style = chartStyle
 
     override fun setStyle(style: Style): BarChart = style(style)
 

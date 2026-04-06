@@ -636,7 +636,7 @@ data class Block(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = blockStyle
+    override fun style(): Style = blockStyle
 
     override fun setStyle(style: Style): Block = style(style)
 

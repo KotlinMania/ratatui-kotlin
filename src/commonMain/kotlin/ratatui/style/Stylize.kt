@@ -15,7 +15,7 @@ interface Styled<T> {
     /**
      * Returns the style of the object.
      */
-    fun getStyle(): Style
+    fun style(): Style
 
     /**
      * Sets the style of the object.
@@ -210,22 +210,22 @@ interface Stylize<T> {
  */
 class StylizeImpl<T>(private val styled: Styled<T>) : Stylize<T> {
     override fun bg(color: Color): T {
-        val style = styled.getStyle().bg(color)
+        val style = styled.style().bg(color)
         return styled.setStyle(style)
     }
 
     override fun fg(color: Color): T {
-        val style = styled.getStyle().fg(color)
+        val style = styled.style().fg(color)
         return styled.setStyle(style)
     }
 
     override fun addModifier(modifier: Modifier): T {
-        val style = styled.getStyle().addModifier(modifier)
+        val style = styled.style().addModifier(modifier)
         return styled.setStyle(style)
     }
 
     override fun removeModifier(modifier: Modifier): T {
-        val style = styled.getStyle().removeModifier(modifier)
+        val style = styled.style().removeModifier(modifier)
         return styled.setStyle(style)
     }
 
@@ -241,7 +241,7 @@ fun String.toStyled(): StringStyled = StringStyled(this)
  * Wrapper class to make String implement Styled.
  */
 class StringStyled(private val content: String) : Styled<Span> {
-    override fun getStyle(): Style = Style.default()
+    override fun style(): Style = Style.default()
 
     override fun setStyle(style: Style): Span = Span.styled(content, style)
 }

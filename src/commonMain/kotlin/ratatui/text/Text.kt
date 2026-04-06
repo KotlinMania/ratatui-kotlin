@@ -420,7 +420,7 @@ data class Text(
     }
 
     // Styled interface implementation
-    override fun getStyle(): Style = style
+    override fun style(): Style = style
     override fun setStyle(style: Style): Text = copy(style = style)
 
     // Widget interface implementation

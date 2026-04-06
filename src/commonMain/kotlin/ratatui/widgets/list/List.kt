@@ -424,7 +424,7 @@ data class List(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = listStyle
+    override fun style(): Style = listStyle
 
     override fun setStyle(style: Style): List = style(style)
 

@@ -205,7 +205,7 @@ data class Span(
     fun intoRightAlignedLine(): Line = Line.from(this).rightAligned()
 
     // Styled implementation
-    override fun getStyle(): Style = style
+    override fun style(): Style = style
 
     override fun setStyle(style: Style): Span = style(style)
 

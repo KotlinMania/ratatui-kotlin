@@ -338,7 +338,7 @@ data class Paragraph(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = paragraphStyle
+    override fun style(): Style = paragraphStyle
 
     override fun setStyle(style: Style): Paragraph = style(style)
 

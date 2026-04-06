@@ -90,7 +90,7 @@ data class Row(
     internal fun heightWithMargin(): Int = height + topMargin + bottomMargin
 
     // Styled implementation
-    override fun getStyle(): Style = rowStyle
+    override fun style(): Style = rowStyle
 
     override fun setStyle(style: Style): Row = style(style)
 

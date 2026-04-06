@@ -431,7 +431,7 @@ data class Table(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = tableStyle
+    override fun style(): Style = tableStyle
 
     override fun setStyle(style: Style): Table = style(style)
 

@@ -230,7 +230,7 @@ data class Tabs(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = tabsStyle
+    override fun style(): Style = tabsStyle
 
     override fun setStyle(style: Style): Tabs = style(style)
 

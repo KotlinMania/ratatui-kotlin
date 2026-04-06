@@ -72,7 +72,7 @@ data class Cell(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = cellStyle
+    override fun style(): Style = cellStyle
 
     override fun setStyle(style: Style): Cell = style(style)
 

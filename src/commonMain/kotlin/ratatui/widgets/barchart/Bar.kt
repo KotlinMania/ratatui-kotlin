@@ -166,7 +166,7 @@ data class Bar(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = barStyle
+    override fun style(): Style = barStyle
 
     override fun setStyle(style: Style): Bar = style(style)
 

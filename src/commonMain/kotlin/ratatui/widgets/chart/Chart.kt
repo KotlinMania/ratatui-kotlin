@@ -506,7 +506,7 @@ data class Chart(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = chartStyle
+    override fun style(): Style = chartStyle
 
     override fun setStyle(style: Style): Chart = style(style)
 
