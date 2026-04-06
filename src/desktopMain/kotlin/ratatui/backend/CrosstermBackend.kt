@@ -4,9 +4,9 @@ import io.github.kotlinmania.crossterm.cursor.Hide
 import io.github.kotlinmania.crossterm.cursor.MoveTo
 import io.github.kotlinmania.crossterm.cursor.Show
 import io.github.kotlinmania.crossterm.cursor.sys.position
-import io.github.kotlinmania.crossterm.style.Attribute
+import io.github.kotlinmania.crossterm.style.types.Attribute
 import io.github.kotlinmania.crossterm.style.Attributes
-import io.github.kotlinmania.crossterm.style.Color
+import io.github.kotlinmania.crossterm.style.types.Color
 import io.github.kotlinmania.crossterm.style.Print
 import io.github.kotlinmania.crossterm.style.SetAttribute
 import io.github.kotlinmania.crossterm.style.SetAttributes
