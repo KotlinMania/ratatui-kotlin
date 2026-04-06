@@ -98,13 +98,6 @@ kotlin {
 
                 // File I/O
                 implementation("com.squareup.okio:okio:3.9.1")
-
-                // Character encoding support (for legacy codepage conversion)
-                // fleeksoft-io provides JDK-like IO classes for Kotlin Multiplatform
-                implementation("com.fleeksoft.io:io-core:0.0.4")
-                implementation("com.fleeksoft.io:io:0.0.4")
-                implementation("com.fleeksoft.charset:charset:0.0.4")
-                implementation("com.fleeksoft.charset:charset-ext:0.0.4")
             }
         }
 
