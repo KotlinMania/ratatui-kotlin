@@ -1,6 +1,5 @@
 package ratatui.text
 
-import kotlin.jvm.JvmName
 import ratatui.buffer.Buffer
 import ratatui.layout.Rect
 import ratatui.style.Color
@@ -69,7 +68,6 @@ data class Span(
     /** The content of the span. */
     val content: String = "",
     /** The style of the span. */
-    @get:JvmName("styleValue")
     val style: Style = Style.default()
 ) : Styled<Span>, Widget {
 

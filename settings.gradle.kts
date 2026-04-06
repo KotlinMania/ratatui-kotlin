@@ -18,13 +18,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "ratatui-kotlin"
 
-// Include local kasuari-kotlin for development (until kasuari-kotlin 0.1.1+ is published with all targets)
-// Remove this once kasuari-kotlin is published to Maven Central with iOS/JS/WASM/Android targets
-val localKasuari = file("kasuari-kotlin")
-if (localKasuari.exists()) {
-    includeBuild(localKasuari) {
-        dependencySubstitution {
-            substitute(module("io.github.kotlinmania:kasuari-kotlin")).using(project(":"))
-        }
-    }
-}
+// Published-only dependency resolution: do not composite-include other builds here.
