@@ -1,6 +1,7 @@
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
 
 plugins {
     kotlin("multiplatform") version "2.3.0"
@@ -12,7 +13,7 @@ plugins {
 group = "io.github.kotlinmania"
 version = "0.1.5"
 
-// Android setup
+// Setup Android SDK location and licenses automatically (for CI + local builds).
 val sdkDir = file(".android-sdk")
 val licensesDir = sdkDir.resolve("licenses")
 if (!licensesDir.exists()) licensesDir.mkdirs()
@@ -26,10 +27,8 @@ if (!licenseFile.exists()) {
         """.trimIndent()
     )
 }
-val localProperties: File? = rootProject.file("local.properties")
-if (localProperties?.exists() == false) {
-    localProperties.writeText("sdk.dir=${sdkDir.absolutePath}")
-}
+val localProperties: File = rootProject.file("local.properties")
+localProperties.writeText("sdk.dir=${sdkDir.absolutePath}")
 
 kotlin {
     applyDefaultHierarchyTemplate()
@@ -89,7 +88,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("io.github.kotlinmania:kasuari-kotlin:0.1.0")
+                api("io.github.kotlinmania:kasuari-kotlin:0.1.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
@@ -158,6 +157,15 @@ kotlin {
         val commonTest by getting { dependencies { implementation(kotlin("test")) } }
     }
     jvmToolchain(21)
+}
+
+val enableIosSimulatorTests =
+    providers.gradleProperty("enableIosSimulatorTests").map { it.toBoolean() }.orElse(false)
+
+tasks.withType<KotlinNativeTest>().configureEach {
+    if (!enableIosSimulatorTests.get() && (name == "iosX64Test" || name == "iosSimulatorArm64Test")) {
+        enabled = false
+    }
 }
 
 
