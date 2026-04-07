@@ -3,6 +3,7 @@ package ratatui.terminal
 import ratatui.backend.Backend
 import ratatui.backend.ClearType
 import ratatui.buffer.Buffer
+import ratatui.buffer.Cell
 import ratatui.layout.Position
 import ratatui.layout.Rect
 import ratatui.layout.Size
@@ -72,17 +73,14 @@ class Terminal<B : Backend>(
             is Viewport.Fixed -> viewport.area
         }
 
-        viewportArea = when (viewport) {
-            is Viewport.Fullscreen -> area
-            is Viewport.Inline -> computeInlineSize(viewport.height, area.asSize())
-            is Viewport.Fixed -> viewport.area
+        val (initialViewportArea, initialCursorPos) = when (viewport) {
+            is Viewport.Fullscreen -> Pair(area, Position.ORIGIN)
+            is Viewport.Inline -> computeInlineSize(viewport.height, area.asSize(), 0)
+            is Viewport.Fixed -> Pair(viewport.area, viewport.area.asPosition())
         }
 
-        lastKnownCursorPos = when (viewport) {
-            is Viewport.Fullscreen -> Position.ORIGIN
-            is Viewport.Inline -> Position(0, viewportArea.y)
-            is Viewport.Fixed -> viewportArea.asPosition()
-        }
+        viewportArea = initialViewportArea
+        lastKnownCursorPos = initialCursorPos
 
         lastKnownArea = area
         buffers = arrayOf(Buffer.empty(viewportArea), Buffer.empty(viewportArea))
@@ -138,7 +136,7 @@ class Terminal<B : Backend>(
             is Viewport.Inline -> {
                 val offsetInPreviousViewport = (lastKnownCursorPos.y - viewportArea.top())
                     .coerceAtLeast(0)
-                computeInlineSize(viewport.height, area.asSize(), offsetInPreviousViewport)
+                computeInlineSize(viewport.height, area.asSize(), offsetInPreviousViewport).first
             }
             is Viewport.Fixed, is Viewport.Fullscreen -> area
         }
@@ -291,14 +289,109 @@ class Terminal<B : Backend>(
     }
 
     /**
+     * Insert some content before the current inline viewport. This has no effect when the
+     * viewport is not inline.
+     *
+     * Transliteration of `Terminal::insert_before` (non-scrolling-regions implementation).
+     */
+    fun insertBefore(height: UShort, drawFn: (Buffer) -> Unit) {
+        if (viewport !is Viewport.Inline) return
+        insertBeforeNoScrollingRegions(height, drawFn)
+    }
+
+    /**
      * Queries the real size of the backend.
      */
     fun size(): Size = backend.size()
 
-    private fun computeInlineSize(height: UShort, size: Size, offset: Int = 0): Rect {
-        val h = minOf(height.toInt(), size.height)
-        val y = (size.height - h - offset).coerceAtLeast(0)
-        return Rect(x = 0, y = y, width = size.width, height = h)
+    private fun insertBeforeNoScrollingRegions(height: UShort, drawFn: (Buffer) -> Unit) {
+        val area = Rect(
+            x = 0,
+            y = 0,
+            width = viewportArea.width,
+            height = height.toInt()
+        )
+        val buffer = Buffer.empty(area)
+        drawFn(buffer)
+        val cells = buffer.content.toList()
+
+        var bufferIndex = 0
+
+        var drawnHeight = viewportArea.top()
+        var bufferHeight = height.toInt()
+        val viewportHeight = viewportArea.height
+        val screenHeight = lastKnownArea.height
+
+        while (bufferHeight + viewportHeight > screenHeight) {
+            val toDraw = minOf(bufferHeight, screenHeight)
+            val scrollUp = maxOf(0, drawnHeight + toDraw - screenHeight)
+            scrollUp(scrollUp)
+            bufferIndex = drawLines(drawnHeight - scrollUp, toDraw, cells, bufferIndex)
+            drawnHeight += toDraw - scrollUp
+            bufferHeight -= toDraw
+        }
+
+        val scrollUp = maxOf(0, drawnHeight + bufferHeight + viewportHeight - screenHeight)
+        scrollUp(scrollUp)
+        drawLines(drawnHeight - scrollUp, bufferHeight, cells, bufferIndex)
+        drawnHeight += bufferHeight - scrollUp
+
+        setViewportArea(viewportArea.copy(y = drawnHeight))
+        clear()
+    }
+
+    private fun drawLines(
+        yOffset: Int,
+        linesToDraw: Int,
+        cells: List<Cell>,
+        startIndex: Int
+    ): Int {
+        val width = lastKnownArea.width
+        val endIndex = startIndex + (width * linesToDraw)
+        val toDraw = cells.subList(startIndex, endIndex)
+        if (linesToDraw > 0) {
+            val iter = toDraw.asSequence()
+                .withIndex()
+                .map { (i, c) -> Triple(i % width, yOffset + (i / width), c) }
+                .iterator()
+            backend.draw(iter)
+            backend.flush()
+        }
+        return endIndex
+    }
+
+    private fun scrollUp(linesToScroll: Int) {
+        if (linesToScroll > 0) {
+            setCursorPosition(Position(0, (lastKnownArea.height - 1).coerceAtLeast(0)))
+            backend.appendLines(linesToScroll.toUShort())
+        }
+    }
+
+    private fun computeInlineSize(height: UShort, size: Size, offsetInPreviousViewport: Int): Pair<Rect, Position> {
+        val pos = backend.getCursorPosition()
+        var row = pos.y
+
+        val maxHeight = minOf(size.height, height.toInt())
+
+        val linesAfterCursor = (height.toInt() - offsetInPreviousViewport - 1).coerceAtLeast(0)
+        backend.appendLines(linesAfterCursor.toUShort())
+
+        val availableLines = (size.height - row - 1).coerceAtLeast(0)
+        val missingLines = (linesAfterCursor - availableLines).coerceAtLeast(0)
+        if (missingLines > 0) {
+            row = (row - missingLines).coerceAtLeast(0)
+        }
+        row = (row - offsetInPreviousViewport).coerceAtLeast(0)
+
+        return Pair(
+            Rect(
+                x = 0,
+                y = row,
+                width = size.width,
+                height = maxHeight
+            ),
+            pos
+        )
     }
 
     companion object {
