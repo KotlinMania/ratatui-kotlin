@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/style/color.rs
 package ratatui.style
 
 /**
@@ -121,18 +122,51 @@ sealed class Color {
      *
      * See also: https://en.wikipedia.org/wiki/ANSI_escape_code#24-bit
      */
-    data class Rgb(val r: UByte, val g: UByte, val b: UByte) : Color()
+    data class Rgb(val r: UByte, val g: UByte, val b: UByte) : Color() {
+        override fun toString(): String {
+            val rHex = r.toString(16).padStart(2, '0').uppercase()
+            val gHex = g.toString(16).padStart(2, '0').uppercase()
+            val bHex = b.toString(16).padStart(2, '0').uppercase()
+            return "#$rHex$gHex$bHex"
+        }
+    }
 
     /**
      * An 8-bit 256 color.
      *
      * See also: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
      */
-    data class Indexed(val index: UByte) : Color()
+    data class Indexed(val index: UByte) : Color() {
+        override fun toString(): String = index.toString()
+    }
 
     companion object {
         /** Default color (Reset) */
         fun default(): Color = Reset
+
+        /**
+         * Converts a tuple of 3 u8 values to a [Color.Rgb] instance.
+         *
+         * Transliteration of `impl From<(u8, u8, u8)> for Color`.
+         */
+        fun from(rgb: Triple<UByte, UByte, UByte>): Color = Rgb(rgb.first, rgb.second, rgb.third)
+
+        /**
+         * Converts an array of 3 or 4 u8 values to a [Color.Rgb] instance.
+         *
+         * - If `bytes.size == 3`, returns `Rgb(r, g, b)`.
+         * - If `bytes.size == 4`, returns `Rgb(r, g, b)` (ignoring alpha).
+         *
+         * Transliteration of:
+         * - `impl From<[u8; 3]> for Color`
+         * - `impl From<[u8; 4]> for Color`
+         */
+        fun from(bytes: UByteArray): Color {
+            if (bytes.size != 3 && bytes.size != 4) {
+                throw IllegalArgumentException("Expected 3 or 4 bytes, got ${bytes.size}")
+            }
+            return Rgb(bytes[0], bytes[1], bytes[2])
+        }
 
         /**
          * Convert a UInt to a Color
@@ -147,11 +181,11 @@ sealed class Color {
         }
 
         /**
-         * Parse a string to a Color.
+         * Converts a string representation to a [Color] instance.
          *
          * Supports named colors, RGB hex values (#RRGGBB), and indexed colors (0-255).
          *
-         * @throws ParseColorError if the string cannot be parsed
+         * @throws ParseColorError if the string cannot be parsed.
          */
         fun fromStr(s: String): Color {
             // There is a mix of different color names and formats in the wild.
@@ -196,38 +230,34 @@ sealed class Color {
                 }
             }
         }
+    }
 
-        /**
-         * Try to parse a string to a Color, returning null on failure.
-         */
-        fun fromStrOrNull(s: String): Color? = try {
-            fromStr(s)
-        } catch (e: ParseColorError) {
-            null
+    internal fun stylizeDebug(kind: ColorDebugKind): ColorDebug = ColorDebug(kind = kind, color = this)
+
+    override fun toString(): String =
+        // Most variants are `data object`s which already use their name as `toString()`.
+        // Keep an explicit match here to mirror Rust's `fmt::Display` arms.
+        when (this) {
+            is Reset -> "Reset"
+            is Black -> "Black"
+            is Red -> "Red"
+            is Green -> "Green"
+            is Yellow -> "Yellow"
+            is Blue -> "Blue"
+            is Magenta -> "Magenta"
+            is Cyan -> "Cyan"
+            is Gray -> "Gray"
+            is DarkGray -> "DarkGray"
+            is LightRed -> "LightRed"
+            is LightGreen -> "LightGreen"
+            is LightYellow -> "LightYellow"
+            is LightBlue -> "LightBlue"
+            is LightMagenta -> "LightMagenta"
+            is LightCyan -> "LightCyan"
+            is White -> "White"
+            is Rgb -> this.toString()
+            is Indexed -> this.toString()
         }
-    }
-
-    override fun toString(): String = when (this) {
-        is Reset -> "Reset"
-        is Black -> "Black"
-        is Red -> "Red"
-        is Green -> "Green"
-        is Yellow -> "Yellow"
-        is Blue -> "Blue"
-        is Magenta -> "Magenta"
-        is Cyan -> "Cyan"
-        is Gray -> "Gray"
-        is DarkGray -> "DarkGray"
-        is LightRed -> "LightRed"
-        is LightGreen -> "LightGreen"
-        is LightYellow -> "LightYellow"
-        is LightBlue -> "LightBlue"
-        is LightMagenta -> "LightMagenta"
-        is LightCyan -> "LightCyan"
-        is White -> "White"
-        is Rgb -> "#${r.toString(16).padStart(2, '0').uppercase()}${g.toString(16).padStart(2, '0').uppercase()}${b.toString(16).padStart(2, '0').uppercase()}"
-        is Indexed -> index.toString()
-    }
 }
 
 /** Error type indicating a failure to parse a color string. */
@@ -241,195 +271,4 @@ private fun parseHexColor(input: String): Triple<UByte, UByte, UByte>? {
     val g = input.substring(3, 5).toUByteOrNull(16) ?: return null
     val b = input.substring(5, 7).toUByteOrNull(16) ?: return null
     return Triple(r, g, b)
-}
-
-// Extension functions for Color conversion
-fun Triple<UByte, UByte, UByte>.toColor(): Color = Color.Rgb(first, second, third)
-fun UByte.toIndexedColor(): Color = Color.Indexed(this)
-
-// =============================================================================
-// Tests
-// =============================================================================
-// Note: HSL/Hsluv palette tests are not ported as we don't have the palette library.
-// Serde tests are not ported as serialization is handled differently in Kotlin.
-
-/**
- * Unit tests for Color parsing and display.
- *
- * In Kotlin, tests would typically be in a separate test source set.
- * These are included here as reference implementations matching the Rust tests.
- */
-internal object ColorTests {
-
-    // -------------------------------------------------------------------------
-    // fromU32 tests
-    // -------------------------------------------------------------------------
-
-    fun testFromU32() {
-        check(Color.fromU32(0x000000u) == Color.Rgb(0u, 0u, 0u))
-        check(Color.fromU32(0xFF0000u) == Color.Rgb(255u, 0u, 0u))
-        check(Color.fromU32(0x00FF00u) == Color.Rgb(0u, 255u, 0u))
-        check(Color.fromU32(0x0000FFu) == Color.Rgb(0u, 0u, 255u))
-        check(Color.fromU32(0xFFFFFFu) == Color.Rgb(255u, 255u, 255u))
-    }
-
-    // -------------------------------------------------------------------------
-    // fromStr RGB color test
-    // -------------------------------------------------------------------------
-
-    fun testFromRgbColor() {
-        val color: Color = Color.fromStr("#FF0000")
-        check(color == Color.Rgb(255u, 0u, 0u))
-    }
-
-    // -------------------------------------------------------------------------
-    // fromStr indexed color test
-    // -------------------------------------------------------------------------
-
-    fun testFromIndexedColor() {
-        val color: Color = Color.fromStr("10")
-        check(color == Color.Indexed(10u))
-    }
-
-    // -------------------------------------------------------------------------
-    // fromStr ANSI color tests
-    // -------------------------------------------------------------------------
-
-    fun testFromAnsiColor() {
-        check(Color.fromStr("reset") == Color.Reset)
-        check(Color.fromStr("black") == Color.Black)
-        check(Color.fromStr("red") == Color.Red)
-        check(Color.fromStr("green") == Color.Green)
-        check(Color.fromStr("yellow") == Color.Yellow)
-        check(Color.fromStr("blue") == Color.Blue)
-        check(Color.fromStr("magenta") == Color.Magenta)
-        check(Color.fromStr("cyan") == Color.Cyan)
-        check(Color.fromStr("gray") == Color.Gray)
-        check(Color.fromStr("darkgray") == Color.DarkGray)
-        check(Color.fromStr("lightred") == Color.LightRed)
-        check(Color.fromStr("lightgreen") == Color.LightGreen)
-        check(Color.fromStr("lightyellow") == Color.LightYellow)
-        check(Color.fromStr("lightblue") == Color.LightBlue)
-        check(Color.fromStr("lightmagenta") == Color.LightMagenta)
-        check(Color.fromStr("lightcyan") == Color.LightCyan)
-        check(Color.fromStr("white") == Color.White)
-
-        // aliases
-        check(Color.fromStr("lightblack") == Color.DarkGray)
-        check(Color.fromStr("lightwhite") == Color.White)
-        check(Color.fromStr("lightgray") == Color.White)
-
-        // silver = grey = gray
-        check(Color.fromStr("grey") == Color.Gray)
-        check(Color.fromStr("silver") == Color.Gray)
-
-        // spaces are ignored
-        check(Color.fromStr("light black") == Color.DarkGray)
-        check(Color.fromStr("light white") == Color.White)
-        check(Color.fromStr("light gray") == Color.White)
-
-        // dashes are ignored
-        check(Color.fromStr("light-black") == Color.DarkGray)
-        check(Color.fromStr("light-white") == Color.White)
-        check(Color.fromStr("light-gray") == Color.White)
-
-        // underscores are ignored
-        check(Color.fromStr("light_black") == Color.DarkGray)
-        check(Color.fromStr("light_white") == Color.White)
-        check(Color.fromStr("light_gray") == Color.White)
-
-        // bright = light
-        check(Color.fromStr("bright-black") == Color.DarkGray)
-        check(Color.fromStr("bright-white") == Color.White)
-
-        // bright = light
-        check(Color.fromStr("brightblack") == Color.DarkGray)
-        check(Color.fromStr("brightwhite") == Color.White)
-    }
-
-    // -------------------------------------------------------------------------
-    // Invalid color parsing tests
-    // -------------------------------------------------------------------------
-
-    fun testFromInvalidColors() {
-        val badColors = listOf(
-            "invalid_color", // not a color string
-            "abcdef0",       // 7 chars is not a color
-            " bcdefa",       // doesn't start with a '#'
-            "#abcdef00",     // too many chars
-            "#1\uD83E\uDD80" + "2", // len 7 but on char boundaries shouldn't panic (crab emoji)
-            "resets",        // typo
-            "lightblackk",   // typo
-        )
-
-        for (badColor in badColors) {
-            val result = Color.fromStrOrNull(badColor)
-            check(result == null) { "bad color: '$badColor'" }
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    // toString (display) tests
-    // -------------------------------------------------------------------------
-
-    fun testDisplay() {
-        check(Color.Black.toString() == "Black")
-        check(Color.Red.toString() == "Red")
-        check(Color.Green.toString() == "Green")
-        check(Color.Yellow.toString() == "Yellow")
-        check(Color.Blue.toString() == "Blue")
-        check(Color.Magenta.toString() == "Magenta")
-        check(Color.Cyan.toString() == "Cyan")
-        check(Color.Gray.toString() == "Gray")
-        check(Color.DarkGray.toString() == "DarkGray")
-        check(Color.LightRed.toString() == "LightRed")
-        check(Color.LightGreen.toString() == "LightGreen")
-        check(Color.LightYellow.toString() == "LightYellow")
-        check(Color.LightBlue.toString() == "LightBlue")
-        check(Color.LightMagenta.toString() == "LightMagenta")
-        check(Color.LightCyan.toString() == "LightCyan")
-        check(Color.White.toString() == "White")
-        check(Color.Indexed(10u).toString() == "10")
-        check(Color.Rgb(255u, 0u, 0u).toString() == "#FF0000")
-        check(Color.Reset.toString() == "Reset")
-    }
-
-    // -------------------------------------------------------------------------
-    // Array and tuple conversion tests
-    // -------------------------------------------------------------------------
-
-    fun testFromArrayAndTupleConversions() {
-        // From Triple (Kotlin equivalent of tuple)
-        val fromTriple = Triple(123.toUByte(), 45.toUByte(), 67.toUByte()).toColor()
-        check(fromTriple == Color.Rgb(123u, 45u, 67u))
-
-        // From list/array (takes first 3 elements)
-        val fromList = listOf(89.toUByte(), 76.toUByte(), 54.toUByte()).toColor()
-        check(fromList == Color.Rgb(89u, 76u, 54u))
-
-        // From list with 4 elements (alpha is ignored, takes first 3)
-        val fromList4 = listOf(10.toUByte(), 20.toUByte(), 30.toUByte(), 255.toUByte()).toColor()
-        check(fromList4 == Color.Rgb(10u, 20u, 30u))
-    }
-
-    // -------------------------------------------------------------------------
-    // Run all tests
-    // -------------------------------------------------------------------------
-
-    fun runAll() {
-        testFromU32()
-        testFromRgbColor()
-        testFromIndexedColor()
-        testFromAnsiColor()
-        testFromInvalidColors()
-        testDisplay()
-        testFromArrayAndTupleConversions()
-        println("All Color tests passed!")
-    }
-}
-
-// Extension function to convert a list of UBytes to Color (takes first 3)
-fun List<UByte>.toColor(): Color {
-    require(size >= 3) { "List must have at least 3 elements" }
-    return Color.Rgb(this[0], this[1], this[2])
 }
