@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/paragraph.rs
 package ratatui.widgets.paragraph
 
 import ratatui.buffer.Buffer
