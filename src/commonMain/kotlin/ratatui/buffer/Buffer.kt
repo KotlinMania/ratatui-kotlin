@@ -14,7 +14,34 @@ import ratatui.text.unicodeWidth
  *
  * No widget in the library interacts directly with the terminal. Instead each of them
  * is required to draw their state to an intermediate buffer. It is basically a grid
- * where each cell contains a grapheme, a foreground color and a background color.
+ * where each cell contains a grapheme, a foreground color and a background color. This grid will
+ * then be used to output the appropriate escape sequences and characters to draw the UI as the
+ * user has defined it.
+ *
+ * ## Examples
+ *
+ * ```kotlin
+ * val buf = Buffer.empty(Rect.new(0, 0, 10, 5))
+ *
+ * // indexing using Position
+ * buf[Position(x = 0, y = 0)].setSymbol("A")
+ * check(buf[Position(x = 0, y = 0)].symbol() == "A")
+ *
+ * // indexing using (x, y)
+ * buf[0, 1].setSymbol("B")
+ * check(buf[0, 1].symbol() == "B")
+ *
+ * // getting a nullable cell instead of throwing if outside the buffer
+ * val cell = requireNotNull(buf.cellMut(Position(x = 0, y = 2))) { "cell not found" }
+ * cell.setSymbol("C")
+ *
+ * val c = requireNotNull(buf.cell(Position(x = 0, y = 2))) { "cell not found" }
+ * check(c.symbol() == "C")
+ *
+ * buf.setString(3, 0, "string", Style.default())
+ * val r = buf[5, 0]
+ * check(r.symbol() == "r")
+ * ```
  */
 class Buffer(
     /** The area represented by this buffer */
@@ -60,26 +87,35 @@ class Buffer(
     /** Returns the area covered by this buffer */
     fun area(): Rect = area
 
-    /** Returns the index in the content list for the given coordinates */
-    fun indexOf(x: Int, y: Int): Int {
-        require(area.contains(Position(x, y))) {
-            "index outside of buffer: the area is $area but index is ($x, $y)"
-        }
-        val relY = y - area.y
-        val relX = x - area.x
+    private fun indexOfOpt(position: Position): Int? {
+        if (!area.contains(position)) return null
+        val relY = position.y - area.y
+        val relX = position.x - area.x
         val width = area.width
         return relY * width + relX
     }
 
+    /** Returns the index in the content list for the given coordinates */
+    fun indexOf(x: Int, y: Int): Int {
+        return indexOfOpt(Position(x, y)) ?: error(
+            "index outside of buffer: the area is ${area.debugString()} but index is ($x, $y)"
+        )
+    }
+
     /** Returns the cell at the given position, or null if outside bounds */
     fun cell(position: Position): Cell? {
-        if (!area.contains(position)) return null
-        val index = indexOf(position.x, position.y)
+        val index = indexOfOpt(position) ?: return null
         return content.getOrNull(index)
     }
 
+    /** Returns the cell at the given coordinates, or null if outside bounds */
+    fun cell(x: Int, y: Int): Cell? = cell(Position(x, y))
+
     /** Returns the mutable cell at the given position, or null if outside bounds */
     fun cellMut(position: Position): Cell? = cell(position)
+
+    /** Returns the mutable cell at the given coordinates, or null if outside bounds */
+    fun cellMut(x: Int, y: Int): Cell? = cellMut(Position(x, y))
 
     /** Indexing operator for (x, y) pairs */
     operator fun get(x: Int, y: Int): Cell {
@@ -89,6 +125,20 @@ class Buffer(
 
     /** Indexing operator for Position */
     operator fun get(position: Position): Cell = get(position.x, position.y)
+
+    /**
+     * Returns the (global) coordinates of a cell given its index.
+     *
+     * Global coordinates are offset by the Buffer's area offset (`x`/`y`).
+     */
+    fun posOf(index: Int): Pair<Int, Int> {
+        require(index >= 0 && index < content.size) {
+            "Trying to get the coords of a cell outside the buffer: i=$index len=${content.size}"
+        }
+        val x = (index % area.width) + area.x
+        val y = (index / area.width) + area.y
+        return Pair(x, y)
+    }
 
     /** Print a string, starting at the position (x, y) */
     fun setString(x: Int, y: Int, string: String, style: Style) {
@@ -189,20 +239,58 @@ class Buffer(
         }
     }
 
+    /** Merge another buffer into this one. */
+    fun merge(other: Buffer) {
+        val newArea = this.area.union(other.area)
+
+        val newLength = newArea.area().toInt()
+        while (content.size < newLength) content.add(Cell.EMPTY.clone())
+        while (content.size > newLength) content.removeLast()
+
+        // Move original content to the appropriate space.
+        val size = this.area.area().toInt()
+        for (i in (0 until size).reversed()) {
+            val (x, y) = posOf(i)
+            val k = ((y - newArea.y) * newArea.width + (x - newArea.x))
+            if (i != k) {
+                content[k] = content[i].clone()
+                content[i].reset()
+            }
+        }
+
+        // Push content of the other buffer into this one (may erase previous data).
+        val otherSize = other.area.area().toInt()
+        for (i in 0 until otherSize) {
+            val (x, y) = other.posOf(i)
+            val k = ((y - newArea.y) * newArea.width + (x - newArea.x))
+            content[k] = other.content[i].clone()
+        }
+
+        this.area = newArea
+    }
+
     /**
      * Builds a minimal sequence of updates necessary to update the UI from this buffer to [other].
      *
-     * Transliteration of `ratatui-core`'s `Buffer::diff` implementation.
+     * Prefer [diffIter] to avoid the intermediate allocation.
      */
     fun diff(other: Buffer): List<Triple<Int, Int, Cell>> {
         val updates = mutableListOf<Triple<Int, Int, Cell>>()
-        val diff = BufferDiff.new(this, other)
+        val diff = diffIter(other)
         while (diff.hasNext()) {
             val (x, y, cell) = diff.next()
             updates.add(Triple(x, y, cell))
         }
         return updates
     }
+
+    /**
+     * Builds a minimal sequence of coordinates and Cells necessary to update the UI from this
+     * buffer to [other].
+     *
+     * Transliteration of `ratatui-core`'s `Buffer::diff_iter` implementation.
+     */
+    fun diffIter(other: Buffer): BufferDiff = BufferDiff.new(this, other)
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -221,15 +309,90 @@ class Buffer(
 
     override fun toString(): String {
         val sb = StringBuilder()
-        sb.append("Buffer { area: $area, content: [\n")
-        for (y in area.top() until area.bottom()) {
-            sb.append("  \"")
-            for (x in area.left() until area.right()) {
-                sb.append(this[x, y].symbol())
-            }
-            sb.append("\"\n")
+        sb.append("Buffer {\n    area: ${area.debugString()}")
+
+        if (area.isEmpty()) {
+            sb.append("\n}")
+            return sb.toString()
         }
-        sb.append("]}")
+
+        sb.append(",\n    content: [\n")
+        val styles = mutableListOf<StyleEntry>()
+        var lastStyle: StyleKey? = null
+
+        for (y in 0 until area.height) {
+            val overwritten = mutableListOf<Pair<Int, String>>()
+            var skip = 0
+            sb.append("        \"")
+            for (x in 0 until area.width) {
+                val cell = this[area.x + x, area.y + y]
+                val sym = cell.symbol()
+                if (skip == 0) {
+                    sb.append(sym)
+                } else {
+                    overwritten.add(Pair(x, sym))
+                }
+                skip = (maxOf(skip, cell.cellWidth().toInt()) - 1).coerceAtLeast(0)
+
+                val styleKey = StyleKey(fg = cell.fg, bg = cell.bg, modifier = cell.modifier)
+                if (lastStyle != styleKey) {
+                    lastStyle = styleKey
+                    styles.add(
+                        StyleEntry(
+                            x = x,
+                            y = y,
+                            fg = cell.fg,
+                            bg = cell.bg,
+                            modifier = cell.modifier
+                        )
+                    )
+                }
+            }
+            sb.append("\",")
+            if (overwritten.isNotEmpty()) {
+                sb.append(" // hidden by multi-width symbols: ${overwritten.debugString()}")
+            }
+            sb.append("\n")
+        }
+
+        sb.append("    ],\n    styles: [\n")
+        for (s in styles) {
+            sb.append("        x: ${s.x}, y: ${s.y}, fg: ${s.fg}, bg: ${s.bg}, modifier: ${s.modifier},\n")
+        }
+        sb.append("    ]\n}")
         return sb.toString()
     }
+}
+
+private data class StyleKey(
+    val fg: ratatui.style.Color,
+    val bg: ratatui.style.Color,
+    val modifier: ratatui.style.Modifier
+)
+
+private data class StyleEntry(
+    val x: Int,
+    val y: Int,
+    val fg: ratatui.style.Color,
+    val bg: ratatui.style.Color,
+    val modifier: ratatui.style.Modifier
+)
+
+private fun Rect.debugString(): String = "Rect { x: $x, y: $y, width: $width, height: $height }"
+
+private fun List<Pair<Int, String>>.debugString(): String = joinToString(prefix = "[", postfix = "]") { (x, s) ->
+    "($x, ${s.debugQuoted()})"
+}
+
+private fun String.debugQuoted(): String {
+    val escaped = buildString {
+        for (ch in this@debugQuoted) {
+            when (ch) {
+                '\\' -> append("\\\\")
+                '"' -> append("\\\"")
+                else -> append(ch)
+            }
+        }
+    }
+    return "\"$escaped\""
 }

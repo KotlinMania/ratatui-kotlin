@@ -19,6 +19,8 @@ class BufferDiff private constructor(
 ) : Iterator<Triple<Int, Int, Cell>> {
     private var pos: Int = 0
     private var trailing: TrailingState? = null
+    private var cached: Triple<Int, Int, Cell>? = null
+    private var cacheValid: Boolean = false
 
     private data class TrailingState(
         var nextIndex: Int,
@@ -50,11 +52,22 @@ class BufferDiff private constructor(
     }
 
     override fun hasNext(): Boolean {
-        val len = minOf(next.size, prev.size)
-        return trailing != null || pos < len
+        if (!cacheValid) {
+            cached = nextDiffOrNull()
+            cacheValid = true
+        }
+        return cached != null
     }
 
     override fun next(): Triple<Int, Int, Cell> {
+        if (!hasNext()) throw NoSuchElementException()
+        val result = cached ?: throw NoSuchElementException()
+        cached = null
+        cacheValid = false
+        return result
+    }
+
+    private fun nextDiffOrNull(): Triple<Int, Int, Cell>? {
         // First, yield any pending VS16 trailing cells.
         trailing?.let { state ->
             while (state.nextIndex < state.end) {
@@ -119,7 +132,7 @@ class BufferDiff private constructor(
             }
         }
 
-        throw NoSuchElementException()
+        return null
     }
 }
 
