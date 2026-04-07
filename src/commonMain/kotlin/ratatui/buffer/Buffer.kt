@@ -95,33 +95,44 @@ class Buffer(
         setStringn(x, y, string, Int.MAX_VALUE, style)
     }
 
-    /** Print at most the first n characters of a string */
+    /**
+     * Print at most the first `n` characters of a string if enough space is available until the end of the line.
+     *
+     * Skips zero-width graphemes and control characters.
+     *
+     * Use [setString] when the maximum amount of characters can be printed.
+     */
     fun setStringn(x: Int, y: Int, string: String, maxWidth: Int, style: Style): Pair<Int, Int> {
         var currentX = x
-        val right = area.right()
-        val remainingWidth = (right - x).coerceAtMost(maxWidth)
 
-        var used = 0
-        for (grapheme in graphemes(string)) {
-            if (used >= remainingWidth) break
-            if (grapheme.length == 1 && grapheme[0].isISOControl()) continue
+        val remainingWidthMax = maxWidth.coerceAtLeast(0)
+        val remainingWidthToRight = (area.right() - currentX).coerceAtLeast(0)
+        var remainingWidth = minOf(remainingWidthToRight, remainingWidthMax)
 
-            val symbolWidth = unicodeWidth(grapheme)
-            if (symbolWidth == 0) {
-                if (currentX > x) {
-                    val index = indexOf(currentX - 1, y)
-                    content[index].appendSymbol(grapheme).setStyle(style)
-                }
-                continue
+        val graphemes = graphemes(string)
+            .asSequence()
+            .filter { symbol -> symbol.none { it.isISOControl() } }
+            .map { symbol -> symbol to unicodeWidth(symbol) }
+            .filter { (_symbol, width) -> width > 0 }
+
+        for ((symbol, width) in graphemes) {
+            val nextRemainingWidth = remainingWidth - width
+            if (nextRemainingWidth < 0) {
+                break
             }
+            remainingWidth = nextRemainingWidth
 
-            if (used + symbolWidth > remainingWidth) break
+            this[currentX, y].setSymbol(symbol).setStyle(style)
+            val nextSymbol = currentX + width
+            currentX += 1
 
-            val index = indexOf(currentX, y)
-            content[index].setSymbol(grapheme).setStyle(style)
-            currentX += symbolWidth
-            used += symbolWidth
+            // Reset following cells if multi-width (they would be hidden by the grapheme).
+            while (currentX < nextSymbol) {
+                this[currentX, y].reset()
+                currentX += 1
+            }
         }
+
         return Pair(currentX, y)
     }
 
