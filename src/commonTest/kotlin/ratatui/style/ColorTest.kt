@@ -1,5 +1,8 @@
 package ratatui.style
 
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -133,5 +136,38 @@ class ColorTest {
         val fromTuple4 = Color.from(ubyteArrayOf(200u, 150u, 100u, 0u))
         assertEquals(Color.Rgb(200u, 150u, 100u), fromTuple4)
     }
-}
 
+    @Test
+    fun serializeThenDeserialize() {
+        val json = Json
+        assertEquals("\"Red\"", json.encodeToString<Color>(Color.Red))
+        assertEquals(Color.Red, json.decodeFromString<Color>("\"Red\""))
+        assertEquals(Color.Rgb(255u, 0u, 255u), json.decodeFromString<Color>("\"#FF00FF\""))
+        assertEquals(Color.Indexed(10u), json.decodeFromString<Color>("\"10\""))
+    }
+
+    @Test
+    fun deserializeWithPreviousFormat() {
+        val json = Json
+        assertEquals(Color.Rgb(255u, 0u, 255u), json.decodeFromString<Color>("{\"Rgb\":[255,0,255]}"))
+        assertEquals(Color.Indexed(10u), json.decodeFromString<Color>("{\"Indexed\":10}"))
+    }
+
+    @Test
+    fun fromHsl() {
+        assertEquals(Color.Rgb(0u, 0u, 0u), Color.fromHsl(Hsl.new(0.0, 0.0, 0.0)))
+        assertEquals(Color.Rgb(255u, 255u, 255u), Color.fromHsl(Hsl.new(0.0, 0.0, 1.0)))
+        assertEquals(Color.Rgb(128u, 128u, 128u), Color.fromHsl(Hsl.new(0.0, 0.0, 0.5)))
+        assertEquals(Color.Rgb(255u, 0u, 0u), Color.fromHsl(Hsl.new(0.0, 1.0, 0.5)))
+        assertEquals(Color.Rgb(0u, 0u, 255u), Color.fromHsl(Hsl.new(-120.0, 1.0, 0.5)))
+    }
+
+    @Test
+    fun fromHsluv() {
+        assertEquals(Color.Rgb(0u, 0u, 0u), Color.fromHsluv(Hsluv.new(0.0, 100.0, 0.0)))
+        assertEquals(Color.Rgb(255u, 255u, 255u), Color.fromHsluv(Hsluv.new(0.0, 0.0, 100.0)))
+        assertEquals(Color.Rgb(119u, 119u, 119u), Color.fromHsluv(Hsluv.new(0.0, 0.0, 50.0)))
+        assertEquals(Color.Rgb(255u, 0u, 0u), Color.fromHsluv(Hsluv.new(12.18, 100.0, 53.2)))
+        assertEquals(Color.Rgb(0u, 0u, 255u), Color.fromHsluv(Hsluv.new(-94.13, 100.0, 32.3)))
+    }
+}

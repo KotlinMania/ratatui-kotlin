@@ -532,6 +532,18 @@ operator fun Text.plus(text: Text): Text {
 }
 
 /**
+ * A trait for converting a value to a [Text].
+ *
+ * This interface provides a way to convert any displayable type to a Text.
+ */
+interface ToText {
+    /**
+     * Converts the value to a [Text].
+     */
+    fun toText(): Text
+}
+
+/**
  * Extension function to convert any value to a [Text] using its [toString] representation.
  */
 fun Any.toText(): Text = Text.raw(this.toString())
