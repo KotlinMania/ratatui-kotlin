@@ -3,103 +3,11 @@ package ratatui.buffer
 import ratatui.layout.Position
 import ratatui.layout.Rect
 import ratatui.style.Style
-import ratatui.symbols.merge.MergeStrategy
 import ratatui.text.Line
 import ratatui.text.Span
+import ratatui.text.graphemes
 import ratatui.text.unicodeWidth
 import ratatui.terminal.CellUpdate
-import kotlin.math.max
-
-/**
- * A buffer cell.
- *
- * Each cell in the buffer contains a symbol (grapheme cluster), foreground color,
- * background color, and text modifiers.
- *
- * This is a minimal stub implementation. The full implementation will be ported
- * from the Rust ratatui-core crate.
- */
-data class Cell(
-    /** The string to be drawn in the cell */
-    var symbol: String = " ",
-    /** The foreground color of the cell */
-    var fg: ratatui.style.Color = ratatui.style.Color.Reset,
-    /** The background color of the cell */
-    var bg: ratatui.style.Color = ratatui.style.Color.Reset,
-    /** The modifier of the cell */
-    var modifier: ratatui.style.Modifier = ratatui.style.Modifier.empty(),
-    /** Whether the cell should be skipped when diffing */
-    var skip: Boolean = false
-) {
-    companion object {
-        /** An empty Cell */
-        val EMPTY: Cell = Cell()
-
-        /** Creates a new Cell with the given symbol */
-        fun new(symbol: String): Cell = Cell(symbol = symbol)
-    }
-
-    /** Gets the symbol of the cell */
-    fun symbol(): String = symbol
-
-    /** Sets the symbol of the cell */
-    fun setSymbol(symbol: String): Cell {
-        this.symbol = symbol
-        return this
-    }
-
-    /** Appends a symbol to the cell (for zero-width characters) */
-    fun appendSymbol(symbol: String): Cell {
-        this.symbol += symbol
-        return this
-    }
-
-    /** Sets the style of the cell */
-    fun setStyle(style: Style): Cell {
-        style.fg?.let { this.fg = it }
-        style.bg?.let { this.bg = it }
-        // TODO: handle modifiers
-        return this
-    }
-
-    /** Sets the foreground color of the cell */
-    fun setFg(color: ratatui.style.Color): Cell {
-        this.fg = color
-        return this
-    }
-
-    /** Sets the background color of the cell */
-    fun setBg(color: ratatui.style.Color): Cell {
-        this.bg = color
-        return this
-    }
-
-    /**
-     * Merges the symbol of the cell with the one already on the cell, using the provided
-     * [MergeStrategy].
-     *
-     * Merges Box Drawing Unicode block characters to create a single character representing
-     * their combination, useful for border collapsing.
-     *
-     * @param newSymbol The symbol to merge with the existing one
-     * @param strategy The merge strategy to use
-     * @return This cell for chaining
-     */
-    fun mergeSymbol(newSymbol: String, strategy: MergeStrategy): Cell {
-        val mergedSymbol = strategy.merge(symbol, newSymbol)
-        symbol = mergedSymbol
-        return this
-    }
-
-    /** Resets the cell to empty state */
-    fun reset() {
-        symbol = " "
-        fg = ratatui.style.Color.Reset
-        bg = ratatui.style.Color.Reset
-        modifier = ratatui.style.Modifier.empty()
-        skip = false
-    }
-}
 
 /**
  * A buffer that maps to the desired content of the terminal after the draw call.
@@ -121,14 +29,14 @@ class Buffer(
         /** Returns a Buffer with all cells set to the default one */
         fun empty(area: Rect): Buffer {
             val size = area.area().toInt()
-            val content = MutableList(size) { Cell.EMPTY.copy() }
+            val content = MutableList(size) { Cell.EMPTY.clone() }
             return Buffer(area, content)
         }
 
         /** Returns a Buffer with all cells initialized with the given Cell */
         fun filled(area: Rect, cell: Cell): Buffer {
             val size = area.area().toInt()
-            val content = MutableList(size) { cell.copy() }
+            val content = MutableList(size) { cell.clone() }
             return Buffer(area, content)
         }
 
@@ -197,14 +105,25 @@ class Buffer(
         val remainingWidth = (right - x).coerceAtMost(maxWidth)
 
         var used = 0
-        for (char in string) {
+        for (grapheme in graphemes(string)) {
             if (used >= remainingWidth) break
-            if (char.isISOControl()) continue
+            if (grapheme.length == 1 && grapheme[0].isISOControl()) continue
+
+            val symbolWidth = unicodeWidth(grapheme)
+            if (symbolWidth == 0) {
+                if (currentX > x) {
+                    val index = indexOf(currentX - 1, y)
+                    content[index].appendSymbol(grapheme).setStyle(style)
+                }
+                continue
+            }
+
+            if (used + symbolWidth > remainingWidth) break
 
             val index = indexOf(currentX, y)
-            content[index].setSymbol(char.toString()).setStyle(style)
-            currentX++
-            used++
+            content[index].setSymbol(grapheme).setStyle(style)
+            currentX += symbolWidth
+            used += symbolWidth
         }
         return Pair(currentX, y)
     }
@@ -250,7 +169,7 @@ class Buffer(
         if (content.size > length) {
             while (content.size > length) content.removeLast()
         } else {
-            while (content.size < length) content.add(Cell.EMPTY.copy())
+            while (content.size < length) content.add(Cell.EMPTY.clone())
         }
         this.area = area
     }
@@ -268,48 +187,12 @@ class Buffer(
      * Transliteration of `ratatui-core`'s `Buffer::diff` implementation.
      */
     fun diff(other: Buffer): List<CellUpdate> {
-        val previousBuffer = content
-        val nextBuffer = other.content
-
         val updates = mutableListOf<CellUpdate>()
-        var invalidated = 0
-        var toSkip = 0
-
-        val len = minOf(nextBuffer.size, previousBuffer.size)
-        for (i in 0 until len) {
-            val current = nextBuffer[i]
-            val previous = previousBuffer[i]
-
-            if (!current.skip && (current != previous || invalidated > 0) && toSkip == 0) {
-                val (x, y) = posOf(i)
-                updates.add(cellUpdate(x, y, current))
-
-                // If the current cell is multi-width, ensure trailing cells are explicitly cleared
-                // when they previously contained non-blank content. Some terminals do not reliably
-                // clear the trailing cell(s) when printing a wide grapheme, which can result in
-                // visual artifacts.
-                val symbol = current.symbol()
-                val cellWidth = unicodeWidth(symbol)
-                val containsVs16 = symbol.any { c -> c == '\uFE0F' }
-                if (cellWidth > 1 && containsVs16) {
-                    for (k in 1 until cellWidth) {
-                        val j = i + k
-                        if (j >= len) break
-                        val prevTrailing = previousBuffer[j]
-                        val nextTrailing = nextBuffer[j]
-                        if (!nextTrailing.skip && prevTrailing != nextTrailing) {
-                            val (tx, ty) = posOf(j)
-                            updates.add(cellUpdate(tx, ty, nextTrailing))
-                        }
-                    }
-                }
-            }
-
-            toSkip = (unicodeWidth(current.symbol()) - 1).coerceAtLeast(0)
-            val affectedWidth = max(unicodeWidth(current.symbol()), unicodeWidth(previous.symbol()))
-            invalidated = (max(affectedWidth, invalidated) - 1).coerceAtLeast(0)
+        val diff = BufferDiff.new(this, other)
+        while (diff.hasNext()) {
+            val (x, y, cell) = diff.next()
+            updates.add(cellUpdate(x, y, cell))
         }
-
         return updates
     }
 
@@ -324,7 +207,7 @@ class Buffer(
         return CellUpdate(
             x = x,
             y = y,
-            symbol = cell.symbol,
+            symbol = cell.symbol(),
             fg = cell.fg,
             bg = cell.bg,
             modifiers = cell.modifier
@@ -352,7 +235,7 @@ class Buffer(
         for (y in area.top() until area.bottom()) {
             sb.append("  \"")
             for (x in area.left() until area.right()) {
-                sb.append(this[x, y].symbol)
+                sb.append(this[x, y].symbol())
             }
             sb.append("\"\n")
         }

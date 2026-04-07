@@ -4,11 +4,9 @@ import io.github.kotlinmania.crossterm.terminal.EnterAlternateScreen
 import io.github.kotlinmania.crossterm.terminal.LeaveAlternateScreen
 import io.github.kotlinmania.crossterm.terminal.sys.disableRawMode
 import io.github.kotlinmania.crossterm.terminal.sys.enableRawMode
-import ratatui.backend.CrosstermBackend
 import ratatui.terminal.Terminal
 import ratatui.terminal.TerminalOptions
-
-typealias DefaultTerminal = Terminal<CrosstermBackend>
+import ratatui_crossterm.CrosstermBackend
 
 private class StdoutBuffer : Appendable {
     private val buffer = StringBuilder()
@@ -36,7 +34,7 @@ private class StdoutBuffer : Appendable {
     }
 }
 
-fun <R> run(block: (DefaultTerminal) -> R): R {
+fun <R> run(block: (Terminal<CrosstermBackend>) -> R): R {
     val terminal = init()
     try {
         return block(terminal)
@@ -45,11 +43,11 @@ fun <R> run(block: (DefaultTerminal) -> R): R {
     }
 }
 
-fun init(): DefaultTerminal {
+fun init(): Terminal<CrosstermBackend> {
     return tryInit()
 }
 
-fun tryInit(): DefaultTerminal {
+fun tryInit(): Terminal<CrosstermBackend> {
     enableRawMode()
 
     val stdout = StdoutBuffer()
@@ -60,11 +58,11 @@ fun tryInit(): DefaultTerminal {
     return Terminal.new(backend)
 }
 
-fun initWithOptions(options: TerminalOptions): DefaultTerminal {
+fun initWithOptions(options: TerminalOptions): Terminal<CrosstermBackend> {
     return tryInitWithOptions(options)
 }
 
-fun tryInitWithOptions(options: TerminalOptions): DefaultTerminal {
+fun tryInitWithOptions(options: TerminalOptions): Terminal<CrosstermBackend> {
     enableRawMode()
     val stdout = StdoutBuffer()
     val backend = CrosstermBackend(stdout, stdout::flush)

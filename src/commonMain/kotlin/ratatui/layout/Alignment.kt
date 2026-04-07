@@ -6,20 +6,7 @@
 package ratatui.layout
 
 /**
- * A type alias for [HorizontalAlignment].
- *
- * Prior to Ratatui 0.30.0, [HorizontalAlignment] was named `Alignment`. This alias is provided
- * for backwards compatibility. Because this type is used almost everywhere in Ratatui related apps
- * and libraries, it's unlikely that this alias will be removed in the future.
- */
-typealias Alignment = HorizontalAlignment
-
-/**
  * Horizontal content alignment within a layout area.
- *
- * Prior to Ratatui 0.30.0, this type was named `Alignment`. In Ratatui 0.30.0, the name was
- * changed to `HorizontalAlignment` to make it more descriptive. The old name is still available as
- * an alias for backwards compatibility.
  *
  * This type is used throughout Ratatui to control how content is positioned horizontally within
  * available space. It's commonly used with widgets to control text alignment, but can also be
@@ -45,6 +32,13 @@ enum class HorizontalAlignment {
         }
     }
 }
+
+/**
+ * Alias for [HorizontalAlignment].
+ *
+ * Mirrors Rust `type Alignment = HorizontalAlignment;`.
+ */
+typealias Alignment = HorizontalAlignment
 
 /**
  * Vertical content alignment within a layout area.
