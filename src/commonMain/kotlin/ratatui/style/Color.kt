@@ -34,8 +34,8 @@ package ratatui.style
  * - we support `-` and `_` and ` ` as separators for all colors
  * - we support both `gray` and `grey` spellings
  *
- * `Color.toStyle()` is implemented by creating a style with the foreground color set to the
- * given color. This allows you to use colors anywhere that accepts a Style.
+ * `Color` can be used anywhere that accepts a [Style] because
+ * [Style.from][Style.Companion.from] accepts a foreground color.
  *
  * Example:
  * ```kotlin
@@ -51,28 +51,28 @@ package ratatui.style
  * ```
  */
 sealed class Color {
-    /** Resets the foreground or background color */
+    /** Resets the foreground or background color. */
     data object Reset : Color()
 
-    /** ANSI Color: Black. Foreground: 30, Background: 40 */
+    /** ANSI Color: Black. Foreground: 30, Background: 40. */
     data object Black : Color()
 
-    /** ANSI Color: Red. Foreground: 31, Background: 41 */
+    /** ANSI Color: Red. Foreground: 31, Background: 41. */
     data object Red : Color()
 
-    /** ANSI Color: Green. Foreground: 32, Background: 42 */
+    /** ANSI Color: Green. Foreground: 32, Background: 42. */
     data object Green : Color()
 
-    /** ANSI Color: Yellow. Foreground: 33, Background: 43 */
+    /** ANSI Color: Yellow. Foreground: 33, Background: 43. */
     data object Yellow : Color()
 
-    /** ANSI Color: Blue. Foreground: 34, Background: 44 */
+    /** ANSI Color: Blue. Foreground: 34, Background: 44. */
     data object Blue : Color()
 
-    /** ANSI Color: Magenta. Foreground: 35, Background: 45 */
+    /** ANSI Color: Magenta. Foreground: 35, Background: 45. */
     data object Magenta : Color()
 
-    /** ANSI Color: Cyan. Foreground: 36, Background: 46 */
+    /** ANSI Color: Cyan. Foreground: 36, Background: 46. */
     data object Cyan : Color()
 
     /**
@@ -89,27 +89,28 @@ sealed class Color {
      */
     data object DarkGray : Color()
 
-    /** ANSI Color: Bright Red. Foreground: 91, Background: 101 */
+    /** ANSI Color: Bright Red. Foreground: 91, Background: 101. */
     data object LightRed : Color()
 
-    /** ANSI Color: Bright Green. Foreground: 92, Background: 102 */
+    /** ANSI Color: Bright Green. Foreground: 92, Background: 102. */
     data object LightGreen : Color()
 
-    /** ANSI Color: Bright Yellow. Foreground: 93, Background: 103 */
+    /** ANSI Color: Bright Yellow. Foreground: 93, Background: 103. */
     data object LightYellow : Color()
 
-    /** ANSI Color: Bright Blue. Foreground: 94, Background: 104 */
+    /** ANSI Color: Bright Blue. Foreground: 94, Background: 104. */
     data object LightBlue : Color()
 
-    /** ANSI Color: Bright Magenta. Foreground: 95, Background: 105 */
+    /** ANSI Color: Bright Magenta. Foreground: 95, Background: 105. */
     data object LightMagenta : Color()
 
-    /** ANSI Color: Bright Cyan. Foreground: 96, Background: 106 */
+    /** ANSI Color: Bright Cyan. Foreground: 96, Background: 106. */
     data object LightCyan : Color()
 
     /**
-     * ANSI Color: Bright White. Foreground: 97, Background: 107
-     * Sometimes called `bright white` or `light white` in some terminals
+     * ANSI Color: Bright White. Foreground: 97, Background: 107.
+     *
+     * Sometimes called `bright white` or `light white` in some terminals.
      */
     data object White : Color()
 
@@ -141,25 +142,19 @@ sealed class Color {
     }
 
     companion object {
-        /** Default color (Reset) */
+        /** Default color (Reset). */
         fun default(): Color = Reset
 
         /**
-         * Converts a tuple of 3 u8 values to a [Color.Rgb] instance.
-         *
-         * Transliteration of `impl From<(u8, u8, u8)> for Color`.
+         * Converts a tuple of 3 `u8` values to a [Color.Rgb] instance.
          */
         fun from(rgb: Triple<UByte, UByte, UByte>): Color = Rgb(rgb.first, rgb.second, rgb.third)
 
         /**
-         * Converts an array of 3 or 4 u8 values to a [Color.Rgb] instance.
+         * Converts an array of 3 or 4 `u8` values to a [Color.Rgb] instance.
          *
          * - If `bytes.size == 3`, returns `Rgb(r, g, b)`.
          * - If `bytes.size == 4`, returns `Rgb(r, g, b)` (ignoring alpha).
-         *
-         * Transliteration of:
-         * - `impl From<[u8; 3]> for Color`
-         * - `impl From<[u8; 4]> for Color`
          */
         fun from(bytes: UByteArray): Color {
             if (bytes.size != 3 && bytes.size != 4) {
@@ -169,7 +164,7 @@ sealed class Color {
         }
 
         /**
-         * Convert a UInt to a Color
+         * Converts a `UInt` to a `Color`.
          *
          * The UInt should be in the format 0x00RRGGBB.
          */
@@ -183,9 +178,8 @@ sealed class Color {
         /**
          * Converts a string representation to a [Color] instance.
          *
-         * Supports named colors, RGB hex values (#RRGGBB), and indexed colors (0-255).
-         *
-         * @throws ParseColorError if the string cannot be parsed.
+         * Supports named colors, RGB hex values, and indexed colors. If the string cannot be
+         * parsed, a [ParseColorError] is returned.
          */
         fun fromStr(s: String): Color {
             // There is a mix of different color names and formats in the wild.

@@ -6,16 +6,40 @@ import ratatui.text.Span
 import ratatui.text.ToSpan
 
 /**
- * A macro for creating a [Line] using `vec!`-style syntax.
+ * A macro for creating a [Line] using `vec!` syntax.
  *
- * Transliteration of the Rust `line!` macro.
+ * `line!` is similar to the Rust `vec!` macro, but it returns a [Line] instead of a `Vec`.
+ *
+ * # Examples
+ *
+ * - Create a [Line] containing a vector of [Span]s:
+ *
+ *   ```kotlin
+ *   val line = line("hello", "world")
+ *   val line = line("hello".red(), "world".red().bold())
+ *   ```
+ *
+ * - Create a [Line] from a given [Span] repeated some amount of times:
+ *
+ *   ```kotlin
+ *   val line = line("hello", 2)
+ *   ```
+ *
+ * - Use the Rust `span!` macro inside `line!` for formatting.
+ *
+ *   ```kotlin
+ *   val line = line(
+ *       Span.styled("hello {}", Style.default().fg(Color.Red)),
+ *       Span.styled("goodbye {}", Style.default().addModifier(Modifier.BOLD)),
+ *   )
+ *   ```
  */
 fun line(): Line = Line.default()
 
 /**
- * Create a [Line] from a given span repeated `n` times.
+ * Create a [Line] from a given [Span] repeated some amount of times.
  *
- * Transliteration of the Rust `line![$span; $n]` form.
+ * Mirrors the Rust `line![$span; $n]` form.
  */
 fun line(span: Any, n: Int): Line {
     if (n < 0) {
@@ -27,7 +51,7 @@ fun line(span: Any, n: Int): Line {
 /**
  * Create a [Line] containing a vector of [Span]s.
  *
- * Transliteration of the Rust `line![$($span),+]` form.
+ * Mirrors the Rust `line![$($span),+]` form.
  */
 fun line(vararg spans: Any): Line {
     if (spans.isEmpty()) {
@@ -42,4 +66,3 @@ private fun intoSpan(value: Any): Span = when (value) {
     is ToSpan -> value.toSpan()
     else -> Span.raw(value.toString())
 }
-
