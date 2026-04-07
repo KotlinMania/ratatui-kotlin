@@ -29,16 +29,3 @@ fun String.cellWidth(): UShort {
     }
     return unicodeWidth(this).toUShort()
 }
-
-/**
- * CellWidth for a Cell.
- *
- * Returns ForcedWidth when set, otherwise falls back to the width of the cell's symbol.
- */
-fun Cell.cellWidth(): UShort {
-    return when (val option = diffOption) {
-        CellDiffOption.Skip -> symbol().cellWidth()
-        CellDiffOption.None -> symbol().cellWidth()
-        is CellDiffOption.ForcedWidth -> option.width.get()
-    }
-}

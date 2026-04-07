@@ -134,7 +134,7 @@ class TestBackend private constructor(
         pos = position
     }
 
-    fun clear() {
+    override fun clear() {
         buffer.reset()
     }
 
@@ -203,7 +203,7 @@ class TestBackend private constructor(
 
             val removed = buffer.content.subList(0, cellsToScrollback).map { it.clone() }
             for (i in 0 until cellsToScrollback) {
-                buffer.content[i] = Cell.EMPTY.clone()
+                buffer.content[i] = Cell.EMPTY
             }
             appendToScrollback(scrollback, removed)
 
@@ -215,7 +215,7 @@ class TestBackend private constructor(
 
             val extra = (width * scrollBy) - cellsToScrollback
             if (extra > 0) {
-                appendToScrollback(scrollback, List(extra) { Cell.EMPTY.clone() })
+                appendToScrollback(scrollback, List(extra) { Cell.EMPTY })
             }
         }
 

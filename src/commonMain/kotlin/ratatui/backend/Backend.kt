@@ -24,7 +24,20 @@ enum class ClearType {
     CurrentLine,
 
     /** Clears from the cursor position (inclusive) to the end of the current line. */
-    UntilNewLine
+    UntilNewLine;
+
+    companion object {
+        fun fromString(value: String): ClearType? {
+            return when (value) {
+                "All" -> All
+                "AfterCursor" -> AfterCursor
+                "BeforeCursor" -> BeforeCursor
+                "CurrentLine" -> CurrentLine
+                "UntilNewLine" -> UntilNewLine
+                else -> null
+            }
+        }
+    }
 }
 
 /**
@@ -86,13 +99,34 @@ interface Backend {
         setCursorPosition(Position(x.toInt(), y.toInt()))
     }
 
+    /**
+     * Clears all character cells in the terminal's visible display area.
+     *
+     * This operation preserves the cursor position.
+     *
+     * This is equivalent to calling [clearRegion] with [ClearType.All].
+     */
+    fun clear() {
+        clearRegion(ClearType.All)
+    }
+
     /** Clear a region of the terminal's visible display area. */
     fun clearRegion(clearType: ClearType)
 
     /** Get the terminal size. */
     fun size(): Size
 
+    /**
+     * Get the size of the terminal screen in columns/rows and pixels.
+     *
+     * Pixel dimensions may be unavailable on some backends; the default implementation reports
+     * `0,0` pixels (matching the Rust documentation note).
+     */
+    fun windowSize(): WindowSize {
+        val columnsRows = size()
+        return WindowSize(columnsRows = columnsRows, pixels = Size(0, 0))
+    }
+
     /** Flush any buffered output. */
     fun flush()
 }
-

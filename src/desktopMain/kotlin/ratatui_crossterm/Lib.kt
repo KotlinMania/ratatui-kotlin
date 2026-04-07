@@ -131,7 +131,7 @@ class CrosstermBackend(
         flushFn()
     }
 
-    fun clear() {
+    override fun clear() {
         clearRegion(ClearType.All)
     }
 
@@ -142,7 +142,13 @@ class CrosstermBackend(
         flushFn()
     }
 
-    fun windowSize(): io.github.kotlinmania.crossterm.terminal.WindowSize = crosstermWindowSize()
+    override fun windowSize(): ratatui.backend.WindowSize {
+        val ws = crosstermWindowSize()
+        return ratatui.backend.WindowSize(
+            columnsRows = Size(ws.columns.toInt(), ws.rows.toInt()),
+            pixels = Size(ws.width.toInt(), ws.height.toInt())
+        )
+    }
 
     fun scrollRegionUp(region: UShortRange, amount: UShort) {
         ScrollUpInRegion(

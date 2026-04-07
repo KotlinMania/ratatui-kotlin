@@ -53,7 +53,7 @@ class Buffer(
         /** Returns a Buffer with all cells set to the default one */
         fun empty(area: Rect): Buffer {
             val size = area.area().toInt()
-            val content = MutableList(size) { Cell.EMPTY.clone() }
+            val content = MutableList(size) { Cell.EMPTY }
             return Buffer(area, content)
         }
 
@@ -227,7 +227,7 @@ class Buffer(
         if (content.size > length) {
             while (content.size > length) content.removeLast()
         } else {
-            while (content.size < length) content.add(Cell.EMPTY.clone())
+            while (content.size < length) content.add(Cell.EMPTY)
         }
         this.area = area
     }
@@ -244,7 +244,7 @@ class Buffer(
         val newArea = this.area.union(other.area)
 
         val newLength = newArea.area().toInt()
-        while (content.size < newLength) content.add(Cell.EMPTY.clone())
+        while (content.size < newLength) content.add(Cell.EMPTY)
         while (content.size > newLength) content.removeLast()
 
         // Move original content to the appropriate space.

@@ -100,7 +100,7 @@ data class Paragraph(
     /** A block to wrap the widget in */
     private val block: Block? = null,
     /** Widget style */
-    private val paragraphStyle: Style = Style.default(),
+    private val style: Style = Style.default(),
     /** How to wrap the text */
     private val wrap: Wrap? = null,
     /** The text to display */
@@ -108,7 +108,7 @@ data class Paragraph(
     /** Scroll offset (y, x) */
     private val scroll: Position = Position.ORIGIN,
     /** Alignment of the text */
-    private val paragraphAlignment: HorizontalAlignment = HorizontalAlignment.Left
+    private val alignment: HorizontalAlignment = HorizontalAlignment.Left
 ) : Widget, Styled<Paragraph> {
 
     /**
@@ -134,7 +134,7 @@ data class Paragraph(
      * val paragraph = Paragraph.new("Hello, world!").style(Style.new().red().onWhite())
      * ```
      */
-    fun style(style: Style): Paragraph = copy(paragraphStyle = style)
+    fun style(style: Style): Paragraph = copy(style = style)
 
     /**
      * Sets the wrapping configuration for the widget.
@@ -175,7 +175,7 @@ data class Paragraph(
      * val paragraph = Paragraph.new("Hello World").alignment(HorizontalAlignment.Center)
      * ```
      */
-    fun alignment(alignment: HorizontalAlignment): Paragraph = copy(paragraphAlignment = alignment)
+    fun alignment(alignment: HorizontalAlignment): Paragraph = copy(alignment = alignment)
 
     /**
      * Left-aligns the text in the given paragraph.
@@ -225,10 +225,10 @@ data class Paragraph(
         val count = if (wrap != null) {
             val styled = text.lines.asSequence().map { line ->
                 val graphemes = line.spans.flatMap { span ->
-                    span.styledGraphemes(paragraphStyle)
+                    span.styledGraphemes(style)
                 }.iterator()
-                val alignment = line.alignment ?: paragraphAlignment
-                graphemes to alignment
+                val lineAlignment = line.alignment ?: alignment
+                graphemes to lineAlignment
             }.iterator()
             val lineComposer = WordWrapper(styled, width, wrap.trim)
             var count = 0
@@ -267,7 +267,7 @@ data class Paragraph(
     // Widget implementation
     override fun render(area: Rect, buf: Buffer) {
         val clippedArea = area.intersection(buf.area)
-        buf.setStyle(clippedArea, paragraphStyle)
+        buf.setStyle(clippedArea, style)
         block?.render(clippedArea, buf)
         val inner = block.innerIfSome(clippedArea)
         renderParagraph(inner, buf)
@@ -278,11 +278,11 @@ data class Paragraph(
             return
         }
 
-        buf.setStyle(textArea, paragraphStyle)
+        buf.setStyle(textArea, style)
         val styled = text.lines.asSequence().map { line ->
             val graphemes = line.styledGraphemes(text.style).iterator()
-            val alignment = line.alignment ?: paragraphAlignment
-            graphemes to alignment
+            val lineAlignment = line.alignment ?: alignment
+            graphemes to lineAlignment
         }.iterator()
 
         if (wrap != null) {
@@ -339,7 +339,7 @@ data class Paragraph(
     }
 
     // Styled implementation
-    override fun style(): Style = paragraphStyle
+    override fun style(): Style = style
 
     override fun setStyle(style: Style): Paragraph = style(style)
 
@@ -359,22 +359,25 @@ data class Paragraph(
          * val paragraph = Paragraph.new(Line.from(listOf("Hello, ".toSpan(), "world!".red())))
          * ```
          */
-        fun new(text: String): Paragraph = Paragraph(text = Text.from(text))
+        fun new(text: String): Paragraph = new(Text.from(text))
 
         /**
          * Creates a new Paragraph widget with the given Text.
          */
-        fun new(text: Text): Paragraph = Paragraph(text = text)
+        fun new(text: Text): Paragraph = Paragraph(
+            text = text,
+            alignment = text.alignment ?: HorizontalAlignment.Left
+        )
 
         /**
          * Creates a new Paragraph widget with the given Line.
          */
-        fun new(line: Line): Paragraph = Paragraph(text = Text.from(line))
+        fun new(line: Line): Paragraph = new(Text.from(line))
 
         /**
          * Creates a new Paragraph widget with the given lines.
          */
-        fun new(lines: List<Line>): Paragraph = Paragraph(text = Text.from(lines))
+        fun new(lines: List<Line>): Paragraph = new(Text.from(lines))
 
         /**
          * Creates a default empty Paragraph.

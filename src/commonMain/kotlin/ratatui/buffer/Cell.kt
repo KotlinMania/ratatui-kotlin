@@ -11,10 +11,14 @@ import ratatui.symbols.merge.MergeStrategy
  *
  * This mirrors Rust's `core::num::NonZeroU16`.
  */
-data class NonZeroUShort private constructor(
+class NonZeroUShort private constructor(
     private val value: UShort
 ) {
     fun get(): UShort = value
+
+    override fun equals(other: Any?): Boolean = other is NonZeroUShort && value == other.value
+
+    override fun hashCode(): Int = value.hashCode()
 
     companion object {
         fun new(value: UShort): NonZeroUShort? = if (value == 0.toUShort()) null else NonZeroUShort(value)
@@ -54,17 +58,18 @@ class Cell private constructor(
     var diffOption: CellDiffOption,
     @Deprecated("use setDiffOption(CellDiffOption.Skip) instead")
     var skip: Boolean
-) {
+) : CellWidth {
     companion object {
         @Suppress("DEPRECATION")
-        val EMPTY: Cell = Cell(
-            symbol = null,
-            fg = Color.Reset,
-            bg = Color.Reset,
-            modifier = Modifier.empty(),
-            diffOption = CellDiffOption.None,
-            skip = false
-        )
+        val EMPTY: Cell
+            get() = Cell(
+                symbol = null,
+                fg = Color.Reset,
+                bg = Color.Reset,
+                modifier = Modifier.empty(),
+                diffOption = CellDiffOption.None,
+                skip = false
+            )
 
         fun new(symbol: String): Cell = Cell(
             symbol = symbol,
@@ -74,6 +79,14 @@ class Cell private constructor(
             diffOption = CellDiffOption.None,
             skip = false
         )
+
+        fun default(): Cell = EMPTY.clone()
+
+        fun from(ch: Char): Cell {
+            val cell = EMPTY.clone()
+            cell.setChar(ch)
+            return cell
+        }
     }
 
     fun clone(): Cell = Cell(
@@ -91,6 +104,19 @@ class Cell private constructor(
      * If the cell has no symbol, returns a single space character.
      */
     fun symbol(): String = symbol ?: " "
+
+    /**
+     * Returns ForcedWidth when set, otherwise computes width from the cell's symbol.
+     *
+     * Transliteration of `impl CellWidth for Cell`.
+     */
+    override fun cellWidth(): UShort {
+        return when (val option = diffOption) {
+            is CellDiffOption.ForcedWidth -> option.width.get()
+            CellDiffOption.Skip -> symbol().cellWidth()
+            CellDiffOption.None -> symbol().cellWidth()
+        }
+    }
 
     /**
      * Merges the symbol of the cell with the one already on the cell, using the provided strategy.
