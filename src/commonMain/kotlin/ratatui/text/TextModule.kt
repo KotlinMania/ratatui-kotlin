@@ -68,7 +68,7 @@ internal object TextModule {
     val line = Line::class
     val toLine = ToLine::class
 
-    // `Masked` is defined in `masked.rs` in Rust; ported separately to Kotlin when needed.
+    val masked = Masked::class
 
     val span = Span::class
     val toSpan = ToSpan::class
