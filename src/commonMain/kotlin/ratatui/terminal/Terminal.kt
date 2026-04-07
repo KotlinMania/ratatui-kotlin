@@ -97,7 +97,7 @@ class Terminal<B : Backend>(
         return Frame(
             viewportArea = viewportArea,
             buffer = buffers[current],
-            frameCount = frameCount
+            count = frameCount
         )
     }
 
