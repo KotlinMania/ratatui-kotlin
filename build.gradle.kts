@@ -104,7 +104,7 @@ kotlin {
         val desktopMain by creating {
             dependsOn(commonMain)
             dependencies {
-                api("io.github.kotlinmania:crossterm-kotlin:0.1.2")
+                api("io.github.kotlinmania:crossterm-kotlin:0.1.3")
             }
         }
 

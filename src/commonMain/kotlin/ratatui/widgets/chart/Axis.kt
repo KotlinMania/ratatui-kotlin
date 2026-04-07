@@ -1,6 +1,6 @@
 package ratatui.widgets.chart
 
-import ratatui.layout.Alignment
+import ratatui.layout.HorizontalAlignment
 import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.text.Line
@@ -36,7 +36,7 @@ data class Axis(
     /** The style used to draw the axis itself */
     internal val axisStyle: Style = Style.default(),
     /** The alignment of the labels of the Axis */
-    internal val labelsAlign: Alignment = Alignment.Left
+    internal val labelsAlign: HorizontalAlignment = HorizontalAlignment.Left
 ) : Styled<Axis> {
 
     /**
@@ -139,7 +139,7 @@ data class Axis(
      * @param alignment The alignment for labels
      * @return A new Axis with the labels alignment set
      */
-    fun labelsAlignment(alignment: Alignment): Axis = copy(labelsAlign = alignment)
+    fun labelsAlignment(alignment: HorizontalAlignment): Axis = copy(labelsAlign = alignment)
 
     // Styled implementation
     override fun style(): Style = axisStyle

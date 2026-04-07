@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/buffer/diff.rs
 package ratatui.buffer
 
 import ratatui.layout.Rect
@@ -127,4 +128,3 @@ private fun isSkip(cell: Cell): Boolean {
     return cell.diffOption is CellDiffOption.Skip ||
         (cell.skip && cell.diffOption is CellDiffOption.None)
 }
-

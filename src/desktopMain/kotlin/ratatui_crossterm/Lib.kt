@@ -5,19 +5,15 @@
  *
  * ## Crossterm Version and Re-export
  *
- * `ratatui-crossterm` requires you to specify a version of the Crossterm library to be used. In
- * Rust, this is managed via feature flags (e.g. `crossterm_0_28`, `crossterm_0_29`) and the chosen
- * Crossterm crate is re-exported as `ratatui_crossterm::crossterm` so downstream crates can avoid
- * version conflicts.
+ * Rust `ratatui-crossterm` uses feature flags (`crossterm_0_xx`) to select a Crossterm version and
+ * re-exports it as `ratatui_crossterm::crossterm` to avoid dependency graph version conflicts.
  *
- * Kotlin does not have Rust-style feature unification for crates, and this port targets a single
- * published `io.github.kotlinmania:crossterm-kotlin` dependency. The backend implementation lives
- * here as a direct transliteration target for `ratatui-crossterm/src/lib.rs`.
+ * This Kotlin port targets the published `io.github.kotlinmania:crossterm-kotlin` dependency.
  *
  * # Crate Organization
  *
- * `ratatui-crossterm` is part of the Ratatui workspace that was modularized in version 0.30.0.
- * This file is intentionally a “crate root” mirror for parity and will be split later.
+ * `ratatui-crossterm` is part of the Ratatui workspace (modularized in 0.30.0). This file is a
+ * “crate root” mirror for parity and will be split later.
  */
 package ratatui_crossterm
 
@@ -31,8 +27,8 @@ import io.github.kotlinmania.crossterm.style.Attributes as CrosstermAttributes
 import io.github.kotlinmania.crossterm.style.ContentStyle as CrosstermContentStyle
 import io.github.kotlinmania.crossterm.style.Print
 import io.github.kotlinmania.crossterm.style.SetAttribute
-import io.github.kotlinmania.crossterm.style.SetColors
 import io.github.kotlinmania.crossterm.style.SetBackgroundColor
+import io.github.kotlinmania.crossterm.style.SetColors
 import io.github.kotlinmania.crossterm.style.SetForegroundColor
 import io.github.kotlinmania.crossterm.style.types.Attribute as CrosstermAttribute
 import io.github.kotlinmania.crossterm.style.types.Color as CrosstermColor
@@ -41,14 +37,14 @@ import io.github.kotlinmania.crossterm.terminal.Clear
 import io.github.kotlinmania.crossterm.terminal.ClearType as CrosstermClearType
 import io.github.kotlinmania.crossterm.terminal.sys.size as terminalSize
 import io.github.kotlinmania.crossterm.terminal.windowSize as crosstermWindowSize
+import ratatui.backend.Backend
+import ratatui.backend.ClearType
 import ratatui.layout.Position
 import ratatui.layout.Size
+import ratatui.buffer.Cell
 import ratatui.style.Color
 import ratatui.style.Modifier
 import ratatui.style.Style
-import ratatui.terminal.Backend
-import ratatui.terminal.CellUpdate
-import ratatui.terminal.ClearType
 
 /**
  * A [Backend] implementation that uses Crossterm to render to the terminal.
@@ -60,43 +56,39 @@ class CrosstermBackend(
     private val flushFn: () -> Unit = {}
 ) : Backend {
 
-    override fun draw(updates: List<CellUpdate>) {
-        // NOTE: Rust consumes an iterator of `(x, y, &Cell)` from buffer diffing. Kotlin currently
-        // uses `CellUpdate` as the transport type; keep behavior consistent per-cell.
+    override fun draw(content: Iterator<Triple<Int, Int, Cell>>) {
         var fg: Color = Color.Reset
         var bg: Color = Color.Reset
         var modifier: Modifier = Modifier.empty()
         var lastPos: Position? = null
 
-        for (update in updates) {
-            val x = update.x.toUShort()
-            val y = update.y.toUShort()
-
-            // Move cursor if previous location was not (x - 1, y)
-            if (!(lastPos != null && x.toInt() == lastPos!!.x + 1 && y.toInt() == lastPos!!.y)) {
-                MoveTo(x, y).writeAnsi(writer)
+        while (content.hasNext()) {
+            val (x, y, cell) = content.next()
+            // Move the cursor if the previous location was not (x - 1, y)
+            val prev = lastPos
+            if (!(prev != null && x == prev.x + 1 && y == prev.y)) {
+                MoveTo(x.toUShort(), y.toUShort()).writeAnsi(writer)
             }
-            lastPos = Position(update.x, update.y)
+            lastPos = Position(x, y)
 
-            if (update.modifiers != modifier) {
-                ModifierDiff(from = modifier, to = update.modifiers).queue(writer)
-                modifier = update.modifiers
+            if (cell.modifier != modifier) {
+                ModifierDiff(from = modifier, to = cell.modifier).queue(writer)
+                modifier = cell.modifier
             }
 
-            if (update.fg != fg || update.bg != bg) {
+            if (cell.fg != fg || cell.bg != bg) {
                 val colors = CrosstermColors(
-                    foreground = update.fg.intoCrossterm(),
-                    background = update.bg.intoCrossterm()
+                    foreground = cell.fg.intoCrossterm(),
+                    background = cell.bg.intoCrossterm()
                 )
                 SetColors(colors).writeAnsi(writer)
-                fg = update.fg
-                bg = update.bg
+                fg = cell.fg
+                bg = cell.bg
             }
 
-            Print(update.symbol).writeAnsi(writer)
+            Print(cell.symbol()).writeAnsi(writer)
         }
 
-        // Reset at end (matches Rust end-of-draw queue! reset sequence)
         SetForegroundColor(CrosstermColor.Reset).writeAnsi(writer)
         SetBackgroundColor(CrosstermColor.Reset).writeAnsi(writer)
         SetAttribute(CrosstermAttribute.Reset).writeAnsi(writer)
@@ -111,8 +103,8 @@ class CrosstermBackend(
     }
 
     override fun getCursorPosition(): Position {
-        val (col, row) = position()
-        return Position(col.toInt(), row.toInt())
+        val (x, y) = position()
+        return Position(x.toInt(), y.toInt())
     }
 
     override fun setCursorPosition(position: Position) {
@@ -131,8 +123,8 @@ class CrosstermBackend(
     }
 
     override fun size(): Size {
-        val (columns, rows) = terminalSize()
-        return Size(columns.toInt(), rows.toInt())
+        val (width, height) = terminalSize()
+        return Size(width.toInt(), height.toInt())
     }
 
     override fun flush() {
@@ -143,16 +135,14 @@ class CrosstermBackend(
         clearRegion(ClearType.All)
     }
 
-    fun appendLines(n: UShort) {
+    override fun appendLines(n: UShort) {
         for (i in 0 until n.toInt()) {
             Print("\n").writeAnsi(writer)
         }
         flushFn()
     }
 
-    fun windowSize(): io.github.kotlinmania.crossterm.terminal.WindowSize {
-        return crosstermWindowSize()
-    }
+    fun windowSize(): io.github.kotlinmania.crossterm.terminal.WindowSize = crosstermWindowSize()
 
     fun scrollRegionUp(region: UShortRange, amount: UShort) {
         ScrollUpInRegion(
@@ -171,30 +161,6 @@ class CrosstermBackend(
         ).writeAnsi(writer)
         flushFn()
     }
-
-    private fun Color.intoCrossterm(): CrosstermColor {
-        return when (this) {
-            Color.Reset -> CrosstermColor.Reset
-            Color.Black -> CrosstermColor.Black
-            Color.Red -> CrosstermColor.DarkRed
-            Color.Green -> CrosstermColor.DarkGreen
-            Color.Yellow -> CrosstermColor.DarkYellow
-            Color.Blue -> CrosstermColor.DarkBlue
-            Color.Magenta -> CrosstermColor.DarkMagenta
-            Color.Cyan -> CrosstermColor.DarkCyan
-            Color.Gray -> CrosstermColor.Grey
-            Color.DarkGray -> CrosstermColor.DarkGrey
-            Color.LightRed -> CrosstermColor.Red
-            Color.LightGreen -> CrosstermColor.Green
-            Color.LightYellow -> CrosstermColor.Yellow
-            Color.LightBlue -> CrosstermColor.Blue
-            Color.LightMagenta -> CrosstermColor.Magenta
-            Color.LightCyan -> CrosstermColor.Cyan
-            Color.White -> CrosstermColor.White
-            is Color.Rgb -> CrosstermColor.Rgb(r, g, b)
-            is Color.Indexed -> CrosstermColor.AnsiValue(index)
-        }
-    }
 }
 
 /**
@@ -206,8 +172,6 @@ data class UShortRange(
 )
 
 /**
- * The ModifierDiff struct is used to calculate the difference between two Modifier values.
- *
  * Transliteration of `ratatui-crossterm/src/lib.rs` `ModifierDiff`.
  */
 private data class ModifierDiff(
@@ -223,13 +187,36 @@ private data class ModifierDiff(
 
         val resetIntensity = removed.contains(Modifier.BOLD) || removed.contains(Modifier.DIM)
         if (resetIntensity) {
+            // Bold and Dim are both reset by applying the Normal intensity.
             SetAttribute(CrosstermAttribute.NormalIntensity).writeAnsi(writer)
 
+            // The remaining Bold and Dim attributes must be reapplied after the intensity reset.
             if (to.contains(Modifier.DIM)) {
                 SetAttribute(CrosstermAttribute.Dim).writeAnsi(writer)
             }
             if (to.contains(Modifier.BOLD)) {
                 SetAttribute(CrosstermAttribute.Bold).writeAnsi(writer)
+            }
+        }
+
+        if (removed.contains(Modifier.ITALIC)) SetAttribute(CrosstermAttribute.NoItalic).writeAnsi(writer)
+        if (removed.contains(Modifier.UNDERLINED)) SetAttribute(CrosstermAttribute.NoUnderline).writeAnsi(writer)
+        if (removed.contains(Modifier.CROSSED_OUT)) SetAttribute(CrosstermAttribute.NotCrossedOut).writeAnsi(writer)
+        if (removed.contains(Modifier.HIDDEN)) SetAttribute(CrosstermAttribute.NoHidden).writeAnsi(writer)
+        if (removed.contains(Modifier.SLOW_BLINK) || removed.contains(Modifier.RAPID_BLINK)) {
+            SetAttribute(CrosstermAttribute.NoBlink).writeAnsi(writer)
+        }
+
+        val added = to.difference(from)
+        if (added.contains(Modifier.REVERSED)) SetAttribute(CrosstermAttribute.Reverse).writeAnsi(writer)
+        if (added.contains(Modifier.BOLD) && !resetIntensity) SetAttribute(CrosstermAttribute.Bold).writeAnsi(writer)
+        if (added.contains(Modifier.ITALIC)) SetAttribute(CrosstermAttribute.Italic).writeAnsi(writer)
+        if (added.contains(Modifier.UNDERLINED)) SetAttribute(CrosstermAttribute.Underlined).writeAnsi(writer)
+        if (added.contains(Modifier.DIM) && !resetIntensity) SetAttribute(CrosstermAttribute.Dim).writeAnsi(writer)
+        if (added.contains(Modifier.CROSSED_OUT)) SetAttribute(CrosstermAttribute.CrossedOut).writeAnsi(writer)
+        if (added.contains(Modifier.HIDDEN)) SetAttribute(CrosstermAttribute.Hidden).writeAnsi(writer)
+        if (added.contains(Modifier.SLOW_BLINK)) SetAttribute(CrosstermAttribute.SlowBlink).writeAnsi(writer)
+        if (added.contains(Modifier.RAPID_BLINK)) SetAttribute(CrosstermAttribute.RapidBlink).writeAnsi(writer)
     }
 }
 
@@ -239,11 +226,10 @@ private data class ScrollUpInRegion(
     val linesToScroll: UShort
 ) : Command {
     override fun writeAnsi(writer: Appendable) {
-        if (linesToScroll != 0.toUShort()) {
-            writer.append(csi("${firstRow.saturatingAdd(1u)};${lastRow.saturatingAdd(1u)}r"))
-            writer.append(csi("${linesToScroll}S"))
-            writer.append(csi("r"))
-        }
+        if (linesToScroll == 0.toUShort()) return
+        writer.append(csi("${firstRow.saturatingAdd(1u)};${lastRow.saturatingAdd(1u)}r"))
+        writer.append(csi("${linesToScroll}S"))
+        writer.append(csi("r"))
     }
 }
 
@@ -253,11 +239,10 @@ private data class ScrollDownInRegion(
     val linesToScroll: UShort
 ) : Command {
     override fun writeAnsi(writer: Appendable) {
-        if (linesToScroll != 0.toUShort()) {
-            writer.append(csi("${firstRow.saturatingAdd(1u)};${lastRow.saturatingAdd(1u)}r"))
-            writer.append(csi("${linesToScroll}T"))
-            writer.append(csi("r"))
-        }
+        if (linesToScroll == 0.toUShort()) return
+        writer.append(csi("${firstRow.saturatingAdd(1u)};${lastRow.saturatingAdd(1u)}r"))
+        writer.append(csi("${linesToScroll}T"))
+        writer.append(csi("r"))
     }
 }
 
@@ -268,7 +253,31 @@ private fun UShort.saturatingAdd(other: UInt): UInt {
 
 private fun UShort.saturatingSub(other: UInt): UInt {
     val value = this.toUInt()
-    return if (other > value) 0u else (value - other)
+    return if (other > value) 0u else value - other
+}
+
+private fun Color.intoCrossterm(): CrosstermColor {
+    return when (this) {
+        Color.Reset -> CrosstermColor.Reset
+        Color.Black -> CrosstermColor.Black
+        Color.Red -> CrosstermColor.DarkRed
+        Color.Green -> CrosstermColor.DarkGreen
+        Color.Yellow -> CrosstermColor.DarkYellow
+        Color.Blue -> CrosstermColor.DarkBlue
+        Color.Magenta -> CrosstermColor.DarkMagenta
+        Color.Cyan -> CrosstermColor.DarkCyan
+        Color.Gray -> CrosstermColor.Grey
+        Color.DarkGray -> CrosstermColor.DarkGrey
+        Color.LightRed -> CrosstermColor.Red
+        Color.LightGreen -> CrosstermColor.Green
+        Color.LightBlue -> CrosstermColor.Blue
+        Color.LightYellow -> CrosstermColor.Yellow
+        Color.LightMagenta -> CrosstermColor.Magenta
+        Color.LightCyan -> CrosstermColor.Cyan
+        Color.White -> CrosstermColor.White
+        is Color.Rgb -> CrosstermColor.Rgb(r, g, b)
+        is Color.Indexed -> CrosstermColor.AnsiValue(index)
+    }
 }
 
 private fun Color.Companion.fromCrossterm(value: CrosstermColor): Color {
@@ -296,6 +305,8 @@ private fun Color.Companion.fromCrossterm(value: CrosstermColor): Color {
 }
 
 private fun Modifier.Companion.fromCrossterm(value: CrosstermAttribute): Modifier {
+    // `Attribute*s*` contains multiple `Attribute`. Convert to `Attribute*s*` (containing only one value)
+    // to avoid implementing the conversion again.
     return fromCrossterm(CrosstermAttributes.from(value))
 }
 
@@ -323,27 +334,15 @@ private fun Modifier.Companion.fromCrossterm(value: CrosstermAttributes): Modifi
 
 private fun Style.Companion.fromCrossterm(value: CrosstermContentStyle): Style {
     var subModifier = Modifier.empty()
-    if (value.attributes.has(CrosstermAttribute.NoBold)) {
-        subModifier = subModifier or Modifier.BOLD
-    }
-    if (value.attributes.has(CrosstermAttribute.NoItalic)) {
-        subModifier = subModifier or Modifier.ITALIC
-    }
-    if (value.attributes.has(CrosstermAttribute.NotCrossedOut)) {
-        subModifier = subModifier or Modifier.CROSSED_OUT
-    }
-    if (value.attributes.has(CrosstermAttribute.NoUnderline)) {
-        subModifier = subModifier or Modifier.UNDERLINED
-    }
-    if (value.attributes.has(CrosstermAttribute.NoHidden)) {
-        subModifier = subModifier or Modifier.HIDDEN
-    }
+    if (value.attributes.has(CrosstermAttribute.NoBold)) subModifier = subModifier or Modifier.BOLD
+    if (value.attributes.has(CrosstermAttribute.NoItalic)) subModifier = subModifier or Modifier.ITALIC
+    if (value.attributes.has(CrosstermAttribute.NotCrossedOut)) subModifier = subModifier or Modifier.CROSSED_OUT
+    if (value.attributes.has(CrosstermAttribute.NoUnderline)) subModifier = subModifier or Modifier.UNDERLINED
+    if (value.attributes.has(CrosstermAttribute.NoHidden)) subModifier = subModifier or Modifier.HIDDEN
     if (value.attributes.has(CrosstermAttribute.NoBlink)) {
         subModifier = subModifier or (Modifier.RAPID_BLINK or Modifier.SLOW_BLINK)
     }
-    if (value.attributes.has(CrosstermAttribute.NoReverse)) {
-        subModifier = subModifier or Modifier.REVERSED
-    }
+    if (value.attributes.has(CrosstermAttribute.NoReverse)) subModifier = subModifier or Modifier.REVERSED
 
     return Style(
         fg = value.foregroundColor?.let { Color.fromCrossterm(it) },
@@ -352,51 +351,4 @@ private fun Style.Companion.fromCrossterm(value: CrosstermContentStyle): Style {
         addModifier = Modifier.fromCrossterm(value.attributes),
         subModifier = subModifier
     )
-}
-
-        if (removed.contains(Modifier.ITALIC)) {
-            SetAttribute(CrosstermAttribute.NoItalic).writeAnsi(writer)
-        }
-        if (removed.contains(Modifier.UNDERLINED)) {
-            SetAttribute(CrosstermAttribute.NoUnderline).writeAnsi(writer)
-        }
-        if (removed.contains(Modifier.CROSSED_OUT)) {
-            SetAttribute(CrosstermAttribute.NotCrossedOut).writeAnsi(writer)
-        }
-        if (removed.contains(Modifier.HIDDEN)) {
-            SetAttribute(CrosstermAttribute.NoHidden).writeAnsi(writer)
-        }
-        if (removed.contains(Modifier.SLOW_BLINK) || removed.contains(Modifier.RAPID_BLINK)) {
-            SetAttribute(CrosstermAttribute.NoBlink).writeAnsi(writer)
-        }
-
-        val added = to.difference(from)
-        if (added.contains(Modifier.REVERSED)) {
-            SetAttribute(CrosstermAttribute.Reverse).writeAnsi(writer)
-        }
-        if (added.contains(Modifier.BOLD) && !resetIntensity) {
-            SetAttribute(CrosstermAttribute.Bold).writeAnsi(writer)
-        }
-        if (added.contains(Modifier.ITALIC)) {
-            SetAttribute(CrosstermAttribute.Italic).writeAnsi(writer)
-        }
-        if (added.contains(Modifier.UNDERLINED)) {
-            SetAttribute(CrosstermAttribute.Underlined).writeAnsi(writer)
-        }
-        if (added.contains(Modifier.DIM) && !resetIntensity) {
-            SetAttribute(CrosstermAttribute.Dim).writeAnsi(writer)
-        }
-        if (added.contains(Modifier.CROSSED_OUT)) {
-            SetAttribute(CrosstermAttribute.CrossedOut).writeAnsi(writer)
-        }
-        if (added.contains(Modifier.HIDDEN)) {
-            SetAttribute(CrosstermAttribute.Hidden).writeAnsi(writer)
-        }
-        if (added.contains(Modifier.SLOW_BLINK)) {
-            SetAttribute(CrosstermAttribute.SlowBlink).writeAnsi(writer)
-        }
-        if (added.contains(Modifier.RAPID_BLINK)) {
-            SetAttribute(CrosstermAttribute.RapidBlink).writeAnsi(writer)
-        }
-    }
 }

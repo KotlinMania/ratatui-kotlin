@@ -7,7 +7,6 @@ import kotlinx.datetime.Month
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import ratatui.buffer.Buffer
-import ratatui.layout.Alignment
 import ratatui.layout.Constraint
 import ratatui.layout.Layout
 import ratatui.layout.Direction

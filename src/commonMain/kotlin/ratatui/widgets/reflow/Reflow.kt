@@ -1,6 +1,6 @@
 package ratatui.widgets.reflow
 
-import ratatui.layout.Alignment
+import ratatui.layout.HorizontalAlignment
 import ratatui.text.StyledGrapheme
 
 /**
@@ -12,7 +12,7 @@ data class WrappedLine(
     /** The width of the line */
     val width: Int,
     /** The alignment of the line */
-    val alignment: Alignment
+    val alignment: HorizontalAlignment
 )
 
 /**
@@ -33,13 +33,13 @@ interface LineComposer {
  * @param trim Whether to remove leading whitespace from lines
  */
 class WordWrapper(
-    private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, Alignment>>,
+    private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
     private val maxLineWidth: Int,
     private val trim: Boolean
 ) : LineComposer {
 
     private val wrappedLines = ArrayDeque<MutableList<StyledGrapheme>>()
-    private var currentAlignment = Alignment.Left
+    private var currentAlignment = HorizontalAlignment.Left
     private var currentLine = mutableListOf<StyledGrapheme>()
 
     // Cached allocations
@@ -215,7 +215,7 @@ class WordWrapper(
          * Create a new WordWrapper with the given lines and maximum line width.
          */
         fun new(
-            lines: Iterator<Pair<Iterator<StyledGrapheme>, Alignment>>,
+            lines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
             maxLineWidth: Int,
             trim: Boolean
         ): WordWrapper = WordWrapper(lines, maxLineWidth, trim)
@@ -229,7 +229,7 @@ class WordWrapper(
  * @param maxLineWidth Maximum width of each line
  */
 class LineTruncator(
-    private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, Alignment>>,
+    private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
     private val maxLineWidth: Int
 ) : LineComposer {
 
@@ -271,7 +271,7 @@ class LineTruncator(
                 break
             }
 
-            val symbol = if (localHorizontalOffset == 0 || alignment != Alignment.Left) {
+            val symbol = if (localHorizontalOffset == 0 || alignment != HorizontalAlignment.Left) {
                 grapheme.symbol
             } else {
                 val w = symbolWidth
@@ -303,7 +303,7 @@ class LineTruncator(
          * Create a new LineTruncator with the given lines and maximum line width.
          */
         fun new(
-            lines: Iterator<Pair<Iterator<StyledGrapheme>, Alignment>>,
+            lines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
             maxLineWidth: Int
         ): LineTruncator = LineTruncator(lines, maxLineWidth)
     }

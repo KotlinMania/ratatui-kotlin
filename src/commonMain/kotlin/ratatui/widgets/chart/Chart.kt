@@ -1,7 +1,7 @@
 package ratatui.widgets.chart
 
 import ratatui.buffer.Buffer
-import ratatui.layout.Alignment
+import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Constraint
 import ratatui.layout.Position
 import ratatui.layout.Rect
@@ -295,12 +295,12 @@ data class Chart(
         xAxisConfig.labelsList.firstOrNull()?.let { firstXLabel ->
             val firstLabelWidth = firstXLabel.width()
             val widthLeftOfYAxis = when (xAxisConfig.labelsAlign) {
-                Alignment.Left -> {
+                HorizontalAlignment.Left -> {
                     val yAxisOffset = if (hasYAxis) 1 else 0
                     (firstLabelWidth - yAxisOffset).coerceAtLeast(0)
                 }
-                Alignment.Center -> firstLabelWidth / 2
-                Alignment.Right -> 0
+                HorizontalAlignment.Center -> firstLabelWidth / 2
+                HorizontalAlignment.Right -> 0
             }
             maxWidth = max(maxWidth, widthLeftOfYAxis)
         }
@@ -317,9 +317,9 @@ data class Chart(
         val widthBetweenTicks = graphArea.width / labelsLen
 
         val labelAlignment = when (xAxisConfig.labelsAlign) {
-            Alignment.Left -> Alignment.Right
-            Alignment.Center -> Alignment.Center
-            Alignment.Right -> Alignment.Left
+            HorizontalAlignment.Left -> HorizontalAlignment.Right
+            HorizontalAlignment.Center -> HorizontalAlignment.Center
+            HorizontalAlignment.Right -> HorizontalAlignment.Left
         }
 
         // First label
@@ -331,13 +331,13 @@ data class Chart(
         for ((i, label) in labels.subList(1, labels.size - 1).withIndex()) {
             val x = graphArea.left() + (i + 1) * widthBetweenTicks + 1
             val labelArea = Rect.new(x, y, (widthBetweenTicks - 1).coerceAtLeast(0), 1)
-            renderLabel(buf, label, labelArea, Alignment.Center)
+            renderLabel(buf, label, labelArea, HorizontalAlignment.Center)
         }
 
         // Last label
         val lastLabelX = graphArea.right() - widthBetweenTicks
         val lastLabelArea = Rect.new(lastLabelX, y, widthBetweenTicks, 1)
-        renderLabel(buf, labels.last(), lastLabelArea, Alignment.Right)
+        renderLabel(buf, labels.last(), lastLabelArea, HorizontalAlignment.Right)
     }
 
     private fun firstXLabelArea(
@@ -348,12 +348,12 @@ data class Chart(
         graphArea: Rect
     ): Rect {
         val (minX, maxX) = when (xAxisConfig.labelsAlign) {
-            Alignment.Left -> Pair(chartArea.left(), graphArea.left())
-            Alignment.Center -> Pair(
+            HorizontalAlignment.Left -> Pair(chartArea.left(), graphArea.left())
+            HorizontalAlignment.Center -> Pair(
                 chartArea.left(),
                 graphArea.left() + minOf(maxWidthAfterYAxis, labelWidth)
             )
-            Alignment.Right -> Pair(
+            HorizontalAlignment.Right -> Pair(
                 (graphArea.left() - 1).coerceAtLeast(0),
                 graphArea.left() + maxWidthAfterYAxis
             )
@@ -361,11 +361,11 @@ data class Chart(
         return Rect.new(minX, y, maxX - minX, 1)
     }
 
-    private fun renderLabel(buf: Buffer, label: Line, labelArea: Rect, alignment: Alignment) {
+    private fun renderLabel(buf: Buffer, label: Line, labelArea: Rect, alignment: HorizontalAlignment) {
         val alignedLabel = when (alignment) {
-            Alignment.Left -> label.leftAligned()
-            Alignment.Center -> label.centered()
-            Alignment.Right -> label.rightAligned()
+            HorizontalAlignment.Left -> label.leftAligned()
+            HorizontalAlignment.Center -> label.centered()
+            HorizontalAlignment.Right -> label.rightAligned()
         }
         alignedLabel.render(labelArea, buf)
     }

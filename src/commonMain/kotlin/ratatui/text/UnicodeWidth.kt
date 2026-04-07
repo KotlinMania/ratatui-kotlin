@@ -3,39 +3,79 @@ package ratatui.text
 /**
  * Calculate the unicode display width of a string.
  *
- * This currently implements the same simplified heuristic as the earlier implementation that lived in `Span.kt`.
- * It is factored out so width calculations are consistent across the codebase (e.g. buffer diffs and spans).
+ * Transliteration target: Rust's use of `unicode_width::UnicodeWidthStr::width()`.
  *
- * For full Unicode support, consider using a proper Unicode width implementation (e.g. ICU) across all targets.
+ * This is a lightweight, KMP-friendly approximation of terminal cell width:
+ * - control characters count as width 0
+ * - combining/zero-width marks count as width 0
+ * - wide codepoints (CJK, fullwidth forms, etc.) count as width 2
+ * - everything else counts as width 1
  */
 fun unicodeWidth(s: String): Int {
     var width = 0
-    for (char in s) {
+    var i = 0
+    while (i < s.length) {
+        val ch = s[i]
+        val codePoint =
+            if (ch.isHighSurrogate() && i + 1 < s.length && s[i + 1].isLowSurrogate()) {
+                val high = ch.code - 0xD800
+                val low = s[i + 1].code - 0xDC00
+                i += 2
+                0x10000 + ((high shl 10) or low)
+            } else {
+                i += 1
+                ch.code
+            }
+
         width += when {
-            char.isISOControl() -> 0
-            // CJK characters are typically 2 columns wide
-            char.code in 0x4E00..0x9FFF -> 2  // CJK Unified Ideographs
-            char.code in 0x3400..0x4DBF -> 2  // CJK Unified Ideographs Extension A
-            char.code in 0x20000..0x2A6DF -> 2  // CJK Unified Ideographs Extension B
-            char.code in 0xF900..0xFAFF -> 2  // CJK Compatibility Ideographs
-            char.code in 0xFF00..0xFF60 -> 2  // Fullwidth Forms
-            char.code in 0xFFE0..0xFFE6 -> 2  // Fullwidth Forms
-            // Zero-width characters
-            char.code == 0x200B -> 0  // Zero Width Space
-            char.code == 0x200C -> 0  // Zero Width Non-Joiner
-            char.code == 0x200D -> 0  // Zero Width Joiner
-            char.code == 0x200E -> 0  // Left-to-Right Mark
-            char.code == 0x200F -> 0  // Right-to-Left Mark
-            char.code == 0xFEFF -> 0  // Zero Width No-Break Space
-            // Combining characters
-            char.code in 0x0300..0x036F -> 0  // Combining Diacritical Marks
-            char.code in 0x1AB0..0x1AFF -> 0  // Combining Diacritical Marks Extended
-            char.code in 0x1DC0..0x1DFF -> 0  // Combining Diacritical Marks Supplement
-            char.code in 0x20D0..0x20FF -> 0  // Combining Diacritical Marks for Symbols
-            char.code in 0xFE20..0xFE2F -> 0  // Combining Half Marks
+            codePoint < 0x20 || codePoint in 0x7F..0x9F -> 0
+            isZeroWidth(codePoint) -> 0
+            isWide(codePoint) -> 2
             else -> 1
         }
     }
     return width
 }
 
+private fun isZeroWidth(codePoint: Int): Boolean {
+    return when {
+        // Explicit zero-width codepoints
+        codePoint == 0x200B -> true // ZERO WIDTH SPACE
+        codePoint == 0x200C -> true // ZERO WIDTH NON-JOINER
+        codePoint == 0x200D -> true // ZERO WIDTH JOINER
+        codePoint == 0x200E -> true // LEFT-TO-RIGHT MARK
+        codePoint == 0x200F -> true // RIGHT-TO-LEFT MARK
+        codePoint == 0xFEFF -> true // ZERO WIDTH NO-BREAK SPACE
+
+        // Combining marks
+        codePoint in 0x0300..0x036F -> true // Combining Diacritical Marks
+        codePoint in 0x1AB0..0x1AFF -> true // Combining Diacritical Marks Extended
+        codePoint in 0x1DC0..0x1DFF -> true // Combining Diacritical Marks Supplement
+        codePoint in 0x20D0..0x20FF -> true // Combining Diacritical Marks for Symbols
+        codePoint in 0xFE20..0xFE2F -> true // Combining Half Marks
+        else -> false
+    }
+}
+
+private fun isWide(codePoint: Int): Boolean {
+    return when {
+        // Hangul Jamo init. consonants
+        codePoint in 0x1100..0x115F -> true
+        // CJK / Japanese / Korean blocks (includes Hiragana/Katakana)
+        codePoint in 0x2E80..0xA4CF -> true
+        // Hangul syllables
+        codePoint in 0xAC00..0xD7A3 -> true
+        // CJK compatibility ideographs
+        codePoint in 0xF900..0xFAFF -> true
+        // Fullwidth forms
+        codePoint in 0xFF00..0xFF60 -> true
+        codePoint in 0xFFE0..0xFFE6 -> true
+        // Common emoji/pictographs ranges (many terminals render these as double-width)
+        codePoint in 0x1F300..0x1F64F -> true
+        codePoint in 0x1F900..0x1F9FF -> true
+        // CJK Unified Ideographs Extensions (non-BMP)
+        codePoint in 0x20000..0x2FFFD -> true
+        codePoint in 0x30000..0x3FFFD -> true
+        else -> false
+    }
+}

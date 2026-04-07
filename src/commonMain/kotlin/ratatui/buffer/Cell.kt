@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/buffer/cell.rs
 package ratatui.buffer
 
 import ratatui.style.Color
@@ -205,4 +206,3 @@ class Cell private constructor(
         return result
     }
 }
-

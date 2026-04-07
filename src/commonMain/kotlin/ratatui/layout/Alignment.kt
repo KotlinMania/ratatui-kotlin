@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/alignment.rs
 /**
  * Alignment types for horizontal and vertical content positioning.
  *
@@ -32,13 +33,6 @@ enum class HorizontalAlignment {
         }
     }
 }
-
-/**
- * Alias for [HorizontalAlignment].
- *
- * Mirrors Rust `type Alignment = HorizontalAlignment;`.
- */
-typealias Alignment = HorizontalAlignment
 
 /**
  * Vertical content alignment within a layout area.

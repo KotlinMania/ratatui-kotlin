@@ -1,7 +1,7 @@
 package ratatui.widgets.barchart
 
 import ratatui.buffer.Buffer
-import ratatui.layout.Alignment
+import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.text.Line
@@ -54,13 +54,13 @@ data class BarGroup(
         // of the whole area, just the label area
         val width = labelLine.width().coerceAtMost(area.width)
         val labelArea = when (labelLine.alignment) {
-            Alignment.Center -> Rect(
+            HorizontalAlignment.Center -> Rect(
                 x = area.x + (area.width - width) / 2,
                 y = area.y,
                 width = width,
                 height = area.height
             )
-            Alignment.Right -> Rect(
+            HorizontalAlignment.Right -> Rect(
                 x = area.x + area.width - width,
                 y = area.y,
                 width = width,

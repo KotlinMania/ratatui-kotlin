@@ -1,6 +1,6 @@
 package ratatui.text
 import ratatui.buffer.Buffer
-import ratatui.layout.Alignment
+import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.style.Styled
@@ -34,9 +34,9 @@ import ratatui.widgets.Widget
  * - [Line.spans] sets the content of the line.
  * - [Line.style] sets the style of the line.
  * - [Line.alignment] sets the alignment of the line.
- * - [Line.leftAligned] sets the alignment of the line to [Alignment.Left].
- * - [Line.centered] sets the alignment of the line to [Alignment.Center].
- * - [Line.rightAligned] sets the alignment of the line to [Alignment.Right].
+ * - [Line.leftAligned] sets the alignment of the line to [HorizontalAlignment.Left].
+ * - [Line.centered] sets the alignment of the line to [HorizontalAlignment.Center].
+ * - [Line.rightAligned] sets the alignment of the line to [HorizontalAlignment.Right].
  *
  * # Other Methods
  *
@@ -86,12 +86,12 @@ import ratatui.widgets.Widget
  *
  * ## Aligning Lines
  *
- * The line's [Alignment] is used by the rendering widget to determine how to align the line
+ * The line's [HorizontalAlignment] is used by the rendering widget to determine how to align the line
  * within the available space. If the line is longer than the available space, the alignment is
  * ignored and the line is truncated.
  *
  * ```kotlin
- * val line = Line.from("Hello world!").alignment(Alignment.Right)
+ * val line = Line.from("Hello world!").alignment(HorizontalAlignment.Right)
  * val line = Line.from("Hello world!").centered()
  * val line = Line.from("Hello world!").leftAligned()
  * val line = Line.from("Hello world!").rightAligned()
@@ -112,7 +112,7 @@ data class Line(
     val style: Style = Style.default(),
 
     /** The alignment of this line of text. */
-    val alignment: Alignment? = null,
+    val alignment: HorizontalAlignment? = null,
 
     /** The spans that make up this line of text. */
     val spans: MutableList<Span> = mutableListOf()
@@ -163,17 +163,17 @@ data class Line(
      * val line = Line.from("Hi, what's up?")
      * assertEquals(null, line.alignment)
      * assertEquals(
-     *     Alignment.Right,
-     *     line.alignment(Alignment.Right).alignment
+     *     HorizontalAlignment.Right,
+     *     line.alignment(HorizontalAlignment.Right).alignment
      * )
      * ```
      */
-    fun alignment(alignment: Alignment): Line = copy(alignment = alignment)
+    fun alignment(alignment: HorizontalAlignment): Line = copy(alignment = alignment)
 
     /**
      * Left-aligns this line of text.
      *
-     * Convenience shortcut for `Line.alignment(Alignment.Left)`.
+     * Convenience shortcut for `Line.alignment(HorizontalAlignment.Left)`.
      * Setting the alignment of a Line generally overrides the alignment of its
      * parent Text or Widget, with the default alignment being inherited from the parent.
      *
@@ -183,12 +183,12 @@ data class Line(
      * val line = Line.from("Hi, what's up?").leftAligned()
      * ```
      */
-    fun leftAligned(): Line = alignment(Alignment.Left)
+    fun leftAligned(): Line = alignment(HorizontalAlignment.Left)
 
     /**
      * Center-aligns this line of text.
      *
-     * Convenience shortcut for `Line.alignment(Alignment.Center)`.
+     * Convenience shortcut for `Line.alignment(HorizontalAlignment.Center)`.
      * Setting the alignment of a Line generally overrides the alignment of its
      * parent Text or Widget, with the default alignment being inherited from the parent.
      *
@@ -198,12 +198,12 @@ data class Line(
      * val line = Line.from("Hi, what's up?").centered()
      * ```
      */
-    fun centered(): Line = alignment(Alignment.Center)
+    fun centered(): Line = alignment(HorizontalAlignment.Center)
 
     /**
      * Right-aligns this line of text.
      *
-     * Convenience shortcut for `Line.alignment(Alignment.Right)`.
+     * Convenience shortcut for `Line.alignment(HorizontalAlignment.Right)`.
      * Setting the alignment of a Line generally overrides the alignment of its
      * parent Text or Widget, with the default alignment being inherited from the parent.
      *
@@ -213,7 +213,7 @@ data class Line(
      * val line = Line.from("Hi, what's up?").rightAligned()
      * ```
      */
-    fun rightAligned(): Line = alignment(Alignment.Right)
+    fun rightAligned(): Line = alignment(HorizontalAlignment.Right)
 
     /**
      * Returns the width of the underlying string.
@@ -334,7 +334,7 @@ data class Line(
     internal fun renderWithAlignment(
         area: Rect,
         buf: Buffer,
-        parentAlignment: Alignment?
+        parentAlignment: HorizontalAlignment?
     ) {
         val clippedArea = area.intersection(buf.area)
         if (clippedArea.isEmpty()) {
@@ -354,9 +354,9 @@ data class Line(
         val canRenderCompleteLine = lineWidth <= areaWidth
         if (canRenderCompleteLine) {
             val indentWidth = when (effectiveAlignment) {
-                Alignment.Center -> (areaWidth - lineWidth) / 2
-                Alignment.Right -> areaWidth - lineWidth
-                Alignment.Left, null -> 0
+                HorizontalAlignment.Center -> (areaWidth - lineWidth) / 2
+                HorizontalAlignment.Right -> areaWidth - lineWidth
+                HorizontalAlignment.Left, null -> 0
             }
             val indentedArea = renderArea.indentX(indentWidth)
             renderSpans(spans, indentedArea, buf, 0)
@@ -364,9 +364,9 @@ data class Line(
             // There is not enough space to render the whole line. As the right side is truncated by
             // the area width, only truncate the left.
             val skipWidth = when (effectiveAlignment) {
-                Alignment.Center -> (lineWidth - areaWidth) / 2
-                Alignment.Right -> lineWidth - areaWidth
-                Alignment.Left, null -> 0
+                HorizontalAlignment.Center -> (lineWidth - areaWidth) / 2
+                HorizontalAlignment.Right -> lineWidth - areaWidth
+                HorizontalAlignment.Left, null -> 0
             }
             renderSpans(spans, renderArea, buf, skipWidth)
         }

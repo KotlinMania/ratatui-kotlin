@@ -1,7 +1,7 @@
 package ratatui.widgets.paragraph
 
 import ratatui.buffer.Buffer
-import ratatui.layout.Alignment
+import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Position
 import ratatui.layout.Rect
 import ratatui.style.Style
@@ -91,7 +91,7 @@ data class Wrap(
  * Paragraph.new(text)
  *     .block(Block.bordered().title("Paragraph"))
  *     .style(Style.new().white().onBlack())
- *     .alignment(Alignment.Center)
+ *     .alignment(HorizontalAlignment.Center)
  *     .wrap(Wrap(trim = true))
  * ```
  */
@@ -107,7 +107,7 @@ data class Paragraph(
     /** Scroll offset (y, x) */
     private val scroll: Position = Position.ORIGIN,
     /** Alignment of the text */
-    private val paragraphAlignment: Alignment = Alignment.Left
+    private val paragraphAlignment: HorizontalAlignment = HorizontalAlignment.Left
 ) : Widget, Styled<Paragraph> {
 
     /**
@@ -165,37 +165,37 @@ data class Paragraph(
     /**
      * Set the text alignment for the given paragraph.
      *
-     * The alignment is a variant of the [Alignment] enum which can be one of Left, Right, or
+     * The alignment is a variant of the [HorizontalAlignment] enum which can be one of Left, Right, or
      * Center. If no alignment is specified, the text in a paragraph will be left-aligned.
      *
      * # Example
      *
      * ```kotlin
-     * val paragraph = Paragraph.new("Hello World").alignment(Alignment.Center)
+     * val paragraph = Paragraph.new("Hello World").alignment(HorizontalAlignment.Center)
      * ```
      */
-    fun alignment(alignment: Alignment): Paragraph = copy(paragraphAlignment = alignment)
+    fun alignment(alignment: HorizontalAlignment): Paragraph = copy(paragraphAlignment = alignment)
 
     /**
      * Left-aligns the text in the given paragraph.
      *
-     * Convenience shortcut for `Paragraph.alignment(Alignment.Left)`.
+     * Convenience shortcut for `Paragraph.alignment(HorizontalAlignment.Left)`.
      */
-    fun leftAligned(): Paragraph = alignment(Alignment.Left)
+    fun leftAligned(): Paragraph = alignment(HorizontalAlignment.Left)
 
     /**
      * Center-aligns the text in the given paragraph.
      *
-     * Convenience shortcut for `Paragraph.alignment(Alignment.Center)`.
+     * Convenience shortcut for `Paragraph.alignment(HorizontalAlignment.Center)`.
      */
-    fun centered(): Paragraph = alignment(Alignment.Center)
+    fun centered(): Paragraph = alignment(HorizontalAlignment.Center)
 
     /**
      * Right-aligns the text in the given paragraph.
      *
-     * Convenience shortcut for `Paragraph.alignment(Alignment.Right)`.
+     * Convenience shortcut for `Paragraph.alignment(HorizontalAlignment.Right)`.
      */
-    fun rightAligned(): Paragraph = alignment(Alignment.Right)
+    fun rightAligned(): Paragraph = alignment(HorizontalAlignment.Right)
 
     /**
      * Calculates the number of lines needed to fully render.
@@ -329,11 +329,11 @@ data class Paragraph(
         }
     }
 
-    private fun getLineOffset(lineWidth: Int, textAreaWidth: Int, alignment: Alignment): Int {
+    private fun getLineOffset(lineWidth: Int, textAreaWidth: Int, alignment: HorizontalAlignment): Int {
         return when (alignment) {
-            Alignment.Center -> ((textAreaWidth / 2) - (lineWidth / 2)).coerceAtLeast(0)
-            Alignment.Right -> (textAreaWidth - lineWidth).coerceAtLeast(0)
-            Alignment.Left -> 0
+            HorizontalAlignment.Center -> ((textAreaWidth / 2) - (lineWidth / 2)).coerceAtLeast(0)
+            HorizontalAlignment.Right -> (textAreaWidth - lineWidth).coerceAtLeast(0)
+            HorizontalAlignment.Left -> 0
         }
     }
 

@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/buffer/buffer.rs
 package ratatui.buffer
 
 import ratatui.layout.Position
@@ -7,7 +8,6 @@ import ratatui.text.Line
 import ratatui.text.Span
 import ratatui.text.graphemes
 import ratatui.text.unicodeWidth
-import ratatui.terminal.CellUpdate
 
 /**
  * A buffer that maps to the desired content of the terminal after the draw call.
@@ -15,9 +15,6 @@ import ratatui.terminal.CellUpdate
  * No widget in the library interacts directly with the terminal. Instead each of them
  * is required to draw their state to an intermediate buffer. It is basically a grid
  * where each cell contains a grapheme, a foreground color and a background color.
- *
- * This is a minimal stub implementation. The full implementation will be ported
- * from the Rust ratatui-core crate.
  */
 class Buffer(
     /** The area represented by this buffer */
@@ -186,32 +183,14 @@ class Buffer(
      *
      * Transliteration of `ratatui-core`'s `Buffer::diff` implementation.
      */
-    fun diff(other: Buffer): List<CellUpdate> {
-        val updates = mutableListOf<CellUpdate>()
+    fun diff(other: Buffer): List<Triple<Int, Int, Cell>> {
+        val updates = mutableListOf<Triple<Int, Int, Cell>>()
         val diff = BufferDiff.new(this, other)
         while (diff.hasNext()) {
             val (x, y, cell) = diff.next()
-            updates.add(cellUpdate(x, y, cell))
+            updates.add(Triple(x, y, cell))
         }
         return updates
-    }
-
-    private fun posOf(i: Int): Pair<Int, Int> {
-        val width = area.width
-        val x = area.x + (i % width)
-        val y = area.y + (i / width)
-        return Pair(x, y)
-    }
-
-    private fun cellUpdate(x: Int, y: Int, cell: Cell): CellUpdate {
-        return CellUpdate(
-            x = x,
-            y = y,
-            symbol = cell.symbol(),
-            fg = cell.fg,
-            bg = cell.bg,
-            modifiers = cell.modifier
-        )
     }
 
     override fun equals(other: Any?): Boolean {

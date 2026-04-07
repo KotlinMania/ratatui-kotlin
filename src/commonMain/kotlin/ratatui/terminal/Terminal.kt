@@ -1,11 +1,11 @@
 package ratatui.terminal
 
+import ratatui.backend.Backend
+import ratatui.backend.ClearType
 import ratatui.buffer.Buffer
 import ratatui.layout.Position
 import ratatui.layout.Rect
 import ratatui.layout.Size
-import ratatui.style.Color
-import ratatui.style.Modifier
 
 /**
  * An interface to interact and draw [Frame]s on the user's terminal.
@@ -121,9 +121,10 @@ class Terminal<B : Backend>(
         val updates = previousBuffer.diff(currentBuffer)
         if (updates.isNotEmpty()) {
             val last = updates.last()
-            lastKnownCursorPos = Position(last.x, last.y)
+            val (x, y, _) = last
+            lastKnownCursorPos = Position(x, y)
         }
-        backend.draw(updates)
+        backend.draw(updates.iterator())
     }
 
     /**
@@ -324,79 +325,3 @@ data class TerminalOptions(
     /** Viewport used to draw to the terminal */
     val viewport: Viewport = Viewport.Fullscreen
 )
-
-/**
- * Type of region to clear.
- */
-enum class ClearType {
-    /** Clear the entire screen */
-    All,
-    /** Clear from cursor to end of screen */
-    AfterCursor,
-    /** Clear from start of screen to cursor */
-    BeforeCursor,
-    /** Clear the current line */
-    CurrentLine,
-    /** Clear from cursor to end of line */
-    UntilNewLine
-}
-
-/**
- * A cell update to be drawn to the terminal.
- */
-data class CellUpdate(
-    val x: Int,
-    val y: Int,
-    val symbol: String,
-    val fg: Color,
-    val bg: Color,
-    val modifiers: Modifier
-)
-
-/**
- * Backend interface for terminal operations.
- *
- * Implementations of this interface are responsible for the actual terminal I/O operations.
- */
-interface Backend {
-    /**
-     * Draw the given updates to the terminal.
-     */
-    fun draw(updates: List<CellUpdate>)
-
-    /**
-     * Hide the cursor.
-     */
-    fun hideCursor()
-
-    /**
-     * Show the cursor.
-     */
-    fun showCursor()
-
-    /**
-     * Get the current cursor position.
-     */
-    fun getCursorPosition(): Position
-
-    /**
-     * Set the cursor position.
-     */
-    fun setCursorPosition(position: Position)
-
-    /**
-     * Clear a region of the terminal.
-     */
-    fun clearRegion(clearType: ClearType)
-
-    /**
-     * Get the terminal size.
-     */
-    fun size(): Size
-
-    /**
-     * Flush any buffered output.
-     */
-    fun flush()
-}
-

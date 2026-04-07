@@ -1,8 +1,8 @@
 package ratatui.widgets.barchart
 
 import ratatui.buffer.Buffer
-import ratatui.layout.Alignment
 import ratatui.layout.Direction
+import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Rect
 import ratatui.style.Color
 import ratatui.style.Modifier
@@ -272,9 +272,9 @@ class BarChartTest {
         // test the centered group position when one bar is outside the group
         val group = BarGroup.from("a" to 1L, "b" to 2L, "c" to 3L, "c" to 4L)
         val chart = BarChart.default()
-            .data(group.label(Line.from("G1").alignment(Alignment.Center)))
+            .data(group.label(Line.from("G1").alignment(HorizontalAlignment.Center)))
             .data(BarGroup.from("a" to 1L, "b" to 2L, "c" to 3L, "c" to 4L)
-                .label(Line.from("G2").alignment(Alignment.Center)))
+                .label(Line.from("G2").alignment(HorizontalAlignment.Center)))
 
         val buffer = Buffer.empty(Rect.new(0, 0, 13, 5))
         chart.render(buffer.area, buffer)
@@ -292,7 +292,7 @@ class BarChartTest {
     fun testGroupLabelRight() {
         val chart = BarChart.default().data(
             BarGroup.default()
-                .label(Line.from("G").alignment(Alignment.Right))
+                .label(Line.from("G").alignment(HorizontalAlignment.Right))
                 .bars(Bar.default().value(2), Bar.default().value(5))
         )
 
@@ -384,7 +384,7 @@ class BarChartTest {
             "h" to 7L,
             "i" to 8L
         )
-        group = group.label(Line.from("Group").alignment(Alignment.Center))
+        group = group.label(Line.from("Group").alignment(HorizontalAlignment.Center))
 
         val chart = BarChart.default()
             .data(group)
@@ -413,7 +413,7 @@ class BarChartTest {
             "h" to 7L,
             "i" to 8L
         )
-        group = group.label(Line.from("Group").alignment(Alignment.Center))
+        group = group.label(Line.from("Group").alignment(HorizontalAlignment.Center))
 
         val chart = BarChart.default()
             .data(group)
@@ -433,7 +433,7 @@ class BarChartTest {
     @Test
     fun twoLinesWithoutBarLabels() {
         val group = BarGroup.default()
-            .label(Line.from("Group").alignment(Alignment.Center))
+            .label(Line.from("Group").alignment(HorizontalAlignment.Center))
             .bars(
                 Bar.default().value(0),
                 Bar.default().value(1),

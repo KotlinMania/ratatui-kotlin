@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/buffer/cell_width.rs
 package ratatui.buffer
 
 import ratatui.text.unicodeWidth
@@ -19,8 +20,12 @@ interface CellWidth {
  */
 fun String.cellWidth(): UShort {
     if (length == 1) {
-        // Rust uses debug_assert to validate this isn't ASCII control; keep behavior without throwing.
-        return 1u
+        val ch = this[0]
+        // Rust fast-paths for single-byte ASCII (str::len() == 1). Kotlin `length` counts chars,
+        // so explicitly restrict this to ASCII.
+        if (ch.code <= 0x7F) {
+            return 1u
+        }
     }
     return unicodeWidth(this).toUShort()
 }
@@ -37,4 +42,3 @@ fun Cell.cellWidth(): UShort {
         is CellDiffOption.ForcedWidth -> option.width.get()
     }
 }
-
