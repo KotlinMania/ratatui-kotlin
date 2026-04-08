@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/terminal.rs
 package ratatui.terminal
 
 import ratatui.backend.Backend
@@ -237,6 +238,26 @@ class Terminal<B : Backend>(
     fun showCursor() {
         backend.showCursor()
         hiddenCursor = false
+    }
+
+    /**
+     * Gets the current cursor position.
+     *
+     * This is the position of the cursor after the last draw call and is returned as a tuple of
+     * `(x, y)` coordinates.
+     */
+    @Deprecated("use getCursorPosition() instead which returns Position")
+    fun getCursor(): Pair<UShort, UShort> {
+        val pos = getCursorPosition()
+        return Pair(pos.x.toUShort(), pos.y.toUShort())
+    }
+
+    /**
+     * Sets the cursor position.
+     */
+    @Deprecated("use setCursorPosition((x, y)) instead which takes Position")
+    fun setCursor(x: UShort, y: UShort) {
+        setCursorPosition(Position(x.toInt(), y.toInt()))
     }
 
     /**
