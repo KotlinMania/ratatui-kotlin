@@ -12,14 +12,27 @@ package ratatui.text
  * - everything else counts as width 1
  */
 fun unicodeWidth(s: String): Int {
+    if (s.isEmpty()) return 0
+
+    var width = 0
+    for (grapheme in graphemes(s)) {
+        width += graphemeCellWidth(grapheme)
+    }
+    return width
+}
+
+internal fun graphemeCellWidth(grapheme: String): Int {
+    // Treat emoji ZWJ sequences as a single grapheme with width 2.
+    if (grapheme.indexOf('\u200D') >= 0) return 2
+
     var width = 0
     var i = 0
-    while (i < s.length) {
-        val ch = s[i]
+    while (i < grapheme.length) {
+        val ch = grapheme[i]
         val codePoint =
-            if (ch.isHighSurrogate() && i + 1 < s.length && s[i + 1].isLowSurrogate()) {
+            if (ch.isHighSurrogate() && i + 1 < grapheme.length && grapheme[i + 1].isLowSurrogate()) {
                 val high = ch.code - 0xD800
-                val low = s[i + 1].code - 0xDC00
+                val low = grapheme[i + 1].code - 0xDC00
                 i += 2
                 0x10000 + ((high shl 10) or low)
             } else {
@@ -34,6 +47,12 @@ fun unicodeWidth(s: String): Int {
             else -> 1
         }
     }
+
+    // VS16 (emoji presentation selector) promotes many otherwise-narrow symbols to emoji width.
+    if (grapheme.indexOf('\uFE0F') >= 0 && width == 1) {
+        width = 2
+    }
+
     return width
 }
 
@@ -53,6 +72,13 @@ private fun isZeroWidth(codePoint: Int): Boolean {
         codePoint in 0x1DC0..0x1DFF -> true // Combining Diacritical Marks Supplement
         codePoint in 0x20D0..0x20FF -> true // Combining Diacritical Marks for Symbols
         codePoint in 0xFE20..0xFE2F -> true // Combining Half Marks
+
+        // Variation selectors (including VS16 emoji presentation).
+        codePoint in 0xFE00..0xFE0F -> true
+        codePoint in 0xE0100..0xE01EF -> true
+
+        // Emoji modifiers (Fitzpatrick skin tones).
+        codePoint in 0x1F3FB..0x1F3FF -> true
         else -> false
     }
 }
