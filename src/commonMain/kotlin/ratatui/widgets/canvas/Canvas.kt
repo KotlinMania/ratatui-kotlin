@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/canvas.rs
 package ratatui.widgets.canvas
 
 import ratatui.buffer.Buffer
