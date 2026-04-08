@@ -125,6 +125,10 @@ These files need immediate attention:
   - Similarity: 0.00
   - Dependencies: 1
 
+- **terminal.cursor** → `terminal.CursorModuleTest`
+  - Similarity: 0.00
+  - Dependencies: 1
+
 - **ratatui-widgets.scrollbar** → `scrollbar.Scrollbar`
   - Similarity: 0.05
   - Dependencies: 1
@@ -135,10 +139,6 @@ These files need immediate attention:
 
 - **ratatui-widgets.calendar** → `calendar.Monthly`
   - Similarity: 0.13
-  - Dependencies: 1
-
-- **terminal.cursor** → `terminal.Cursor`
-  - Similarity: 0.14
   - Dependencies: 1
 
 - **widgets.stateful_widget_ref** → `widgets.StatefulWidgetRef`
