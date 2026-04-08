@@ -9,6 +9,7 @@ import ratatui.style.Styled
 import ratatui.symbols.border.Set as BorderSet
 import ratatui.symbols.merge.MergeStrategy
 import ratatui.text.Line
+import ratatui.text.Span
 import ratatui.widgets.Borders
 import ratatui.widgets.BorderType
 import ratatui.widgets.Widget
@@ -160,6 +161,13 @@ data class Block(
     }
 
     /**
+     * Adds a title to the block using the default position.
+     *
+     * This is a convenience overload to match the Rust API which accepts `Span` titles.
+     */
+    fun title(title: Span): Block = title(Line.from(title))
+
+    /**
      * Adds a title to the top of the block.
      *
      * @param title The title text or Line
@@ -181,6 +189,13 @@ data class Block(
     }
 
     /**
+     * Adds a title to the top of the block.
+     *
+     * This is a convenience overload to match the Rust API which accepts `Span` titles.
+     */
+    fun titleTop(title: Span): Block = titleTop(Line.from(title))
+
+    /**
      * Adds a title to the bottom of the block.
      *
      * @param title The title text or Line
@@ -200,6 +215,13 @@ data class Block(
         newTitles.add(TitlePosition.Bottom to title)
         return copy(titles = newTitles)
     }
+
+    /**
+     * Adds a title to the bottom of the block.
+     *
+     * This is a convenience overload to match the Rust API which accepts `Span` titles.
+     */
+    fun titleBottom(title: Span): Block = titleBottom(Line.from(title))
 
     /**
      * Applies the style to all titles.

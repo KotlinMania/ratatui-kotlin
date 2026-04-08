@@ -1,5 +1,8 @@
 package ratatui.widgets.scrollbar
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 /**
  * A struct representing the state of a Scrollbar widget.
  *
@@ -35,12 +38,15 @@ package ratatui.widgets.scrollbar
  *     .viewportContentLength(10)
  * ```
  */
+@Serializable
 data class ScrollbarState(
     /** The total length of the scrollable content. */
+    @SerialName("content_length")
     var contentLength: Int = 0,
     /** The current position within the scrollable content. */
     var position: Int = 0,
     /** The length of content in current viewport. */
+    @SerialName("viewport_content_length")
     var viewportContentLength: Int = 0
 ) {
     /**

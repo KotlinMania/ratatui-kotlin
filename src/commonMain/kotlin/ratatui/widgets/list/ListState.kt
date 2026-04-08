@@ -1,5 +1,7 @@
 package ratatui.widgets.list
 
+import kotlinx.serialization.Serializable
+
 /**
  * State of the [List] widget.
  *
@@ -27,6 +29,7 @@ package ratatui.widgets.list
  * list.render(area, buffer, state)
  * ```
  */
+@Serializable
 data class ListState(
     /** Index of the first item to be displayed */
     var offset: Int = 0,

@@ -1,5 +1,8 @@
 package ratatui.widgets.table
 
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
 /**
  * State of a [Table] widget.
  *
@@ -30,12 +33,14 @@ package ratatui.widgets.table
  * table.render(area, buffer, state)
  * ```
  */
+@Serializable
 data class TableState(
     /** Index of the first row to be displayed */
     var offset: Int = 0,
     /** Index of the selected row, or null if no row is selected */
     var selected: Int? = null,
     /** Index of the selected column, or null if no column is selected */
+    @SerialName("selected_column")
     var selectedColumn: Int? = null
 ) {
     /**
