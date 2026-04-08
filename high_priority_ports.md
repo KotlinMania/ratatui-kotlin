@@ -125,8 +125,8 @@ These files need immediate attention:
   - Similarity: 0.00
   - Dependencies: 1
 
-- **ratatui-widgets.scrollbar** → `scrollbar.ScrollbarState`
-  - Similarity: 0.02
+- **ratatui-widgets.scrollbar** → `scrollbar.Scrollbar`
+  - Similarity: 0.05
   - Dependencies: 1
 
 - **layout.direction** → `layout.Direction`
@@ -202,5 +202,5 @@ These files need immediate attention:
 | 19 | `demo2.tabs` | 0 | `examples/apps/demo2/src/tabs.rs` |
 | 20 | `tabs.about` | 0 | `examples/apps/demo2/src/tabs/about.rs` |
 
-... and 83 more missing files.
+... and 84 more missing files.
 

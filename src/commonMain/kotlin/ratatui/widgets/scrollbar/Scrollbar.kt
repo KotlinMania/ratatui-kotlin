@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/scrollbar.rs
 package ratatui.widgets.scrollbar
 
 import ratatui.buffer.Buffer
