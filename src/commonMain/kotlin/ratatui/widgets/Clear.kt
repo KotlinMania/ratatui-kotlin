@@ -13,6 +13,7 @@ import ratatui.layout.Rect
  *
  * ```kotlin
  * fun drawOnClear(frame: Frame, area: Rect) {
+ *     val buffer = frame.bufferMut()
  *     val block = Block.bordered().title("Block")
  *     Clear.render(area, buffer) // <- this will clear/reset the area first
  *     block.render(area, buffer) // now render the block widget

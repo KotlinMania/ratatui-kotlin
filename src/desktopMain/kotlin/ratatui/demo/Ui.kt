@@ -377,6 +377,9 @@ private fun drawSecondTab(frame: Frame, app: App, area: Rect) {
 }
 
 private fun drawThirdTab(frame: Frame, app: App, area: Rect) {
+    @Suppress("UNUSED_VARIABLE")
+    val unusedApp = app
+
     val chunks = Layout.horizontal(listOf(Constraint.Ratio(1u, 2u), Constraint.Ratio(1u, 2u))).split(area)
 
     val colors = listOf(

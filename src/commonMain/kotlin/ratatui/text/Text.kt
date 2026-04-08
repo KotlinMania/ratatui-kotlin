@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/text/text.rs
 package ratatui.text
 
 import ratatui.buffer.Buffer

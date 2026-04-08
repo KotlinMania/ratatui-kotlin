@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/text/span.rs
 package ratatui.text
 
 import ratatui.buffer.Buffer

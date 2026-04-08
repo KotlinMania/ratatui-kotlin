@@ -1,4 +1,6 @@
+// port-lint: source ratatui-core/src/text/line.rs
 package ratatui.text
+
 import ratatui.buffer.Buffer
 import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Rect

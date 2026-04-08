@@ -72,6 +72,7 @@ interface Backend {
      */
     fun appendLines(n: UShort) {
         // default: no-op
+        if (n == 0.toUShort()) return
     }
 
     /** Hide the cursor on the terminal screen. */
