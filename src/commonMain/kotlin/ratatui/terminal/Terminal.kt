@@ -3,6 +3,7 @@ package ratatui.terminal
 import ratatui.backend.Backend
 import ratatui.backend.ClearType
 import ratatui.buffer.Buffer
+import ratatui.buffer.BufferDiff
 import ratatui.buffer.Cell
 import ratatui.layout.Position
 import ratatui.layout.Rect
@@ -119,8 +120,7 @@ class Terminal<B : Backend>(
         val updates = previousBuffer.diff(currentBuffer)
         if (updates.isNotEmpty()) {
             val last = updates.last()
-            val (x, y, _) = last
-            lastKnownCursorPos = Position(x, y)
+            lastKnownCursorPos = Position(last.x, last.y)
         }
         backend.draw(updates.iterator())
     }
@@ -352,7 +352,7 @@ class Terminal<B : Backend>(
         if (linesToDraw > 0) {
             val iter = toDraw.asSequence()
                 .withIndex()
-                .map { (i, c) -> Triple(i % width, yOffset + (i / width), c) }
+                .map { (i, c) -> BufferDiff.Item(i % width, yOffset + (i / width), c) }
                 .iterator()
             backend.draw(iter)
             backend.flush()

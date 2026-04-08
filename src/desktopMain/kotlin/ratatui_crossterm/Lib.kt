@@ -41,6 +41,7 @@ import ratatui.backend.Backend
 import ratatui.backend.ClearType
 import ratatui.layout.Position
 import ratatui.layout.Size
+import ratatui.buffer.BufferDiff
 import ratatui.buffer.Cell
 import ratatui.style.Color
 import ratatui.style.Modifier
@@ -56,14 +57,17 @@ class CrosstermBackend(
     private val flushFn: () -> Unit = {}
 ) : Backend {
 
-    override fun draw(content: Iterator<Triple<Int, Int, Cell>>) {
+    override fun draw(content: Iterator<BufferDiff.Item>) {
         var fg: Color = Color.Reset
         var bg: Color = Color.Reset
         var modifier: Modifier = Modifier.empty()
         var lastPos: Position? = null
 
         while (content.hasNext()) {
-            val (x, y, cell) = content.next()
+            val item = content.next()
+            val x = item.x
+            val y = item.y
+            val cell = item.cell
             // Move the cursor if the previous location was not (x - 1, y)
             val prev = lastPos
             if (!(prev != null && x == prev.x + 1 && y == prev.y)) {

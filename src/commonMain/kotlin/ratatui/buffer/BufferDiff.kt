@@ -16,10 +16,21 @@ class BufferDiff private constructor(
     private val next: List<Cell>,
     private val prev: List<Cell>,
     private val area: Rect
-) : Iterator<Triple<Int, Int, Cell>> {
+) : Iterator<BufferDiff.Item> {
+    /**
+     * Transliteration of Rust's iterator item: `(x, y, &Cell)`.
+     *
+     * Rust declares this as `type Item = (u16, u16, &'next Cell)` in the `Iterator` implementation.
+     */
+    data class Item(
+        val x: Int,
+        val y: Int,
+        val cell: Cell
+    )
+
     private var pos: Int = 0
     private var trailing: TrailingState? = null
-    private var cached: Triple<Int, Int, Cell>? = null
+    private var cached: Item? = null
     private var cacheValid: Boolean = false
 
     private data class TrailingState(
@@ -59,7 +70,7 @@ class BufferDiff private constructor(
         return cached != null
     }
 
-    override fun next(): Triple<Int, Int, Cell> {
+    override fun next(): Item {
         if (!hasNext()) throw NoSuchElementException()
         val result = cached ?: throw NoSuchElementException()
         cached = null
@@ -67,7 +78,7 @@ class BufferDiff private constructor(
         return result
     }
 
-    private fun nextDiffOrNull(): Triple<Int, Int, Cell>? {
+    private fun nextDiffOrNull(): Item? {
         // First, yield any pending VS16 trailing cells.
         trailing?.let { state ->
             while (state.nextIndex < state.end) {
@@ -77,7 +88,7 @@ class BufferDiff private constructor(
                 // Only emit update if the symbol has changed.
                 if (!isSkip(next[j]) && prev[j].symbol() != next[j].symbol()) {
                     val (tx, ty) = posOf(j)
-                    return Triple(tx, ty, next[j])
+                    return Item(tx, ty, next[j])
                 }
             }
 
@@ -102,28 +113,28 @@ class BufferDiff private constructor(
                     } else if (option is CellDiffOption.ForcedWidth) {
                         val width = option.width.get().toInt()
                         pos += (width - 1).coerceAtLeast(0)
-                        if (current != previous) {
-                            val (x, y) = posOf(i)
-                            return Triple(x, y, current)
-                        }
-                    } else {
-                        if (current != previous) {
-                            val cellWidth = current.cellWidth().toInt()
-                            val containsVs16 = cellWidth > 1 && current.symbol().any { c -> c == '\uFE0F' }
+                    if (current != previous) {
+                        val (x, y) = posOf(i)
+                        return Item(x, y, current)
+                    }
+                } else {
+                    if (current != previous) {
+                        val cellWidth = current.cellWidth().toInt()
+                        val containsVs16 = cellWidth > 1 && current.symbol().any { c -> c == '\uFE0F' }
 
                             if (containsVs16) {
                                 val trailingEnd = (i + cellWidth).coerceAtMost(len)
                                 trailing = TrailingState(nextIndex = i + 1, end = trailingEnd)
                             } else if (cellWidth > 1) {
-                                pos += (cellWidth - 1).coerceAtLeast(0)
-                            }
+                            pos += (cellWidth - 1).coerceAtLeast(0)
+                        }
 
-                            val (x, y) = posOf(i)
-                            return Triple(x, y, current)
-                        } else {
-                            // No change, but still need to skip width to keep position aligned.
-                            val cellWidth = current.cellWidth().toInt()
-                            if (cellWidth > 1) {
+                        val (x, y) = posOf(i)
+                        return Item(x, y, current)
+                    } else {
+                        // No change, but still need to skip width to keep position aligned.
+                        val cellWidth = current.cellWidth().toInt()
+                        if (cellWidth > 1) {
                                 pos += (cellWidth - 1).coerceAtLeast(0)
                             }
                         }

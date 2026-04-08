@@ -372,10 +372,10 @@ class BufferTest {
 
         val diff = prev.diff(next)
         val expected = listOf(
-            Triple(2, 1, Cell.new("I")),
-            Triple(3, 1, Cell.new("T")),
-            Triple(4, 1, Cell.new("L")),
-            Triple(5, 1, Cell.new("E")),
+            BufferDiff.Item(2, 1, Cell.new("I")),
+            BufferDiff.Item(3, 1, Cell.new("T")),
+            BufferDiff.Item(4, 1, Cell.new("L")),
+            BufferDiff.Item(5, 1, Cell.new("E")),
         )
         assertEquals(expected, diff)
     }
@@ -393,11 +393,11 @@ class BufferTest {
 
         val diff = prev.diff(next)
         val expected = listOf(
-            Triple(1, 0, Cell.new("称")),
+            BufferDiff.Item(1, 0, Cell.new("称")),
             // Skipped "i"
-            Triple(3, 0, Cell.new("号")),
+            BufferDiff.Item(3, 0, Cell.new("号")),
             // Skipped "l"
-            Triple(5, 0, Cell.new("─")),
+            BufferDiff.Item(5, 0, Cell.new("─")),
         )
         assertEquals(expected, diff)
     }
@@ -409,9 +409,9 @@ class BufferTest {
 
         val diff = prev.diff(next)
         val expected = listOf(
-            Triple(1, 0, Cell.new("─")),
-            Triple(2, 0, Cell.new("称")),
-            Triple(4, 0, Cell.new("号")),
+            BufferDiff.Item(1, 0, Cell.new("─")),
+            BufferDiff.Item(2, 0, Cell.new("称")),
+            BufferDiff.Item(4, 0, Cell.new("号")),
         )
         assertEquals(expected, diff)
     }
@@ -525,7 +525,7 @@ class BufferTest {
         }
 
         val diff = prev.diff(next)
-        assertEquals(listOf(Triple(0, 0, Cell.new("4"))), diff)
+        assertEquals(listOf(BufferDiff.Item(0, 0, Cell.new("4"))), diff)
     }
 
     @Test

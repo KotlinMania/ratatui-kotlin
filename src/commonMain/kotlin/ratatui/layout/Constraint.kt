@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/constraint.rs
 /**
  * A constraint that defines the size of a layout element.
  *
@@ -65,21 +66,27 @@ sealed class Constraint {
      *
      * The element size is set to at least the specified amount.
      */
-    data class Min(val value: Int) : Constraint()
+    data class Min(val value: Int) : Constraint() {
+        override fun toString(): String = "Min($value)"
+    }
 
     /**
      * Applies a maximum size constraint to the element.
      *
      * The element size is set to at most the specified amount.
      */
-    data class Max(val value: Int) : Constraint()
+    data class Max(val value: Int) : Constraint() {
+        override fun toString(): String = "Max($value)"
+    }
 
     /**
      * Applies a length constraint to the element.
      *
      * The element size is set to the specified amount.
      */
-    data class Length(val value: Int) : Constraint()
+    data class Length(val value: Int) : Constraint() {
+        override fun toString(): String = "Length($value)"
+    }
 
     /**
      * Applies a percentage of the available space to the element.
@@ -90,7 +97,9 @@ sealed class Constraint {
      * Note: Certain percentages that cannot be represented exactly (e.g. 1/3) are not possible.
      * You might want to use [Constraint.Ratio] or [Constraint.Fill] in such cases.
      */
-    data class Percentage(val value: Int) : Constraint()
+    data class Percentage(val value: Int) : Constraint() {
+        override fun toString(): String = "Percentage($value)"
+    }
 
     /**
      * Applies a ratio of the available space to the element.
@@ -98,7 +107,9 @@ sealed class Constraint {
      * Converts the given ratio to a floating-point value and multiplies that with area.
      * This value is rounded back to an integer as part of the layout split calculation.
      */
-    data class Ratio(val numerator: UInt, val denominator: UInt) : Constraint()
+    data class Ratio(val numerator: UInt, val denominator: UInt) : Constraint() {
+        override fun toString(): String = "Ratio($numerator, $denominator)"
+    }
 
     /**
      * Applies the scaling factor proportional to all other [Constraint.Fill] elements
@@ -107,7 +118,9 @@ sealed class Constraint {
      * The element will only expand or fill into excess available space, proportionally matching
      * other [Constraint.Fill] elements while satisfying all other constraints.
      */
-    data class Fill(val value: Int) : Constraint()
+    data class Fill(val value: Int) : Constraint() {
+        override fun toString(): String = "Fill($value)"
+    }
 
     /**
      * Apply the constraint to a length and return the resulting size.
@@ -154,14 +167,12 @@ sealed class Constraint {
     /** Check if this is a [Fill] constraint */
     fun isFill(): Boolean = this is Fill
 
-    override fun toString(): String = when (this) {
-        is Percentage -> "Percentage($value)"
-        is Ratio -> "Ratio($numerator, $denominator)"
-        is Length -> "Length($value)"
-        is Fill -> "Fill($value)"
-        is Max -> "Max($value)"
-        is Min -> "Min($value)"
-    }
+    /**
+     * Get a reference to self.
+     *
+     * Mirrors Rust `AsRef<Self> for Constraint`.
+     */
+    fun asRef(): Constraint = this
 
     companion object {
         /** The default constraint (Percentage(100)) */
@@ -169,6 +180,13 @@ sealed class Constraint {
 
         /** Create a Length constraint from an Int */
         fun from(length: Int): Constraint = Length(length)
+
+        /**
+         * Create a constraint from another constraint (copy).
+         *
+         * Mirrors Rust `From<&Self> for Constraint`.
+         */
+        fun from(constraint: Constraint): Constraint = constraint
 
         /**
          * Convert an iterable of lengths into a list of constraints.

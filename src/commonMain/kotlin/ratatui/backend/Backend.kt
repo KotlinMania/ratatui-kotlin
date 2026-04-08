@@ -1,7 +1,7 @@
 // port-lint: source ratatui-core/src/backend.rs
 package ratatui.backend
 
-import ratatui.buffer.Cell
+import ratatui.buffer.BufferDiff
 import ratatui.layout.Position
 import ratatui.layout.Size
 
@@ -63,7 +63,7 @@ interface Backend {
      *
      * The content is provided as an iterator over `(x, y, cell)` tuples.
      */
-    fun draw(content: Iterator<Triple<Int, Int, Cell>>)
+    fun draw(content: Iterator<BufferDiff.Item>)
 
     /**
      * Insert `n` line breaks to the terminal screen.

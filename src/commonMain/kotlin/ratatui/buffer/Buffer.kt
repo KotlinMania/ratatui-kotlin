@@ -274,12 +274,11 @@ class Buffer(
      *
      * Prefer [diffIter] to avoid the intermediate allocation.
      */
-    fun diff(other: Buffer): List<Triple<Int, Int, Cell>> {
-        val updates = mutableListOf<Triple<Int, Int, Cell>>()
+    fun diff(other: Buffer): List<BufferDiff.Item> {
+        val updates = mutableListOf<BufferDiff.Item>()
         val diff = diffIter(other)
         while (diff.hasNext()) {
-            val (x, y, cell) = diff.next()
-            updates.add(Triple(x, y, cell))
+            updates.add(diff.next())
         }
         return updates
     }

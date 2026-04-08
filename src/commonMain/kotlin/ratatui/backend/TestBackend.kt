@@ -112,11 +112,11 @@ class TestBackend private constructor(
     /** Asserts that the backend's scrollback buffer is equal to the expected string lines. */
     fun assertScrollbackLines(vararg lines: String) = assertScrollback(Buffer.withLines(*lines))
 
-    override fun draw(content: Iterator<Triple<Int, Int, Cell>>) {
+    override fun draw(content: Iterator<ratatui.buffer.BufferDiff.Item>) {
         while (content.hasNext()) {
-            val (x, y, cell) = content.next()
-            val index = buffer.indexOf(x, y)
-            buffer.content[index] = cell.clone()
+            val item = content.next()
+            val index = buffer.indexOf(item.x, item.y)
+            buffer.content[index] = item.cell.clone()
         }
     }
 
