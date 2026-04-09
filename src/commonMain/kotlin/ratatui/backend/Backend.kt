@@ -177,6 +177,8 @@ interface Backend {
      * This method is optional and may not be implemented by all backends.
      */
     fun appendLines(n: UShort) {
+        @Suppress("UNUSED_EXPRESSION")
+        n
         // default: no-op
     }
 
