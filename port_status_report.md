@@ -38,11 +38,11 @@ These files are well-ported and likely complete:
 
 These files need significant work:
 
-- `ratatui-core.buffer` → `buffer.BufferModule` (0.44, 88 deps)
+- `ratatui-core.buffer` → `buffer.BufferModule` (0.39, 88 deps)
 - `widgets.widget` → `widgets.Widget` (0.34, 44 deps)
 - `ratatui-macros.line` → `ratatui_macros.Line` (0.52, 37 deps)
 - `style.color` → `style.Color` (0.33, 15 deps)
-- `ratatui-core.text` → `text.TextModule` (0.40, 13 deps)
+- `ratatui-core.text` → `text.TextModule` (0.38, 13 deps)
 - `commands.format` → `commands.Format` (0.59, 17 deps)
 - `ratatui-core.backend` → `backend.Backend` (0.36, 7 deps)
 - `symbols.marker` → `symbols.Marker` (0.50, 9 deps)
@@ -206,7 +206,7 @@ present in the Rust source file.
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 7609 / 29254 lines (26%)
+**Documentation coverage:** 7630 / 29254 lines (26%)
 
 Top documentation gaps (>20%):
 

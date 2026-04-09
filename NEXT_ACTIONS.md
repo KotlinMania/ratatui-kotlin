@@ -12,9 +12,9 @@ Based on AST analysis, here are the concrete next steps.
 ## Priority 1: Fix Incomplete High-Dependency Files
 
 ### 1. ratatui-core.buffer
-- **Similarity:** 0.44 (needs 41% improvement)
+- **Similarity:** 0.39 (needs 46% improvement)
 - **Dependencies:** 88
-- **Priority Score:** 49.1
+- **Priority Score:** 53.7
 - **Action:** Deep review - likely missing major functionality
 
 ### 2. widgets.widget
@@ -36,9 +36,9 @@ Based on AST analysis, here are the concrete next steps.
 - **Action:** Deep review - likely missing major functionality
 
 ### 5. ratatui-core.text
-- **Similarity:** 0.40 (needs 45% improvement)
+- **Similarity:** 0.38 (needs 47% improvement)
 - **Dependencies:** 13
-- **Priority Score:** 7.8
+- **Priority Score:** 8.0
 - **Action:** Deep review - likely missing major functionality
 
 ### 6. commands.format

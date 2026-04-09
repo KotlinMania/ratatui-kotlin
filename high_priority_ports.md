@@ -4,11 +4,11 @@
 
 | Rank | Source | Target | Similarity | Deps | Priority |
 |------|--------|--------|------------|------|----------|
-| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.44 | 88 | 49.1 |
+| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.39 | 88 | 53.7 |
 | 2 | `widgets.widget` | `widgets.Widget` | 0.34 | 44 | 29.2 |
 | 3 | `ratatui-macros.line` | `ratatui_macros.Line` | 0.52 | 37 | 17.7 |
 | 4 | `style.color` | `style.Color` | 0.33 | 15 | 10.1 |
-| 5 | `ratatui-core.text` | `text.TextModule` | 0.40 | 13 | 7.8 |
+| 5 | `ratatui-core.text` | `text.TextModule` | 0.38 | 13 | 8.0 |
 | 6 | `tests.rect` | `layout.RectTest` | 0.86 | 54 | 7.4 |
 | 7 | `commands.format` | `commands.Format` | 0.59 | 17 | 6.9 |
 | 8 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
@@ -30,7 +30,7 @@
 These files need immediate attention:
 
 - **ratatui-core.buffer** → `buffer.BufferModule`
-  - Similarity: 0.44
+  - Similarity: 0.39
   - Dependencies: 88
 
 - **widgets.widget** → `widgets.Widget`
@@ -46,7 +46,7 @@ These files need immediate attention:
   - Dependencies: 15
 
 - **ratatui-core.text** → `text.TextModule`
-  - Similarity: 0.40
+  - Similarity: 0.38
   - Dependencies: 13
 
 - **commands.format** → `commands.Format`

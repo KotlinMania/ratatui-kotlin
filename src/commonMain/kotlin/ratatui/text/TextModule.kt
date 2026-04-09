@@ -1,15 +1,6 @@
 // port-lint: source ratatui-core/src/text.rs
 package ratatui.text
 
-import ratatui.text.Line
-import ratatui.text.Masked
-import ratatui.text.Span
-import ratatui.text.StyledGrapheme
-import ratatui.text.Text
-import ratatui.text.ToLine
-import ratatui.text.ToSpan
-import ratatui.text.ToText
-
 /**
  * Primitives for styled text.
  *
@@ -54,6 +45,13 @@ import ratatui.text.ToText
  *     )
  * )
  * ```
+ *
+ * This mirrors Rust's `ratatui-core/src/text.rs`, which declares submodules and publicly exports:
+ * - [StyledGrapheme]
+ * - [Line] / [ToLine]
+ * - [Masked]
+ * - [Span] / [ToSpan]
+ * - [Text] / [ToText]
  */
 
 @Suppress("unused")

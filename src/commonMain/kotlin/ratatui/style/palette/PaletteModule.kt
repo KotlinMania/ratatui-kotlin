@@ -5,6 +5,9 @@ import ratatui.style.palette.tailwind.Palette as TailwindPalette
 
 /**
  * A module for defining color palettes.
+ *
+ * This mirrors Rust's `ratatui-core/src/style/palette.rs`, which declares palette submodules such
+ * as `material` and `tailwind`.
  */
 
 @Suppress("unused")

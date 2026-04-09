@@ -1,14 +1,16 @@
 // port-lint: source ratatui-core/src/buffer.rs
 package ratatui.buffer
 
-import ratatui.buffer.Buffer
-import ratatui.buffer.BufferDiff
-import ratatui.buffer.Cell
-import ratatui.buffer.CellDiffOption
-import ratatui.buffer.CellWidth
-
 /**
  * A module for the [Buffer] and [Cell] types.
+ *
+ * This mirrors Rust's `ratatui-core/src/buffer.rs`, which declares submodules and publicly exports
+ * the buffer primitives:
+ * - [Buffer]
+ * - [Cell]
+ * - [CellDiffOption]
+ * - [CellWidth]
+ * - [BufferDiff]
  */
 
 @Suppress("unused")
