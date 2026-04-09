@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/text/masked.rs
 package ratatui.text
 
 import kotlin.test.Test
@@ -30,4 +31,3 @@ class MaskedTest {
         assertEquals(Text.raw("xxxxx"), text)
     }
 }
-

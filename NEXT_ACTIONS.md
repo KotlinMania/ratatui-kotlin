@@ -4,17 +4,17 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Current Progress:** 57.1% (140/233 files)
-- **Matched Files:** 133
-- **Average Similarity:** 0.35
-- **Critical Issues:** 104 files with <0.60 similarity
+- **Current Progress:** 61.4% (162/233 files)
+- **Matched Files:** 143
+- **Average Similarity:** 0.39
+- **Critical Issues:** 106 files with <0.60 similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
 ### 1. ratatui-core.buffer
-- **Similarity:** 0.39 (needs 46% improvement)
+- **Similarity:** 0.57 (needs 28% improvement)
 - **Dependencies:** 88
-- **Priority Score:** 53.7
+- **Priority Score:** 38.0
 - **Action:** Deep review - likely missing major functionality
 
 ### 2. widgets.widget
@@ -30,33 +30,33 @@ Based on AST analysis, here are the concrete next steps.
 - **Action:** Deep review - likely missing major functionality
 
 ### 4. style.color
-- **Similarity:** 0.33 (needs 52% improvement)
+- **Similarity:** 0.39 (needs 46% improvement)
 - **Dependencies:** 15
-- **Priority Score:** 10.1
+- **Priority Score:** 9.2
 - **Action:** Deep review - likely missing major functionality
 
-### 5. ratatui-core.text
-- **Similarity:** 0.38 (needs 47% improvement)
-- **Dependencies:** 13
-- **Priority Score:** 8.0
-- **Action:** Deep review - likely missing major functionality
-
-### 6. commands.format
-- **Similarity:** 0.59 (needs 26% improvement)
-- **Dependencies:** 17
-- **Priority Score:** 6.9
-- **Action:** Deep review - likely missing major functionality
-
-### 7. terminal.frame
+### 5. terminal.frame
 - **Similarity:** 0.69 (needs 16% improvement)
 - **Dependencies:** 22
 - **Priority Score:** 6.9
 - **Action:** Review and complete missing sections
 
-### 8. ratatui-core.style
-- **Similarity:** 0.62 (needs 23% improvement)
-- **Dependencies:** 14
+### 6. ratatui-core.text
+- **Similarity:** 0.55 (needs 30% improvement)
+- **Dependencies:** 13
+- **Priority Score:** 5.8
+- **Action:** Deep review - likely missing major functionality
+
+### 7. commands.format
+- **Similarity:** 0.68 (needs 17% improvement)
+- **Dependencies:** 17
 - **Priority Score:** 5.4
+- **Action:** Review and complete missing sections
+
+### 8. ratatui-core.style
+- **Similarity:** 0.63 (needs 22% improvement)
+- **Dependencies:** 14
+- **Priority Score:** 5.1
 - **Action:** Review and complete missing sections
 
 ### 9. buffer.cell

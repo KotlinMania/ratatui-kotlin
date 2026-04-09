@@ -14,6 +14,7 @@ import ratatui.symbols.line.Line as LineSymbols
 import ratatui.text.Line
 import ratatui.terminal.Terminal
 import ratatui.widgets.Borders
+import ratatui.widgets.HighlightSpacing
 import ratatui.widgets.block.Block
 
 class ListTest {

@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/constraint.rs
 package ratatui.layout
 
 import kotlin.test.Test

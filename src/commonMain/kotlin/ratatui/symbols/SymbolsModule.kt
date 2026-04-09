@@ -1,30 +1,25 @@
 // port-lint: source ratatui-core/src/symbols.rs
-package ratatui.symbols
-
-import ratatui.symbols.bar.Bar
-import ratatui.symbols.block.Block
-import ratatui.symbols.border.Set as BorderSet
-import ratatui.symbols.line.Line
-import ratatui.symbols.merge.MergeStrategy
-import ratatui.symbols.scrollbar.Set as ScrollbarSet
-import ratatui.symbols.shade.Shade
-
+@file:Suppress("unused")
 /**
  * Symbols and markers for drawing various widgets.
- *
- * This mirrors Rust's `ratatui-core/src/symbols.rs`, which is primarily a module entry-point that
- * exposes the various symbol submodules (bar, block, border, etc).
  */
+package ratatui.symbols
 
-@Suppress("unused")
-private val exports = listOf(
-    DOT,
-    Marker.Dot,
-    Bar.FULL,
-    Block.FULL,
-    BorderSet::class,
-    Line.VERTICAL,
-    MergeStrategy.Replace,
-    ScrollbarSet::class,
-    Shade.LIGHT,
-)
+// Rust:
+//   pub use marker::{DOT, Marker};
+private val marker = Marker::class
+private val dot = DOT
+
+// Rust:
+//   pub mod bar; pub mod block; pub mod border; pub mod braille; pub mod half_block;
+//   pub mod line; pub mod marker; pub mod merge; pub mod pixel; pub mod scrollbar; pub mod shade;
+private val bar = ratatui.symbols.bar.Bar::class
+private val block = ratatui.symbols.block.Block::class
+private val border = ratatui.symbols.border.Set::class
+private val braille = Braille::class
+private val halfBlock = HalfBlock::class
+private val line = ratatui.symbols.line.Set::class
+private val merge = ratatui.symbols.merge.MergeStrategy::class
+private val pixel = Pixel::class
+private val scrollbar = ratatui.symbols.scrollbar.Set::class
+private val shade = ratatui.symbols.shade.Shade::class

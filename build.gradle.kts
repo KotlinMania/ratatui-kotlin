@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "io.github.kotlinmania"
-version = "0.1.10"
+version = "0.1.18"
 
 val androidSdkDir: String? =
     providers.environmentVariable("ANDROID_SDK_ROOT").orNull
@@ -84,20 +84,12 @@ kotlin {
         val commonMain by getting {
             dependencies {
                 api("io.github.kotlinmania:kasuari-kotlin:0.1.1")
+                api("io.github.kotlinmania:anstyle-kotlin:0.1.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
-
-                // Ktor HTTP client for multiplatform
-                implementation("io.ktor:ktor-client-core:3.0.3")
-                implementation("io.ktor:ktor-client-content-negotiation:3.0.3")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.3")
-                implementation("io.ktor:ktor-client-auth:3.0.3")
-
-                // File I/O
-                implementation("com.squareup.okio:okio:3.9.1")
             }
         }
 
@@ -114,9 +106,7 @@ kotlin {
         }
 
         val appleMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-darwin:3.0.3")
-            }
+            dependencies {}
         }
 
         val macosMain by getting {
@@ -125,34 +115,24 @@ kotlin {
 
         val linuxMain by getting {
             dependsOn(desktopMain)
-            dependencies {
-                implementation("io.ktor:ktor-client-curl:3.0.3")
-            }
+            dependencies {}
         }
 
         val mingwMain by getting {
             dependsOn(desktopMain)
-            dependencies {
-                implementation("io.ktor:ktor-client-curl:3.0.3")
-            }
+            dependencies {}
         }
 
         val jsMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-js:3.0.3")
-            }
+            dependencies {}
         }
 
         val wasmJsMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-js:3.0.3")
-            }
+            dependencies {}
         }
 
         val androidMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-okhttp:3.0.3")
-            }
+            dependencies {}
         }
 
         val commonTest by getting { dependencies { implementation(kotlin("test")) } }

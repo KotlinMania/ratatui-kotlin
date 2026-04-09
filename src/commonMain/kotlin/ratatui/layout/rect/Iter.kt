@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/rect/iter.rs
 package ratatui.layout.rect
 
 import ratatui.layout.Position
@@ -117,4 +118,3 @@ class Positions private constructor(
         return Pair(count, count)
     }
 }
-

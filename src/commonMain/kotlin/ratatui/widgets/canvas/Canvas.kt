@@ -273,6 +273,7 @@ internal fun createGrid(width: Int, height: Int, marker: Marker): Grid {
         Marker.Sextant -> PatternGrid(width, height, 2, 3, Pixel.SEXTANTS)
         Marker.Octant -> PatternGrid(width, height, 2, 4, Pixel.OCTANTS)
         Marker.Dot -> CharGrid(width, height, "•")
+        is Marker.Custom -> CharGrid(width, height, marker.char.toString())
     }
 }
 

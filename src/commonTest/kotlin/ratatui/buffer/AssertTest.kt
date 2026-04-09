@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/buffer/assert.rs
 package ratatui.buffer
 
 import kotlin.test.Test

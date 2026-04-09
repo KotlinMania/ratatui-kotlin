@@ -1,23 +1,19 @@
 // port-lint: source ratatui-core/src/buffer.rs
-package ratatui.buffer
-
+@file:Suppress("unused")
 /**
  * A module for the [Buffer] and [Cell] types.
- *
- * This mirrors Rust's `ratatui-core/src/buffer.rs`, which declares submodules and publicly exports
- * the buffer primitives:
- * - [Buffer]
- * - [Cell]
- * - [CellDiffOption]
- * - [CellWidth]
- * - [BufferDiff]
  */
+package ratatui.buffer
 
-@Suppress("unused")
-private val exports = listOf(
-    Buffer::class,
-    Cell::class,
-    CellDiffOption::class,
-    CellWidth::class,
-    BufferDiff::class,
-)
+// Rust:
+//   mod assert;
+//   mod buffer;
+//   mod cell;
+//   mod cell_width;
+//   mod diff;
+private val assert = ::assertBufferEq
+private val buffer = Buffer::class
+private val cell = Cell::class
+private val cellDiffOption = CellDiffOption::class
+private val cellWidth = CellWidth::class
+private val diff = BufferDiff::class

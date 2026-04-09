@@ -62,6 +62,8 @@ data class Position(
 ) : Comparable<Position> {
 
     companion object {
+        private const val U16_MAX: Int = 0xFFFF
+
         /** Position at the origin, the top left edge at 0,0 */
         val ORIGIN: Position = Position(0, 0)
 
@@ -69,7 +71,7 @@ data class Position(
         val MIN: Position = ORIGIN
 
         /** Position at the maximum x and y values */
-        val MAX: Position = Position(Int.MAX_VALUE, Int.MAX_VALUE)
+        val MAX: Position = Position(U16_MAX, U16_MAX)
 
         /** Create a new position */
         fun new(x: Int, y: Int): Position = Position(x, y)
@@ -85,7 +87,7 @@ data class Position(
      * Moves the position by the given offset.
      *
      * Positive offsets move right and down, negative offsets move left and up. Values that would
-     * move the position outside the Int range are clamped to the nearest edge.
+     * move the position outside the `u16` range are clamped to the nearest edge.
      */
     fun offset(offset: Offset): Position = this + offset
 
@@ -102,10 +104,10 @@ data class Position(
     /**
      * Moves the position by the given offset.
      *
-     * Values that would move the position outside the Int range are clamped to the nearest edge.
+     * Values that would move the position outside the `u16` range are clamped to the nearest edge.
      */
     operator fun plus(offset: Offset): Position {
-        val max = Int.MAX_VALUE.toLong()
+        val max = U16_MAX.toLong()
         val newX = (x.toLong() + offset.x.toLong()).coerceIn(0, max).toInt()
         val newY = (y.toLong() + offset.y.toLong()).coerceIn(0, max).toInt()
         return Position(newX, newY)
@@ -114,10 +116,10 @@ data class Position(
     /**
      * Moves the position by the inverse of the given offset.
      *
-     * Values that would move the position outside the Int range are clamped to the nearest edge.
+     * Values that would move the position outside the `u16` range are clamped to the nearest edge.
      */
     operator fun minus(offset: Offset): Position {
-        val max = Int.MAX_VALUE.toLong()
+        val max = U16_MAX.toLong()
         val newX = (x.toLong() - offset.x.toLong()).coerceIn(0, max).toInt()
         val newY = (y.toLong() - offset.y.toLong()).coerceIn(0, max).toInt()
         return Position(newX, newY)

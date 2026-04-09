@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/backend.rs
 package ratatui.backend
 
 import kotlin.test.Test
@@ -24,4 +25,3 @@ class ClearTypeTest {
         assertNull(ClearType.fromString(""))
     }
 }
-

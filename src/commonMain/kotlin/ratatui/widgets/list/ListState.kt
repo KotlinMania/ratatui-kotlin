@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/list/state.rs
 package ratatui.widgets.list
 
 import kotlinx.serialization.Serializable

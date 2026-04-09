@@ -1,6 +1,5 @@
 // port-lint: source ratatui-core/src/text.rs
-package ratatui.text
-
+@file:Suppress("unused")
 /**
  * Primitives for styled text.
  *
@@ -11,15 +10,15 @@ package ratatui.text
  * - A single-line string where each grapheme may have its own style is represented by a [Line].
  * - A multi-line string where each grapheme may have its own style is represented by a [Text].
  *
- * These types form a hierarchy: [Line] is a collection of [Span], and each line of [Text] is a
+ * These types form a hierarchy: [Line] is a collection of [Span] and each line of [Text] is a
  * [Line].
  *
- * Keep in mind that many widgets will use these types to advertise what kind of string is
- * supported for their properties. Moreover, Ratatui provides convenient conversion helpers so that
- * you can start by using simple `String` values and then promote them to these primitives when you
- * need additional styling capabilities.
+ * Keep in mind that a lot of widgets will use those types to advertise what kind of string is
+ * supported for their properties. Moreover, Ratatui provides convenient conversions (for example
+ * [ToSpan], [ToLine], and [ToText]) so that you can start by using simple `String` and then
+ * promote them to the primitives when you need additional styling capabilities.
  *
- * For example, for the `Block` widget, all the following calls are valid to set its title
+ * For example, for the `Block` widget, all the following calls are valid to set its `title`
  * property (which is a [Line] under the hood):
  *
  * ```kotlin
@@ -30,12 +29,15 @@ package ratatui.text
  * import ratatui.widgets.block.Block
  *
  * // A simple string with no styling.
+ * // Converted to Line.from("My title")
  * val block1 = Block.new().title("My title")
  *
  * // A simple string with a unique style.
+ * // Converted to Line.from(Span.styled(...))
  * val block2 = Block.new().title(Span.styled("My title", Style.default().fg(Color.Yellow)))
  *
  * // A string with multiple styles.
+ * // Converted to Line.from(listOf(...))
  * val block3 = Block.new().title(
  *     Line.from(
  *         listOf(
@@ -45,23 +47,20 @@ package ratatui.text
  *     )
  * )
  * ```
- *
- * This mirrors Rust's `ratatui-core/src/text.rs`, which declares submodules and publicly exports:
- * - [StyledGrapheme]
- * - [Line] / [ToLine]
- * - [Masked]
- * - [Span] / [ToSpan]
- * - [Text] / [ToText]
  */
+package ratatui.text
 
-@Suppress("unused")
-private val exports = listOf(
-    StyledGrapheme::class,
-    Line::class,
-    ToLine::class,
-    Masked::class,
-    Span::class,
-    ToSpan::class,
-    Text::class,
-    ToText::class,
-)
+// Rust:
+//   mod grapheme; pub use grapheme::StyledGrapheme;
+//   mod line;     pub use line::{Line, ToLine};
+//   mod masked;   pub use masked::Masked;
+//   mod span;     pub use span::{Span, ToSpan};
+//   mod text;     pub use text::{Text, ToText};
+private val grapheme = StyledGrapheme::class
+private val line = Line::class
+private val toLine = ToLine::class
+private val masked = Masked::class
+private val span = Span::class
+private val toSpan = ToSpan::class
+private val text = Text::class
+private val toText = ToText::class

@@ -2,6 +2,7 @@
 package ratatui.text
 
 import ratatui.buffer.Buffer
+import ratatui.buffer.cellWidth
 import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Rect
 import ratatui.style.Style
@@ -488,7 +489,7 @@ private fun renderSpans(spans: List<Span>, area: Rect, buf: Buffer, spanSkipWidt
             val offset = if (offsetToApply > 0) {
                 // Truncate the start of the span
                 val truncated = unicodeTruncateStart(span.content, availableWidth)
-                val actualWidth = unicodeWidth(truncated)
+                val actualWidth = truncated.cellWidth().toInt()
                 val firstGraphemeOffset = availableWidth - actualWidth
                 Span.styled(truncated, span.style).render(currentArea.indentX(firstGraphemeOffset), buf)
                 actualWidth
@@ -500,7 +501,7 @@ private fun renderSpans(spans: List<Span>, area: Rect, buf: Buffer, spanSkipWidt
         } else {
             // Span is only partially visible - truncate the start
             val truncated = unicodeTruncateStart(span.content, availableWidth)
-            val actualWidth = unicodeWidth(truncated)
+            val actualWidth = truncated.cellWidth().toInt()
             val firstGraphemeOffset = availableWidth - actualWidth
             Span.styled(truncated, span.style).render(currentArea.indentX(firstGraphemeOffset), buf)
             currentArea = currentArea.indentX(actualWidth)
@@ -515,11 +516,11 @@ private fun renderSpans(spans: List<Span>, area: Rect, buf: Buffer, spanSkipWidt
 private fun unicodeTruncateStart(s: String, maxWidth: Int): String {
     if (maxWidth <= 0) return ""
     val graphemes = graphemes(s)
-    var totalWidth = graphemes.sumOf { unicodeWidth(it) }
+    var totalWidth = graphemes.sumOf { it.cellWidth().toInt() }
 
     var startIndex = 0
     while (totalWidth > maxWidth && startIndex < graphemes.size) {
-        totalWidth -= unicodeWidth(graphemes[startIndex])
+        totalWidth -= graphemes[startIndex].cellWidth().toInt()
         startIndex++
     }
 

@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/symbols/merge.rs
 package ratatui.symbols.merge
 
 /**

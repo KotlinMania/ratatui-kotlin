@@ -2,6 +2,7 @@
 package ratatui.widgets.paragraph
 
 import ratatui.buffer.Buffer
+import ratatui.buffer.cellWidth
 import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Position
 import ratatui.layout.Rect
@@ -318,7 +319,7 @@ data class Paragraph(
     private fun renderLine(wrapped: WrappedLine, area: Rect, buf: Buffer, y: Int) {
         var x = getLineOffset(wrapped.width, area.width, wrapped.alignment)
         for (grapheme in wrapped.graphemes) {
-            val width = grapheme.width()
+            val width = grapheme.symbol.cellWidth().toInt()
             if (width == 0) {
                 continue
             }

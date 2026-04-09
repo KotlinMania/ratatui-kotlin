@@ -172,9 +172,24 @@ sealed class Color {
         fun default(): Color = Reset
 
         /**
+         * Converts `(r, g, b)` values to a [Color.Rgb] instance.
+         *
+         * Mirrors Rust `impl From<(u8, u8, u8)> for Color`.
+         */
+        fun from(r: UByte, g: UByte, b: UByte): Color = Rgb(r, g, b)
+
+        /**
          * Converts a tuple of 3 `u8` values to a [Color.Rgb] instance.
          */
         fun from(rgb: Triple<UByte, UByte, UByte>): Color = Rgb(rgb.first, rgb.second, rgb.third)
+
+        /**
+         * Converts `(r, g, b, a)` values to a [Color.Rgb] instance (ignoring alpha).
+         *
+         * Mirrors Rust `impl From<(u8, u8, u8, u8)> for Color`.
+         */
+        fun from(r: UByte, g: UByte, b: UByte, @Suppress("UNUSED_PARAMETER") a: UByte): Color =
+            Rgb(r, g, b)
 
         /**
          * Converts an array of 3 or 4 `u8` values to a [Color.Rgb] instance.

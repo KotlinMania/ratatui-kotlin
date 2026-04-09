@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/symbols/block.rs
 package ratatui.symbols.block
 
 /**

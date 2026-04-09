@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/buffer/cell_width.rs
 package ratatui.buffer
 
 import kotlin.test.Test
@@ -19,4 +20,3 @@ class CellWidthTest {
         assertEquals(0u, "".cellWidth())
     }
 }
-

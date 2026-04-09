@@ -14,8 +14,8 @@ import ratatui.text.Line
 import ratatui.text.Span
 import ratatui.terminal.Terminal
 import ratatui.widgets.Borders
+import ratatui.widgets.HighlightSpacing
 import ratatui.widgets.block.Block
-import ratatui.widgets.list.HighlightSpacing
 
 class TableTest {
     @Test
@@ -840,4 +840,3 @@ class TableTest {
         )
     }
 }
-

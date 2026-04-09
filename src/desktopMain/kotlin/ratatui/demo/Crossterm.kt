@@ -16,32 +16,6 @@ import ratatui.backend.Backend
 import ratatui.terminal.Terminal
 import ratatui_crossterm.CrosstermBackend
 
-private class StdoutBuffer : Appendable {
-    private val buffer = StringBuilder()
-
-    override fun append(value: CharSequence?): StdoutBuffer {
-        buffer.append(value)
-        return this
-    }
-
-    override fun append(value: CharSequence?, startIndex: Int, endIndex: Int): StdoutBuffer {
-        buffer.append(value, startIndex, endIndex)
-        return this
-    }
-
-    override fun append(value: Char): StdoutBuffer {
-        buffer.append(value)
-        return this
-    }
-
-    fun flush() {
-        if (buffer.isNotEmpty()) {
-            print(buffer.toString())
-            buffer.setLength(0)
-        }
-    }
-}
-
 fun runCrossterm(tickRate: Duration, enhancedGraphics: Boolean) {
     enableRawMode()
     val stdout = StdoutBuffer()

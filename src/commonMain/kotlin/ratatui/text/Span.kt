@@ -2,6 +2,7 @@
 package ratatui.text
 
 import ratatui.buffer.Buffer
+import ratatui.buffer.cellWidth
 import ratatui.layout.Rect
 import ratatui.style.Color
 import ratatui.style.Modifier
@@ -141,7 +142,7 @@ data class Span(
     /**
      * Returns the unicode width of the content held by this span.
      */
-    fun width(): Int = unicodeWidth(content)
+    fun width(): Int = content.cellWidth().toInt()
 
     /**
      * Returns a list of graphemes held by this span.
@@ -219,7 +220,7 @@ data class Span(
         var x = clippedArea.x
         val y = clippedArea.y
         for ((i, grapheme) in styledGraphemes(Style.default()).withIndex()) {
-            val symbolWidth = unicodeWidth(grapheme.symbol)
+            val symbolWidth = grapheme.symbol.cellWidth().toInt()
             val nextX = (x + symbolWidth).coerceAtMost(Int.MAX_VALUE)
             if (nextX > clippedArea.right()) {
                 break
@@ -307,35 +308,6 @@ data class Span(
          * Create a span from another span.
          */
         fun from(span: Span): Span = span.copy()
-    }
-}
-
-/**
- * A styled grapheme - a single grapheme cluster with an associated style.
- */
-data class StyledGrapheme(
-    val symbol: String,
-    val style: Style
-) {
-    /**
-     * Returns true if the grapheme is whitespace.
-     * A grapheme is considered whitespace if all its characters are whitespace,
-     * or if it's a zero-width space.
-     */
-    fun isWhitespace(): Boolean {
-        if (symbol.isEmpty()) return false
-        // Zero-width space is considered whitespace for word-wrapping purposes
-        if (symbol == "\u200B") return true
-        return symbol.all { it.isWhitespace() }
-    }
-
-    /**
-     * Returns the display width of this grapheme.
-     */
-    fun width(): Int = unicodeWidth(symbol)
-
-    companion object {
-        fun new(symbol: String, style: Style): StyledGrapheme = StyledGrapheme(symbol, style)
     }
 }
 

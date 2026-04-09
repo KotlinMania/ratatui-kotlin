@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/widgets/widget.rs
 package ratatui.widgets
 
 import kotlin.test.Test

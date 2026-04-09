@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/list.rs
 package ratatui.widgets.list
 
 import ratatui.buffer.Buffer
@@ -5,6 +6,7 @@ import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.text.Line
+import ratatui.widgets.HighlightSpacing
 import ratatui.widgets.StatefulWidget
 import ratatui.widgets.Widget
 import ratatui.widgets.block.Block

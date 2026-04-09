@@ -108,36 +108,35 @@ class BufferDiff private constructor(
             when (val option = current.diffOption) {
                 CellDiffOption.Skip -> Unit
                 else -> {
+                    // Skip diffing when the deprecated skip field is set (and diff option is None).
                     if (isSkip(current)) {
-                        // deprecated skip handling
+                        Unit
                     } else if (option is CellDiffOption.ForcedWidth) {
-                        val width = option.width.get().toInt()
-                        pos += (width - 1).coerceAtLeast(0)
-                    if (current != previous) {
-                        val (x, y) = posOf(i)
-                        return Item(x, y, current)
-                    }
-                } else {
-                    if (current != previous) {
-                        val cellWidth = current.cellWidth().toInt()
-                        val containsVs16 = cellWidth > 1 && current.symbol().any { c -> c == '\uFE0F' }
-
-                            if (containsVs16) {
-                                val trailingEnd = (i + cellWidth).coerceAtMost(len)
-                                trailing = TrailingState(nextIndex = i + 1, end = trailingEnd)
-                            } else if (cellWidth > 1) {
-                            pos += (cellWidth - 1).coerceAtLeast(0)
+                        pos += (option.width.get().toInt() - 1).coerceAtLeast(0)
+                        if (current != previous) {
+                            val (x, y) = posOf(i)
+                            return Item(x, y, current)
                         }
-
-                        val (x, y) = posOf(i)
-                        return Item(x, y, current)
                     } else {
-                        // No change, but still need to skip width to keep position aligned.
+                        // CellDiffOption.None
                         val cellWidth = current.cellWidth().toInt()
-                        if (cellWidth > 1) {
-                                pos += (cellWidth - 1).coerceAtLeast(0)
-                            }
+                        if (current == previous) {
+                            pos += (cellWidth - 1).coerceAtLeast(0)
+                            continue
                         }
+
+                        val containsVs16 = cellWidth > 1 && current.symbol().any { c -> c == '\uFE0F' }
+                        if (containsVs16) {
+                            val trailingEnd = (i + cellWidth).coerceAtMost(len)
+                            trailing = TrailingState(nextIndex = i + 1, end = trailingEnd)
+                        } else if (cellWidth > 1) {
+                            pos += (cellWidth - 1).coerceAtLeast(0)
+                        } else {
+                            // Single-width character; no position adjustment needed.
+                        }
+
+                        val (x, y) = posOf(i)
+                        return Item(x, y, current)
                     }
                 }
             }
