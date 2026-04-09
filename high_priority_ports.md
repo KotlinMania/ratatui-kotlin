@@ -4,16 +4,16 @@
 
 | Rank | Source | Target | Similarity | Deps | Priority |
 |------|--------|--------|------------|------|----------|
-| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.14 | 88 | 75.4 |
+| 1 | `ratatui-core.buffer` | `buffer.BufferTest` | 0.00 | 88 | 88.0 |
 | 2 | `widgets.widget` | `widgets.Widget` | 0.34 | 44 | 29.2 |
 | 3 | `ratatui-macros.line` | `ratatui_macros.Line` | 0.52 | 37 | 17.7 |
-| 4 | `ratatui-core.text` | `text.TextModule` | 0.15 | 13 | 11.1 |
+| 4 | `ratatui-core.text` | `text.UnicodeWidth` | 0.13 | 13 | 11.3 |
 | 5 | `style.color` | `style.Color` | 0.33 | 15 | 10.1 |
 | 6 | `tests.rect` | `layout.RectTest` | 0.86 | 54 | 7.4 |
 | 7 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
 | 8 | `commands.format` | `commands.Format` | 0.68 | 17 | 5.4 |
-| 9 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.12 | 6 | 5.3 |
-| 10 | `ratatui-core.style` | `style.Style` | 0.63 | 14 | 5.1 |
+| 9 | `ratatui-core.style` | `style.Style` | 0.63 | 14 | 5.1 |
+| 10 | `ratatui-core.symbols` | `symbols.MarkerTest` | 0.24 | 6 | 4.6 |
 | 11 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
 | 12 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
 | 13 | `symbols.marker` | `symbols.Marker` | 0.58 | 9 | 3.8 |
@@ -29,8 +29,8 @@
 
 These files need immediate attention:
 
-- **ratatui-core.buffer** → `buffer.BufferModule`
-  - Similarity: 0.14
+- **ratatui-core.buffer** → `buffer.BufferTest`
+  - Similarity: 0.00
   - Dependencies: 88
 
 - **widgets.widget** → `widgets.Widget`
@@ -41,16 +41,16 @@ These files need immediate attention:
   - Similarity: 0.52
   - Dependencies: 37
 
-- **ratatui-core.text** → `text.TextModule`
-  - Similarity: 0.15
+- **ratatui-core.text** → `text.UnicodeWidth`
+  - Similarity: 0.13
   - Dependencies: 13
 
 - **style.color** → `style.Color`
   - Similarity: 0.33
   - Dependencies: 15
 
-- **ratatui-core.symbols** → `symbols.SymbolsModule`
-  - Similarity: 0.12
+- **ratatui-core.symbols** → `symbols.MarkerTest`
+  - Similarity: 0.24
   - Dependencies: 6
 
 - **ratatui-core.backend** → `backend.Backend`
@@ -84,10 +84,6 @@ These files need immediate attention:
 - **demo.app** → `demo.App`
   - Similarity: 0.51
   - Dependencies: 5
-
-- **style.palette** → `palette.PaletteModule`
-  - Similarity: 0.21
-  - Dependencies: 3
 
 - **ratatui-widgets.canvas** → `canvas.Canvas`
   - Similarity: 0.55
@@ -201,10 +197,10 @@ These files need immediate attention:
 
 | Rank | Source file | Deps | Path |
 |------|------------|------|------|
-| 1 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
-| 2 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
-| 3 | `xtask.main` | 0 | `xtask/src/main.rs` |
-| 4 | `canvas.main` | 0 | `examples/apps/canvas/src/main.rs` |
+| 1 | `style.palette` | 3 | `ratatui-core/src/style/palette.rs` |
+| 2 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
+| 3 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
+| 4 | `xtask.main` | 0 | `xtask/src/main.rs` |
 | 5 | `chart.main` | 0 | `examples/apps/chart/src/main.rs` |
 | 6 | `color-explorer.main` | 0 | `examples/apps/color-explorer/src/main.rs` |
 | 7 | `colors-rgb.main` | 0 | `examples/apps/colors-rgb/src/main.rs` |

@@ -4,7 +4,7 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Current Progress:** 60.5% (158/233 files)
+- **Current Progress:** 60.5% (154/233 files)
 - **Matched Files:** 141
 - **Average Similarity:** 0.36
 - **Critical Issues:** 106 files with <0.60 similarity
@@ -12,9 +12,9 @@ Based on AST analysis, here are the concrete next steps.
 ## Priority 1: Fix Incomplete High-Dependency Files
 
 ### 1. ratatui-core.buffer
-- **Similarity:** 0.14 (needs 71% improvement)
+- **Similarity:** 0.00 (needs 85% improvement)
 - **Dependencies:** 88
-- **Priority Score:** 75.4
+- **Priority Score:** 88.0
 - **Action:** Deep review - likely missing major functionality
 
 ### 2. widgets.widget
@@ -30,9 +30,9 @@ Based on AST analysis, here are the concrete next steps.
 - **Action:** Deep review - likely missing major functionality
 
 ### 4. ratatui-core.text
-- **Similarity:** 0.15 (needs 70% improvement)
+- **Similarity:** 0.13 (needs 72% improvement)
 - **Dependencies:** 13
-- **Priority Score:** 11.1
+- **Priority Score:** 11.3
 - **Action:** Deep review - likely missing major functionality
 
 ### 5. style.color
