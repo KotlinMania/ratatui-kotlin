@@ -109,8 +109,8 @@ These files need immediate attention:
   - Similarity: 0.51
   - Dependencies: 4
 
-- **table.highlight_spacing** → `list.HighlightSpacing`
-  - Similarity: 0.41
+- **table.highlight_spacing** → `widgets.HighlightSpacing`
+  - Similarity: 0.46
   - Dependencies: 3
 
 - **ratatui-widgets.tabs** → `tabs.Tabs`
@@ -222,5 +222,5 @@ These files need immediate attention:
 | 19 | `tabs.recipe` | 0 | `examples/apps/demo2/src/tabs/recipe.rs` |
 | 20 | `tabs.traceroute` | 0 | `examples/apps/demo2/src/tabs/traceroute.rs` |
 
-... and 73 more missing files.
+... and 72 more missing files.
 
