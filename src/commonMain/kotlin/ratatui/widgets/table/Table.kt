@@ -10,11 +10,11 @@ import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.text.Text
+import ratatui.widgets.HighlightSpacing
 import ratatui.widgets.StatefulWidget
 import ratatui.widgets.Widget
 import ratatui.widgets.block.Block
 import ratatui.widgets.block.innerIfSome
-import ratatui.widgets.list.HighlightSpacing
 
 /**
  * A widget to display data in formatted columns.
