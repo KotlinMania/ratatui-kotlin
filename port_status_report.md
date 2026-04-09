@@ -44,8 +44,8 @@ These files need significant work:
 - `style.color` → `style.Color` (0.17, 15 deps)
 - `ratatui-core.text` → `text.UnicodeWidth` (0.13, 13 deps)
 - `commands.format` → `commands.Format` (0.59, 17 deps)
-- `symbols.marker` → `symbols.Marker` (0.50, 9 deps)
 - `ratatui-core.backend` → `backend.Backend` (0.36, 7 deps)
+- `symbols.marker` → `symbols.Marker` (0.50, 9 deps)
 - `widgets.stateful_widget` → `widgets.StatefulWidget` (0.14, 5 deps)
 - `layout.alignment` → `layout.Alignment` (0.27, 5 deps)
 - `layout.position` → `layout.Position` (0.14, 4 deps)
@@ -81,7 +81,7 @@ These files need significant work:
 - `canvas.map` → `canvas.Map` (0.43)
 - `ratatui.init` → `ratatui.Init` (0.00)
 - `canvas.line` → `canvas.Line` (0.21)
-- `backend.test` → `backend.TestBackend` (0.16)
+- `backend.test` → `backend.TestBackend` (0.17)
 - `widgets.widget_ref` → `widgets.WidgetRef` (0.20)
 - `ratatui-core.terminal` → `terminal.Terminal` (0.00)
 - `symbols.half_block` → `symbols.HalfBlock` (0.53)
@@ -203,7 +203,7 @@ present in the Rust source file.
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 7264 / 28214 lines (26%)
+**Documentation coverage:** 7400 / 28214 lines (26%)
 
 Top documentation gaps (>20%):
 
@@ -220,8 +220,8 @@ Top documentation gaps (>20%):
 - `palette.tailwind` - 97% gap (600 → 20 lines)
 - `ratatui-core.terminal` - 81% gap (712 → 134 lines)
 - `text.line` - 63% gap (914 → 338 lines)
-- `ratatui-core.backend` - 91% gap (616 → 54 lines)
 - `buffer.buffer` - 88% gap (634 → 79 lines)
+- `ratatui-widgets.list` - 88% gap (622 → 73 lines)
 
 ... and 61 more files with doc gaps.
 

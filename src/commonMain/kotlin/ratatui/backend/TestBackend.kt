@@ -225,6 +225,15 @@ class TestBackend private constructor(
 
     override fun size(): Size = buffer.area.asSize()
 
+    override fun windowSize(): WindowSize {
+        // Some arbitrary window pixel size, probably doesn't need much testing.
+        val windowPixelSize = Size(width = 640, height = 480)
+        return WindowSize(
+            columnsRows = buffer.area.asSize(),
+            pixels = windowPixelSize
+        )
+    }
+
     override fun flush() {
         // no-op
     }

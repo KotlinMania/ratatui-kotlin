@@ -13,8 +13,8 @@
 | 7 | `commands.format` | `commands.Format` | 0.59 | 17 | 6.9 |
 | 8 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
 | 9 | `ratatui-core.style` | `style.Style` | 0.62 | 14 | 5.4 |
-| 10 | `symbols.marker` | `symbols.Marker` | 0.50 | 9 | 4.5 |
-| 11 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
+| 10 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
+| 11 | `symbols.marker` | `symbols.Marker` | 0.50 | 9 | 4.5 |
 | 12 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
 | 13 | `layout.alignment` | `layout.Alignment` | 0.27 | 5 | 3.7 |
 | 14 | `layout.position` | `layout.Position` | 0.14 | 4 | 3.4 |
@@ -53,13 +53,14 @@ These files need immediate attention:
   - Similarity: 0.59
   - Dependencies: 17
 
-- **symbols.marker** → `symbols.Marker`
-  - Similarity: 0.50
-  - Dependencies: 9
-
 - **ratatui-core.backend** → `backend.Backend`
   - Similarity: 0.36
   - Dependencies: 7
+  - Lint issues: 1
+
+- **symbols.marker** → `symbols.Marker`
+  - Similarity: 0.50
+  - Dependencies: 9
 
 - **widgets.stateful_widget** → `widgets.StatefulWidget`
   - Similarity: 0.14
