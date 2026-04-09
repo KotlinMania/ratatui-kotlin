@@ -4,18 +4,18 @@
 
 | Rank | Source | Target | Similarity | Deps | Priority |
 |------|--------|--------|------------|------|----------|
-| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.14 | 88 | 75.4 |
+| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.34 | 88 | 58.1 |
 | 2 | `widgets.widget` | `widgets.Widget` | 0.34 | 44 | 29.2 |
 | 3 | `ratatui-macros.line` | `ratatui_macros.Line` | 0.52 | 37 | 17.7 |
-| 4 | `ratatui-core.text` | `text.TextModule` | 0.15 | 13 | 11.1 |
-| 5 | `style.color` | `style.Color` | 0.33 | 15 | 10.1 |
+| 4 | `style.color` | `style.Color` | 0.33 | 15 | 10.1 |
+| 5 | `ratatui-core.text` | `text.TextModule` | 0.33 | 13 | 8.7 |
 | 6 | `tests.rect` | `layout.RectTest` | 0.86 | 54 | 7.4 |
 | 7 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
 | 8 | `commands.format` | `commands.Format` | 0.68 | 17 | 5.4 |
-| 9 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.12 | 6 | 5.3 |
-| 10 | `ratatui-core.style` | `style.Style` | 0.63 | 14 | 5.1 |
-| 11 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
-| 12 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
+| 9 | `ratatui-core.style` | `style.Style` | 0.63 | 14 | 5.1 |
+| 10 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
+| 11 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
+| 12 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.33 | 6 | 4.0 |
 | 13 | `symbols.marker` | `symbols.Marker` | 0.58 | 9 | 3.8 |
 | 14 | `layout.position` | `layout.Position` | 0.14 | 4 | 3.4 |
 | 15 | `rect.iter` | `rect.Iter` | 0.43 | 6 | 3.4 |
@@ -30,7 +30,7 @@
 These files need immediate attention:
 
 - **ratatui-core.buffer** → `buffer.BufferModule`
-  - Similarity: 0.14
+  - Similarity: 0.34
   - Dependencies: 88
 
 - **widgets.widget** → `widgets.Widget`
@@ -41,26 +41,25 @@ These files need immediate attention:
   - Similarity: 0.52
   - Dependencies: 37
 
-- **ratatui-core.text** → `text.TextModule`
-  - Similarity: 0.15
-  - Dependencies: 13
-
 - **style.color** → `style.Color`
   - Similarity: 0.33
   - Dependencies: 15
 
-- **ratatui-core.symbols** → `symbols.SymbolsModule`
-  - Similarity: 0.12
-  - Dependencies: 6
+- **ratatui-core.text** → `text.TextModule`
+  - Similarity: 0.33
+  - Dependencies: 13
 
 - **ratatui-core.backend** → `backend.Backend`
   - Similarity: 0.36
   - Dependencies: 7
-  - Lint issues: 1
 
 - **widgets.stateful_widget** → `widgets.StatefulWidget`
   - Similarity: 0.14
   - Dependencies: 5
+
+- **ratatui-core.symbols** → `symbols.SymbolsModule`
+  - Similarity: 0.33
+  - Dependencies: 6
 
 - **symbols.marker** → `symbols.Marker`
   - Similarity: 0.58
