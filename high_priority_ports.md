@@ -15,8 +15,8 @@
 | 9 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.12 | 6 | 5.3 |
 | 10 | `ratatui-core.style` | `style.Style` | 0.63 | 14 | 5.1 |
 | 11 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
-| 12 | `symbols.marker` | `symbols.Marker` | 0.50 | 9 | 4.5 |
-| 13 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
+| 12 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
+| 13 | `symbols.marker` | `symbols.Marker` | 0.58 | 9 | 3.8 |
 | 14 | `layout.position` | `layout.Position` | 0.14 | 4 | 3.4 |
 | 15 | `rect.iter` | `rect.Iter` | 0.43 | 6 | 3.4 |
 | 16 | `buffer.cell` | `buffer.Cell` | 0.67 | 10 | 3.3 |
@@ -58,13 +58,13 @@ These files need immediate attention:
   - Dependencies: 7
   - Lint issues: 1
 
-- **symbols.marker** → `symbols.Marker`
-  - Similarity: 0.50
-  - Dependencies: 9
-
 - **widgets.stateful_widget** → `widgets.StatefulWidget`
   - Similarity: 0.14
   - Dependencies: 5
+
+- **symbols.marker** → `symbols.Marker`
+  - Similarity: 0.58
+  - Dependencies: 9
 
 - **layout.position** → `layout.Position`
   - Similarity: 0.14
@@ -202,10 +202,10 @@ These files need immediate attention:
 
 | Rank | Source file | Deps | Path |
 |------|------------|------|------|
-| 1 | `demo2.theme` | 1 | `examples/apps/demo2/src/theme.rs` |
-| 2 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
-| 3 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
-| 4 | `xtask.main` | 0 | `xtask/src/main.rs` |
+| 1 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
+| 2 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
+| 3 | `xtask.main` | 0 | `xtask/src/main.rs` |
+| 4 | `canvas.main` | 0 | `examples/apps/canvas/src/main.rs` |
 | 5 | `chart.main` | 0 | `examples/apps/chart/src/main.rs` |
 | 6 | `color-explorer.main` | 0 | `examples/apps/color-explorer/src/main.rs` |
 | 7 | `colors-rgb.main` | 0 | `examples/apps/colors-rgb/src/main.rs` |
@@ -223,5 +223,5 @@ These files need immediate attention:
 | 19 | `tabs.recipe` | 0 | `examples/apps/demo2/src/tabs/recipe.rs` |
 | 20 | `tabs.traceroute` | 0 | `examples/apps/demo2/src/tabs/traceroute.rs` |
 
-... and 72 more missing files.
+... and 71 more missing files.
 
