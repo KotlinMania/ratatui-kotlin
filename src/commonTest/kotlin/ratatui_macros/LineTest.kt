@@ -1,3 +1,4 @@
+// port-lint: source ratatui-macros/src/line.rs
 package ratatui_macros
 
 import ratatui.text.Line
@@ -54,4 +55,3 @@ class LineTest {
         assertEquals(expected, actual)
     }
 }
-

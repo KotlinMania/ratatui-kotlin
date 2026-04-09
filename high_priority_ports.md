@@ -89,6 +89,10 @@ These files need immediate attention:
   - Similarity: 0.21
   - Dependencies: 3
 
+- **buffer.cell_width** → `buffer.CellWidth`
+  - Similarity: 0.21
+  - Dependencies: 3
+
 - **ratatui-widgets.canvas** → `canvas.Canvas`
   - Similarity: 0.55
   - Dependencies: 5
@@ -109,19 +113,15 @@ These files need immediate attention:
   - Similarity: 0.41
   - Dependencies: 3
 
-- **buffer.cell_width** → `buffer.CellWidth`
-  - Similarity: 0.45
-  - Dependencies: 3
-
 - **ratatui-widgets.tabs** → `tabs.Tabs`
   - Similarity: 0.25
   - Dependencies: 2
 
-- **ratatui-widgets.block** → `block.Block`
+- **ratatui-widgets.block** → `commonMain.kotlin.ratatui.widgets.block.Block`
   - Similarity: 0.26
   - Dependencies: 2
 
-- **symbols.border** → `symbols.Border`
+- **symbols.border** → `border.Border`
   - Similarity: 0.54
   - Dependencies: 3
 
@@ -137,7 +137,7 @@ These files need immediate attention:
   - Similarity: 0.00
   - Dependencies: 1
 
-- **ratatui-widgets.scrollbar** → `scrollbar.Scrollbar`
+- **ratatui-widgets.scrollbar** → `commonMain.kotlin.ratatui.widgets.scrollbar.Scrollbar`
   - Similarity: 0.05
   - Dependencies: 1
 
@@ -166,7 +166,7 @@ These files need immediate attention:
   - Dependencies: 1
 
 - **layout.margin** → `layout.Margin`
-  - Similarity: 0.36
+  - Similarity: 0.37
   - Dependencies: 1
 
 - **demo.crossterm** → `demo.Crossterm`
@@ -222,5 +222,5 @@ These files need immediate attention:
 | 19 | `tabs.recipe` | 0 | `examples/apps/demo2/src/tabs/recipe.rs` |
 | 20 | `tabs.traceroute` | 0 | `examples/apps/demo2/src/tabs/traceroute.rs` |
 
-... and 71 more missing files.
+... and 73 more missing files.
 

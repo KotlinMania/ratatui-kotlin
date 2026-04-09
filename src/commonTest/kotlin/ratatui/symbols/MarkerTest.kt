@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/symbols/marker.rs
 package ratatui.symbols
 
 import kotlin.test.Test
@@ -22,4 +23,3 @@ class MarkerTest {
         assertEquals(null, Marker.fromStr(""))
     }
 }
-

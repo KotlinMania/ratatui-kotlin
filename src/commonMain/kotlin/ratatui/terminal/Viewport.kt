@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/terminal/viewport.rs
 package ratatui.terminal
 
 import ratatui.layout.Rect
@@ -59,4 +60,3 @@ sealed class Viewport {
         fun default(): Viewport = Fullscreen
     }
 }
-

@@ -2,6 +2,7 @@
 package ratatui.text
 
 import ratatui.buffer.Buffer
+import ratatui.buffer.cellWidth
 import ratatui.layout.Rect
 import ratatui.style.Color
 import ratatui.style.Modifier
@@ -141,7 +142,7 @@ data class Span(
     /**
      * Returns the unicode width of the content held by this span.
      */
-    fun width(): Int = unicodeWidth(content)
+    fun width(): Int = content.cellWidth().toInt()
 
     /**
      * Returns a list of graphemes held by this span.
@@ -219,7 +220,7 @@ data class Span(
         var x = clippedArea.x
         val y = clippedArea.y
         for ((i, grapheme) in styledGraphemes(Style.default()).withIndex()) {
-            val symbolWidth = unicodeWidth(grapheme.symbol)
+            val symbolWidth = grapheme.symbol.cellWidth().toInt()
             val nextX = (x + symbolWidth).coerceAtMost(Int.MAX_VALUE)
             if (nextX > clippedArea.right()) {
                 break

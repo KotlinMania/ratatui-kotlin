@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/buffer/cell.rs
 package ratatui.buffer
 
 import kotlin.test.Test
@@ -135,4 +136,3 @@ class CellTest {
         assertNotEquals(cell1, cell2)
     }
 }
-

@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/buffer/buffer.rs
 package ratatui.buffer
 
 import ratatui.layout.Position

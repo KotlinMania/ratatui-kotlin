@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/table.rs
 package ratatui.widgets.table
 
 import ratatui.buffer.Buffer

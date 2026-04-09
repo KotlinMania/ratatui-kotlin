@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/rect/iter.rs
 package ratatui.layout.rect
 
 import ratatui.layout.Position
@@ -156,4 +157,3 @@ class IterTest {
         assertEquals(Pair(0, 0), positions.sizeHint())
     }
 }
-

@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/text/grapheme.rs
 package ratatui.text
 
 import ratatui.style.Style
@@ -38,4 +39,3 @@ class GraphemeTest {
         assertEquals(Style.new().green().onRed(), sg.style)
     }
 }
-

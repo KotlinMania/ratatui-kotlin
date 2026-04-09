@@ -4,10 +4,10 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Current Progress:** 60.9% (159/233 files)
-- **Matched Files:** 142
-- **Average Similarity:** 0.35
-- **Critical Issues:** 107 files with <0.60 similarity
+- **Current Progress:** 60.1% (158/233 files)
+- **Matched Files:** 140
+- **Average Similarity:** 0.37
+- **Critical Issues:** 105 files with <0.60 similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
@@ -91,7 +91,7 @@ For each file to be considered "complete":
 ```bash
 # Initialize task queue for systematic porting
 cd tools/ast_distance
-./ast_distance --init-tasks ../../tmp/ratatui rust ../../src kotlin tasks.json ../../AGENTS.md
+./ast_distance --init-tasks ../../tmp/ratatui/ rust ../../src/ kotlin tasks.json ../../AGENTS.md
 
 # Get next high-priority task
 ./ast_distance --assign tasks.json <agent-id>

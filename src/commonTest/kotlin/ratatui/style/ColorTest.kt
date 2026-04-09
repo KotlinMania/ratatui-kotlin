@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/style/color.rs
 package ratatui.style
 
 import kotlinx.serialization.decodeFromString

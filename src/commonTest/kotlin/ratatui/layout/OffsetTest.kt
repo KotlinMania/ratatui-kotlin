@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/offset.rs
 package ratatui.layout
 
 import kotlin.test.Test
@@ -23,4 +24,3 @@ class OffsetTest {
         assertEquals(Offset.new(4, 9), offset)
     }
 }
-

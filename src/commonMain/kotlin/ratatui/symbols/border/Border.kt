@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/symbols/border.rs
 package ratatui.symbols.border
 
 import ratatui.symbols.block.Block

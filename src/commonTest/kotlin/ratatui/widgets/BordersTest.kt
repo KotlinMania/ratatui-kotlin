@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/borders.rs
 package ratatui.widgets
 
 import kotlin.test.Test
@@ -37,4 +38,3 @@ class BordersTest {
         assertEquals(leftRight, Borders.fromBits(border(Borders.RIGHT, Borders.LEFT).bits))
     }
 }
-

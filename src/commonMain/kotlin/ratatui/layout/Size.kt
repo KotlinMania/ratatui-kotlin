@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/size.rs
 /**
  * A simple size struct for representing dimensions in the terminal.
  *

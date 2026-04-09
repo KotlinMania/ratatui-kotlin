@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/barchart/bar.rs
 package ratatui.widgets.barchart
 
 import ratatui.buffer.Buffer

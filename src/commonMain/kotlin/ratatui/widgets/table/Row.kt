@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/table/row.rs
 package ratatui.widgets.table
 
 import ratatui.style.Style

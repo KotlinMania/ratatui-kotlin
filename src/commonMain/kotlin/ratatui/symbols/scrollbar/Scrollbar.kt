@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/symbols/scrollbar.rs
 package ratatui.symbols.scrollbar
 
 import ratatui.symbols.block.Block

@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/symbols/shade.rs
 package ratatui.symbols.shade
 
 /**

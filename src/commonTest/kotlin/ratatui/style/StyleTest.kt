@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/style.rs
 package ratatui.style
 
 import kotlin.test.Test
@@ -209,4 +210,3 @@ class StyleTest {
         )
     }
 }
-

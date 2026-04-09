@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/canvas/points.rs
 package ratatui.widgets.canvas
 
 import ratatui.style.Color

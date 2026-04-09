@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/widgets/stateful_widget.rs
 package ratatui.widgets
 
 import kotlin.test.Test
@@ -40,4 +41,3 @@ class StatefulWidgetTest {
         assertEquals(Buffer.withLines("Bytes: hello        "), buffer)
     }
 }
-

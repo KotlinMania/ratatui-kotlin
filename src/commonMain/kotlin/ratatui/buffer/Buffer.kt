@@ -7,7 +7,6 @@ import ratatui.style.Style
 import ratatui.text.Line
 import ratatui.text.Span
 import ratatui.text.graphemes
-import ratatui.text.graphemeCellWidth
 
 /**
  * A buffer that maps to the desired content of the terminal after the draw call.
@@ -204,7 +203,7 @@ class Buffer(
         val graphemes = graphemes(string)
             .asSequence()
             .filter { symbol -> symbol.none { it.isISOControl() } }
-            .map { symbol -> symbol to graphemeCellWidth(symbol) }
+            .map { symbol -> symbol to symbol.cellWidth().toInt() }
             .filter { (_symbol, width) -> width > 0 }
 
         for ((symbol, width) in graphemes) {

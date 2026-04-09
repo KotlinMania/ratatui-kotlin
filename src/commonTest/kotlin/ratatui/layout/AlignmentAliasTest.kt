@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/alignment.rs
 package ratatui.layout
 
 import kotlin.test.Test
@@ -42,4 +43,3 @@ class AlignmentAliasTest {
         assertFailsWith<IllegalArgumentException> { VerticalAlignment.fromString("") }
     }
 }
-
