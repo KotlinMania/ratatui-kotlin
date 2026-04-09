@@ -17,11 +17,11 @@
 | 11 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
 | 12 | `symbols.marker` | `symbols.Marker` | 0.50 | 9 | 4.5 |
 | 13 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
-| 14 | `layout.alignment` | `layout.Alignment` | 0.27 | 5 | 3.7 |
-| 15 | `layout.position` | `layout.Position` | 0.14 | 4 | 3.4 |
-| 16 | `rect.iter` | `rect.Iter` | 0.43 | 6 | 3.4 |
-| 17 | `buffer.cell` | `buffer.Cell` | 0.67 | 10 | 3.3 |
-| 18 | `ratatui-widgets.paragraph` | `paragraph.Paragraph` | 0.21 | 4 | 3.2 |
+| 14 | `layout.position` | `layout.Position` | 0.14 | 4 | 3.4 |
+| 15 | `rect.iter` | `rect.Iter` | 0.43 | 6 | 3.4 |
+| 16 | `buffer.cell` | `buffer.Cell` | 0.67 | 10 | 3.3 |
+| 17 | `ratatui-widgets.paragraph` | `paragraph.Paragraph` | 0.21 | 4 | 3.2 |
+| 18 | `layout.alignment` | `layout.Alignment` | 0.38 | 5 | 3.1 |
 | 19 | `tests.terminal` | `terminal.TerminalTest` | 0.80 | 13 | 2.6 |
 | 20 | `demo.app` | `demo.App` | 0.51 | 5 | 2.5 |
 
@@ -70,10 +70,6 @@ These files need immediate attention:
   - Similarity: 0.14
   - Dependencies: 5
 
-- **layout.alignment** → `layout.Alignment`
-  - Similarity: 0.27
-  - Dependencies: 5
-
 - **layout.position** → `layout.Position`
   - Similarity: 0.14
   - Dependencies: 4
@@ -85,6 +81,10 @@ These files need immediate attention:
 - **ratatui-widgets.paragraph** → `paragraph.Paragraph`
   - Similarity: 0.21
   - Dependencies: 4
+
+- **layout.alignment** → `layout.Alignment`
+  - Similarity: 0.38
+  - Dependencies: 5
 
 - **demo.app** → `demo.App`
   - Similarity: 0.51
