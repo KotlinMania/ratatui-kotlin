@@ -1,5 +1,6 @@
 package ratatui.widgets.reflow
 
+import ratatui.buffer.cellWidth
 import ratatui.layout.HorizontalAlignment
 import ratatui.text.StyledGrapheme
 
@@ -63,7 +64,7 @@ class WordWrapper(
 
         for (grapheme in lineSymbols) {
             val isWhitespace = grapheme.isWhitespace()
-            val symbolWidth = grapheme.width()
+            val symbolWidth = grapheme.symbol.cellWidth().toInt()
 
             // ignore symbols wider than line limit
             if (symbolWidth > maxLineWidth) {
@@ -119,7 +120,7 @@ class WordWrapper(
                 // remove whitespace up to the end of line
                 while (pendingWhitespace.isNotEmpty()) {
                     val ws = pendingWhitespace.first()
-                    val wsWidth = ws.width()
+                    val wsWidth = ws.symbol.cellWidth().toInt()
 
                     if (wsWidth > remainingWidth) {
                         break
@@ -191,7 +192,7 @@ class WordWrapper(
             // emit next cached line if present
             val cachedLine = wrappedLines.removeFirstOrNull()
             if (cachedLine != null) {
-                val lineWidth = cachedLine.sumOf { it.width() }
+                val lineWidth = cachedLine.sumOf { it.symbol.cellWidth().toInt() }
                 replaceCurrentLine(cachedLine)
                 return WrappedLine(
                     graphemes = currentLine,
@@ -259,7 +260,7 @@ class LineTruncator(
         var localHorizontalOffset = horizontalOffset
 
         for (grapheme in lineSymbols) {
-            val symbolWidth = grapheme.width()
+            val symbolWidth = grapheme.symbol.cellWidth().toInt()
 
             // Ignore characters wider than the total max width
             if (symbolWidth > maxLineWidth) {

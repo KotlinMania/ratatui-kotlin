@@ -53,15 +53,3 @@ package ratatui.text
  * - [Span] / [ToSpan]
  * - [Text] / [ToText]
  */
-
-@Suppress("unused")
-private val exports = listOf(
-    StyledGrapheme::class,
-    Line::class,
-    ToLine::class,
-    Masked::class,
-    Span::class,
-    ToSpan::class,
-    Text::class,
-    ToText::class,
-)

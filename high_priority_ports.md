@@ -4,33 +4,33 @@
 
 | Rank | Source | Target | Similarity | Deps | Priority |
 |------|--------|--------|------------|------|----------|
-| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.39 | 88 | 53.7 |
+| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.14 | 88 | 75.4 |
 | 2 | `widgets.widget` | `widgets.Widget` | 0.34 | 44 | 29.2 |
 | 3 | `ratatui-macros.line` | `ratatui_macros.Line` | 0.52 | 37 | 17.7 |
-| 4 | `style.color` | `style.Color` | 0.33 | 15 | 10.1 |
-| 5 | `ratatui-core.text` | `text.TextModule` | 0.38 | 13 | 8.0 |
+| 4 | `ratatui-core.text` | `text.TextModule` | 0.15 | 13 | 11.1 |
+| 5 | `style.color` | `style.Color` | 0.33 | 15 | 10.1 |
 | 6 | `tests.rect` | `layout.RectTest` | 0.86 | 54 | 7.4 |
 | 7 | `commands.format` | `commands.Format` | 0.59 | 17 | 6.9 |
 | 8 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
 | 9 | `ratatui-core.style` | `style.Style` | 0.62 | 14 | 5.4 |
-| 10 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
-| 11 | `symbols.marker` | `symbols.Marker` | 0.50 | 9 | 4.5 |
-| 12 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
-| 13 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.32 | 6 | 4.1 |
+| 10 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.12 | 6 | 5.3 |
+| 11 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
+| 12 | `symbols.marker` | `symbols.Marker` | 0.50 | 9 | 4.5 |
+| 13 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
 | 14 | `layout.alignment` | `layout.Alignment` | 0.27 | 5 | 3.7 |
 | 15 | `layout.position` | `layout.Position` | 0.14 | 4 | 3.4 |
 | 16 | `rect.iter` | `rect.Iter` | 0.43 | 6 | 3.4 |
 | 17 | `buffer.cell` | `buffer.Cell` | 0.67 | 10 | 3.3 |
 | 18 | `ratatui-widgets.paragraph` | `paragraph.Paragraph` | 0.21 | 4 | 3.2 |
 | 19 | `tests.terminal` | `terminal.TerminalTest` | 0.80 | 13 | 2.6 |
-| 20 | `style.palette` | `palette.PaletteModule` | 0.16 | 3 | 2.5 |
+| 20 | `demo.app` | `demo.App` | 0.51 | 5 | 2.5 |
 
 ## Critical Issues (Similarity < 0.60 with Dependencies)
 
 These files need immediate attention:
 
 - **ratatui-core.buffer** → `buffer.BufferModule`
-  - Similarity: 0.39
+  - Similarity: 0.14
   - Dependencies: 88
 
 - **widgets.widget** → `widgets.Widget`
@@ -41,17 +41,21 @@ These files need immediate attention:
   - Similarity: 0.52
   - Dependencies: 37
 
+- **ratatui-core.text** → `text.TextModule`
+  - Similarity: 0.15
+  - Dependencies: 13
+
 - **style.color** → `style.Color`
   - Similarity: 0.33
   - Dependencies: 15
 
-- **ratatui-core.text** → `text.TextModule`
-  - Similarity: 0.38
-  - Dependencies: 13
-
 - **commands.format** → `commands.Format`
   - Similarity: 0.59
   - Dependencies: 17
+
+- **ratatui-core.symbols** → `symbols.SymbolsModule`
+  - Similarity: 0.12
+  - Dependencies: 6
 
 - **ratatui-core.backend** → `backend.Backend`
   - Similarity: 0.36
@@ -65,10 +69,6 @@ These files need immediate attention:
 - **widgets.stateful_widget** → `widgets.StatefulWidget`
   - Similarity: 0.14
   - Dependencies: 5
-
-- **ratatui-core.symbols** → `symbols.SymbolsModule`
-  - Similarity: 0.32
-  - Dependencies: 6
 
 - **layout.alignment** → `layout.Alignment`
   - Similarity: 0.27
@@ -86,13 +86,13 @@ These files need immediate attention:
   - Similarity: 0.21
   - Dependencies: 4
 
-- **style.palette** → `palette.PaletteModule`
-  - Similarity: 0.16
-  - Dependencies: 3
-
 - **demo.app** → `demo.App`
   - Similarity: 0.51
   - Dependencies: 5
+
+- **style.palette** → `palette.PaletteModule`
+  - Similarity: 0.21
+  - Dependencies: 3
 
 - **ratatui-widgets.canvas** → `canvas.Canvas`
   - Similarity: 0.55
@@ -130,11 +130,11 @@ These files need immediate attention:
   - Similarity: 0.47
   - Dependencies: 2
 
-- **ratatui-widgets.borders** → `widgets.Borders`
+- **terminal.cursor** → `terminal.CursorModuleTest`
   - Similarity: 0.00
   - Dependencies: 1
 
-- **terminal.cursor** → `terminal.CursorModuleTest`
+- **ratatui-widgets.borders** → `widgets.Borders`
   - Similarity: 0.00
   - Dependencies: 1
 
@@ -215,5 +215,5 @@ These files need immediate attention:
 | 19 | `tabs.about` | 0 | `examples/apps/demo2/src/tabs/about.rs` |
 | 20 | `tabs.email` | 0 | `examples/apps/demo2/src/tabs/email.rs` |
 
-... and 80 more missing files.
+... and 79 more missing files.
 

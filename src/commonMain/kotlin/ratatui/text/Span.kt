@@ -311,35 +311,6 @@ data class Span(
 }
 
 /**
- * A styled grapheme - a single grapheme cluster with an associated style.
- */
-data class StyledGrapheme(
-    val symbol: String,
-    val style: Style
-) {
-    /**
-     * Returns true if the grapheme is whitespace.
-     * A grapheme is considered whitespace if all its characters are whitespace,
-     * or if it's a zero-width space.
-     */
-    fun isWhitespace(): Boolean {
-        if (symbol.isEmpty()) return false
-        // Zero-width space is considered whitespace for word-wrapping purposes
-        if (symbol == "\u200B") return true
-        return symbol.all { it.isWhitespace() }
-    }
-
-    /**
-     * Returns the display width of this grapheme.
-     */
-    fun width(): Int = unicodeWidth(symbol)
-
-    companion object {
-        fun new(symbol: String, style: Style): StyledGrapheme = StyledGrapheme(symbol, style)
-    }
-}
-
-/**
  * A trait for converting a value to a [Span].
  *
  * This interface provides a way to convert any displayable type to a Span.

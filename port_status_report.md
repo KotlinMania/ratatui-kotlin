@@ -1,27 +1,27 @@
 # Code Port - Progress Report
 
 **Generated:** 2026-04-08
-**Source:** tmp/ratatui/
-**Target:** src/
+**Source:** tmp/ratatui
+**Target:** src
 
 ## Executive Summary
 
 | Metric | Count | Percentage |
 |--------|-------|------------|
 | Total source files | 233 | 100% |
-| Target units (paired) | 140 | - |
-| Target files (total) | 140 | - |
-| Porting progress | 133 | 57.1% (matched) |
-| Missing files | 100 | 42.9% |
+| Target units (paired) | 142 | - |
+| Target files (total) | 142 | - |
+| Porting progress | 134 | 57.5% (matched) |
+| Missing files | 99 | 42.5% |
 
 ## Port Quality Analysis
 
-**Average Similarity:** 0.35
+**Average Similarity:** 0.34
 
 **Quality Distribution:**
 - Excellent (≥0.85): 6 files (4.5% of matched)
-- Good (0.60-0.84): 23 files (17.3% of matched)
-- Critical (<0.60): 104 files (78.2% of matched)
+- Good (0.60-0.84): 23 files (17.2% of matched)
+- Critical (<0.60): 105 files (78.4% of matched)
 
 ### Excellent Ports (Similarity ≥ 0.85)
 
@@ -38,22 +38,22 @@ These files are well-ported and likely complete:
 
 These files need significant work:
 
-- `ratatui-core.buffer` → `buffer.BufferModule` (0.39, 88 deps)
+- `ratatui-core.buffer` → `buffer.BufferModule` (0.14, 88 deps)
 - `widgets.widget` → `widgets.Widget` (0.34, 44 deps)
 - `ratatui-macros.line` → `ratatui_macros.Line` (0.52, 37 deps)
+- `ratatui-core.text` → `text.TextModule` (0.15, 13 deps)
 - `style.color` → `style.Color` (0.33, 15 deps)
-- `ratatui-core.text` → `text.TextModule` (0.38, 13 deps)
 - `commands.format` → `commands.Format` (0.59, 17 deps)
+- `ratatui-core.symbols` → `symbols.SymbolsModule` (0.12, 6 deps)
 - `ratatui-core.backend` → `backend.Backend` (0.36, 7 deps)
 - `symbols.marker` → `symbols.Marker` (0.50, 9 deps)
 - `widgets.stateful_widget` → `widgets.StatefulWidget` (0.14, 5 deps)
-- `ratatui-core.symbols` → `symbols.SymbolsModule` (0.32, 6 deps)
 - `layout.alignment` → `layout.Alignment` (0.27, 5 deps)
 - `layout.position` → `layout.Position` (0.14, 4 deps)
 - `rect.iter` → `rect.Iter` (0.43, 6 deps)
 - `ratatui-widgets.paragraph` → `paragraph.Paragraph` (0.21, 4 deps)
-- `style.palette` → `palette.PaletteModule` (0.16, 3 deps)
 - `demo.app` → `demo.App` (0.51, 5 deps)
+- `style.palette` → `palette.PaletteModule` (0.21, 3 deps)
 - `ratatui-widgets.canvas` → `canvas.Canvas` (0.55, 5 deps)
 - `ratatui-macros.span` → `ratatui_macros.Span` (0.47, 4 deps)
 - `layout.constraint` → `layout.Constraint` (0.51, 4 deps)
@@ -63,8 +63,8 @@ These files need significant work:
 - `ratatui-widgets.block` → `block.Block` (0.26, 2 deps)
 - `symbols.border` → `symbols.Border` (0.54, 3 deps)
 - `layout.size` → `layout.Size` (0.47, 2 deps)
-- `ratatui-widgets.borders` → `widgets.Borders` (0.00, 1 deps)
 - `terminal.cursor` → `terminal.CursorModuleTest` (0.00, 1 deps)
+- `ratatui-widgets.borders` → `widgets.Borders` (0.00, 1 deps)
 - `ratatui-widgets.scrollbar` → `scrollbar.Scrollbar` (0.05, 1 deps)
 - `layout.direction` → `layout.Direction` (0.55, 2 deps)
 - `ratatui-widgets.calendar` → `calendar.Monthly` (0.13, 1 deps)
@@ -83,7 +83,7 @@ These files need significant work:
 - `canvas.map` → `canvas.Map` (0.43)
 - `symbols.pixel` → `symbols.Pixel` (0.30)
 - `symbols.merge` → `symbols.Merge` (0.24)
-- `text.span` → `text.Span` (0.21)
+- `text.span` → `text.Span` (0.20)
 - `symbols.line` → `symbols.Line` (0.56)
 - `ratatui.init` → `ratatui.Init` (0.00)
 - `canvas.line` → `canvas.Line` (0.21)
@@ -92,20 +92,21 @@ These files need significant work:
 - `ratatui-core.terminal` → `terminal.Terminal` (0.00)
 - `symbols.half_block` → `symbols.HalfBlock` (0.53)
 - `widgets.widget_ref` → `widgets.WidgetRef` (0.20)
-- `table.cell` → `table.Cell` (0.23)
 - `tests.state_serde` → `ratatui.StateSerdeTest` (0.51)
-- `layout.layout` → `layout.Layout` (0.10)
+- `table.cell` → `table.Cell` (0.23)
 - `ratatui-crossterm.lib` → `ratatui_crossterm.Lib` (0.28)
-- `barchart.bar` → `barchart.Bar` (0.36)
+- `layout.layout` → `layout.Layout` (0.10)
 - `rect.ops` → `layout.RectOps` (0.00)
+- `barchart.bar` → `barchart.Bar` (0.36)
 - `buffer.assert` → `buffer.Assert` (0.48)
-- `ratatui-widgets.sparkline` → `sparkline.Sparkline` (0.08)
 - `style.stylize` → `style.Stylize` (0.42)
+- `ratatui-widgets.sparkline` → `sparkline.Sparkline` (0.08)
+- `buffer.buffer` → `buffer.Buffer` (0.22)
 - `ratatui-widgets.list` → `list.List` (0.25)
 - `ratatui-widgets.gauge` → `gauge.Gauge` (0.11)
-- `buffer.buffer` → `buffer.Buffer` (0.22)
+- `text.grapheme` → `text.Grapheme` (0.33)
 - `ratatui-widgets.chart` → `chart.Chart` (0.07)
-- `ratatui-widgets.reflow` → `reflow.Reflow` (0.40)
+- `ratatui-widgets.reflow` → `reflow.Reflow` (0.39)
 - `ratatui-widgets.barchart` → `barchart.BarChart` (0.35)
 - `ratatui-widgets.table` → `table.Table` (0.14)
 - `layout.rect` → `layout.Rect` (0.37)
@@ -118,6 +119,7 @@ These files need significant work:
 - `examples.gauge` → `gauge.LineGauge` (0.11)
 - `list.state` → `list.ListState` (0.28)
 - `ratatui.widgets` → `widgets.WidgetStylize` (0.00)
+- `examples.list` → `list.ListItem` (0.00)
 - `ratatui-widgets.lib` → `widgets.WidgetTest` (0.09)
 - `ratatui-core.widgets` → `widgets.BorderType` (0.13)
 - `ratatui-macros.layout` → `layout.ConstraintTest` (0.29)
@@ -125,7 +127,6 @@ These files need significant work:
 - `ratatui-macros.text` → `text.UnicodeWidth` (0.14)
 - `tests.macros` → `ratatui_macros.RowTest` (0.33)
 - `table.state` → `table.TableState` (0.28)
-- `list.item` → `list.ListItem` (0.40)
 - `main.text` → `text.TextTest` (0.00)
 - `main.line` → `text.LineTest` (0.00)
 - `ratatui-core.layout` → `layout.PositionTest` (0.21)
@@ -172,9 +173,9 @@ present in the Rust source file.
 | `table.row` | `table.Row` | 1/2 | `Item` |
 | `widgets.widget_ref` | `widgets.WidgetRef` | 2/3 | `Greeting`, `Farewell` |
 | `table.cell` | `table.Cell` | 1/2 | `Item` |
-| `layout.layout` | `layout.Layout` | 4/7 | `Rects`, `Segments`, `Spacers` … |
 | `ratatui-crossterm.lib` | `ratatui_crossterm.Lib` | 3/7 | `Error`, `IntoCrossterm`, `FromCrossterm` |
-| `barchart.bar` | `barchart.Bar` | 1/2 | `Item` |
+| `layout.layout` | `layout.Layout` | 4/7 | `Rects`, `Segments`, `Spacers` … |
+| `rect.ops` | `layout.RectOps` | 1/1 | `Output` |
 
 ## High Priority Missing Files
 
@@ -201,13 +202,13 @@ present in the Rust source file.
 | 19 | `tabs.about` | 0 | `examples/apps/demo2/src/tabs/about.rs` |
 | 20 | `tabs.email` | 0 | `examples/apps/demo2/src/tabs/email.rs` |
 
-... and 80 more missing files.
+... and 79 more missing files.
 
 ## Documentation Gaps
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 7630 / 29254 lines (26%)
+**Documentation coverage:** 7630 / 28964 lines (26%)
 
 Top documentation gaps (>20%):
 
