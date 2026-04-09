@@ -4,10 +4,10 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Current Progress:** 57.1% (145/233 files)
-- **Matched Files:** 133
+- **Current Progress:** 60.5% (154/233 files)
+- **Matched Files:** 141
 - **Average Similarity:** 0.34
-- **Critical Issues:** 104 files with <0.60 similarity
+- **Critical Issues:** 107 files with <0.60 similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
@@ -41,16 +41,16 @@ Based on AST analysis, here are the concrete next steps.
 - **Priority Score:** 10.1
 - **Action:** Deep review - likely missing major functionality
 
-### 6. commands.format
-- **Similarity:** 0.59 (needs 26% improvement)
-- **Dependencies:** 17
-- **Priority Score:** 6.9
-- **Action:** Deep review - likely missing major functionality
-
-### 7. terminal.frame
+### 6. terminal.frame
 - **Similarity:** 0.69 (needs 16% improvement)
 - **Dependencies:** 22
 - **Priority Score:** 6.9
+- **Action:** Review and complete missing sections
+
+### 7. commands.format
+- **Similarity:** 0.68 (needs 17% improvement)
+- **Dependencies:** 17
+- **Priority Score:** 5.4
 - **Action:** Review and complete missing sections
 
 ### 8. ratatui-core.style

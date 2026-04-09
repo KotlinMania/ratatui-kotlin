@@ -10,8 +10,8 @@
 | 4 | `ratatui-core.text` | `text.TextModule` | 0.15 | 13 | 11.1 |
 | 5 | `style.color` | `style.Color` | 0.33 | 15 | 10.1 |
 | 6 | `tests.rect` | `layout.RectTest` | 0.86 | 54 | 7.4 |
-| 7 | `commands.format` | `commands.Format` | 0.59 | 17 | 6.9 |
-| 8 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
+| 7 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
+| 8 | `commands.format` | `commands.Format` | 0.68 | 17 | 5.4 |
 | 9 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.12 | 6 | 5.3 |
 | 10 | `ratatui-core.style` | `style.Style` | 0.63 | 14 | 5.1 |
 | 11 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
@@ -48,10 +48,6 @@ These files need immediate attention:
 - **style.color** → `style.Color`
   - Similarity: 0.33
   - Dependencies: 15
-
-- **commands.format** → `commands.Format`
-  - Similarity: 0.59
-  - Dependencies: 17
 
 - **ratatui-core.symbols** → `symbols.SymbolsModule`
   - Similarity: 0.12
@@ -102,6 +98,10 @@ These files need immediate attention:
   - Similarity: 0.47
   - Dependencies: 4
 
+- **demo.termion** → `demo.Termion`
+  - Similarity: 0.00
+  - Dependencies: 2
+
 - **layout.constraint** → `layout.Constraint`
   - Similarity: 0.51
   - Dependencies: 4
@@ -126,15 +126,19 @@ These files need immediate attention:
   - Similarity: 0.54
   - Dependencies: 3
 
+- **demo.termwiz** → `demo.Termwiz`
+  - Similarity: 0.35
+  - Dependencies: 2
+
 - **layout.size** → `layout.Size`
   - Similarity: 0.47
   - Dependencies: 2
 
-- **ratatui-widgets.borders** → `widgets.Borders`
+- **terminal.cursor** → `terminal.CursorModuleTest`
   - Similarity: 0.00
   - Dependencies: 1
 
-- **terminal.cursor** → `terminal.CursorModuleTest`
+- **ratatui-widgets.borders** → `widgets.Borders`
   - Similarity: 0.00
   - Dependencies: 1
 
@@ -166,12 +170,12 @@ These files need immediate attention:
   - Similarity: 0.29
   - Dependencies: 1
 
-- **demo.crossterm** → `demo.Crossterm`
-  - Similarity: 0.35
-  - Dependencies: 1
-
 - **layout.margin** → `layout.Margin`
   - Similarity: 0.36
+  - Dependencies: 1
+
+- **demo.crossterm** → `demo.Crossterm`
+  - Similarity: 0.39
   - Dependencies: 1
 
 - **canvas.rectangle** → `canvas.Rectangle`
@@ -190,30 +194,34 @@ These files need immediate attention:
   - Similarity: 0.54
   - Dependencies: 1
 
+- **commands.clippy** → `commands.Clippy`
+  - Similarity: 0.59
+  - Dependencies: 1
+
 ## Missing Files (Top by Dependents)
 
 | Rank | Source file | Deps | Path |
 |------|------------|------|------|
-| 1 | `demo.termion` | 2 | `examples/apps/demo/src/termion.rs` |
-| 2 | `demo.termwiz` | 2 | `examples/apps/demo/src/termwiz.rs` |
-| 3 | `commands.typos` | 1 | `xtask/src/commands/typos.rs` |
-| 4 | `commands.docs` | 1 | `xtask/src/commands/docs.rs` |
-| 5 | `commands.coverage` | 1 | `xtask/src/commands/coverage.rs` |
-| 6 | `commands.clippy` | 1 | `xtask/src/commands/clippy.rs` |
-| 7 | `commands.check` | 1 | `xtask/src/commands/check.rs` |
-| 8 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
-| 9 | `demo2.theme` | 1 | `examples/apps/demo2/src/theme.rs` |
-| 10 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
-| 11 | `xtask.main` | 0 | `xtask/src/main.rs` |
-| 12 | `custom-widget.main` | 0 | `examples/apps/custom-widget/src/main.rs` |
-| 13 | `constraints.main` | 0 | `examples/apps/constraints/src/main.rs` |
-| 14 | `demo2.app` | 0 | `examples/apps/demo2/src/app.rs` |
-| 15 | `demo2.colors` | 0 | `examples/apps/demo2/src/colors.rs` |
-| 16 | `demo2.destroy` | 0 | `examples/apps/demo2/src/destroy.rs` |
-| 17 | `demo2.main` | 0 | `examples/apps/demo2/src/main.rs` |
-| 18 | `demo2.tabs` | 0 | `examples/apps/demo2/src/tabs.rs` |
-| 19 | `tabs.about` | 0 | `examples/apps/demo2/src/tabs/about.rs` |
-| 20 | `tabs.email` | 0 | `examples/apps/demo2/src/tabs/email.rs` |
+| 1 | `demo2.theme` | 1 | `examples/apps/demo2/src/theme.rs` |
+| 2 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
+| 3 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
+| 4 | `xtask.main` | 0 | `xtask/src/main.rs` |
+| 5 | `chart.main` | 0 | `examples/apps/chart/src/main.rs` |
+| 6 | `color-explorer.main` | 0 | `examples/apps/color-explorer/src/main.rs` |
+| 7 | `colors-rgb.main` | 0 | `examples/apps/colors-rgb/src/main.rs` |
+| 8 | `constraint-explorer.main` | 0 | `examples/apps/constraint-explorer/src/main.rs` |
+| 9 | `constraints.main` | 0 | `examples/apps/constraints/src/main.rs` |
+| 10 | `custom-widget.main` | 0 | `examples/apps/custom-widget/src/main.rs` |
+| 11 | `demo.main` | 0 | `examples/apps/demo/src/main.rs` |
+| 12 | `demo2.app` | 0 | `examples/apps/demo2/src/app.rs` |
+| 13 | `demo2.colors` | 0 | `examples/apps/demo2/src/colors.rs` |
+| 14 | `demo2.destroy` | 0 | `examples/apps/demo2/src/destroy.rs` |
+| 15 | `demo2.main` | 0 | `examples/apps/demo2/src/main.rs` |
+| 16 | `demo2.tabs` | 0 | `examples/apps/demo2/src/tabs.rs` |
+| 17 | `tabs.about` | 0 | `examples/apps/demo2/src/tabs/about.rs` |
+| 18 | `tabs.email` | 0 | `examples/apps/demo2/src/tabs/email.rs` |
+| 19 | `tabs.recipe` | 0 | `examples/apps/demo2/src/tabs/recipe.rs` |
+| 20 | `tabs.traceroute` | 0 | `examples/apps/demo2/src/tabs/traceroute.rs` |
 
-... and 80 more missing files.
+... and 72 more missing files.
 
