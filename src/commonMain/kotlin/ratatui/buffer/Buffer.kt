@@ -87,6 +87,34 @@ class Buffer(
     /** Returns the area covered by this buffer */
     fun area(): Rect = area
 
+    /**
+     * Returns a reference to the [Cell] at the given coordinates.
+     *
+     * Note: idiomatically methods named `get` usually return a nullable value, but this method
+     * throws instead. This is kept for parity with Rust and backwards compatibility.
+     *
+     * Prefer using `buf[x, y]` or [cell] / [cellMut] instead.
+     */
+    @Deprecated(
+        message = "Use buf[x, y] instead. To avoid throwing, use cell(x, y).",
+        replaceWith = ReplaceWith("this[x.toInt(), y.toInt()]")
+    )
+    fun get(x: UShort, y: UShort): Cell = this[x.toInt(), y.toInt()]
+
+    /**
+     * Returns a mutable reference to the [Cell] at the given coordinates.
+     *
+     * Kotlin does not distinguish between shared and mutable references in the same way as Rust,
+     * but [Cell] is mutable, so returning the cell instance provides the same effect.
+     *
+     * Prefer using `buf[x, y]` or [cellMut] instead.
+     */
+    @Deprecated(
+        message = "Use buf[x, y] instead. To avoid throwing, use cellMut(x, y).",
+        replaceWith = ReplaceWith("this[x.toInt(), y.toInt()]")
+    )
+    fun getMut(x: UShort, y: UShort): Cell = this[x.toInt(), y.toInt()]
+
     private fun indexOfOpt(position: Position): Int? {
         if (!area.contains(position)) return null
         val relY = position.y - area.y
@@ -108,11 +136,25 @@ class Buffer(
         return content.getOrNull(index)
     }
 
+    /**
+     * Returns the cell at the given coordinates, or null if outside bounds.
+     *
+     * This mirrors Rust's `Buffer::cell((x, y))` overloads via Kotlin [Pair]s.
+     */
+    fun cell(position: Pair<Int, Int>): Cell? = cell(Position(position.first, position.second))
+
     /** Returns the cell at the given coordinates, or null if outside bounds */
     fun cell(x: Int, y: Int): Cell? = cell(Position(x, y))
 
     /** Returns the mutable cell at the given position, or null if outside bounds */
     fun cellMut(position: Position): Cell? = cell(position)
+
+    /**
+     * Returns the mutable cell at the given coordinates, or null if outside bounds.
+     *
+     * This mirrors Rust's `Buffer::cell_mut((x, y))` overloads via Kotlin [Pair]s.
+     */
+    fun cellMut(position: Pair<Int, Int>): Cell? = cellMut(Position(position.first, position.second))
 
     /** Returns the mutable cell at the given coordinates, or null if outside bounds */
     fun cellMut(x: Int, y: Int): Cell? = cellMut(Position(x, y))

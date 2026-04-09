@@ -7,6 +7,28 @@
 package ratatui.layout
 
 /**
+ * A backwards-compatible alias for [HorizontalAlignment].
+ *
+ * In Rust, `HorizontalAlignment` used to be named `Alignment`. That alias is retained as:
+ * `pub type Alignment = HorizontalAlignment`.
+ *
+ * This repo forbids Kotlin `typealias`, so this object provides the equivalent value-level API
+ * (`Alignment.Left`, `Alignment.Center`, `Alignment.Right`) while the underlying type remains
+ * [HorizontalAlignment].
+ */
+object Alignment {
+    val Left: HorizontalAlignment = HorizontalAlignment.Left
+    val Center: HorizontalAlignment = HorizontalAlignment.Center
+    val Right: HorizontalAlignment = HorizontalAlignment.Right
+
+    /** The default alignment (Left). */
+    val default: HorizontalAlignment = HorizontalAlignment.default
+
+    /** Parse an alignment from a string. */
+    fun fromString(value: String): HorizontalAlignment = HorizontalAlignment.fromString(value)
+}
+
+/**
  * Horizontal content alignment within a layout area.
  *
  * This type is used throughout Ratatui to control how content is positioned horizontally within
