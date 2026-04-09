@@ -12,8 +12,8 @@
 | 6 | `tests.rect` | `layout.RectTest` | 0.86 | 54 | 7.4 |
 | 7 | `commands.format` | `commands.Format` | 0.59 | 17 | 6.9 |
 | 8 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
-| 9 | `ratatui-core.style` | `style.Style` | 0.62 | 14 | 5.4 |
-| 10 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.12 | 6 | 5.3 |
+| 9 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.12 | 6 | 5.3 |
+| 10 | `ratatui-core.style` | `style.Style` | 0.63 | 14 | 5.1 |
 | 11 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
 | 12 | `symbols.marker` | `symbols.Marker` | 0.50 | 9 | 4.5 |
 | 13 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
@@ -215,5 +215,5 @@ These files need immediate attention:
 | 19 | `tabs.about` | 0 | `examples/apps/demo2/src/tabs/about.rs` |
 | 20 | `tabs.email` | 0 | `examples/apps/demo2/src/tabs/email.rs` |
 
-... and 79 more missing files.
+... and 80 more missing files.
 
