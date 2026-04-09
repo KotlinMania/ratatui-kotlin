@@ -86,7 +86,7 @@ These files need immediate attention:
   - Dependencies: 5
 
 - **style.palette** → `palette.PaletteModule`
-  - Similarity: 0.21
+  - Similarity: 0.25
   - Dependencies: 3
 
 - **ratatui-widgets.canvas** → `canvas.Canvas`

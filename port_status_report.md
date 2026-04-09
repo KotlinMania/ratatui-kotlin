@@ -9,8 +9,8 @@
 | Metric | Count | Percentage |
 |--------|-------|------------|
 | Total source files | 233 | 100% |
-| Target units (paired) | 157 | - |
-| Target files (total) | 157 | - |
+| Target units (paired) | 158 | - |
+| Target files (total) | 158 | - |
 | Porting progress | 141 | 60.5% (matched) |
 | Missing files | 92 | 39.5% |
 
@@ -52,7 +52,7 @@ These files need significant work:
 - `ratatui-widgets.paragraph` → `paragraph.Paragraph` (0.21, 4 deps)
 - `layout.alignment` → `layout.Alignment` (0.38, 5 deps)
 - `demo.app` → `demo.App` (0.51, 5 deps)
-- `style.palette` → `palette.PaletteModule` (0.21, 3 deps)
+- `style.palette` → `palette.PaletteModule` (0.25, 3 deps)
 - `ratatui-widgets.canvas` → `canvas.Canvas` (0.55, 5 deps)
 - `ratatui-macros.span` → `ratatui_macros.Span` (0.47, 4 deps)
 - `demo.termion` → `demo.Termion` (0.00, 2 deps)
@@ -80,70 +80,70 @@ These files need significant work:
 - `ratatui-macros.row` → `ratatui_macros.Row` (0.54, 1 deps)
 - `ratatui-widgets.borders` → `widgets.Borders` (0.55, 1 deps)
 - `commands.clippy` → `commands.Clippy` (0.59, 1 deps)
-- `main.barchart` → `chart.Axis` (0.00)
+- `state.lib` → `widgets.StatefulWidgetTest` (0.00)
 - `ratatui.widgets` → `widgets.WidgetsModule` (0.00)
+- `text.line` → `text.Line` (0.14)
 - `tests.stateful_widget_ref_dyn` → `widgets.StatefulWidgetRefDynTest` (0.45)
 - `symbols.merge` → `symbols.Merge` (0.24)
-- `symbols.pixel` → `symbols.Pixel` (0.30)
+- `table.row` → `table.Row` (0.27)
+- `table.cell` → `table.Cell` (0.23)
+- `ratatui.init` → `ratatui.Init` (0.00)
 - `backend.test` → `backend.TestBackend` (0.17)
-- `canvas.line` → `canvas.Line` (0.21)
-- `ratatui-core.terminal` → `terminal.Terminal` (0.00)
+- `ratatui-core.layout` → `layout.LayoutModule` (0.14)
+- `symbols.line` → `symbols.Line` (0.56)
 - `widgets.widget_ref` → `widgets.WidgetRef` (0.20)
 - `symbols.half_block` → `symbols.HalfBlock` (0.53)
-- `barchart.bar` → `barchart.Bar` (0.36)
-- `table.row` → `table.Row` (0.27)
-- `symbols.line` → `symbols.Line` (0.56)
+- `ratatui-core.terminal` → `terminal.Terminal` (0.00)
+- `canvas.map` → `canvas.Map` (0.43)
+- `canvas.line` → `canvas.Line` (0.21)
+- `ratatui-crossterm.lib` → `ratatui_crossterm.Lib` (0.28)
 - `tests.state_serde` → `ratatui.StateSerdeTest` (0.51)
 - `rect.ops` → `layout.RectOps` (0.00)
-- `ratatui-crossterm.lib` → `ratatui_crossterm.Lib` (0.28)
-- `canvas.map` → `canvas.Map` (0.43)
 - `style.stylize` → `style.Stylize` (0.42)
-- `buffer.buffer` → `buffer.Buffer` (0.23)
-- `ratatui.init` → `ratatui.Init` (0.00)
-- `text.grapheme` → `text.Grapheme` (0.33)
-- `buffer.assert` → `buffer.Assert` (0.48)
+- `barchart.bar` → `barchart.Bar` (0.36)
 - `layout.layout` → `layout.Layout` (0.10)
-- `table.cell` → `table.Cell` (0.23)
+- `buffer.buffer` → `buffer.Buffer` (0.23)
+- `symbols.pixel` → `symbols.Pixel` (0.30)
+- `buffer.assert` → `buffer.Assert` (0.48)
+- `text.grapheme` → `text.Grapheme` (0.33)
+- `examples.list` → `list.List` (0.10)
 - `layout.rect` → `layout.Rect` (0.37)
-- `ratatui-widgets.list` → `list.List` (0.25)
-- `main.table` → `table.Table` (0.13)
-- `main.sparkline` → `sparkline.Sparkline` (0.20)
-- `text.text` → `text.Text` (0.15)
+- `examples.sparkline` → `sparkline.Sparkline` (0.22)
+- `ratatui-widgets.gauge` → `gauge.Gauge` (0.11)
+- `examples.table` → `table.Table` (0.12)
+- `text.span` → `text.Span` (0.20)
+- `ratatui-widgets.chart` → `chart.Chart` (0.07)
 - `ratatui-widgets.barchart` → `barchart.BarChart` (0.35)
-- `examples.gauge` → `gauge.Gauge` (0.19)
-- `examples.chart` → `chart.Chart` (0.11)
 - `ratatui-widgets.reflow` → `reflow.Reflow` (0.39)
-- `text.line` → `text.Line` (0.14)
-- `ratatui-widgets.sparkline` → `sparkline.SparklineBar` (0.01)
-- `examples.sparkline` → `sparkline.SparklineTest` (0.00)
+- `main.sparkline` → `sparkline.SparklineBar` (0.00)
+- `ratatui-widgets.sparkline` → `sparkline.SparklineTest` (0.00)
 - `examples.scrollbar` → `scrollbar.ScrollbarState` (0.00)
 - `main.buffer` → `buffer.BufferTest` (0.00)
 - `list.state` → `list.ListState` (0.28)
+- `examples.gauge` → `gauge.LineGauge` (0.11)
 - `canvas.world` → `canvas.WorldData` (0.07)
-- `ratatui-widgets.gauge` → `gauge.LineGauge` (0.10)
 - `ratatui-core.widgets` → `widgets.WidgetStylize` (0.06)
-- `ratatui-macros.lib` → `ratatui_macros.RowTest` (0.18)
-- `ratatui-widgets.chart` → `chart.LegendPosition` (0.00)
-- `main.line` → `text.LineTest` (0.00)
+- `ratatui-macros.text` → `text.LineTest` (0.14)
 - `table.state` → `table.TableState` (0.28)
-- `ratatui.lib` → `ratatui_macros.LineTest` (0.05)
-- `ratatui-widgets.lib` → `widgets.StatefulWidgetTest` (0.08)
-- `main.text` → `text.TextTest` (0.00)
+- `ratatui.lib` → `ratatui_macros.RowTest` (0.05)
+- `main.line` → `ratatui_macros.LineTest` (0.00)
 - `ratatui-macros.layout` → `layout.AlignmentAliasTest` (0.08)
-- `ratatui-macros.text` → `text.UnicodeWidth` (0.14)
-- `examples.list` → `list.ListItem` (0.00)
-- `ratatui-core.layout` → `layout.PositionTest` (0.21)
+- `ratatui-widgets.lib` → `widgets.BordersTest` (0.12)
+- `main.text` → `text.TextTest` (0.00)
+- `ratatui-widgets.list` → `list.ListItem` (0.00)
 - `examples.calendar` → `calendar.CalendarEventStore` (0.00)
 - `terminal.render` → `sparkline.RenderDirection` (0.00)
-- `text.span` → `text.Span` (0.20)
+- `text.text` → `text.Text` (0.15)
 - `examples.logo` → `logo.RatatuiLogo` (0.17)
 - `ratatui-widgets.logo` → `logo.LogoMascotTest` (0.00)
 - `main.rect` → `scrollbar.ScrollDirection` (0.00)
 - `commands.backend` → `backend.ClearTypeTest` (0.00)
+- `examples.chart` → `chart.LegendPosition` (0.00)
 - `examples.barchart-grouped` → `chart.GraphType` (0.00)
 - `examples.barchart` → `chart.Dataset` (0.00)
 - `terminal.buffers` → `buffer.CellWidthTest` (0.00)
 - `style.anstyle` → `style.StylizeTest` (0.00)
+- `main.barchart` → `chart.Axis` (0.00)
 
 ## Incorrect Ports (Missing Types)
 
@@ -166,17 +166,17 @@ present in the Rust source file.
 | `ratatui-widgets.calendar` | `calendar.Monthly` | 2/3 | `DateStyler`, `CalendarEventStore` |
 | `widgets.stateful_widget_ref` | `widgets.StatefulWidgetRef` | 3/4 | `State`, `PersonalGreeting`, `Bytes` |
 | `ratatui.widgets` | `widgets.WidgetsModule` | 1/1 | `FrameExt` |
+| `text.line` | `text.Line` | 3/5 | `Item`, `IntoIter`, `Output` |
 | `tests.stateful_widget_ref_dyn` | `widgets.StatefulWidgetRefDynTest` | 3/8 | `State`, `BoxedWindow`, `BoxedState` |
 | `symbols.merge` | `symbols.Merge` | 1/4 | `BorderSymbolError` |
+| `table.row` | `table.Row` | 1/2 | `Item` |
+| `table.cell` | `table.Cell` | 1/2 | `Item` |
+| `ratatui.init` | `ratatui.Init` | 1/1 | `DefaultTerminal` |
 | `backend.test` | `backend.TestBackend` | 2/3 | `Result`, `Error` |
 | `widgets.widget_ref` | `widgets.WidgetRef` | 2/3 | `Greeting`, `Farewell` |
-| `barchart.bar` | `barchart.Bar` | 1/2 | `Item` |
-| `table.row` | `table.Row` | 1/2 | `Item` |
-| `rect.ops` | `layout.RectOps` | 1/1 | `Output` |
 | `ratatui-crossterm.lib` | `ratatui_crossterm.Lib` | 3/7 | `Error`, `IntoCrossterm`, `FromCrossterm` |
+| `rect.ops` | `layout.RectOps` | 1/1 | `Output` |
 | `style.stylize` | `style.Stylize` | 1/5 | `Item` |
-| `buffer.buffer` | `buffer.Buffer` | 1/2 | `Output` |
-| `ratatui.init` | `ratatui.Init` | 1/1 | `DefaultTerminal` |
 
 ## High Priority Missing Files
 
@@ -209,25 +209,25 @@ present in the Rust source file.
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 8438 / 28624 lines (29%)
+**Documentation coverage:** 8742 / 28328 lines (31%)
 
 Top documentation gaps (>20%):
 
 - `layout.layout` - 91% gap (1212 → 110 lines)
 - `ratatui-widgets.block` - 77% gap (1240 → 286 lines)
 - `ratatui.init` - 100% gap (876 → 0 lines)
-- `ratatui-widgets.chart` - 99% gap (868 → 13 lines)
 - `ratatui.lib` - 100% gap (826 → 0 lines)
 - `ratatui.widgets` - 53% gap (1430 → 665 lines)
+- `ratatui-widgets.chart` - 82% gap (868 → 154 lines)
 - `layout.rect` - 83% gap (816 → 140 lines)
 - `table.state` - 87% gap (732 → 96 lines)
-- `ratatui-core.layout` - 100% gap (620 → 0 lines)
 - `symbols.merge` - 92% gap (640 → 52 lines)
 - `palette.tailwind` - 97% gap (600 → 20 lines)
 - `ratatui-core.terminal` - 81% gap (712 → 134 lines)
 - `text.line` - 63% gap (914 → 338 lines)
+- `ratatui-widgets.list` - 88% gap (622 → 73 lines)
 - `buffer.buffer` - 83% gap (634 → 105 lines)
 - `text.text` - 54% gap (898 → 409 lines)
 
-... and 62 more files with doc gaps.
+... and 61 more files with doc gaps.
 
