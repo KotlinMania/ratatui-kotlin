@@ -11,7 +11,7 @@ plugins {
 }
 
 group = "io.github.kotlinmania"
-version = "0.1.16"
+version = "0.1.17"
 
 val androidSdkDir: String? =
     providers.environmentVariable("ANDROID_SDK_ROOT").orNull
