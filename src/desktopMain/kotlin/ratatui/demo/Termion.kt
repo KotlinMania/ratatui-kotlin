@@ -1,4 +1,4 @@
-// port-lint: source examples/apps/demo/src/crossterm.rs
+// port-lint: source examples/apps/demo/src/termion.rs
 package ratatui.demo
 
 import io.github.kotlinmania.crossterm.event.DisableMouseCapture
@@ -16,7 +16,15 @@ import ratatui.backend.Backend
 import ratatui.terminal.Terminal
 import ratatui_crossterm.CrosstermBackend
 
-fun runCrossterm(tickRate: Duration, enhancedGraphics: Boolean) {
+/**
+ * Termion demo runner.
+ *
+ * Rust uses the `termion` crate and a channel-based event loop. This Kotlin port targets
+ * Kotlin/Native and uses the published `crossterm-kotlin` dependency as the terminal backend.
+ *
+ * Transliteration target: `examples/apps/demo/src/termion.rs`.
+ */
+fun runTermion(tickRate: Duration, enhancedGraphics: Boolean) {
     enableRawMode()
     val stdout = StdoutBuffer()
     EnterAlternateScreen.writeAnsi(stdout)
@@ -26,7 +34,7 @@ fun runCrossterm(tickRate: Duration, enhancedGraphics: Boolean) {
     val backend = CrosstermBackend(stdout, stdout::flush)
     val terminal = Terminal.new(backend)
 
-    val app = App.new("Crossterm Demo", enhancedGraphics)
+    val app = App.new("Termion Demo", enhancedGraphics)
     val result = runApp(terminal, app, tickRate)
 
     disableRawMode()
