@@ -129,7 +129,7 @@ These files need immediate attention:
   - Similarity: 0.47
   - Dependencies: 2
 
-- **terminal.cursor** → `terminal.CursorModuleTest`
+- **terminal.cursor** → `terminal.CursorTest`
   - Similarity: 0.00
   - Dependencies: 1
 

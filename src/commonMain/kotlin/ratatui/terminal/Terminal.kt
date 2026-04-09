@@ -111,6 +111,12 @@ class Terminal<B : Backend>(
      */
     fun backend(): B = backend
 
+    /** Exposes whether the cursor is currently hidden (test-only parity with Rust). */
+    internal fun hiddenCursor(): Boolean = hiddenCursor
+
+    /** Exposes the last known cursor position (test-only parity with Rust). */
+    internal fun lastKnownCursorPos(): Position = lastKnownCursorPos
+
     /**
      * Obtains a difference between the previous and the current buffer and passes it to the
      * current backend for drawing.
