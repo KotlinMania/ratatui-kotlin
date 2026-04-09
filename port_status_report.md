@@ -19,8 +19,8 @@
 **Average Similarity:** 0.36
 
 **Quality Distribution:**
-- Excellent (≥0.85): 6 files (4.3% of matched)
-- Good (0.60-0.84): 29 files (20.6% of matched)
+- Excellent (≥0.85): 5 files (3.5% of matched)
+- Good (0.60-0.84): 30 files (21.3% of matched)
 - Critical (<0.60): 106 files (75.2% of matched)
 
 ### Excellent Ports (Similarity ≥ 0.85)
@@ -30,29 +30,28 @@ These files are well-ported and likely complete:
 - `layout.RectTest` (0.86, 54 deps)
 - `ratatui.StylizeWidgetTest` (0.86, 9 deps)
 - `demo.Ui` (0.86, 3 deps)
-- `canvas.CanvasTest` (0.85, 0 deps)
 - `gauge.GaugeTest` (0.87, 0 deps)
-- `tabs.TabsTest` (0.87, 0 deps)
+- `tabs.TabsTest` (0.86, 0 deps)
 
 ### Critical Ports (Similarity < 0.60)
 
 These files need significant work:
 
-- `ratatui-core.buffer` → `buffer.BufferModule` (0.34, 88 deps)
+- `ratatui-core.buffer` → `buffer.BufferModule` (0.14, 88 deps)
 - `widgets.widget` → `widgets.Widget` (0.34, 44 deps)
 - `ratatui-macros.line` → `ratatui_macros.Line` (0.52, 37 deps)
+- `ratatui-core.text` → `text.TextModule` (0.15, 13 deps)
 - `style.color` → `style.Color` (0.33, 15 deps)
-- `ratatui-core.text` → `text.TextModule` (0.33, 13 deps)
+- `ratatui-core.symbols` → `symbols.SymbolsModule` (0.12, 6 deps)
 - `ratatui-core.backend` → `backend.Backend` (0.36, 7 deps)
 - `widgets.stateful_widget` → `widgets.StatefulWidget` (0.14, 5 deps)
-- `ratatui-core.symbols` → `symbols.SymbolsModule` (0.33, 6 deps)
 - `symbols.marker` → `symbols.Marker` (0.58, 9 deps)
 - `layout.position` → `layout.Position` (0.14, 4 deps)
 - `rect.iter` → `rect.Iter` (0.43, 6 deps)
 - `ratatui-widgets.paragraph` → `paragraph.Paragraph` (0.21, 4 deps)
 - `layout.alignment` → `layout.Alignment` (0.38, 5 deps)
 - `demo.app` → `demo.App` (0.51, 5 deps)
-- `style.palette` → `palette.PaletteModule` (0.25, 3 deps)
+- `style.palette` → `palette.PaletteModule` (0.21, 3 deps)
 - `ratatui-widgets.canvas` → `canvas.Canvas` (0.55, 5 deps)
 - `ratatui-macros.span` → `ratatui_macros.Span` (0.47, 4 deps)
 - `demo.termion` → `demo.Termion` (0.00, 2 deps)

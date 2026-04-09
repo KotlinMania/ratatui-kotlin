@@ -1,6 +1,4 @@
 // port-lint: source ratatui-core/src/style/palette.rs
-@file:Suppress("unused")
-
 package ratatui.style.palette
 
 /**
@@ -12,5 +10,3 @@ package ratatui.style.palette
  * - `material`
  * - `tailwind`
  */
-
-private val _tailwindModule: ratatui.style.palette.tailwind.Palette? = null

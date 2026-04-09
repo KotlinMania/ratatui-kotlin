@@ -1,6 +1,4 @@
 // port-lint: source ratatui-core/src/buffer.rs
-@file:Suppress("unused")
-
 package ratatui.buffer
 
 /**
@@ -21,9 +19,3 @@ package ratatui.buffer
  * - [CellWidth]
  * - [BufferDiff]
  */
-
-private val _bufferExport: Buffer? = null
-private val _cellExport: Cell? = null
-private val _cellDiffOptionExport: CellDiffOption? = null
-private val _cellWidthExport: CellWidth? = null
-private val _bufferDiffExport: BufferDiff? = null

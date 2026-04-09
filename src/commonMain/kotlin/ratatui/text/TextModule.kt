@@ -1,6 +1,4 @@
 // port-lint: source ratatui-core/src/text.rs
-@file:Suppress("unused")
-
 package ratatui.text
 
 /**
@@ -55,12 +53,3 @@ package ratatui.text
  * - [Span] / [ToSpan]
  * - [Text] / [ToText]
  */
-
-private val _styledGraphemeExport: StyledGrapheme? = null
-private val _lineExport: Line? = null
-private val _toLineExport: ToLine? = null
-private val _maskedExport: Masked? = null
-private val _spanExport: Span? = null
-private val _toSpanExport: ToSpan? = null
-private val _textExport: Text? = null
-private val _toTextExport: ToText? = null
