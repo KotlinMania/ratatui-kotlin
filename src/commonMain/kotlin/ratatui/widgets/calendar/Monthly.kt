@@ -275,6 +275,13 @@ class CalendarEventStore(
 
     companion object {
         /**
+         * Constructs an empty event store.
+         *
+         * This mirrors Rust's common `Default::default()` usage in tests and examples.
+         */
+        fun default(): CalendarEventStore = CalendarEventStore()
+
+        /**
          * Construct a store that has the current date styled.
          */
         fun today(style: Style): CalendarEventStore {

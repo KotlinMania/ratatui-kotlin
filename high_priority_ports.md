@@ -137,17 +137,9 @@ These files need immediate attention:
   - Similarity: 0.00
   - Dependencies: 1
 
-- **ratatui-widgets.scrollbar** → `commonMain.kotlin.ratatui.widgets.scrollbar.Scrollbar`
-  - Similarity: 0.05
-  - Dependencies: 1
-
 - **layout.direction** → `layout.Direction`
   - Similarity: 0.55
   - Dependencies: 2
-
-- **ratatui-widgets.calendar** → `calendar.Monthly`
-  - Similarity: 0.13
-  - Dependencies: 1
 
 - **widgets.stateful_widget_ref** → `widgets.StatefulWidgetRef`
   - Similarity: 0.15
@@ -163,6 +155,10 @@ These files need immediate attention:
 
 - **layout.flex** → `layout.Flex`
   - Similarity: 0.29
+  - Dependencies: 1
+
+- **ratatui-widgets.scrollbar** → `commonMain.kotlin.ratatui.widgets.scrollbar.Scrollbar`
+  - Similarity: 0.33
   - Dependencies: 1
 
 - **layout.margin** → `layout.Margin`
@@ -191,6 +187,10 @@ These files need immediate attention:
 
 - **ratatui-widgets.borders** → `widgets.Borders`
   - Similarity: 0.55
+  - Dependencies: 1
+
+- **ratatui-widgets.calendar** → `calendar.Monthly`
+  - Similarity: 0.59
   - Dependencies: 1
 
 - **commands.clippy** → `commands.Clippy`
@@ -222,5 +222,5 @@ These files need immediate attention:
 | 19 | `tabs.recipe` | 0 | `examples/apps/demo2/src/tabs/recipe.rs` |
 | 20 | `tabs.traceroute` | 0 | `examples/apps/demo2/src/tabs/traceroute.rs` |
 
-... and 68 more missing files.
+... and 70 more missing files.
 
