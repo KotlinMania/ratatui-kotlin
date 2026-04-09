@@ -14,9 +14,9 @@
  * [Line].
  *
  * Keep in mind that a lot of widgets will use those types to advertise what kind of string is
- * supported for their properties. Moreover, the Kotlin port provides convenient conversion-style
- * helpers (for example [ToSpan], [ToLine], and [ToText]) so that you can start by using simple
- * `String` and then promote them to the primitives when you need additional styling capabilities.
+ * supported for their properties. Moreover, Ratatui provides convenient conversions (for example
+ * [ToSpan], [ToLine], and [ToText]) so that you can start by using simple `String` and then
+ * promote them to the primitives when you need additional styling capabilities.
  *
  * For example, for the `Block` widget, all the following calls are valid to set its `title`
  * property (which is a [Line] under the hood):
@@ -47,9 +47,6 @@
  *     )
  * )
  * ```
- *
- * This file mirrors `ratatui-core`'s `text.rs` module entrypoint and exists to keep the port
- * aligned with the Rust module structure without relying on Kotlin `typealias` re-exports.
  */
 package ratatui.text
 

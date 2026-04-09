@@ -128,13 +128,13 @@ class ColorTest {
         val fromArray3 = Color.from(ubyteArrayOf(123u, 45u, 67u))
         assertEquals(Color.Rgb(123u, 45u, 67u), fromArray3)
 
-        val fromTuple3 = Color.from(Triple(89u, 76u, 54u))
+        val fromTuple3 = Color.from(89u, 76u, 54u)
         assertEquals(Color.Rgb(89u, 76u, 54u), fromTuple3)
 
         val fromArray4 = Color.from(ubyteArrayOf(10u, 20u, 30u, 255u))
         assertEquals(Color.Rgb(10u, 20u, 30u), fromArray4)
 
-        val fromTuple4 = Color.from(ubyteArrayOf(200u, 150u, 100u, 0u))
+        val fromTuple4 = Color.from(200u, 150u, 100u, 0u)
         assertEquals(Color.Rgb(200u, 150u, 100u), fromTuple4)
     }
 

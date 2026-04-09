@@ -16,12 +16,12 @@
 
 ## Port Quality Analysis
 
-**Average Similarity:** 0.37
+**Average Similarity:** 0.38
 
 **Quality Distribution:**
 - Excellent (≥0.85): 5 files (3.4% of matched)
-- Good (0.60-0.84): 31 files (21.4% of matched)
-- Critical (<0.60): 109 files (75.2% of matched)
+- Good (0.60-0.84): 32 files (22.1% of matched)
+- Critical (<0.60): 108 files (74.5% of matched)
 
 ### Excellent Ports (Similarity ≥ 0.85)
 
@@ -40,7 +40,7 @@ These files need significant work:
 - `ratatui-core.buffer` → `buffer.BufferModule` (0.57, 88 deps)
 - `widgets.widget` → `widgets.Widget` (0.34, 44 deps)
 - `ratatui-macros.line` → `ratatui_macros.Line` (0.52, 37 deps)
-- `style.color` → `style.Color` (0.33, 15 deps)
+- `style.color` → `style.Color` (0.39, 15 deps)
 - `ratatui-core.text` → `text.TextModule` (0.55, 13 deps)
 - `ratatui-core.backend` → `backend.Backend` (0.36, 7 deps)
 - `widgets.stateful_widget` → `widgets.StatefulWidget` (0.14, 5 deps)
@@ -92,7 +92,6 @@ These files need significant work:
 - `widgets.widget_ref` → `widgets.WidgetRef` (0.20)
 - `list.item` → `list.ListItem` (0.40)
 - `symbols.half_block` → `symbols.HalfBlock` (0.53)
-- `ratatui-core.widgets` → `widgets.WidgetsModule` (0.17)
 - `ratatui-core.terminal` → `terminal.Terminal` (0.00)
 - `ratatui-widgets.reflow` → `reflow.Reflow` (0.39)
 - `ratatui-widgets.list` → `list.List` (0.25)
@@ -211,7 +210,7 @@ present in the Rust source file.
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 7984 / 30706 lines (26%)
+**Documentation coverage:** 7967 / 30706 lines (26%)
 
 Top documentation gaps (>20%):
 
