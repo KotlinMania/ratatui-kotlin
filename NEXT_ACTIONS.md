@@ -4,17 +4,17 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Current Progress:** 55.4% (135/233 files)
-- **Matched Files:** 129
-- **Average Similarity:** 0.34
-- **Critical Issues:** 100 files with <0.60 similarity
+- **Current Progress:** 56.7% (139/233 files)
+- **Matched Files:** 132
+- **Average Similarity:** 0.35
+- **Critical Issues:** 103 files with <0.60 similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
 ### 1. ratatui-core.buffer
-- **Similarity:** 0.00 (needs 85% improvement)
+- **Similarity:** 0.44 (needs 41% improvement)
 - **Dependencies:** 88
-- **Priority Score:** 88.0
+- **Priority Score:** 49.1
 - **Action:** Deep review - likely missing major functionality
 
 ### 2. widgets.widget
@@ -30,15 +30,15 @@ Based on AST analysis, here are the concrete next steps.
 - **Action:** Deep review - likely missing major functionality
 
 ### 4. style.color
-- **Similarity:** 0.17 (needs 68% improvement)
+- **Similarity:** 0.33 (needs 52% improvement)
 - **Dependencies:** 15
-- **Priority Score:** 12.5
+- **Priority Score:** 10.1
 - **Action:** Deep review - likely missing major functionality
 
 ### 5. ratatui-core.text
-- **Similarity:** 0.13 (needs 72% improvement)
+- **Similarity:** 0.40 (needs 45% improvement)
 - **Dependencies:** 13
-- **Priority Score:** 11.3
+- **Priority Score:** 7.8
 - **Action:** Deep review - likely missing major functionality
 
 ### 6. commands.format
@@ -91,7 +91,7 @@ For each file to be considered "complete":
 ```bash
 # Initialize task queue for systematic porting
 cd tools/ast_distance
-./ast_distance --init-tasks ../../tmp/ratatui rust ../../src kotlin tasks.json ../../AGENTS.md
+./ast_distance --init-tasks ../../tmp/ratatui/ rust ../../src/ kotlin tasks.json ../../AGENTS.md
 
 # Get next high-priority task
 ./ast_distance --assign tasks.json <agent-id>

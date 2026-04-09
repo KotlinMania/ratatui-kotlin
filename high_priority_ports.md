@@ -4,11 +4,11 @@
 
 | Rank | Source | Target | Similarity | Deps | Priority |
 |------|--------|--------|------------|------|----------|
-| 1 | `ratatui-core.buffer` | `buffer.BufferTest` | 0.00 | 88 | 88.0 |
+| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.44 | 88 | 49.1 |
 | 2 | `widgets.widget` | `widgets.Widget` | 0.34 | 44 | 29.2 |
 | 3 | `ratatui-macros.line` | `ratatui_macros.Line` | 0.52 | 37 | 17.7 |
-| 4 | `style.color` | `style.Color` | 0.17 | 15 | 12.5 |
-| 5 | `ratatui-core.text` | `text.UnicodeWidth` | 0.13 | 13 | 11.3 |
+| 4 | `style.color` | `style.Color` | 0.33 | 15 | 10.1 |
+| 5 | `ratatui-core.text` | `text.TextModule` | 0.40 | 13 | 7.8 |
 | 6 | `tests.rect` | `layout.RectTest` | 0.86 | 54 | 7.4 |
 | 7 | `commands.format` | `commands.Format` | 0.59 | 17 | 6.9 |
 | 8 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
@@ -16,21 +16,21 @@
 | 10 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
 | 11 | `symbols.marker` | `symbols.Marker` | 0.50 | 9 | 4.5 |
 | 12 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
-| 13 | `layout.alignment` | `layout.Alignment` | 0.27 | 5 | 3.7 |
-| 14 | `layout.position` | `layout.Position` | 0.14 | 4 | 3.4 |
-| 15 | `rect.iter` | `rect.Iter` | 0.43 | 6 | 3.4 |
-| 16 | `buffer.cell` | `buffer.Cell` | 0.67 | 10 | 3.3 |
-| 17 | `ratatui-widgets.paragraph` | `paragraph.Paragraph` | 0.21 | 4 | 3.2 |
-| 18 | `tests.terminal` | `terminal.TerminalTest` | 0.80 | 13 | 2.6 |
-| 19 | `demo.app` | `demo.App` | 0.51 | 5 | 2.5 |
-| 20 | `ratatui-widgets.canvas` | `canvas.Canvas` | 0.55 | 5 | 2.2 |
+| 13 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.32 | 6 | 4.1 |
+| 14 | `layout.alignment` | `layout.Alignment` | 0.27 | 5 | 3.7 |
+| 15 | `layout.position` | `layout.Position` | 0.14 | 4 | 3.4 |
+| 16 | `rect.iter` | `rect.Iter` | 0.43 | 6 | 3.4 |
+| 17 | `buffer.cell` | `buffer.Cell` | 0.67 | 10 | 3.3 |
+| 18 | `ratatui-widgets.paragraph` | `paragraph.Paragraph` | 0.21 | 4 | 3.2 |
+| 19 | `tests.terminal` | `terminal.TerminalTest` | 0.80 | 13 | 2.6 |
+| 20 | `style.palette` | `palette.PaletteModule` | 0.16 | 3 | 2.5 |
 
 ## Critical Issues (Similarity < 0.60 with Dependencies)
 
 These files need immediate attention:
 
-- **ratatui-core.buffer** → `buffer.BufferTest`
-  - Similarity: 0.00
+- **ratatui-core.buffer** → `buffer.BufferModule`
+  - Similarity: 0.44
   - Dependencies: 88
 
 - **widgets.widget** → `widgets.Widget`
@@ -42,11 +42,11 @@ These files need immediate attention:
   - Dependencies: 37
 
 - **style.color** → `style.Color`
-  - Similarity: 0.17
+  - Similarity: 0.33
   - Dependencies: 15
 
-- **ratatui-core.text** → `text.UnicodeWidth`
-  - Similarity: 0.13
+- **ratatui-core.text** → `text.TextModule`
+  - Similarity: 0.40
   - Dependencies: 13
 
 - **commands.format** → `commands.Format`
@@ -66,6 +66,10 @@ These files need immediate attention:
   - Similarity: 0.14
   - Dependencies: 5
 
+- **ratatui-core.symbols** → `symbols.SymbolsModule`
+  - Similarity: 0.32
+  - Dependencies: 6
+
 - **layout.alignment** → `layout.Alignment`
   - Similarity: 0.27
   - Dependencies: 5
@@ -81,6 +85,10 @@ These files need immediate attention:
 - **ratatui-widgets.paragraph** → `paragraph.Paragraph`
   - Similarity: 0.21
   - Dependencies: 4
+
+- **style.palette** → `palette.PaletteModule`
+  - Similarity: 0.16
+  - Dependencies: 3
 
 - **demo.app** → `demo.App`
   - Similarity: 0.51
@@ -182,20 +190,20 @@ These files need immediate attention:
 
 | Rank | Source file | Deps | Path |
 |------|------------|------|------|
-| 1 | `ratatui-core.symbols` | 6 | `ratatui-core/src/symbols.rs` |
-| 2 | `style.palette` | 3 | `ratatui-core/src/style/palette.rs` |
-| 3 | `demo.termion` | 2 | `examples/apps/demo/src/termion.rs` |
-| 4 | `demo.termwiz` | 2 | `examples/apps/demo/src/termwiz.rs` |
-| 5 | `commands.typos` | 1 | `xtask/src/commands/typos.rs` |
-| 6 | `commands.docs` | 1 | `xtask/src/commands/docs.rs` |
-| 7 | `commands.coverage` | 1 | `xtask/src/commands/coverage.rs` |
-| 8 | `commands.clippy` | 1 | `xtask/src/commands/clippy.rs` |
-| 9 | `commands.check` | 1 | `xtask/src/commands/check.rs` |
-| 10 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
-| 11 | `demo2.theme` | 1 | `examples/apps/demo2/src/theme.rs` |
-| 12 | `demo.crossterm` | 1 | `examples/apps/demo/src/crossterm.rs` |
-| 13 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
-| 14 | `xtask.main` | 0 | `xtask/src/main.rs` |
+| 1 | `demo.termwiz` | 2 | `examples/apps/demo/src/termwiz.rs` |
+| 2 | `demo.termion` | 2 | `examples/apps/demo/src/termion.rs` |
+| 3 | `demo.crossterm` | 1 | `examples/apps/demo/src/crossterm.rs` |
+| 4 | `commands.typos` | 1 | `xtask/src/commands/typos.rs` |
+| 5 | `commands.docs` | 1 | `xtask/src/commands/docs.rs` |
+| 6 | `commands.coverage` | 1 | `xtask/src/commands/coverage.rs` |
+| 7 | `commands.clippy` | 1 | `xtask/src/commands/clippy.rs` |
+| 8 | `commands.check` | 1 | `xtask/src/commands/check.rs` |
+| 9 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
+| 10 | `demo2.theme` | 1 | `examples/apps/demo2/src/theme.rs` |
+| 11 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
+| 12 | `xtask.main` | 0 | `xtask/src/main.rs` |
+| 13 | `custom-widget.main` | 0 | `examples/apps/custom-widget/src/main.rs` |
+| 14 | `constraints.main` | 0 | `examples/apps/constraints/src/main.rs` |
 | 15 | `demo2.app` | 0 | `examples/apps/demo2/src/app.rs` |
 | 16 | `demo2.colors` | 0 | `examples/apps/demo2/src/colors.rs` |
 | 17 | `demo2.destroy` | 0 | `examples/apps/demo2/src/destroy.rs` |
@@ -203,5 +211,5 @@ These files need immediate attention:
 | 19 | `demo2.tabs` | 0 | `examples/apps/demo2/src/tabs.rs` |
 | 20 | `tabs.about` | 0 | `examples/apps/demo2/src/tabs/about.rs` |
 
-... and 84 more missing files.
+... and 81 more missing files.
 
