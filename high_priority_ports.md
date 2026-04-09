@@ -138,10 +138,6 @@ These files need immediate attention:
   - Similarity: 0.00
   - Dependencies: 1
 
-- **ratatui-widgets.borders** → `widgets.Borders`
-  - Similarity: 0.00
-  - Dependencies: 1
-
 - **ratatui-widgets.scrollbar** → `scrollbar.Scrollbar`
   - Similarity: 0.05
   - Dependencies: 1
@@ -192,6 +188,10 @@ These files need immediate attention:
 
 - **ratatui-macros.row** → `ratatui_macros.Row`
   - Similarity: 0.54
+  - Dependencies: 1
+
+- **ratatui-widgets.borders** → `widgets.Borders`
+  - Similarity: 0.55
   - Dependencies: 1
 
 - **commands.clippy** → `commands.Clippy`
