@@ -4,17 +4,17 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Current Progress:** 61.8% (166/233 files)
-- **Matched Files:** 144
-- **Average Similarity:** 0.36
+- **Current Progress:** 62.2% (167/233 files)
+- **Matched Files:** 145
+- **Average Similarity:** 0.37
 - **Critical Issues:** 109 files with <0.60 similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
 ### 1. ratatui-core.buffer
-- **Similarity:** 0.14 (needs 71% improvement)
+- **Similarity:** 0.57 (needs 28% improvement)
 - **Dependencies:** 88
-- **Priority Score:** 75.4
+- **Priority Score:** 38.0
 - **Action:** Deep review - likely missing major functionality
 
 ### 2. widgets.widget
@@ -29,23 +29,23 @@ Based on AST analysis, here are the concrete next steps.
 - **Priority Score:** 17.7
 - **Action:** Deep review - likely missing major functionality
 
-### 4. ratatui-core.text
-- **Similarity:** 0.15 (needs 70% improvement)
-- **Dependencies:** 13
-- **Priority Score:** 11.1
-- **Action:** Deep review - likely missing major functionality
-
-### 5. style.color
+### 4. style.color
 - **Similarity:** 0.33 (needs 52% improvement)
 - **Dependencies:** 15
 - **Priority Score:** 10.1
 - **Action:** Deep review - likely missing major functionality
 
-### 6. terminal.frame
+### 5. terminal.frame
 - **Similarity:** 0.69 (needs 16% improvement)
 - **Dependencies:** 22
 - **Priority Score:** 6.9
 - **Action:** Review and complete missing sections
+
+### 6. ratatui-core.text
+- **Similarity:** 0.55 (needs 30% improvement)
+- **Dependencies:** 13
+- **Priority Score:** 5.8
+- **Action:** Deep review - likely missing major functionality
 
 ### 7. commands.format
 - **Similarity:** 0.68 (needs 17% improvement)

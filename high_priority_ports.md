@@ -4,24 +4,24 @@
 
 | Rank | Source | Target | Similarity | Deps | Priority |
 |------|--------|--------|------------|------|----------|
-| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.14 | 88 | 75.4 |
+| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.57 | 88 | 38.0 |
 | 2 | `widgets.widget` | `widgets.Widget` | 0.34 | 44 | 29.2 |
 | 3 | `ratatui-macros.line` | `ratatui_macros.Line` | 0.52 | 37 | 17.7 |
-| 4 | `ratatui-core.text` | `text.TextModule` | 0.15 | 13 | 11.1 |
-| 5 | `style.color` | `style.Color` | 0.33 | 15 | 10.1 |
-| 6 | `tests.rect` | `layout.RectTest` | 0.86 | 54 | 7.4 |
-| 7 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
+| 4 | `style.color` | `style.Color` | 0.33 | 15 | 10.1 |
+| 5 | `tests.rect` | `layout.RectTest` | 0.86 | 54 | 7.4 |
+| 6 | `terminal.frame` | `terminal.Frame` | 0.69 | 22 | 6.9 |
+| 7 | `ratatui-core.text` | `text.TextModule` | 0.55 | 13 | 5.8 |
 | 8 | `commands.format` | `commands.Format` | 0.68 | 17 | 5.4 |
-| 9 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.12 | 6 | 5.3 |
-| 10 | `ratatui-core.style` | `style.Style` | 0.63 | 14 | 5.1 |
-| 11 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
-| 12 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
-| 13 | `symbols.marker` | `symbols.Marker` | 0.58 | 9 | 3.8 |
-| 14 | `layout.position` | `layout.Position` | 0.14 | 4 | 3.4 |
-| 15 | `rect.iter` | `rect.Iter` | 0.43 | 6 | 3.4 |
-| 16 | `buffer.cell` | `buffer.Cell` | 0.67 | 10 | 3.3 |
-| 17 | `ratatui-widgets.paragraph` | `paragraph.Paragraph` | 0.21 | 4 | 3.2 |
-| 18 | `layout.alignment` | `layout.Alignment` | 0.38 | 5 | 3.1 |
+| 9 | `ratatui-core.style` | `style.Style` | 0.63 | 14 | 5.1 |
+| 10 | `ratatui-core.backend` | `backend.Backend` | 0.36 | 7 | 4.5 |
+| 11 | `widgets.stateful_widget` | `widgets.StatefulWidget` | 0.14 | 5 | 4.3 |
+| 12 | `symbols.marker` | `symbols.Marker` | 0.58 | 9 | 3.8 |
+| 13 | `layout.position` | `layout.Position` | 0.14 | 4 | 3.4 |
+| 14 | `rect.iter` | `rect.Iter` | 0.43 | 6 | 3.4 |
+| 15 | `buffer.cell` | `buffer.Cell` | 0.67 | 10 | 3.3 |
+| 16 | `ratatui-widgets.paragraph` | `paragraph.Paragraph` | 0.21 | 4 | 3.2 |
+| 17 | `layout.alignment` | `layout.Alignment` | 0.38 | 5 | 3.1 |
+| 18 | `ratatui-core.symbols` | `symbols.SymbolsModule` | 0.51 | 6 | 2.9 |
 | 19 | `tests.terminal` | `terminal.TerminalTest` | 0.80 | 13 | 2.6 |
 | 20 | `demo.app` | `demo.App` | 0.51 | 5 | 2.5 |
 
@@ -30,7 +30,7 @@
 These files need immediate attention:
 
 - **ratatui-core.buffer** → `buffer.BufferModule`
-  - Similarity: 0.14
+  - Similarity: 0.57
   - Dependencies: 88
 
 - **widgets.widget** → `widgets.Widget`
@@ -41,17 +41,13 @@ These files need immediate attention:
   - Similarity: 0.52
   - Dependencies: 37
 
-- **ratatui-core.text** → `text.TextModule`
-  - Similarity: 0.15
-  - Dependencies: 13
-
 - **style.color** → `style.Color`
   - Similarity: 0.33
   - Dependencies: 15
 
-- **ratatui-core.symbols** → `symbols.SymbolsModule`
-  - Similarity: 0.12
-  - Dependencies: 6
+- **ratatui-core.text** → `text.TextModule`
+  - Similarity: 0.55
+  - Dependencies: 13
 
 - **ratatui-core.backend** → `backend.Backend`
   - Similarity: 0.36
@@ -81,13 +77,13 @@ These files need immediate attention:
   - Similarity: 0.38
   - Dependencies: 5
 
+- **ratatui-core.symbols** → `symbols.SymbolsModule`
+  - Similarity: 0.51
+  - Dependencies: 6
+
 - **demo.app** → `demo.App`
   - Similarity: 0.51
   - Dependencies: 5
-
-- **style.palette** → `palette.PaletteModule`
-  - Similarity: 0.21
-  - Dependencies: 3
 
 - **buffer.cell_width** → `buffer.CellWidth`
   - Similarity: 0.21
@@ -104,6 +100,10 @@ These files need immediate attention:
 - **demo.termion** → `demo.Termion`
   - Similarity: 0.00
   - Dependencies: 2
+
+- **style.palette** → `palette.PaletteModule`
+  - Similarity: 0.34
+  - Dependencies: 3
 
 - **layout.constraint** → `layout.Constraint`
   - Similarity: 0.51
@@ -222,5 +222,5 @@ These files need immediate attention:
 | 19 | `tabs.recipe` | 0 | `examples/apps/demo2/src/tabs/recipe.rs` |
 | 20 | `tabs.traceroute` | 0 | `examples/apps/demo2/src/tabs/traceroute.rs` |
 
-... and 69 more missing files.
+... and 68 more missing files.
 
