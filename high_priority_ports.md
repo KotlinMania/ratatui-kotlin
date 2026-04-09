@@ -166,6 +166,10 @@ These files need immediate attention:
   - Similarity: 0.29
   - Dependencies: 1
 
+- **demo.crossterm** → `demo.Crossterm`
+  - Similarity: 0.35
+  - Dependencies: 1
+
 - **layout.margin** → `layout.Margin`
   - Similarity: 0.36
   - Dependencies: 1
@@ -190,26 +194,26 @@ These files need immediate attention:
 
 | Rank | Source file | Deps | Path |
 |------|------------|------|------|
-| 1 | `demo.termwiz` | 2 | `examples/apps/demo/src/termwiz.rs` |
-| 2 | `demo.termion` | 2 | `examples/apps/demo/src/termion.rs` |
-| 3 | `demo.crossterm` | 1 | `examples/apps/demo/src/crossterm.rs` |
-| 4 | `commands.typos` | 1 | `xtask/src/commands/typos.rs` |
-| 5 | `commands.docs` | 1 | `xtask/src/commands/docs.rs` |
-| 6 | `commands.coverage` | 1 | `xtask/src/commands/coverage.rs` |
-| 7 | `commands.clippy` | 1 | `xtask/src/commands/clippy.rs` |
-| 8 | `commands.check` | 1 | `xtask/src/commands/check.rs` |
-| 9 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
-| 10 | `demo2.theme` | 1 | `examples/apps/demo2/src/theme.rs` |
-| 11 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
-| 12 | `xtask.main` | 0 | `xtask/src/main.rs` |
-| 13 | `custom-widget.main` | 0 | `examples/apps/custom-widget/src/main.rs` |
-| 14 | `constraints.main` | 0 | `examples/apps/constraints/src/main.rs` |
-| 15 | `demo2.app` | 0 | `examples/apps/demo2/src/app.rs` |
-| 16 | `demo2.colors` | 0 | `examples/apps/demo2/src/colors.rs` |
-| 17 | `demo2.destroy` | 0 | `examples/apps/demo2/src/destroy.rs` |
-| 18 | `demo2.main` | 0 | `examples/apps/demo2/src/main.rs` |
-| 19 | `demo2.tabs` | 0 | `examples/apps/demo2/src/tabs.rs` |
-| 20 | `tabs.about` | 0 | `examples/apps/demo2/src/tabs/about.rs` |
+| 1 | `demo.termion` | 2 | `examples/apps/demo/src/termion.rs` |
+| 2 | `demo.termwiz` | 2 | `examples/apps/demo/src/termwiz.rs` |
+| 3 | `commands.typos` | 1 | `xtask/src/commands/typos.rs` |
+| 4 | `commands.docs` | 1 | `xtask/src/commands/docs.rs` |
+| 5 | `commands.coverage` | 1 | `xtask/src/commands/coverage.rs` |
+| 6 | `commands.clippy` | 1 | `xtask/src/commands/clippy.rs` |
+| 7 | `commands.check` | 1 | `xtask/src/commands/check.rs` |
+| 8 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
+| 9 | `demo2.theme` | 1 | `examples/apps/demo2/src/theme.rs` |
+| 10 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
+| 11 | `xtask.main` | 0 | `xtask/src/main.rs` |
+| 12 | `custom-widget.main` | 0 | `examples/apps/custom-widget/src/main.rs` |
+| 13 | `constraints.main` | 0 | `examples/apps/constraints/src/main.rs` |
+| 14 | `demo2.app` | 0 | `examples/apps/demo2/src/app.rs` |
+| 15 | `demo2.colors` | 0 | `examples/apps/demo2/src/colors.rs` |
+| 16 | `demo2.destroy` | 0 | `examples/apps/demo2/src/destroy.rs` |
+| 17 | `demo2.main` | 0 | `examples/apps/demo2/src/main.rs` |
+| 18 | `demo2.tabs` | 0 | `examples/apps/demo2/src/tabs.rs` |
+| 19 | `tabs.about` | 0 | `examples/apps/demo2/src/tabs/about.rs` |
+| 20 | `tabs.email` | 0 | `examples/apps/demo2/src/tabs/email.rs` |
 
-... and 81 more missing files.
+... and 80 more missing files.
 
