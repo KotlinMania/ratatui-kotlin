@@ -3,10 +3,13 @@ package ratatui.widgets.calendar
 
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
+import kotlinx.datetime.todayIn
 import ratatui.buffer.Buffer
 import ratatui.layout.Constraint
 import ratatui.layout.Layout
@@ -237,6 +240,49 @@ data class Monthly<DS : DateStyler>(
          */
         fun <DS : DateStyler> new(displayDate: LocalDate, events: DS): Monthly<DS> =
             Monthly(displayDate, events)
+    }
+}
+
+/**
+ * Provides a method for styling a given date. [Monthly] is generic on this interface, so any type
+ * that implements this interface can be used.
+ */
+interface DateStyler {
+    /** Given a date, return a style for that date. */
+    fun getStyle(date: LocalDate): Style
+}
+
+/**
+ * A simple [DateStyler] based on a [MutableMap].
+ */
+class CalendarEventStore(
+    internal val events: MutableMap<LocalDate, Style> = mutableMapOf()
+) : DateStyler {
+    /**
+     * Add a date and style to the store.
+     *
+     * `style` accepts any type that is convertible to [Style] (for example [Style] or [ratatui.style.Color]).
+     * The Kotlin port currently accepts [Style] directly.
+     */
+    fun add(date: LocalDate, style: Style) {
+        // To simplify style merging, last write wins.
+        events[date] = style
+    }
+
+    private fun lookupStyle(date: LocalDate): Style = events[date] ?: Style.default()
+
+    override fun getStyle(date: LocalDate): Style = lookupStyle(date)
+
+    companion object {
+        /**
+         * Construct a store that has the current date styled.
+         */
+        fun today(style: Style): CalendarEventStore {
+            val res = CalendarEventStore()
+            val today = Clock.System.todayIn(TimeZone.currentSystemDefault())
+            res.add(today, style)
+            return res
+        }
     }
 }
 

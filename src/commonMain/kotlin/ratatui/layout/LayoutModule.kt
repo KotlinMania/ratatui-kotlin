@@ -1,4 +1,5 @@
 // port-lint: source ratatui-core/src/layout.rs
+@file:Suppress("unused")
 /**
  * Layout and positioning in terminal user interfaces.
  *
@@ -122,3 +123,24 @@
  */
 package ratatui.layout
 
+// Rust:
+//   mod alignment; mod constraint; mod direction; mod flex; mod layout;
+//   mod margin; mod offset; mod position; mod rect; mod size;
+private val alignment = Alignment::class
+private val horizontalAlignment = HorizontalAlignment::class
+private val verticalAlignment = VerticalAlignment::class
+private val constraint = Constraint::class
+private val direction = Direction::class
+private val flex = Flex::class
+private val layout = Layout::class
+private val spacing = Spacing::class
+private val margin = Margin::class
+private val offset = Offset::class
+private val position = Position::class
+private val rect = Rect::class
+private val size = Size::class
+
+// Rust:
+//   pub use rect::{Columns, Positions, Rect, Rows};
+private val columns = Rect::columns
+private val rows = Rect::rows
