@@ -206,7 +206,7 @@ present in the Rust source file.
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 7596 / 29254 lines (26%)
+**Documentation coverage:** 7609 / 29254 lines (26%)
 
 Top documentation gaps (>20%):
 

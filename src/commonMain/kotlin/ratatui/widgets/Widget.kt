@@ -37,6 +37,19 @@ import ratatui.style.Style
  *
  * # Examples
  *
+ * ```kotlin
+ * import ratatui.backend.TestBackend
+ * import ratatui.terminal.Terminal
+ * import ratatui.widgets.Clear
+ *
+ * val backend = TestBackend.new(5, 5)
+ * val terminal = Terminal(backend)
+ *
+ * terminal.draw { frame ->
+ *     frame.renderWidget(Clear, frame.area())
+ * }
+ * ```
+ *
  * It's common to render widgets inside other widgets:
  *
  * ```kotlin
