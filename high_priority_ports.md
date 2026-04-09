@@ -85,6 +85,10 @@ These files need immediate attention:
   - Similarity: 0.51
   - Dependencies: 5
 
+- **style.palette** → `palette.PaletteModule`
+  - Similarity: 0.21
+  - Dependencies: 3
+
 - **ratatui-widgets.canvas** → `canvas.Canvas`
   - Similarity: 0.55
   - Dependencies: 5
@@ -197,10 +201,10 @@ These files need immediate attention:
 
 | Rank | Source file | Deps | Path |
 |------|------------|------|------|
-| 1 | `style.palette` | 3 | `ratatui-core/src/style/palette.rs` |
-| 2 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
-| 3 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
-| 4 | `xtask.main` | 0 | `xtask/src/main.rs` |
+| 1 | `bin.refcell` | 1 | `examples/concepts/state/src/bin/refcell.rs` |
+| 2 | `advanced-widget-impl.main` | 0 | `examples/apps/advanced-widget-impl/src/main.rs` |
+| 3 | `xtask.main` | 0 | `xtask/src/main.rs` |
+| 4 | `canvas.main` | 0 | `examples/apps/canvas/src/main.rs` |
 | 5 | `chart.main` | 0 | `examples/apps/chart/src/main.rs` |
 | 6 | `color-explorer.main` | 0 | `examples/apps/color-explorer/src/main.rs` |
 | 7 | `colors-rgb.main` | 0 | `examples/apps/colors-rgb/src/main.rs` |
@@ -218,5 +222,5 @@ These files need immediate attention:
 | 19 | `tabs.recipe` | 0 | `examples/apps/demo2/src/tabs/recipe.rs` |
 | 20 | `tabs.traceroute` | 0 | `examples/apps/demo2/src/tabs/traceroute.rs` |
 
-... and 73 more missing files.
+... and 71 more missing files.
 

@@ -1,6 +1,4 @@
 // port-lint: source ratatui-core/src/text.rs
-package ratatui.text
-
 /**
  * Primitives for styled text.
  *
@@ -52,4 +50,4 @@ package ratatui.text
  * This file mirrors `ratatui-core`'s `text.rs` module entrypoint and exists to keep the port
  * aligned with the Rust module structure without relying on Kotlin `typealias` re-exports.
  */
-
+package ratatui.text

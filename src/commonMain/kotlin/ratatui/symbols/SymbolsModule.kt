@@ -1,6 +1,4 @@
 // port-lint: source ratatui-core/src/symbols.rs
-package ratatui.symbols
-
 /**
  * Symbols and markers for drawing various widgets.
  *
@@ -10,4 +8,4 @@ package ratatui.symbols
  * In the Rust code, this module re-exports [Marker] and [DOT] from `symbols::marker` and declares
  * submodules for the various symbol sets (bars, borders, braille, scrolling, shading, etc.).
  */
-
+package ratatui.symbols
