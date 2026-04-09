@@ -130,11 +130,11 @@ These files need immediate attention:
   - Similarity: 0.47
   - Dependencies: 2
 
-- **terminal.cursor** → `terminal.CursorModuleTest`
+- **ratatui-widgets.borders** → `widgets.Borders`
   - Similarity: 0.00
   - Dependencies: 1
 
-- **ratatui-widgets.borders** → `widgets.Borders`
+- **terminal.cursor** → `terminal.CursorModuleTest`
   - Similarity: 0.00
   - Dependencies: 1
 
