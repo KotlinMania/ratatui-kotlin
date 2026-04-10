@@ -20,8 +20,8 @@
 
 **Quality Distribution:**
 - Excellent (≥0.85): 5 files (3.5% of matched)
-- Good (0.60-0.84): 32 files (22.4% of matched)
-- Critical (<0.60): 106 files (74.1% of matched)
+- Good (0.60-0.84): 34 files (23.8% of matched)
+- Critical (<0.60): 104 files (72.7% of matched)
 
 ### Excellent Ports (Similarity ≥ 0.85)
 
@@ -37,7 +37,6 @@ These files are well-ported and likely complete:
 
 These files need significant work:
 
-- `ratatui-core.buffer` → `buffer.BufferModule` (0.57, 88 deps)
 - `widgets.widget` → `widgets.Widget` (0.34, 44 deps)
 - `ratatui-macros.line` → `ratatui_macros.Line` (0.52, 37 deps)
 - `style.color` → `style.Color` (0.39, 15 deps)
@@ -77,7 +76,6 @@ These files need significant work:
 - `terminal.viewport` → `terminal.Viewport` (0.53, 1 deps)
 - `ratatui-macros.row` → `ratatui_macros.Row` (0.54, 1 deps)
 - `ratatui-widgets.borders` → `widgets.Borders` (0.55, 1 deps)
-- `ratatui-widgets.calendar` → `calendar.Monthly` (0.59, 1 deps)
 - `commands.clippy` → `commands.Clippy` (0.59, 1 deps)
 - `ratatui-core.layout` → `layout.LayoutModule` (0.50)
 - `main.rect` → `rect.IterTest` (0.00)
@@ -208,7 +206,7 @@ present in the Rust source file.
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 7966 / 30632 lines (26%)
+**Documentation coverage:** 7971 / 30632 lines (26%)
 
 Top documentation gaps (>20%):
 

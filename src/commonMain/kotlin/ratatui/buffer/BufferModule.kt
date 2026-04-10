@@ -5,13 +5,13 @@
  */
 package ratatui.buffer
 
-// Rust:
-//   mod assert;
-//   mod buffer;
-//   mod cell;
-//   mod cell_width;
-//   mod diff;
-private val assert = ::assertBufferEq
+import ratatui.buffer.Buffer
+import ratatui.buffer.BufferDiff
+import ratatui.buffer.Cell
+import ratatui.buffer.CellDiffOption
+import ratatui.buffer.CellWidth
+
+private val assert = null
 private val buffer = Buffer::class
 private val cell = Cell::class
 private val cellDiffOption = CellDiffOption::class
