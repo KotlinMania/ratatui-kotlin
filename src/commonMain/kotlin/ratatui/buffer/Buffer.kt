@@ -42,7 +42,7 @@ import ratatui.text.graphemes
  * check(r.symbol() == "r")
  * ```
  */
-class Buffer(
+data class Buffer(
     /** The area represented by this buffer */
     var area: Rect,
     /** The content of the buffer */
@@ -51,9 +51,7 @@ class Buffer(
     companion object {
         /** Returns a Buffer with all cells set to the default one */
         fun empty(area: Rect): Buffer {
-            val size = area.area().toInt()
-            val content = MutableList(size) { Cell.EMPTY }
-            return Buffer(area, content)
+            return filled(area, Cell.EMPTY)
         }
 
         /** Returns a Buffer with all cells initialized with the given Cell */
@@ -124,9 +122,11 @@ class Buffer(
 
     /** Returns the index in the content list for the given coordinates */
     fun indexOf(x: Int, y: Int): Int {
-        return indexOfOpt(Position(x, y)) ?: error(
-            "index outside of buffer: the area is ${area.debugString()} but index is ($x, $y)"
-        )
+        return indexOfOpt(Position(x, y))
+            ?: error(
+                "index outside of buffer: the area is Rect { x: ${area.x}, y: ${area.y}, width: ${area.width}, height: ${area.height} } " +
+                    "but index is ($x, $y)"
+            )
     }
 
     /** Returns the cell at the given position, or null if outside bounds */
@@ -227,37 +227,34 @@ class Buffer(
      * Use [setString] when the maximum amount of characters can be printed.
      */
     fun setStringn(x: Int, y: Int, string: String, maxWidth: Int, style: Style): Pair<Int, Int> {
-        var currentX = x
+        var xVar = x
+        val maxWidthU16 = maxWidth.coerceAtLeast(0).coerceAtMost(UShort.MAX_VALUE.toInt())
+        var remainingWidth = (area.right() - xVar).coerceAtLeast(0).coerceAtMost(maxWidthU16)
 
-        val remainingWidthMax = maxWidth.coerceAtLeast(0)
-        val remainingWidthToRight = (area.right() - currentX).coerceAtLeast(0)
-        var remainingWidth = minOf(remainingWidthToRight, remainingWidthMax)
+        for (symbol in graphemes(string)) {
+            if (symbol.any { it.isISOControl() }) continue
 
-        val graphemes = graphemes(string)
-            .asSequence()
-            .filter { symbol -> symbol.none { it.isISOControl() } }
-            .map { symbol -> symbol to symbol.cellWidth().toInt() }
-            .filter { (_symbol, width) -> width > 0 }
+            val width = symbol.cellWidth().toInt()
+            if (width <= 0) continue
 
-        for ((symbol, width) in graphemes) {
             val nextRemainingWidth = remainingWidth - width
             if (nextRemainingWidth < 0) {
                 break
             }
             remainingWidth = nextRemainingWidth
 
-            this[currentX, y].setSymbol(symbol).setStyle(style)
-            val nextSymbol = currentX + width
-            currentX += 1
+            this[xVar, y].setSymbol(symbol).setStyle(style)
+            val nextSymbol = xVar + width
+            xVar += 1
 
-            // Reset following cells if multi-width (they would be hidden by the grapheme).
-            while (currentX < nextSymbol) {
-                this[currentX, y].reset()
-                currentX += 1
+            // Reset following cells if multi-width (they would be hidden by the grapheme),
+            while (xVar < nextSymbol) {
+                this[xVar, y].reset()
+                xVar += 1
             }
         }
 
-        return Pair(currentX, y)
+        return Pair(xVar, y)
     }
 
     /** Print a line, starting at the position (x, y) */
@@ -365,24 +362,11 @@ class Buffer(
      */
     fun diffIter(other: Buffer): BufferDiff = BufferDiff.new(this, other)
 
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (other == null || this::class != other::class) return false
-        other as Buffer
-        if (area != other.area) return false
-        if (content != other.content) return false
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = area.hashCode()
-        result = 31 * result + content.hashCode()
-        return result
-    }
-
     @Suppress("unused")
     private fun fmt(f: StringBuilder) {
-        f.append("Buffer {\n    area: ${area.debugString()}")
+        f.append(
+            "Buffer {\n    area: Rect { x: ${area.x}, y: ${area.y}, width: ${area.width}, height: ${area.height} }"
+        )
 
         if (area.isEmpty()) {
             f.append("\n}")
@@ -423,7 +407,25 @@ class Buffer(
             }
             f.append("\",")
             if (overwritten.isNotEmpty()) {
-                f.append(" // hidden by multi-width symbols: ${overwritten.debugString()}")
+                val overwrittenString = StringBuilder()
+                overwrittenString.append('[')
+                for (i in overwritten.indices) {
+                    if (i != 0) overwrittenString.append(", ")
+                    val (xx, s) = overwritten[i]
+                    overwrittenString.append('(')
+                    overwrittenString.append(xx)
+                    overwrittenString.append(", \"")
+                    for (ch in s) {
+                        when (ch) {
+                            '\\' -> overwrittenString.append("\\\\")
+                            '"' -> overwrittenString.append("\\\"")
+                            else -> overwrittenString.append(ch)
+                        }
+                    }
+                    overwrittenString.append("\")")
+                }
+                overwrittenString.append(']')
+                f.append(" // hidden by multi-width symbols: $overwrittenString")
             }
             f.append("\n")
         }
@@ -455,22 +457,3 @@ private data class StyleEntry(
     val bg: ratatui.style.Color,
     val modifier: ratatui.style.Modifier
 )
-
-private fun Rect.debugString(): String = "Rect { x: $x, y: $y, width: $width, height: $height }"
-
-private fun List<Pair<Int, String>>.debugString(): String = joinToString(prefix = "[", postfix = "]") { (x, s) ->
-    "($x, ${s.debugQuoted()})"
-}
-
-private fun String.debugQuoted(): String {
-    val escaped = buildString {
-        for (ch in this@debugQuoted) {
-            when (ch) {
-                '\\' -> append("\\\\")
-                '"' -> append("\\\"")
-                else -> append(ch)
-            }
-        }
-    }
-    return "\"$escaped\""
-}
