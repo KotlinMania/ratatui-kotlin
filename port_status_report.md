@@ -1,6 +1,6 @@
 # Code Port - Progress Report
 
-**Generated:** 2026-04-09
+**Generated:** 2026-04-10
 **Source:** tmp/ratatui/
 **Target:** src/
 
@@ -9,8 +9,8 @@
 | Metric | Count | Percentage |
 |--------|-------|------------|
 | Total source files | 233 | 100% |
-| Target units (paired) | 162 | - |
-| Target files (total) | 162 | - |
+| Target units (paired) | 163 | - |
+| Target files (total) | 163 | - |
 | Porting progress | 143 | 61.4% (matched) |
 | Missing files | 90 | 38.6% |
 
@@ -20,8 +20,8 @@
 
 **Quality Distribution:**
 - Excellent (≥0.85): 5 files (3.5% of matched)
-- Good (0.60-0.84): 32 files (22.4% of matched)
-- Critical (<0.60): 106 files (74.1% of matched)
+- Good (0.60-0.84): 34 files (23.8% of matched)
+- Critical (<0.60): 104 files (72.7% of matched)
 
 ### Excellent Ports (Similarity ≥ 0.85)
 
@@ -37,7 +37,6 @@ These files are well-ported and likely complete:
 
 These files need significant work:
 
-- `ratatui-core.buffer` → `buffer.BufferModule` (0.57, 88 deps)
 - `widgets.widget` → `widgets.Widget` (0.34, 44 deps)
 - `ratatui-macros.line` → `ratatui_macros.Line` (0.52, 37 deps)
 - `style.color` → `style.Color` (0.39, 15 deps)
@@ -51,12 +50,12 @@ These files need significant work:
 - `layout.alignment` → `layout.Alignment` (0.38, 5 deps)
 - `ratatui-core.symbols` → `symbols.SymbolsModule` (0.51, 6 deps)
 - `demo.app` → `demo.App` (0.51, 5 deps)
-- `buffer.cell_width` → `buffer.CellWidth` (0.21, 3 deps)
 - `ratatui-widgets.canvas` → `canvas.Canvas` (0.55, 5 deps)
 - `ratatui-macros.span` → `ratatui_macros.Span` (0.47, 4 deps)
 - `demo.termion` → `demo.Termion` (0.00, 2 deps)
 - `style.palette` → `palette.PaletteModule` (0.34, 3 deps)
 - `layout.constraint` → `layout.Constraint` (0.51, 4 deps)
+- `buffer.cell_width` → `buffer.CellWidth` (0.46, 3 deps)
 - `table.highlight_spacing` → `widgets.HighlightSpacing` (0.46, 3 deps)
 - `ratatui-widgets.tabs` → `tabs.Tabs` (0.25, 2 deps)
 - `ratatui-widgets.block` → `commonMain.kotlin.ratatui.widgets.block.Block` (0.26, 2 deps)
@@ -77,10 +76,9 @@ These files need significant work:
 - `terminal.viewport` → `terminal.Viewport` (0.53, 1 deps)
 - `ratatui-macros.row` → `ratatui_macros.Row` (0.54, 1 deps)
 - `ratatui-widgets.borders` → `widgets.Borders` (0.55, 1 deps)
-- `ratatui-widgets.calendar` → `calendar.Monthly` (0.59, 1 deps)
 - `commands.clippy` → `commands.Clippy` (0.59, 1 deps)
 - `ratatui-core.layout` → `layout.LayoutModule` (0.50)
-- `main.rect` → `rect.IterTest` (0.00)
+- `examples.barchart-grouped` → `chart.GraphType` (0.00)
 - `table.cell` → `table.Cell` (0.23)
 - `canvas.line` → `canvas.Line` (0.21)
 - `backend.test` → `backend.TestBackend` (0.17)
@@ -130,18 +128,18 @@ These files need significant work:
 - `ratatui-widgets.sparkline` → `sparkline.SparklineBar` (0.01)
 - `examples.sparkline` → `sparkline.SparklineTest` (0.00)
 - `ratatui-widgets.gauge` → `gauge.LineGauge` (0.10)
-- `ratatui-widgets.chart` → `chart.GraphType` (0.00)
-- `ratatui-widgets.lib` → `widgets.WidgetStylize` (0.07)
+- `ratatui-widgets.chart` → `chart.Dataset` (0.01)
 - `ratatui.lib` → `ratatui_macros.RowTest` (0.05)
+- `ratatui-macros.text` → `text.GraphemeTest` (0.17)
 - `main.text` → `text.TextTest` (0.00)
-- `ratatui-macros.text` → `text.MaskedTest` (0.26)
+- `ratatui-widgets.lib` → `widgets.WidgetTest` (0.09)
 - `terminal.render` → `sparkline.RenderDirection` (0.00)
 - `examples.logo` → `logo.LogoMascotTest` (0.00)
-- `examples.barchart-grouped` → `chart.Axis` (0.00)
+- `examples.barchart` → `chart.LegendPosition` (0.00)
 - `bin.stateful-widget` → `widgets.StatefulWidgetTest` (0.00)
-- `examples.barchart` → `chart.Dataset` (0.00)
-- `main.barchart` → `chart.LegendPosition` (0.00)
+- `main.barchart` → `chart.Axis` (0.00)
 - `terminal.buffers` → `buffer.CellWidthTest` (0.00)
+- `main.rect` → `rect.IterTest` (0.00)
 - `ratatui-widgets.table` → `table.Table` (0.14)
 
 ## Incorrect Ports (Missing Types)
@@ -217,9 +215,9 @@ Top documentation gaps (>20%):
 - `ratatui-widgets.table` - 89% gap (1188 → 136 lines)
 - `ratatui-widgets.block` - 77% gap (1240 → 286 lines)
 - `ratatui.init` - 100% gap (876 → 0 lines)
-- `ratatui-widgets.chart` - 96% gap (868 → 33 lines)
 - `ratatui.lib` - 100% gap (826 → 0 lines)
 - `palette.material` - 94% gap (854 → 49 lines)
+- `ratatui-widgets.chart` - 88% gap (868 → 106 lines)
 - `layout.rect` - 83% gap (816 → 140 lines)
 - `table.state` - 87% gap (732 → 96 lines)
 - `symbols.merge` - 92% gap (640 → 52 lines)
@@ -228,5 +226,5 @@ Top documentation gaps (>20%):
 - `text.line` - 63% gap (914 → 338 lines)
 - `buffer.buffer` - 83% gap (634 → 105 lines)
 
-... and 66 more files with doc gaps.
+... and 67 more files with doc gaps.
 

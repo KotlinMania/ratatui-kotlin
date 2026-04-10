@@ -4,7 +4,7 @@
 
 | Rank | Source | Target | Similarity | Deps | Priority |
 |------|--------|--------|------------|------|----------|
-| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.57 | 88 | 38.0 |
+| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.61 | 88 | 34.0 |
 | 2 | `widgets.widget` | `widgets.Widget` | 0.34 | 44 | 29.2 |
 | 3 | `ratatui-macros.line` | `ratatui_macros.Line` | 0.52 | 37 | 17.7 |
 | 4 | `style.color` | `style.Color` | 0.39 | 15 | 9.2 |
@@ -28,10 +28,6 @@
 ## Critical Issues (Similarity < 0.60 with Dependencies)
 
 These files need immediate attention:
-
-- **ratatui-core.buffer** → `buffer.BufferModule`
-  - Similarity: 0.57
-  - Dependencies: 88
 
 - **widgets.widget** → `widgets.Widget`
   - Similarity: 0.34
@@ -85,10 +81,6 @@ These files need immediate attention:
   - Similarity: 0.51
   - Dependencies: 5
 
-- **buffer.cell_width** → `buffer.CellWidth`
-  - Similarity: 0.21
-  - Dependencies: 3
-
 - **ratatui-widgets.canvas** → `canvas.Canvas`
   - Similarity: 0.55
   - Dependencies: 5
@@ -108,6 +100,10 @@ These files need immediate attention:
 - **layout.constraint** → `layout.Constraint`
   - Similarity: 0.51
   - Dependencies: 4
+
+- **buffer.cell_width** → `buffer.CellWidth`
+  - Similarity: 0.46
+  - Dependencies: 3
 
 - **table.highlight_spacing** → `widgets.HighlightSpacing`
   - Similarity: 0.46
@@ -187,10 +183,6 @@ These files need immediate attention:
 
 - **ratatui-widgets.borders** → `widgets.Borders`
   - Similarity: 0.55
-  - Dependencies: 1
-
-- **ratatui-widgets.calendar** → `calendar.Monthly`
-  - Similarity: 0.59
   - Dependencies: 1
 
 - **commands.clippy** → `commands.Clippy`
