@@ -26,7 +26,7 @@ Based on AST analysis, here are the concrete next steps.
 ### 3. ratatui-macros.line
 - **Similarity:** 0.52 (needs 33% improvement)
 - **Dependencies:** 37
-- **Priority Score:** 17.7
+- **Priority Score:** 17.9
 - **Action:** Deep review - likely missing major functionality
 
 ### 4. style.color

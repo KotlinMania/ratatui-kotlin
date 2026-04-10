@@ -9,13 +9,13 @@ import ratatui.style.Style
  * A `Widget` is a type that can be drawn on a [Buffer] in a given [Rect].
  *
  * For a comprehensive guide to widgets, including trait explanations, implementation patterns,
- * and available widgets, see the `widgets` module documentation in the upstream Rust project.
+ * and available widgets, see the `widgets` module documentation.
  *
  * Prior to Ratatui 0.26.0, widgets generally were created for each frame as they were consumed
- * during rendering. This meant that they were not meant to be stored but used as commands to
+ * during rendering. This meant that they were not meant to be stored but used as *commands* to
  * draw common figures in the UI.
  *
- * Starting with Ratatui 0.26.0, all the internal widgets implement `Widget` for a reference to
+ * Starting with Ratatui 0.26.0, all the internal widgets implement Widget for a reference to
  * themselves. This allows you to store a reference to a widget and render it later. Widget crates
  * should consider also doing this to allow for more flexibility in how widgets are used.
  *
@@ -69,7 +69,8 @@ import ratatui.style.Style
  */
 interface Widget {
     /**
-     * Draws the current state of the widget in the given buffer.
+     * Draws the current state of the widget in the given buffer. That is the only method required
+     * to implement a custom widget.
      */
     fun render(area: Rect, buf: Buffer)
 }
@@ -77,7 +78,11 @@ interface Widget {
 /**
  * Renders a string as a widget.
  *
- * Mirrors Rust `impl Widget for &str` / `impl Widget for String`.
+ * This implementation allows a string to act as a widget, meaning it can be drawn onto a [Buffer]
+ * in a specified [Rect]. This avoids the need for ownership transfer (as in Rust) and provides
+ * a convenient way to draw text directly to the screen.
+ *
+ * Mirrors Rust `impl Widget for &str` and `impl Widget for String`.
  */
 fun String.render(area: Rect, buf: Buffer) {
     buf.setStringn(area.x, area.y, this, area.width, Style.new())
