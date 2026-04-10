@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+
+for arg in "$@"; do
+  case "$arg" in
+    --init-tasks|--tasks|--assign|--complete|--release|--agent|--task-file|--override)
+      echo "error: ast_distance task-assignment flags are disabled in this repo" >&2
+      echo "       (blocked flag: $arg)" >&2
+      exit 2
+      ;;
+  esac
+done
+
+if [[ "${1:-}" == "--deep" ]]; then
+  set +e
+  "$SCRIPT_DIR/ast_distance_patched" "$@"
+  status=$?
+  set -e
+
+  if [[ $status -eq 0 && -f "$SCRIPT_DIR/../NEXT_ACTIONS.md" ]]; then
+    tmp_file="$SCRIPT_DIR/../NEXT_ACTIONS.md.tmp"
+    awk '
+      BEGIN { skipping = 0; replaced = 0 }
+      {
+        if (!replaced && $0 == "## Next Commands") {
+          print
+          print ""
+          print "```bash"
+          print "# Refresh the porting snapshot (preferred signal)"
+          print "cd /Volumes/stuff/Projects/kotlinmania/ratatui-kotlin"
+          print "./tools/ast_distance --deep tmp/ratatui/ rust src/ kotlin"
+          print ""
+          print "# Inspect parity for a specific file"
+          print "./tools/ast_distance --compare-functions tmp/ratatui/<path>.rs rust src/<path>.kt kotlin"
+          print ""
+          print "# Run tests locally (fastest single-target check on macOS arm64)"
+          print "./gradlew macosArm64Test"
+          print "```"
+          print ""
+          print "Note: `ast_distance` task-assignment flags (`--init-tasks`, `--tasks`, `--assign`, `--complete`, etc.)"
+          print "are intentionally disabled in this repo to keep focus on code parity work."
+          replaced = 1
+          skipping = 1
+          next
+        }
+        if (skipping) {
+          if ($0 == "```") {
+            skipping = 0
+          }
+          next
+        }
+        print
+      }
+    ' "$SCRIPT_DIR/../NEXT_ACTIONS.md" > "$tmp_file" && mv "$tmp_file" "$SCRIPT_DIR/../NEXT_ACTIONS.md"
+  fi
+
+  exit $status
+fi
+
+exec "$SCRIPT_DIR/ast_distance_patched" "$@"

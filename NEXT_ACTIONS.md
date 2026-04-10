@@ -89,10 +89,16 @@ For each file to be considered "complete":
 ## Next Commands
 
 ```bash
-# Initialize task queue for systematic porting
-cd tools/ast_distance
-./ast_distance --init-tasks ../../tmp/ratatui/ rust ../../src/ kotlin tasks.json ../../AGENTS.md
+# Refresh the porting snapshot (preferred signal)
+cd /Volumes/stuff/Projects/kotlinmania/ratatui-kotlin
+./tools/ast_distance --deep tmp/ratatui/ rust src/ kotlin
 
-# Get next high-priority task
-./ast_distance --assign tasks.json <agent-id>
+# Inspect parity for a specific file
+./tools/ast_distance --compare-functions tmp/ratatui/<path>.rs rust src/<path>.kt kotlin
+
+# Run tests locally (fastest single-target check on macOS arm64)
+./gradlew macosArm64Test
 ```
+
+Note: `ast_distance` task-assignment flags (`--init-tasks`, `--tasks`, `--assign`, `--complete`, etc.)
+are intentionally disabled in this repo to keep focus on code parity work.

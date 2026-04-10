@@ -9,7 +9,7 @@ import ratatui.layout.Rect
  * between two draw calls.
  *
  * For a comprehensive guide to widgets, including trait explanations, implementation patterns,
- * and available widgets, see the `widgets` module documentation in the upstream Rust project.
+ * and available widgets, see the `widgets` module documentation.
  *
  * Most widgets can be drawn directly based on the input parameters. However, some features may
  * require some kind of associated state to be implemented.
@@ -27,33 +27,72 @@ import ratatui.layout.Rect
  *
  * ```kotlin
  * import ratatui.backend.TestBackend
- * import ratatui.widgets.List
- * import ratatui.widgets.ListItem
- * import ratatui.widgets.ListState
  * import ratatui.terminal.Terminal
+ * import ratatui.widgets.list.List as RatatuiList
+ * import ratatui.widgets.list.ListItem
+ * import ratatui.widgets.list.ListState
  *
  * // Let's say we have some events to display.
  * class Events(
  *     // `items` is the state managed by your application.
- *     var items: List<String>,
- *     // `state` is the state that can be modified by the UI.
+ *     var items: kotlin.collections.List<String>,
+ *     // `state` is the state that can be modified by the UI. It stores the index of the selected
+ *     // item as well as the offset computed during the previous draw call (used to implement
+ *     // natural scrolling).
  *     var state: ListState = ListState.default(),
  * ) {
  *     fun setItems(items: List<String>) {
  *         this.items = items
- *         // We reset the state as the associated items have changed.
+ *         // We reset the state as the associated items have changed. This effectively resets
+ *         // the selection as well as the stored offset.
  *         this.state = ListState.default()
+ *     }
+ *
+ *     // Select the next item. This will not be reflected until the widget is drawn in the
+ *     // `Terminal.draw` callback using `Frame.renderStatefulWidget`.
+ *     fun next() {
+ *         val i = when (val selected = state.selected) {
+ *             null -> 0
+ *             else -> if (selected >= items.size - 1) 0 else selected + 1
+ *         }
+ *         state.select(i)
+ *     }
+ *
+ *     // Select the previous item. This will not be reflected until the widget is drawn in the
+ *     // `Terminal.draw` callback using `Frame.renderStatefulWidget`.
+ *     fun previous() {
+ *         val i = when (val selected = state.selected) {
+ *             null -> 0
+ *             else -> if (selected == 0) items.size - 1 else selected - 1
+ *         }
+ *         state.select(i)
+ *     }
+ *
+ *     // Unselect the currently selected item if any. The implementation of ListState makes
+ *     // sure that the stored offset is also reset.
+ *     fun unselect() {
+ *         state.select(null)
  *     }
  * }
  *
- * val backend = TestBackend.new(5u, 5u)
+ * val backend = TestBackend.new(5, 5)
  * val terminal = Terminal.new(backend)
  *
  * val events = Events(listOf("Item 1", "Item 2"))
- * terminal.draw { f ->
- *     val items = events.items.map { ListItem.new(it) }
- *     val list = List.new(items)
- *     f.renderStatefulWidget(list, f.size(), events.state)
+ * while (true) {
+ *     terminal.draw { f ->
+ *         // The items managed by the application are transformed to something that is understood
+ *         // by ratatui.
+ *         val items = events.items.map { ListItem.new(it) }
+ *         // The `List` widget is then built with those items.
+ *         val list = RatatuiList.new(items)
+ *         // Finally the widget is rendered using the associated state. `events.state` is
+ *         // effectively the only thing that we will "remember" from this draw call.
+ *         f.renderStatefulWidget(list, f.size(), events.state)
+ *     }
+ *
+ *     // In response to some input events or an external http request or whatever:
+ *     events.next()
  * }
  * ```
  *
