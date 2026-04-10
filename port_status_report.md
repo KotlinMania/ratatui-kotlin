@@ -105,7 +105,7 @@ These files need significant work:
 - `table.state` → `table.TableState` (0.28)
 - `tests.backend_termion` → `terminal.BackendDiffTest` (0.30)
 - `ratatui-macros.layout` → `ratatui_macros.Layout` (0.47)
-- `buffer.buffer` → `buffer.Buffer` (0.23)
+- `buffer.buffer` → `buffer.Buffer` (0.25)
 - `ratatui-widgets.logo` → `logo.RatatuiLogo` (0.18)
 - `canvas.world` → `canvas.WorldData` (0.07)
 - `buffer.assert` → `buffer.Assert` (0.48)
@@ -206,7 +206,7 @@ present in the Rust source file.
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 7966 / 30632 lines (26%)
+**Documentation coverage:** 7967 / 30632 lines (26%)
 
 Top documentation gaps (>20%):
 
@@ -224,7 +224,7 @@ Top documentation gaps (>20%):
 - `palette.tailwind` - 97% gap (600 → 20 lines)
 - `ratatui-core.terminal` - 81% gap (712 → 136 lines)
 - `text.line` - 63% gap (914 → 338 lines)
-- `buffer.buffer` - 83% gap (634 → 105 lines)
+- `buffer.buffer` - 83% gap (634 → 106 lines)
 
 ... and 67 more files with doc gaps.
 

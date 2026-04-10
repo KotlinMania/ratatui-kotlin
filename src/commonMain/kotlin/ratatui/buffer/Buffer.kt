@@ -158,6 +158,24 @@ class Buffer(
     /** Returns the mutable cell at the given coordinates, or null if outside bounds */
     fun cellMut(x: Int, y: Int): Cell? = cellMut(Position(x, y))
 
+    @Suppress("unused")
+    private fun index(position: Position): Cell {
+        val index = indexOf(position.x, position.y)
+        return content[index]
+    }
+
+    @Suppress("unused")
+    private fun index(position: Pair<Int, Int>): Cell {
+        val position = Position(position.first, position.second)
+        val index = indexOf(position.x, position.y)
+        return content[index]
+    }
+
+    /** Indexing operator for Pair coordinates */
+    operator fun get(position: Pair<Int, Int>): Cell {
+        return index(position)
+    }
+
     /** Indexing operator for (x, y) pairs */
     operator fun get(x: Int, y: Int): Cell {
         val index = indexOf(x, y)
@@ -165,7 +183,22 @@ class Buffer(
     }
 
     /** Indexing operator for Position */
-    operator fun get(position: Position): Cell = get(position.x, position.y)
+    operator fun get(position: Position): Cell {
+        return index(position)
+    }
+
+    @Suppress("unused")
+    private fun indexMut(position: Position): Cell {
+        val index = indexOf(position.x, position.y)
+        return content[index]
+    }
+
+    @Suppress("unused")
+    private fun indexMut(position: Pair<Int, Int>): Cell {
+        val position = Position(position.first, position.second)
+        val index = indexOf(position.x, position.y)
+        return content[index]
+    }
 
     /**
      * Returns the (global) coordinates of a cell given its index.
@@ -347,28 +380,28 @@ class Buffer(
         return result
     }
 
-    override fun toString(): String {
-        val sb = StringBuilder()
-        sb.append("Buffer {\n    area: ${area.debugString()}")
+    @Suppress("unused")
+    private fun fmt(f: StringBuilder) {
+        f.append("Buffer {\n    area: ${area.debugString()}")
 
         if (area.isEmpty()) {
-            sb.append("\n}")
-            return sb.toString()
+            f.append("\n}")
+            return
         }
 
-        sb.append(",\n    content: [\n")
+        f.append(",\n    content: [\n")
         val styles = mutableListOf<StyleEntry>()
         var lastStyle: StyleKey? = null
 
         for (y in 0 until area.height) {
             val overwritten = mutableListOf<Pair<Int, String>>()
             var skip = 0
-            sb.append("        \"")
+            f.append("        \"")
             for (x in 0 until area.width) {
                 val cell = this[area.x + x, area.y + y]
                 val sym = cell.symbol()
                 if (skip == 0) {
-                    sb.append(sym)
+                    f.append(sym)
                 } else {
                     overwritten.add(Pair(x, sym))
                 }
@@ -388,19 +421,24 @@ class Buffer(
                     )
                 }
             }
-            sb.append("\",")
+            f.append("\",")
             if (overwritten.isNotEmpty()) {
-                sb.append(" // hidden by multi-width symbols: ${overwritten.debugString()}")
+                f.append(" // hidden by multi-width symbols: ${overwritten.debugString()}")
             }
-            sb.append("\n")
+            f.append("\n")
         }
 
-        sb.append("    ],\n    styles: [\n")
+        f.append("    ],\n    styles: [\n")
         for (s in styles) {
-            sb.append("        x: ${s.x}, y: ${s.y}, fg: ${s.fg}, bg: ${s.bg}, modifier: ${s.modifier},\n")
+            f.append("        x: ${s.x}, y: ${s.y}, fg: ${s.fg}, bg: ${s.bg}, modifier: ${s.modifier},\n")
         }
-        sb.append("    ]\n}")
-        return sb.toString()
+        f.append("    ]\n}")
+    }
+
+    override fun toString(): String {
+        val f = StringBuilder()
+        fmt(f)
+        return f.toString()
     }
 }
 
