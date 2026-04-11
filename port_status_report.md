@@ -1,6 +1,6 @@
 # Code Port - Progress Report
 
-**Generated:** 2026-04-09
+**Generated:** 2026-04-10
 **Source:** tmp/ratatui/
 **Target:** src/
 
@@ -20,8 +20,8 @@
 
 **Quality Distribution:**
 - Excellent (≥0.85): 5 files (3.5% of matched)
-- Good (0.60-0.84): 32 files (22.4% of matched)
-- Critical (<0.60): 106 files (74.1% of matched)
+- Good (0.60-0.84): 33 files (23.1% of matched)
+- Critical (<0.60): 105 files (73.4% of matched)
 
 ### Excellent Ports (Similarity ≥ 0.85)
 
@@ -69,7 +69,7 @@ These files need significant work:
 - `text.masked` → `text.Masked` (0.19, 1 deps)
 - `ratatui-widgets.clear` → `widgets.Clear` (0.28, 1 deps)
 - `layout.flex` → `layout.Flex` (0.29, 1 deps)
-- `ratatui-widgets.scrollbar` → `commonMain.kotlin.ratatui.widgets.scrollbar.Scrollbar` (0.33, 1 deps)
+- `ratatui-widgets.scrollbar` → `commonMain.kotlin.ratatui.widgets.scrollbar.Scrollbar` (0.34, 1 deps)
 - `layout.margin` → `layout.Margin` (0.37, 1 deps)
 - `demo.crossterm` → `demo.Crossterm` (0.39, 1 deps)
 - `canvas.rectangle` → `canvas.Rectangle` (0.42, 1 deps)
@@ -77,7 +77,6 @@ These files need significant work:
 - `terminal.viewport` → `terminal.Viewport` (0.53, 1 deps)
 - `ratatui-macros.row` → `ratatui_macros.Row` (0.54, 1 deps)
 - `ratatui-widgets.borders` → `widgets.Borders` (0.55, 1 deps)
-- `ratatui-widgets.calendar` → `calendar.Monthly` (0.59, 1 deps)
 - `commands.clippy` → `commands.Clippy` (0.59, 1 deps)
 - `ratatui-core.layout` → `layout.LayoutModule` (0.50)
 - `main.rect` → `rect.IterTest` (0.00)
@@ -208,7 +207,7 @@ present in the Rust source file.
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 7966 / 30632 lines (26%)
+**Documentation coverage:** 7971 / 30632 lines (26%)
 
 Top documentation gaps (>20%):
 

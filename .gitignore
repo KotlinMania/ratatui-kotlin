@@ -18,9 +18,6 @@ local.properties
 
 /.android-sdk/
 
-# Tools (binaries built from ASTDistance project)
-/tools/ast_distance
-
 # Rust reference source files for porting
 **/*.rs
 /ratatui-core/src/*.rs

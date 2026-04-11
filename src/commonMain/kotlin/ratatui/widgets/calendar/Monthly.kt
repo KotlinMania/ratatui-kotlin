@@ -206,11 +206,8 @@ data class Monthly<DS : DateStyler>(
         var y = daysArea.y
         // go through all the weeks containing a day in the target month.
         val nextMonth = displayDate.month.nextMonth()
-        while (currDay.month != nextMonth || (currDay.month == nextMonth && currDay.dayOfMonth == 1 && numberDaysFromSunday(currDay.dayOfWeek) != 0)) {
-            // Safety check: stop if we've gone too far past the target month
-            if (currDay.month == nextMonth && currDay.dayOfMonth > 7) break
-
-            val spans = mutableListOf<Span>()
+        while (currDay.month != nextMonth) {
+            val spans = ArrayList<Span>(14)
             for (i in 0 until 7) {
                 // Draw the gutter. Do it here so we can avoid worrying about
                 // styling the ' ' in the format_date method

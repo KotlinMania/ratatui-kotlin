@@ -4,13 +4,13 @@ package ratatui.widgets.scrollbar
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import ratatui.buffer.Buffer
+import ratatui.buffer.cellWidth
 import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.symbols.scrollbar.DOUBLE_HORIZONTAL
 import ratatui.symbols.scrollbar.DOUBLE_VERTICAL
 import ratatui.symbols.scrollbar.Set as ScrollbarSet
 import ratatui.widgets.StatefulWidget
-import kotlin.math.roundToInt
 
 /**
  * A struct representing the state of a Scrollbar widget.
@@ -403,32 +403,39 @@ data class Scrollbar(
      * This method returns the length of the start, thumb, and end as a triple.
      */
     private fun partLengths(area: Rect, state: ScrollbarState): Triple<Int, Int, Int> {
-        val trackLength = trackLengthExcludingArrowHeads(area).toDouble()
-        val viewportLength = viewportLength(state, area).toDouble()
+        fun roundingDivide(numerator: Long, denominator: Long): Long =
+            (numerator + denominator / 2) / denominator
 
-        // Ensure that the position of the thumb is within the bounds of the content taking into
-        // account the content and viewport length. When the last line of the content is at the top
-        // of the viewport, the thumb should be at the bottom of the track.
-        val maxPosition = (state.contentLength - 1).coerceAtLeast(0).toDouble()
-        val startPosition = state.position.toDouble().coerceIn(0.0, maxPosition)
-        val maxViewportPosition = maxPosition + viewportLength
-        val endPosition = startPosition + viewportLength
+        val trackLength = trackLengthExcludingArrowHeads(area)
 
-        // Calculate the start and end positions of the thumb. The size will be proportional to the
-        // viewport length compared to the total amount of possible visible rows.
-        val thumbStart = startPosition * trackLength / maxViewportPosition
-        val thumbEnd = endPosition * trackLength / maxViewportPosition
+        if (trackLength == 0) {
+            return Triple(0, 0, 0)
+        }
 
-        // Make sure that the thumb is at least 1 cell long by ensuring that the start of the thumb
-        // is less than the track_len. We use the positions instead of the sizes and use nearest
-        // integer instead of floor / ceil to avoid problems caused by rounding errors.
-        val thumbStartClamped = thumbStart.roundToInt().coerceIn(0, (trackLength - 1).toInt())
-        val thumbEndClamped = thumbEnd.roundToInt().coerceIn(0, trackLength.toInt())
+        val viewportLength = viewportLength(state, area)
 
-        val thumbLength = (thumbEndClamped - thumbStartClamped).coerceAtLeast(1)
-        val trackEndLength = (trackLength.toInt() - thumbStartClamped - thumbLength).coerceAtLeast(0)
+        val maxPosition = (state.contentLength - 1).coerceAtLeast(0)
+        val startPosition = state.position.coerceIn(0, maxPosition)
+        val maxViewportPosition = maxPosition.toLong() + viewportLength.toLong()
 
-        return Triple(thumbStartClamped, thumbLength, trackEndLength)
+        if (maxViewportPosition == 0L) {
+            // Just in case to prevent division by zero.
+            return Triple(0, trackLength, 0)
+        }
+
+        val thumbLength =
+            roundingDivide(viewportLength.toLong() * trackLength.toLong(), maxViewportPosition)
+                .coerceIn(1L, trackLength.toLong())
+                .toInt()
+
+        val thumbStart =
+            roundingDivide(startPosition.toLong() * trackLength.toLong(), maxViewportPosition)
+                .coerceIn(0L, (trackLength - 1).coerceAtLeast(0).toLong())
+                .toInt()
+
+        val trackEnd = (trackLength - (thumbStart + thumbLength)).coerceAtLeast(0)
+
+        return Triple(thumbStart, thumbLength, trackEnd)
     }
 
     private fun scrollbarArea(area: Rect): Rect? {
@@ -450,8 +457,8 @@ data class Scrollbar(
      * ```
      */
     private fun trackLengthExcludingArrowHeads(area: Rect): Int {
-        val startLen = beginSymbol?.length ?: 0
-        val endLen = endSymbol?.length ?: 0
+        val startLen = beginSymbol?.cellWidth()?.toInt() ?: 0
+        val endLen = endSymbol?.cellWidth()?.toInt() ?: 0
         val arrowsLen = startLen + endLen
         return if (orientation.isVertical()) {
             (area.height - arrowsLen).coerceAtLeast(0)

@@ -43,7 +43,7 @@ data class Tabs(
     /** The index of the selected tab */
     private val selected: Int? = null,
     /** The style used to draw the text */
-    private val tabsStyle: Style = Style.default(),
+    private val style: Style = Style.default(),
     /** Style to apply to the selected item */
     private val highlightStyle: Style = DEFAULT_HIGHLIGHT_STYLE,
     /** Tab divider */
@@ -91,7 +91,7 @@ data class Tabs(
     /**
      * Sets the style of the tabs.
      */
-    fun style(style: Style): Tabs = copy(tabsStyle = style)
+    fun style(style: Style): Tabs = copy(style = style)
 
     /**
      * Sets the style for the highlighted tab.
@@ -166,7 +166,7 @@ data class Tabs(
 
     // Widget implementation
     override fun render(area: Rect, buf: Buffer) {
-        buf.setStyle(area, tabsStyle)
+        buf.setStyle(area, style)
         block?.render(area, buf)
         val inner = block.innerIfSome(area)
         renderTabs(inner, buf)
@@ -231,7 +231,7 @@ data class Tabs(
     }
 
     // Styled implementation
-    override fun style(): Style = tabsStyle
+    override fun style(): Style = style
 
     override fun setStyle(style: Style): Tabs = style(style)
 

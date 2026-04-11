@@ -158,7 +158,7 @@ These files need immediate attention:
   - Dependencies: 1
 
 - **ratatui-widgets.scrollbar** → `commonMain.kotlin.ratatui.widgets.scrollbar.Scrollbar`
-  - Similarity: 0.33
+  - Similarity: 0.34
   - Dependencies: 1
 
 - **layout.margin** → `layout.Margin`
@@ -187,10 +187,6 @@ These files need immediate attention:
 
 - **ratatui-widgets.borders** → `widgets.Borders`
   - Similarity: 0.55
-  - Dependencies: 1
-
-- **ratatui-widgets.calendar** → `calendar.Monthly`
-  - Similarity: 0.59
   - Dependencies: 1
 
 - **commands.clippy** → `commands.Clippy`
