@@ -6,6 +6,7 @@ import ratatui.layout.Position
 import ratatui.layout.Rect
 import ratatui.widgets.StatefulWidget
 import ratatui.widgets.Widget
+import ratatui.widgets.render
 
 /**
  * A consistent view into the terminal state for rendering a single frame.
@@ -67,7 +68,17 @@ class Frame internal constructor(
      * frame.renderWidget(block, area)
      * ```
      */
-    fun renderWidget(widget: Widget, area: Rect) {
+    fun renderWidget(widget: Widget?, area: Rect) {
+        widget?.render(area, buffer)
+    }
+
+    /**
+     * Render a string as a [Widget].
+     *
+     * Mirrors Rust `impl Widget for &str` / `impl Widget for String` as used with
+     * `Frame::render_widget`.
+     */
+    fun renderWidget(widget: String, area: Rect) {
         widget.render(area, buffer)
     }
 
