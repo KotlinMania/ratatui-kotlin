@@ -4,7 +4,7 @@
 
 | Rank | Source | Target | Similarity | Deps | Priority |
 |------|--------|--------|------------|------|----------|
-| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.57 | 88 | 38.0 |
+| 1 | `ratatui-core.buffer` | `buffer.BufferModule` | 0.57 | 88 | 37.6 |
 | 2 | `widgets.widget` | `widgets.Widget` | 0.34 | 44 | 29.2 |
 | 3 | `ratatui-macros.line` | `ratatui_macros.Line` | 0.52 | 37 | 17.7 |
 | 4 | `style.color` | `style.Color` | 0.39 | 15 | 9.2 |

@@ -14,7 +14,7 @@ Based on AST analysis, here are the concrete next steps.
 ### 1. ratatui-core.buffer
 - **Similarity:** 0.57 (needs 28% improvement)
 - **Dependencies:** 88
-- **Priority Score:** 38.0
+- **Priority Score:** 37.6
 - **Action:** Deep review - likely missing major functionality
 
 ### 2. widgets.widget
@@ -89,19 +89,10 @@ For each file to be considered "complete":
 ## Next Commands
 
 ```bash
-# Refresh the porting snapshot (preferred signal)
-cd /Volumes/stuff/Projects/kotlinmania/ratatui-kotlin
-./tools/ast_distance --deep tmp/ratatui/ rust src/ kotlin
+# Initialize task queue for systematic porting
+cd tools/ast_distance
+./ast_distance --init-tasks ../../tmp/ratatui/ rust ../../src/ kotlin tasks.json ../../AGENTS.md
 
-# Inspect parity for a specific file
-./tools/ast_distance --compare-functions tmp/ratatui/<path>.rs rust src/<path>.kt kotlin
-
-# Show missing files (fast)
-./tools/ast_distance --missing tmp/ratatui/ rust src/ kotlin
-
-# Run tests locally (fastest single-target check on macOS arm64)
-./gradlew macosArm64Test
+# Get next high-priority task
+./ast_distance --assign tasks.json <agent-id>
 ```
-
-Note: `ast_distance` task-assignment/task-management flags (`--init-tasks`, `--tasks`, `--assign`, `--complete`, etc.)
-are intentionally disabled in this repo to keep focus on code parity work.

@@ -83,7 +83,7 @@ fun Widget.asWidgetRef(): WidgetRef = object : WidgetRef {
  * without the need to create a separate widget instance.
  */
 fun String.renderAsWidget(area: Rect, buf: Buffer) {
-    buf.setStringn(area.x, area.y, this, area.width.toInt(), Style.default())
+    buf.setStringn(area.x, area.y, this, area.width, Style.new())
 }
 
 /**

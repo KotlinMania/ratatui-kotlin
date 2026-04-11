@@ -13,7 +13,6 @@ package ratatui.buffer
 //   mod diff;
 private val assert = ::assertBufferEq
 private val buffer = Buffer::class
-private val cell = Cell::class
-private val cellDiffOption = CellDiffOption::class
+private val cell = arrayOf(Cell::class, CellDiffOption::class)
 private val cellWidth = CellWidth::class
 private val diff = BufferDiff::class
