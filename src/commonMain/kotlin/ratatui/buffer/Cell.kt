@@ -54,6 +54,7 @@ class Cell private constructor(
     private var symbol: String?,
     var fg: Color,
     var bg: Color,
+    var underlineColor: Color,
     var modifier: Modifier,
     var diffOption: CellDiffOption,
     @Deprecated("use setDiffOption(CellDiffOption.Skip) instead")
@@ -66,6 +67,7 @@ class Cell private constructor(
                 symbol = null,
                 fg = Color.Reset,
                 bg = Color.Reset,
+                underlineColor = Color.Reset,
                 modifier = Modifier.empty(),
                 diffOption = CellDiffOption.None,
                 skip = false
@@ -75,6 +77,7 @@ class Cell private constructor(
             symbol = symbol,
             fg = Color.Reset,
             bg = Color.Reset,
+            underlineColor = Color.Reset,
             modifier = Modifier.empty(),
             diffOption = CellDiffOption.None,
             skip = false
@@ -93,6 +96,7 @@ class Cell private constructor(
         symbol = symbol,
         fg = fg,
         bg = bg,
+        underlineColor = underlineColor,
         modifier = modifier,
         diffOption = diffOption,
         skip = skip
@@ -166,6 +170,7 @@ class Cell private constructor(
     fun setStyle(style: Style): Cell {
         style.fg?.let { fg = it }
         style.bg?.let { bg = it }
+        style.underlineColor?.let { underlineColor = it }
         modifier = modifier.insert(style.addModifier)
         modifier = modifier.remove(style.subModifier)
         return this
@@ -176,6 +181,7 @@ class Cell private constructor(
         return Style(
             fg = fg,
             bg = bg,
+            underlineColor = underlineColor,
             addModifier = modifier,
             subModifier = Modifier.empty()
         )
@@ -199,6 +205,7 @@ class Cell private constructor(
         symbol = empty.symbol
         fg = empty.fg
         bg = empty.bg
+        underlineColor = empty.underlineColor
         modifier = empty.modifier
         diffOption = empty.diffOption
         skip = empty.skip
@@ -212,6 +219,7 @@ class Cell private constructor(
         if (!symbolsEq) return false
         if (fg != other.fg) return false
         if (bg != other.bg) return false
+        if (underlineColor != other.underlineColor) return false
         if (modifier != other.modifier) return false
         if (diffOption != other.diffOption) return false
 
@@ -225,6 +233,7 @@ class Cell private constructor(
         var result = symbol().hashCode()
         result = 31 * result + fg.hashCode()
         result = 31 * result + bg.hashCode()
+        result = 31 * result + underlineColor.hashCode()
         result = 31 * result + modifier.hashCode()
         result = 31 * result + diffOption.hashCode()
         @Suppress("DEPRECATION")

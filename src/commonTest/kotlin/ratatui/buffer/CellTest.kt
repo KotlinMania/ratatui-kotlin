@@ -15,6 +15,7 @@ class CellTest {
         assertEquals("あ", cell.symbol())
         assertEquals(Color.Reset, cell.fg)
         assertEquals(Color.Reset, cell.bg)
+        assertEquals(Color.Reset, cell.underlineColor)
         assertEquals(CellDiffOption.None, cell.diffOption)
     }
 
@@ -99,6 +100,7 @@ class CellTest {
         assertEquals(" ", cell.symbol())
         assertEquals(Color.Reset, cell.fg)
         assertEquals(Color.Reset, cell.bg)
+        assertEquals(Color.Reset, cell.underlineColor)
         assertEquals(CellDiffOption.None, cell.diffOption)
     }
 
@@ -109,6 +111,7 @@ class CellTest {
             Style(
                 fg = Color.Reset,
                 bg = Color.Reset,
+                underlineColor = Color.Reset,
                 addModifier = ratatui.style.Modifier.empty(),
                 subModifier = ratatui.style.Modifier.empty()
             ),

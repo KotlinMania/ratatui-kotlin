@@ -1,8 +1,8 @@
 # Code Port - Progress Report
 
-**Generated:** 2026-04-10
-**Source:** tmp/ratatui/
-**Target:** src/
+**Generated:** 2026-04-15
+**Source:** tmp/ratatui
+**Target:** src
 
 ## Executive Summary
 
@@ -16,12 +16,12 @@
 
 ## Port Quality Analysis
 
-**Average Similarity:** 0.39
+**Average Similarity:** 0.38
 
 **Quality Distribution:**
 - Excellent (≥0.85): 5 files (3.5% of matched)
-- Good (0.60-0.84): 33 files (23.1% of matched)
-- Critical (<0.60): 105 files (73.4% of matched)
+- Good (0.60-0.84): 32 files (22.4% of matched)
+- Critical (<0.60): 106 files (74.1% of matched)
 
 ### Excellent Ports (Similarity ≥ 0.85)
 
@@ -37,11 +37,12 @@ These files are well-ported and likely complete:
 
 These files need significant work:
 
-- `ratatui-core.buffer` → `buffer.BufferModule` (0.57, 88 deps)
+- `ratatui-core.buffer` → `buffer.BufferModule` (0.14, 88 deps)
 - `widgets.widget` → `widgets.Widget` (0.34, 44 deps)
 - `ratatui-macros.line` → `ratatui_macros.Line` (0.52, 37 deps)
+- `ratatui-core.text` → `text.TextModule` (0.15, 13 deps)
 - `style.color` → `style.Color` (0.39, 15 deps)
-- `ratatui-core.text` → `text.TextModule` (0.55, 13 deps)
+- `ratatui-core.symbols` → `symbols.SymbolsModule` (0.12, 6 deps)
 - `ratatui-core.backend` → `backend.Backend` (0.36, 7 deps)
 - `widgets.stateful_widget` → `widgets.StatefulWidget` (0.14, 5 deps)
 - `symbols.marker` → `symbols.Marker` (0.58, 9 deps)
@@ -49,13 +50,12 @@ These files need significant work:
 - `rect.iter` → `rect.Iter` (0.43, 6 deps)
 - `ratatui-widgets.paragraph` → `paragraph.Paragraph` (0.21, 4 deps)
 - `layout.alignment` → `layout.Alignment` (0.38, 5 deps)
-- `ratatui-core.symbols` → `symbols.SymbolsModule` (0.51, 6 deps)
 - `demo.app` → `demo.App` (0.51, 5 deps)
+- `style.palette` → `palette.PaletteModule` (0.21, 3 deps)
 - `buffer.cell_width` → `buffer.CellWidth` (0.21, 3 deps)
 - `ratatui-widgets.canvas` → `canvas.Canvas` (0.55, 5 deps)
 - `ratatui-macros.span` → `ratatui_macros.Span` (0.47, 4 deps)
 - `demo.termion` → `demo.Termion` (0.00, 2 deps)
-- `style.palette` → `palette.PaletteModule` (0.34, 3 deps)
 - `layout.constraint` → `layout.Constraint` (0.51, 4 deps)
 - `table.highlight_spacing` → `widgets.HighlightSpacing` (0.46, 3 deps)
 - `ratatui-widgets.tabs` → `tabs.Tabs` (0.25, 2 deps)
@@ -78,7 +78,7 @@ These files need significant work:
 - `ratatui-macros.row` → `ratatui_macros.Row` (0.54, 1 deps)
 - `ratatui-widgets.borders` → `widgets.Borders` (0.55, 1 deps)
 - `commands.clippy` → `commands.Clippy` (0.59, 1 deps)
-- `ratatui-core.layout` → `layout.LayoutModule` (0.50)
+- `ratatui-core.layout` → `layout.LayoutModule` (0.14)
 - `main.rect` → `rect.IterTest` (0.00)
 - `table.cell` → `table.Cell` (0.23)
 - `canvas.line` → `canvas.Line` (0.21)
@@ -91,6 +91,7 @@ These files need significant work:
 - `table.row` → `table.Row` (0.27)
 - `list.item` → `list.ListItem` (0.40)
 - `widgets.widget_ref` → `widgets.WidgetRef` (0.20)
+- `ratatui-core.widgets` → `widgets.WidgetsModule` (0.17)
 - `symbols.half_block` → `symbols.HalfBlock` (0.53)
 - `ratatui-core.terminal` → `terminal.Terminal` (0.00)
 - `ratatui-widgets.reflow` → `reflow.Reflow` (0.39)
@@ -207,7 +208,7 @@ present in the Rust source file.
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 7971 / 30632 lines (26%)
+**Documentation coverage:** 7984 / 30632 lines (26%)
 
 Top documentation gaps (>20%):
 

@@ -1,5 +1,4 @@
 // port-lint: source ratatui-core/src/text.rs
-@file:Suppress("unused")
 /**
  * Primitives for styled text.
  *
@@ -49,18 +48,3 @@
  * ```
  */
 package ratatui.text
-
-// Rust:
-//   mod grapheme; pub use grapheme::StyledGrapheme;
-//   mod line;     pub use line::{Line, ToLine};
-//   mod masked;   pub use masked::Masked;
-//   mod span;     pub use span::{Span, ToSpan};
-//   mod text;     pub use text::{Text, ToText};
-private val grapheme = StyledGrapheme::class
-private val line = Line::class
-private val toLine = ToLine::class
-private val masked = Masked::class
-private val span = Span::class
-private val toSpan = ToSpan::class
-private val text = Text::class
-private val toText = ToText::class

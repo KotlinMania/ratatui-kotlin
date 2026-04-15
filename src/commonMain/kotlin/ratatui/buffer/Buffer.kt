@@ -348,6 +348,40 @@ class Buffer(
     }
 
     override fun toString(): String {
+        data class StyleKey(
+            val fg: ratatui.style.Color,
+            val bg: ratatui.style.Color,
+            val underlineColor: ratatui.style.Color,
+            val modifier: ratatui.style.Modifier
+        )
+
+        data class StyleEntry(
+            val x: Int,
+            val y: Int,
+            val fg: ratatui.style.Color,
+            val bg: ratatui.style.Color,
+            val underlineColor: ratatui.style.Color,
+            val modifier: ratatui.style.Modifier
+        )
+
+        fun String.debugQuoted(): String {
+            val escaped = buildString {
+                for (ch in this@debugQuoted) {
+                    when (ch) {
+                        '\\' -> append("\\\\")
+                        '"' -> append("\\\"")
+                        else -> append(ch)
+                    }
+                }
+            }
+            return "\"$escaped\""
+        }
+
+        fun List<Pair<Int, String>>.debugString(): String =
+            joinToString(prefix = "[", postfix = "]") { (x, s) ->
+                "($x, ${s.debugQuoted()})"
+            }
+
         val sb = StringBuilder()
         sb.append("Buffer {\n    area: ${area.debugString()}")
 
@@ -374,7 +408,13 @@ class Buffer(
                 }
                 skip = (maxOf(skip, cell.cellWidth().toInt()) - 1).coerceAtLeast(0)
 
-                val styleKey = StyleKey(fg = cell.fg, bg = cell.bg, modifier = cell.modifier)
+                val styleKey =
+                    StyleKey(
+                        fg = cell.fg,
+                        bg = cell.bg,
+                        underlineColor = cell.underlineColor,
+                        modifier = cell.modifier
+                    )
                 if (lastStyle != styleKey) {
                     lastStyle = styleKey
                     styles.add(
@@ -383,6 +423,7 @@ class Buffer(
                             y = y,
                             fg = cell.fg,
                             bg = cell.bg,
+                            underlineColor = cell.underlineColor,
                             modifier = cell.modifier
                         )
                     )
@@ -397,42 +438,13 @@ class Buffer(
 
         sb.append("    ],\n    styles: [\n")
         for (s in styles) {
-            sb.append("        x: ${s.x}, y: ${s.y}, fg: ${s.fg}, bg: ${s.bg}, modifier: ${s.modifier},\n")
+            sb.append(
+                "        x: ${s.x}, y: ${s.y}, fg: ${s.fg}, bg: ${s.bg}, underline: ${s.underlineColor}, modifier: ${s.modifier},\n"
+            )
         }
         sb.append("    ]\n}")
         return sb.toString()
     }
 }
 
-private data class StyleKey(
-    val fg: ratatui.style.Color,
-    val bg: ratatui.style.Color,
-    val modifier: ratatui.style.Modifier
-)
-
-private data class StyleEntry(
-    val x: Int,
-    val y: Int,
-    val fg: ratatui.style.Color,
-    val bg: ratatui.style.Color,
-    val modifier: ratatui.style.Modifier
-)
-
 private fun Rect.debugString(): String = "Rect { x: $x, y: $y, width: $width, height: $height }"
-
-private fun List<Pair<Int, String>>.debugString(): String = joinToString(prefix = "[", postfix = "]") { (x, s) ->
-    "($x, ${s.debugQuoted()})"
-}
-
-private fun String.debugQuoted(): String {
-    val escaped = buildString {
-        for (ch in this@debugQuoted) {
-            when (ch) {
-                '\\' -> append("\\\\")
-                '"' -> append("\\\"")
-                else -> append(ch)
-            }
-        }
-    }
-    return "\"$escaped\""
-}

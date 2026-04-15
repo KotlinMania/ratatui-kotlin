@@ -43,8 +43,8 @@ class BufferTest {
                     "G'day World!",
                 ],
                 styles: [
-                    x: 0, y: 0, fg: Reset, bg: Reset, modifier: NONE,
-                    x: 0, y: 1, fg: Green, bg: Yellow, modifier: BOLD,
+                    x: 0, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
+                    x: 0, y: 1, fg: Green, bg: Yellow, underline: Reset, modifier: BOLD,
                 ]
             }
         """.trimIndent()

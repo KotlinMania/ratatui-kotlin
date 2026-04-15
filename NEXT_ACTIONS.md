@@ -6,15 +6,15 @@ Based on AST analysis, here are the concrete next steps.
 
 - **Current Progress:** 61.4% (162/233 files)
 - **Matched Files:** 143
-- **Average Similarity:** 0.39
-- **Critical Issues:** 105 files with <0.60 similarity
+- **Average Similarity:** 0.38
+- **Critical Issues:** 106 files with <0.60 similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
 ### 1. ratatui-core.buffer
-- **Similarity:** 0.57 (needs 28% improvement)
+- **Similarity:** 0.14 (needs 71% improvement)
 - **Dependencies:** 88
-- **Priority Score:** 37.6
+- **Priority Score:** 75.4
 - **Action:** Deep review - likely missing major functionality
 
 ### 2. widgets.widget
@@ -29,23 +29,23 @@ Based on AST analysis, here are the concrete next steps.
 - **Priority Score:** 17.7
 - **Action:** Deep review - likely missing major functionality
 
-### 4. style.color
+### 4. ratatui-core.text
+- **Similarity:** 0.15 (needs 70% improvement)
+- **Dependencies:** 13
+- **Priority Score:** 11.1
+- **Action:** Deep review - likely missing major functionality
+
+### 5. style.color
 - **Similarity:** 0.39 (needs 46% improvement)
 - **Dependencies:** 15
 - **Priority Score:** 9.2
 - **Action:** Deep review - likely missing major functionality
 
-### 5. terminal.frame
+### 6. terminal.frame
 - **Similarity:** 0.69 (needs 16% improvement)
 - **Dependencies:** 22
 - **Priority Score:** 6.9
 - **Action:** Review and complete missing sections
-
-### 6. ratatui-core.text
-- **Similarity:** 0.55 (needs 30% improvement)
-- **Dependencies:** 13
-- **Priority Score:** 5.8
-- **Action:** Deep review - likely missing major functionality
 
 ### 7. commands.format
 - **Similarity:** 0.68 (needs 17% improvement)
@@ -60,9 +60,9 @@ Based on AST analysis, here are the concrete next steps.
 - **Action:** Review and complete missing sections
 
 ### 9. buffer.cell
-- **Similarity:** 0.67 (needs 18% improvement)
+- **Similarity:** 0.68 (needs 17% improvement)
 - **Dependencies:** 10
-- **Priority Score:** 3.3
+- **Priority Score:** 3.2
 - **Action:** Review and complete missing sections
 
 ### 10. tests.terminal
@@ -91,7 +91,7 @@ For each file to be considered "complete":
 ```bash
 # Initialize task queue for systematic porting
 cd tools/ast_distance
-./ast_distance --init-tasks ../../tmp/ratatui/ rust ../../src/ kotlin tasks.json ../../AGENTS.md
+./ast_distance --init-tasks ../../tmp/ratatui rust ../../src kotlin tasks.json ../../AGENTS.md
 
 # Get next high-priority task
 ./ast_distance --assign tasks.json <agent-id>
