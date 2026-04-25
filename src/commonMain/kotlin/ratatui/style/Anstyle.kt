@@ -5,7 +5,6 @@ import ai.solace.tui.anstyle.Ansi256Color
 import ai.solace.tui.anstyle.AnsiColor
 import ai.solace.tui.anstyle.Effects
 import ai.solace.tui.anstyle.RgbColor
-import ai.solace.tui.anstyle.or
 import ai.solace.tui.anstyle.Color as AnstyleColor
 import ai.solace.tui.anstyle.Style as AnstyleStyle
 
@@ -148,28 +147,28 @@ fun Modifier.toEffects(): Effects {
     var effects = Effects.new()
 
     if (contains(Modifier.BOLD)) {
-        effects = effects or Effects.BOLD
+        effects = effects.insert(Effects.BOLD)
     }
     if (contains(Modifier.DIM)) {
-        effects = effects or Effects.DIMMED
+        effects = effects.insert(Effects.DIMMED)
     }
     if (contains(Modifier.ITALIC)) {
-        effects = effects or Effects.ITALIC
+        effects = effects.insert(Effects.ITALIC)
     }
     if (contains(Modifier.UNDERLINED)) {
-        effects = effects or Effects.UNDERLINE
+        effects = effects.insert(Effects.UNDERLINE)
     }
     if (contains(Modifier.SLOW_BLINK) || contains(Modifier.RAPID_BLINK)) {
-        effects = effects or Effects.BLINK
+        effects = effects.insert(Effects.BLINK)
     }
     if (contains(Modifier.REVERSED)) {
-        effects = effects or Effects.INVERT
+        effects = effects.insert(Effects.INVERT)
     }
     if (contains(Modifier.HIDDEN)) {
-        effects = effects or Effects.HIDDEN
+        effects = effects.insert(Effects.HIDDEN)
     }
     if (contains(Modifier.CROSSED_OUT)) {
-        effects = effects or Effects.STRIKETHROUGH
+        effects = effects.insert(Effects.STRIKETHROUGH)
     }
 
     return effects

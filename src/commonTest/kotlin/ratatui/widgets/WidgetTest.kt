@@ -43,7 +43,7 @@ class WidgetTest {
     fun renderOptionStr() {
         val buffer = buf()
         val widget: String? = "hello world"
-        widget.render(buffer.area, buffer)
+        widget?.render(buffer.area, buffer)
         assertEquals(Buffer.withLines("hello world         "), buffer)
     }
 
@@ -68,7 +68,7 @@ class WidgetTest {
     fun renderOptionString() {
         val buffer = buf()
         val widget: String? = "hello world"
-        widget.render(buffer.area, buffer)
+        widget?.render(buffer.area, buffer)
         assertEquals(Buffer.withLines("hello world         "), buffer)
     }
 }

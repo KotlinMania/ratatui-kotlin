@@ -82,25 +82,3 @@ interface Widget {
 fun String.render(area: Rect, buf: Buffer) {
     buf.setStringn(area.x, area.y, this, area.width, Style.new())
 }
-
-/**
- * Renders an optional string as a widget.
- *
- * Mirrors Rust `impl<W: Widget> Widget for Option<W>` applied to `Option<&str>` / `Option<String>`.
- */
-fun String?.render(area: Rect, buf: Buffer) {
-    if (this != null) {
-        this.render(area, buf)
-    }
-}
-
-/**
- * Renders an optional widget.
- *
- * Mirrors Rust `impl<W: Widget> Widget for Option<W>`.
- */
-fun <W : Widget> W?.render(area: Rect, buf: Buffer) {
-    if (this != null) {
-        this.render(area, buf)
-    }
-}
