@@ -25,7 +25,7 @@ data class Clippy(
         val commonFeatures = CROSSTERM_COMMON_FEATURES.joinToString(",")
         val clippyOptions = listOf("--", "-D", "warnings")
 
-        // Run Clippy on `ratatui-crossterm` with `crossterm_0_28` and `crossterm_0_29`.
+        // Run Clippy on `ratatui-crossterm` with `crossterm028` and `crossterm029`.
         for (crosstermFeature in CROSSTERM_VERSION_FEATURES) {
             val features = "$commonFeatures,$crosstermFeature"
             val command = buildList {

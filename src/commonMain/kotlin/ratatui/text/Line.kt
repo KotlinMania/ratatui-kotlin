@@ -76,7 +76,7 @@ import ratatui.widgets.Widget
  *
  * ## Styling Lines
  *
- * The line's [Style] is used by the rendering widget to determine how to style the line. Each
+ * The line [Style] is used by the rendering widget to determine how to style the line. Each
  * [Span] in the line will be styled with the [Style] of the line, and then with its own
  * [Style]. If the line is longer than the available space, the style is applied to the entire
  * line, and the line is truncated. `Line` also implements [Styled] which means you can use the
@@ -89,7 +89,7 @@ import ratatui.widgets.Widget
  *
  * ## Aligning Lines
  *
- * The line's [HorizontalAlignment] is used by the rendering widget to determine how to align the line
+ * The line [HorizontalAlignment] is used by the rendering widget to determine how to align the line
  * within the available space. If the line is longer than the available space, the alignment is
  * ignored and the line is truncated.
  *
@@ -105,7 +105,7 @@ import ratatui.widgets.Widget
  * `Line` implements the [Widget] trait, which means it can be rendered to a [Buffer].
  *
  * ```kotlin
- * // in another widget's render method
+ * // in another widget render method
  * val line = Line.from("Hello world!").style(Style.new().yellow().italic())
  * line.render(area, buf)
  * ```
@@ -163,7 +163,7 @@ data class Line(
      * # Examples
      *
      * ```kotlin
-     * val line = Line.from("Hi, what's up?")
+     * val line = Line.from("Hi, what up?")
      * assertEquals(null, line.alignment)
      * assertEquals(
      *     HorizontalAlignment.Right,
@@ -183,7 +183,7 @@ data class Line(
      * # Examples
      *
      * ```kotlin
-     * val line = Line.from("Hi, what's up?").leftAligned()
+     * val line = Line.from("Hi, what up?").leftAligned()
      * ```
      */
     fun leftAligned(): Line = alignment(HorizontalAlignment.Left)
@@ -198,7 +198,7 @@ data class Line(
      * # Examples
      *
      * ```kotlin
-     * val line = Line.from("Hi, what's up?").centered()
+     * val line = Line.from("Hi, what up?").centered()
      * ```
      */
     fun centered(): Line = alignment(HorizontalAlignment.Center)
@@ -213,7 +213,7 @@ data class Line(
      * # Examples
      *
      * ```kotlin
-     * val line = Line.from("Hi, what's up?").rightAligned()
+     * val line = Line.from("Hi, what up?").rightAligned()
      * ```
      */
     fun rightAligned(): Line = alignment(HorizontalAlignment.Right)
@@ -262,7 +262,7 @@ data class Line(
      *
      * This is useful for when you want to apply a style to a line that already has some styling.
      * In contrast to [Line.style], this method will not overwrite the existing style, but
-     * instead will add the given style's modifiers to this Line's style.
+     * instead will add the given style modifiers to this Line style.
      *
      * This is a fluent setter method which must be chained or used as it returns a new Line.
      *

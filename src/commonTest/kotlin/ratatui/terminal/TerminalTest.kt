@@ -92,7 +92,7 @@ class TerminalTest {
             )
         )
 
-        // insert_before cannot guarantee the contents of the viewport remain unharmed
+        // insertBefore cannot guarantee the contents of the viewport remain unharmed
         // by potential scrolling as such it is necessary to call draw afterwards to
         // redraw the contents of the viewport over the newly designated area.
         terminal.insertBefore(2.toUShort()) { buf ->
@@ -163,7 +163,7 @@ class TerminalTest {
 
     @Test
     fun terminalInsertBeforeScrollsOnManyInserts() {
-        // This test ensures similar behaviour to `terminal_insert_before_scrolls_on_large_input`
+        // This test ensures similar behaviour to `terminalInsertBeforeScrollsOnLargeInput`
         // but covers a bug previously present whereby multiple small insertions
         // (less than `terminal height - viewport height`) would have disparate behaviour to one large
         // insertion. This was caused by an undocumented cap on the height to be inserted, which has now
@@ -214,7 +214,7 @@ class TerminalTest {
 
     @Test
     fun terminalInsertBeforeLargeViewport() {
-        // This test covers a bug previously present whereby doing an insert_before when the
+        // This test covers a bug previously present whereby doing an insertBefore when the
         // viewport covered the entire screen would cause a panic.
 
         val backend = TestBackend.new(20, 3)

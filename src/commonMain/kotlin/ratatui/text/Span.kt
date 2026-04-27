@@ -329,7 +329,7 @@ fun Any.toSpan(): Span = Span.raw(this.toString())
 /**
  * Split a string into grapheme clusters.
  *
- * Transliteration target: Rust's use of `unicode_segmentation::UnicodeSegmentation::graphemes(true)`.
+ * Transliteration target: the upstream use of `unicodeSegmentation::UnicodeSegmentation::graphemes(true)`.
  *
  * This is a pragmatic, KMP-friendly implementation focused on the cases Ratatui relies on:
  * - surrogate pairs (non-BMP code points)

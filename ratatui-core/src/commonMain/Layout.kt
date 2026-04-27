@@ -163,7 +163,6 @@
 //! ```rust
 //! use ratatui_core::layout::{Constraint, Layout, Rect};
 //!
-//! fn create_complex_layout(area: Rect) -> [Rect; 4] {
 //!     // First, split vertically
 //!     let [header, body, footer] = Layout::vertical([
 //!         Constraint::Length(3), // Header
@@ -265,17 +264,14 @@
 //!
 //! // Renders "Row 0", "Row 1", etc. in each horizontal row
 //! for (i, row) in area.rows().enumerate() {
-//!     format!("Row {i}").render(row, &mut buffer);
 //! }
 //!
 //! // Renders column indices (0-9 repeating) in each vertical column
 //! for (i, col) in area.columns().enumerate() {
-//!     format!("{}", i % 10).render(col, &mut buffer);
 //! }
 //!
 //! // Renders position indices (0-9 repeating) at each cell position
 //! for (i, pos) in area.positions().enumerate() {
-//!     buffer[pos].set_symbol(&format!("{}", i % 10));
 //! }
 //! ```
 //!

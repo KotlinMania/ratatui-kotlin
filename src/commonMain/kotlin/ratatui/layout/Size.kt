@@ -7,7 +7,7 @@
  * areas and other layout elements.
  *
  * Size can be created from tuples, extracted from rectangular areas, or constructed directly.
- * It's commonly used in conjunction with [Position] to define rectangular areas.
+ * It commonly used in conjunction with [Position] to define rectangular areas.
  *
  * ## Construction
  *

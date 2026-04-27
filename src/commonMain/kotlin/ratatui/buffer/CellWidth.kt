@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/src/buffer/cell_width.rs
+// port-lint: source ratatui-core/src/buffer/cellWidth.rs
 package ratatui.buffer
 
 import ratatui.text.graphemes
@@ -6,7 +6,7 @@ import ratatui.text.graphemes
 /**
  * Returns the display width in terminal cells.
  *
- * Transliteration of `ratatui_core::buffer::CellWidth`.
+ * Transliteration of `ratatuiCore::buffer::CellWidth`.
  */
 interface CellWidth {
     fun cellWidth(): UShort
@@ -34,7 +34,7 @@ fun String.cellWidth(): UShort {
 /**
  * Kotlin implementation of terminal cell-width measurement.
  *
- * This exists to replace Rust's `unicode_width::UnicodeWidthStr::width()` on Kotlin/Native.
+ * This exists to replace the upstream `unicodeWidth::UnicodeWidthStr::width()` on Kotlin/Native.
  */
 private fun unicodeWidth(s: String): Int {
     if (s.isEmpty()) return 0

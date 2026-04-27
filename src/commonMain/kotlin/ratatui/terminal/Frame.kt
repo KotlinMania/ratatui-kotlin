@@ -76,7 +76,7 @@ class Frame internal constructor(
      * Render a string as a [Widget].
      *
      * Mirrors Rust `impl Widget for &str` / `impl Widget for String` as used with
-     * `Frame::render_widget`.
+     * `Frame::renderWidget`.
      */
     fun renderWidget(widget: String, area: Rect) {
         widget.render(area, buffer)
@@ -118,7 +118,7 @@ class Frame internal constructor(
     /**
      * After drawing this frame, make the cursor visible and put it at the specified (x, y) coordinates.
      *
-     * Mirrors Rust `set_cursor_position((x, y))` (tuple converted via `Into<Position>`).
+     * Mirrors Rust `setCursorPosition((x, y))` (tuple converted via `Into<Position>`).
      */
     fun setCursorPosition(x: Int, y: Int) {
         setCursorPosition(Position(x, y))
@@ -137,7 +137,7 @@ class Frame internal constructor(
     /**
      * Gets the buffer that this [Frame] draws into.
      *
-     * Mirrors Rust `Frame::buffer_mut`.
+     * Mirrors Rust `Frame::bufferMut`.
      */
     fun bufferMut(): Buffer = buffer
 

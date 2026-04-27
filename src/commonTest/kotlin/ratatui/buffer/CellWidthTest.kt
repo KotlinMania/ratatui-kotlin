@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/src/buffer/cell_width.rs
+// port-lint: source ratatui-core/src/buffer/cellWidth.rs
 package ratatui.buffer
 
 import kotlin.test.Test

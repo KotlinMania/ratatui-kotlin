@@ -3,8 +3,8 @@
  * Represents spacing around rectangular areas.
  *
  * [Margin] defines the horizontal and vertical spacing that should be applied around a rectangular
- * area. It's commonly used with [Layout] to add space between the
- * layout's boundaries and its contents, or with [Rect.inner] and
+ * area. It commonly used with [Layout] to add space between the
+ * layout boundaries and its contents, or with [Rect.inner] and
  * [Rect.outer] to create padded areas.
  *
  * The margin values represent the number of character cells to add on each side. For horizontal

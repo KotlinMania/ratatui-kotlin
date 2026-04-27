@@ -8,17 +8,19 @@ use palette::stimulus::IntoStimulus;
 
 use crate::style::Color;
 
-/// Convert an [`palette::Srgb`] color to a [`Color`].
-///
-/// # Examples
-///
-/// ```
-/// use palette::Srgb;
-/// use ratatui_core::style::Color;
-///
-/// let color = Color::from(Srgb::new(1.0f32, 0.0, 0.0));
-/// assert_eq!(color, Color::Rgb(255, 0, 0));
-/// ```
+/**
+ * Convert an [`palette::Srgb`] color to a [`Color`].
+ *
+ * # Examples
+ *
+ * ```
+ * use palette::Srgb;
+ * use ratatui_core::style::Color;
+ *
+ * let color = Color::from(Srgb::new(1.0f32, 0.0, 0.0));
+ * assert_eq!(color, Color::Rgb(255, 0, 0));
+ * ```
+ */
 impl<T: IntoStimulus<u8>> From<Srgb<T>> for Color {
     fn from(color: Srgb<T>) -> Self {
         let (red, green, blue) = color.into_format().into_components();
@@ -26,20 +28,22 @@ impl<T: IntoStimulus<u8>> From<Srgb<T>> for Color {
     }
 }
 
-/// Convert a [`palette::LinSrgb`] color to a [`Color`].
-///
-/// Note: this conversion only works for floating point linear sRGB colors. If you have a linear
-/// sRGB color in another format, you need to convert it to floating point first.
-///
-/// # Examples
-///
-/// ```
-/// use palette::LinSrgb;
-/// use ratatui_core::style::Color;
-///
-/// let color = Color::from(LinSrgb::new(1.0f32, 0.0, 0.0));
-/// assert_eq!(color, Color::Rgb(255, 0, 0));
-/// ```
+/**
+ * Convert a [`palette::LinSrgb`] color to a [`Color`].
+ *
+ * Note: this conversion only works for floating point linear sRGB colors. If you have a linear
+ * sRGB color in another format, you need to convert it to floating point first.
+ *
+ * # Examples
+ *
+ * ```
+ * use palette::LinSrgb;
+ * use ratatui_core::style::Color;
+ *
+ * let color = Color::from(LinSrgb::new(1.0f32, 0.0, 0.0));
+ * assert_eq!(color, Color::Rgb(255, 0, 0));
+ * ```
+ */
 impl<T: IntoStimulus<u8>> From<LinSrgb<T>> for Color
 where
     T: Real + Powf + MulSub + Arithmetics + PartialCmp + Clone,

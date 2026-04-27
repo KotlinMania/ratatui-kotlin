@@ -9,7 +9,7 @@ import ratatui.symbols.merge.MergeStrategy
 /**
  * A non-zero unsigned short value.
  *
- * This mirrors Rust's `core::num::NonZeroU16`.
+ * This mirrors the upstream `core::num::NonZeroU16`.
  */
 class NonZeroUShort private constructor(
     private val value: UShort
@@ -28,7 +28,7 @@ class NonZeroUShort private constructor(
 /**
  * Cell diffing options.
  *
- * Transliteration of `ratatui_core::buffer::CellDiffOption`.
+ * Transliteration of `ratatuiCore::buffer::CellDiffOption`.
  */
 sealed class CellDiffOption {
     /** No special option. */
@@ -40,7 +40,7 @@ sealed class CellDiffOption {
     /**
      * Force a width regardless of the symbol text width.
      *
-     * Escape sequences can have a computed width that doesn't match what is written to the screen.
+     * Escape sequences can have a computed width that does not match what is written to the screen.
      */
     data class ForcedWidth(val width: NonZeroUShort) : CellDiffOption()
 }
@@ -48,7 +48,7 @@ sealed class CellDiffOption {
 /**
  * A buffer cell.
  *
- * Transliteration of `ratatui_core::buffer::Cell`.
+ * Transliteration of `ratatuiCore::buffer::Cell`.
  */
 class Cell private constructor(
     private var symbol: String?,
@@ -110,7 +110,7 @@ class Cell private constructor(
     fun symbol(): String = symbol ?: " "
 
     /**
-     * Returns ForcedWidth when set, otherwise computes width from the cell's symbol.
+     * Returns ForcedWidth when set, otherwise computes width from the cell symbol.
      *
      * Transliteration of `impl CellWidth for Cell`.
      */
@@ -165,7 +165,7 @@ class Cell private constructor(
     /**
      * Sets the style of the cell.
      *
-     * Transliteration of Rust: `set_style<S: Into<Style>>`.
+     * Transliteration of Rust: `setStyle<S: Into<Style>>`.
      */
     fun setStyle(style: Style): Cell {
         style.fg?.let { fg = it }

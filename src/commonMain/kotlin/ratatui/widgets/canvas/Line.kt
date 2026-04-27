@@ -172,7 +172,7 @@ private fun computeOutCode(x: Double, y: Double, xMin: Double, xMax: Double, yMi
 }
 
 /**
- * Bresenham's line algorithm for lines with slope < 1.
+ * Bresenham line algorithm for lines with slope < 1.
  */
 private fun drawLineLow(painter: Painter, x1: Int, y1: Int, x2: Int, y2: Int, color: Color) {
     val dx = x2 - x1
@@ -194,7 +194,7 @@ private fun drawLineLow(painter: Painter, x1: Int, y1: Int, x2: Int, y2: Int, co
 }
 
 /**
- * Bresenham's line algorithm for lines with slope >= 1.
+ * Bresenham line algorithm for lines with slope >= 1.
  */
 private fun drawLineHigh(painter: Painter, x1: Int, y1: Int, x2: Int, y2: Int, color: Color) {
     val dx = abs(x2 - x1)

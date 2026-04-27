@@ -10,7 +10,7 @@ import ratatui.widgets.Widget
  * A widget that renders the Ratatui logo
  *
  * The Ratatui logo takes up two lines of text and comes in two sizes: `Tiny` and `Small`. This may
- * be used in an application's help or about screen to show that it is powered by Ratatui.
+ * be used in an application help or about screen to show that it is powered by Ratatui.
  *
  * ## Tiny (default, 2x15 characters)
  *

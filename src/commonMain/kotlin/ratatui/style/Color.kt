@@ -29,7 +29,7 @@ import kotlin.math.sin
 /**
  * ANSI Color
  *
- * All colors from the [ANSI color table](https://en.wikipedia.org/wiki/ANSI_escape_code#Colors)
+ * All colors from the [ANSI color table](https://en.wikipedia.org/wiki/ANSIEscapeCode#Colors)
  * are supported (though some names are not exactly the same).
  *
  * | Color Name     | Color                   | Foreground | Background |
@@ -68,7 +68,7 @@ import kotlin.math.sin
  * assertEquals(Color.fromStr("lightred"), Color.LightRed)
  * assertEquals(Color.fromStr("light red"), Color.LightRed)
  * assertEquals(Color.fromStr("light-red"), Color.LightRed)
- * assertEquals(Color.fromStr("light_red"), Color.LightRed)
+ * assertEquals(Color.fromStr("lightRed"), Color.LightRed)
  * assertEquals(Color.fromStr("bright red"), Color.LightRed)
  * assertEquals(Color.fromStr("silver"), Color.Gray)
  * assertEquals(Color.fromStr("dark-grey"), Color.DarkGray)
@@ -147,7 +147,7 @@ sealed class Color {
      * Notably versions of Windows Terminal prior to Windows 10 and macOS Terminal.app do not
      * support this.
      *
-     * See also: https://en.wikipedia.org/wiki/ANSI_escape_code#24-bit
+     * See also: https://en.wikipedia.org/wiki/ANSIEscapeCode#24-bit
      */
     data class Rgb(val r: UByte, val g: UByte, val b: UByte) : Color() {
         override fun toString(): String {
@@ -161,7 +161,7 @@ sealed class Color {
     /**
      * An 8-bit 256 color.
      *
-     * See also: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
+     * See also: https://en.wikipedia.org/wiki/ANSIEscapeCode#8-bit
      */
     data class Indexed(val index: UByte) : Color() {
         override fun toString(): String = index.toString()
@@ -299,7 +299,7 @@ sealed class Color {
 
     override fun toString(): String =
         // Most variants are `data object`s which already use their name as `toString()`.
-        // Keep an explicit match here to mirror Rust's `fmt::Display` arms.
+        // Keep an explicit match here to mirror the upstream `fmt::Display` arms.
         when (this) {
             is Reset -> "Reset"
             is Black -> "Black"
@@ -339,7 +339,7 @@ private fun parseHexColor(input: String): Triple<UByte, UByte, UByte>? {
 /**
  * Hue, Saturation, Lightness representation.
  *
- * Mirrors the public API used by Ratatui's optional `palette` feature (`palette::Hsl`).
+ * Mirrors the public API used by Ratatui optional `palette` feature (`palette::Hsl`).
  */
 data class Hsl(
     val hue: Double,
@@ -354,7 +354,7 @@ data class Hsl(
 /**
  * Hue, Saturation, Lightness representation in the HSLuv color space.
  *
- * Mirrors the public API used by Ratatui's optional `palette` feature (`palette::Hsluv`).
+ * Mirrors the public API used by Ratatui optional `palette` feature (`palette::Hsluv`).
  */
 data class Hsluv(
     val hue: Double,
@@ -367,7 +367,7 @@ data class Hsluv(
 }
 
 /**
- * Kotlinx-serialization adapter that mirrors Rust's `serde` behavior.
+ * Kotlinx-serialization adapter that mirrors the upstream `serde` behavior.
  *
  * Rust serializes [Color] via its Display implementation (a string), and deserializes by parsing
  * that same string form. This serializer also supports the previous map-based encoding:
@@ -378,7 +378,7 @@ object ColorSerializer : KSerializer<Color> {
     /**
      * Helper type used to support the previous serde-derived serialization formats.
      *
-     * Mirrors the local `ColorWrapper` enum in Rust's `impl serde::Deserialize for Color`.
+     * Mirrors the local `ColorWrapper` enum in the upstream `impl serde::Deserialize for Color`.
      */
     private sealed interface ColorWrapper {
         data class Rgb(val red: UByte, val green: UByte, val blue: UByte) : ColorWrapper

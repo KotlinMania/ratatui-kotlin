@@ -138,7 +138,7 @@ class Buffer(
     /**
      * Returns the cell at the given coordinates, or null if outside bounds.
      *
-     * This mirrors Rust's `Buffer::cell((x, y))` overloads via Kotlin [Pair]s.
+     * This mirrors the upstream `Buffer::cell((x, y))` overloads via Kotlin [Pair]s.
      */
     fun cell(position: Pair<Int, Int>): Cell? = cell(Position(position.first, position.second))
 
@@ -151,7 +151,7 @@ class Buffer(
     /**
      * Returns the mutable cell at the given coordinates, or null if outside bounds.
      *
-     * This mirrors Rust's `Buffer::cell_mut((x, y))` overloads via Kotlin [Pair]s.
+     * This mirrors the upstream `Buffer.cellMut((x, y))` overloads via Kotlin [Pair]s.
      */
     fun cellMut(position: Pair<Int, Int>): Cell? = cellMut(Position(position.first, position.second))
 
@@ -170,7 +170,7 @@ class Buffer(
     /**
      * Returns the (global) coordinates of a cell given its index.
      *
-     * Global coordinates are offset by the Buffer's area offset (`x`/`y`).
+     * Global coordinates are offset by the Buffer area offset (`x`/`y`).
      */
     fun posOf(index: Int): Pair<Int, Int> {
         require(index >= 0 && index < content.size) {
@@ -328,7 +328,7 @@ class Buffer(
      * Builds a minimal sequence of coordinates and Cells necessary to update the UI from this
      * buffer to [other].
      *
-     * Transliteration of `ratatui-core`'s `Buffer::diff_iter` implementation.
+     * Transliteration of the `ratatui-core` `Buffer.diffIter` implementation.
      */
     fun diffIter(other: Buffer): BufferDiff = BufferDiff.new(this, other)
 

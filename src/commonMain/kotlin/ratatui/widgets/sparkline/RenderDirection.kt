@@ -23,7 +23,7 @@ enum class RenderDirection {
         /**
          * Parses a string into a [RenderDirection].
          *
-         * Accepts various formats: "LeftToRight", "left-to-right", "left_to_right", "ltr"
+         * Accepts various formats: "LeftToRight", "left-to-right", "leftToRight", "ltr"
          *
          * @param value The string to parse
          * @return The parsed direction, or null if parsing fails

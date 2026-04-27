@@ -1,10 +1,10 @@
-// port-lint: source ratatui-widgets/src/table/highlight_spacing.rs
+// port-lint: source ratatui-widgets/src/table/highlightSpacing.rs
 package ratatui.widgets
 
 /**
  * This option allows the user to configure the "highlight symbol" column width spacing.
  *
- * Transliteration of `ratatui_widgets::table::highlight_spacing::HighlightSpacing`.
+ * Transliteration of `ratatuiWidgets::table::highlightSpacing::HighlightSpacing`.
  */
 enum class HighlightSpacing {
     /**
@@ -47,7 +47,7 @@ enum class HighlightSpacing {
         /**
          * Parse a [HighlightSpacing] from its string representation.
          *
-         * Mirrors Rust's `EnumString` derive for `HighlightSpacing`.
+         * Mirrors the upstream `EnumString` derive for `HighlightSpacing`.
          *
          * @throws IllegalArgumentException if [s] does not match any variant.
          */

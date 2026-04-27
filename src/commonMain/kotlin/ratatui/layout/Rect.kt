@@ -156,7 +156,7 @@ data class Rect(
     /**
      * Returns a new Rect outside the current one, with the given margin applied on each side.
      *
-     * If the margin causes the Rect's bounds to be outside the range of an Int, the Rect will
+     * If the margin causes the Rect bounds to be outside the range of an Int, the Rect will
      * be truncated to keep the bounds within Int.
      */
     fun outer(margin: Margin): Rect {
@@ -234,7 +234,7 @@ data class Rect(
     /**
      * Returns true if the given position is inside the Rect.
      *
-     * The position is considered inside the Rect if it is on the Rect's border.
+     * The position is considered inside the Rect if it is on the Rect border.
      */
     fun contains(position: Position): Boolean {
         return position.x >= x &&
@@ -247,7 +247,7 @@ data class Rect(
      * Clamp this Rect to fit inside the other Rect.
      *
      * If the width or height of this Rect is larger than the other Rect, it will be clamped to
-     * the other Rect's width or height.
+     * the other Rect width or height.
      */
     fun clamp(other: Rect): Rect {
         val newWidth = minOf(width, other.width)

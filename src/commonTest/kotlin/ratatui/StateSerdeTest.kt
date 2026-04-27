@@ -1,4 +1,4 @@
-// port-lint: source ratatui/tests/state_serde.rs
+// port-lint: source ratatui/tests/stateSerde.rs
 package ratatui
 
 import kotlinx.serialization.Serializable
@@ -27,7 +27,7 @@ import kotlin.test.assertEquals
 /**
  * Integration tests for serializing/deserializing widget state.
  *
- * Transliteration of `ratatui/tests/state_serde.rs`.
+ * Transliteration of `ratatui/tests/stateSerde.rs`.
  */
 class StateSerdeTest {
     @Serializable

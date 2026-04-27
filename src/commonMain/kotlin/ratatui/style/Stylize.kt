@@ -564,7 +564,7 @@ fun Text.notReversed(): Text = removeModifier(Modifier.REVERSED)
 fun Text.notHidden(): Text = removeModifier(Modifier.HIDDEN)
 fun Text.notCrossedOut(): Text = removeModifier(Modifier.CROSSED_OUT)
 
-// Extension functions for any Styled type, mirroring Rust's Stylize impl for Styled
+// Extension functions for any Styled type, mirroring the upstream Stylize impl for Styled
 fun <T> Styled<T>.fg(color: Color): T = setStyle(style().fg(color))
 fun <T> Styled<T>.bg(color: Color): T = setStyle(style().bg(color))
 fun <T> Styled<T>.reset(): T = setStyle(Style.reset())

@@ -1,4 +1,4 @@
-// port-lint: source ratatui/tests/widgets_list.rs
+// port-lint: source ratatui/tests/widgetsList.rs
 package ratatui.widgets.list
 
 import kotlin.test.Test

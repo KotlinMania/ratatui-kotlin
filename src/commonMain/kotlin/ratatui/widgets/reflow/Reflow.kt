@@ -133,7 +133,7 @@ class WordWrapper(
                     pendingWhitespace.removeFirst()
                 }
 
-                // don't count first whitespace toward next word
+                // do not count first whitespace toward next word
                 if (isWhitespace && pendingWhitespace.isEmpty()) {
                     continue
                 }

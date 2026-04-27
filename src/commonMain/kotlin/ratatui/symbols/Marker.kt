@@ -9,7 +9,7 @@ const val DOT: String = "•"
 /**
  * Marker to use when plotting data points.
  *
- * Transliteration of `ratatui_core::symbols::marker::Marker`.
+ * Transliteration of `ratatuiCore::symbols::marker::Marker`.
  */
 sealed class Marker {
     /**
@@ -28,7 +28,7 @@ sealed class Marker {
     data object Bar : Marker()
 
     /**
-     * Use the [Unicode Braille Patterns](https://en.wikipedia.org/wiki/Braille_Patterns) block to
+     * Use the [Unicode Braille Patterns](https://en.wikipedia.org/wiki/BraillePatterns) block to
      * represent data points.
      *
      * This is a 2x4 grid of dots, where each dot can be either on or off.
@@ -56,7 +56,7 @@ sealed class Marker {
 
     /**
      * Use sextant characters from the [Unicode Symbols for Legacy Computing
-     * Supplement](https://en.wikipedia.org/wiki/Symbols_for_Legacy_Computing_Supplement) to
+     * Supplement](https://en.wikipedia.org/wiki/SymbolsForLegacyComputingSupplement) to
      * represent data points.
      *
      * Sextant characters display densely packed and regularly spaced pseudo-pixels with a 2x3
@@ -70,7 +70,7 @@ sealed class Marker {
 
     /**
      * Use octant characters from the [Unicode Symbols for Legacy Computing
-     * Supplement](https://en.wikipedia.org/wiki/Symbols_for_Legacy_Computing_Supplement) to
+     * Supplement](https://en.wikipedia.org/wiki/SymbolsForLegacyComputingSupplement) to
      * represent data points.
      *
      * Octant characters have the same 2x4 resolution as Braille characters but display densely
@@ -112,7 +112,7 @@ sealed class Marker {
         /**
          * Parse a marker from its string representation.
          *
-         * Mirrors Rust's `EnumString`-derived parsing used by `"Dot".parse::<Marker>()`.
+         * Mirrors the upstream `EnumString`-derived parsing used by `"Dot".parse::<Marker>()`.
          */
         fun fromStr(value: String): Marker? {
             return when (value) {

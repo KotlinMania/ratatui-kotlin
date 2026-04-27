@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/src/widgets/stateful_widget.rs
+// port-lint: source ratatui-core/src/widgets/statefulWidget.rs
 package ratatui.widgets
 
 import kotlin.test.Test

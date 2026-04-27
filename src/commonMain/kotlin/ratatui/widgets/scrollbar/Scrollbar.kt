@@ -17,7 +17,7 @@ import ratatui.widgets.StatefulWidget
  *
  * # Important
  *
- * It's essential to set the [contentLength] field when using this struct. This field
+ * It essential to set the [contentLength] field when using this struct. This field
  * represents the total length of the scrollable content. The default value is zero
  * which will result in the Scrollbar not rendering.
  *
@@ -36,7 +36,7 @@ import ratatui.widgets.StatefulWidget
  * └───────────────┘
  * ```
  *
- * If you don't have multi-line content, you can leave the `viewportContentLength` set to the
+ * If you do not have multi-line content, you can leave the `viewportContentLength` set to the
  * default and it'll use the track size as a `viewportContentLength`.
  */
 @Serializable
@@ -90,12 +90,12 @@ data class ScrollbarState(
         return this
     }
 
-    /** Decrements the scroll position by one, ensuring it doesn't go below zero. */
+    /** Decrements the scroll position by one, ensuring it does not go below zero. */
     fun prev() {
         position = (position - 1).coerceAtLeast(0)
     }
 
-    /** Increments the scroll position by one, ensuring it doesn't exceed the length of the content. */
+    /** Increments the scroll position by one, ensuring it does not exceed the length of the content. */
     fun next() {
         position = (position + 1).coerceAtMost((contentLength - 1).coerceAtLeast(0))
     }
@@ -451,7 +451,7 @@ data class Scrollbar(
      * Calculates length of the track excluding the arrow heads.
      *
      * ```
-     *        +---------- track_length
+     *        +---------- trackLength
      *  vvvvvvvvvvvvvvv
      * <===#####=======>
      * ```

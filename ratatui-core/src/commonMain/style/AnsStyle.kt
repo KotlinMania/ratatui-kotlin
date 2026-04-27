@@ -4,7 +4,7 @@ use thiserror::Error;
 
 use super::{Color, Modifier, Style};
 
-/// Error type for converting between `anstyle` colors and `Color`
+/** Error type for converting between `anstyle` colors and `Color` */
 #[derive(Debug, Error, PartialEq, Eq)]
 pub enum TryFromColorError {
     #[error("cannot convert Ratatui Color to an Ansi256Color as it is not an indexed color")]

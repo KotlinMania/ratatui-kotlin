@@ -160,7 +160,7 @@ data class BarChart(
     /**
      * Set the style of the entire chart.
      *
-     * The style will be applied to everything that isn't styled (borders, bars, labels, ...).
+     * The style will be applied to everything that is not styled (borders, bars, labels, ...).
      */
     fun style(style: Style): BarChart = copy(chartStyle = style)
 
@@ -301,7 +301,7 @@ data class BarChart(
                 barY += barGap + barWidth
             }
 
-            // if group_gap is zero, then there is no place to print the group label
+            // if groupGap is zero, then there is no place to print the group label
             // check also if the group label is still inside the visible area
             val labelY = barY - barGap
             if (groupGap > 0 && labelY < barsArea.bottom()) {

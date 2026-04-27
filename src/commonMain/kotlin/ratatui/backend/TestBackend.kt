@@ -12,7 +12,7 @@ import ratatui.text.toLine
 /**
  * A [Backend] implementation used for integration testing that renders to an in-memory buffer.
  *
- * Transliteration of `ratatui_core::backend::TestBackend`.
+ * Transliteration of `ratatuiCore::backend::TestBackend`.
  */
 class TestBackend private constructor(
     private val buffer: Buffer,
@@ -68,7 +68,7 @@ class TestBackend private constructor(
         scrollback.resize(Rect.new(0, 0, width, scrollbackHeight))
     }
 
-    /** Asserts that the backend's buffer is equal to [expected]. */
+    /** Asserts that the backend buffer is equal to [expected]. */
     fun assertBuffer(expected: Buffer) {
         if (buffer != expected) {
             error(
@@ -79,7 +79,7 @@ class TestBackend private constructor(
         }
     }
 
-    /** Asserts that the backend's scrollback buffer is equal to [expected]. */
+    /** Asserts that the backend scrollback buffer is equal to [expected]. */
     fun assertScrollback(expected: Buffer) {
         if (scrollback != expected) {
             error(
@@ -90,7 +90,7 @@ class TestBackend private constructor(
         }
     }
 
-    /** Asserts that the backend's scrollback buffer is empty. */
+    /** Asserts that the backend scrollback buffer is empty. */
     fun assertScrollbackEmpty() {
         val expected = Buffer.empty(
             Rect(
@@ -103,13 +103,13 @@ class TestBackend private constructor(
         assertScrollback(expected)
     }
 
-    /** Asserts that the backend's buffer is equal to the expected string lines. */
+    /** Asserts that the backend buffer is equal to the expected string lines. */
     fun assertBufferLines(lines: List<String>) = assertBuffer(Buffer.withLines(lines.map { it.toLine() }))
 
-    /** Asserts that the backend's buffer is equal to the expected string lines. */
+    /** Asserts that the backend buffer is equal to the expected string lines. */
     fun assertBufferLines(vararg lines: String) = assertBuffer(Buffer.withLines(*lines))
 
-    /** Asserts that the backend's scrollback buffer is equal to the expected string lines. */
+    /** Asserts that the backend scrollback buffer is equal to the expected string lines. */
     fun assertScrollbackLines(vararg lines: String) = assertScrollback(Buffer.withLines(*lines))
 
     override fun draw(content: Iterator<ratatui.buffer.BufferDiff.Item>) {
@@ -180,7 +180,7 @@ class TestBackend private constructor(
     /**
      * Inserts `n` line breaks at the current cursor position.
      *
-     * This is a transliteration of `TestBackend::append_lines`.
+     * This is a transliteration of `TestBackend::appendLines`.
      */
     override fun appendLines(n: UShort) {
         val lineCount = n.toInt()
@@ -226,7 +226,7 @@ class TestBackend private constructor(
     override fun size(): Size = buffer.area.asSize()
 
     override fun windowSize(): WindowSize {
-        // Some arbitrary window pixel size, probably doesn't need much testing.
+        // Some arbitrary window pixel size, probably does not need much testing.
         val windowPixelSize = Size(width = 640, height = 480)
         return WindowSize(
             columnsRows = buffer.area.asSize(),

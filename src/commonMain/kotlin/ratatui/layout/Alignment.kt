@@ -32,7 +32,7 @@ object Alignment {
  * Horizontal content alignment within a layout area.
  *
  * This type is used throughout Ratatui to control how content is positioned horizontally within
- * available space. It's commonly used with widgets to control text alignment, but can also be
+ * available space. It commonly used with widgets to control text alignment, but can also be
  * used in layout calculations.
  *
  * For comprehensive layout documentation and examples, see the layout module.

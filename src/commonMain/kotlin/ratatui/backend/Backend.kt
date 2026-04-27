@@ -50,7 +50,7 @@
  * terminal-based games, and more.
  *
  * Each backend handles raw mode differently, so the behavior may vary depending on the backend
- * being used. Be sure to consult the backend's specific documentation for exact details on how it
+ * being used. Be sure to consult the backend specific documentation for exact details on how it
  * implements raw mode.
  *
  * # Alternate Screen
@@ -69,7 +69,7 @@
  *
  * Note that not all terminal emulators support the alternate screen, and even those that do may
  * handle it differently. As a result, the behavior may vary depending on the backend being used.
- * Always consult the specific backend's documentation to understand how it implements the
+ * Always consult the specific backend documentation to understand how it implements the
  * alternate screen.
  *
  * # Mouse Capture
@@ -77,13 +77,13 @@
  * Mouse capture is a mode where the terminal captures mouse events such as clicks, scrolls, and
  * movement, and sends them to the application as special sequences or events. This enables the
  * application to handle and respond to mouse actions, providing a more interactive and graphical
- * user experience within the terminal. It's particularly useful for applications like
+ * user experience within the terminal. It particularly useful for applications like
  * terminal-based games, text editors, or other programs that require more direct interaction from
  * the user.
  *
  * Each backend handles mouse capture differently, with variations in the types of events that can
  * be captured and how they are represented. As such, the behavior may vary depending on the
- * backend being used, and developers should consult the specific backend's documentation to
+ * backend being used, and developers should consult the specific backend documentation to
  * understand how it implements mouse capture.
  */
 package ratatui.backend
@@ -93,15 +93,15 @@ import ratatui.layout.Position
 import ratatui.layout.Size
 
 /**
- * Defines which region of the terminal's visible display area is cleared.
+ * Defines which region of the terminal visible display area is cleared.
  *
- * Transliteration of `ratatui_core::backend::ClearType`.
+ * Transliteration of `ratatuiCore::backend::ClearType`.
  *
  * Clearing operates on character cells in the active display surface. It does not move, hide, or
  * reset the cursor position. If the cursor lies inside the cleared region, the character cell at
  * the cursor position is cleared as well.
  *
- * Clearing applies to the terminal's visible display area, not just content previously drawn by
+ * Clearing applies to the terminal visible display area, not just content previously drawn by
  * Ratatui. No guarantees are made about scrollback, history, or off-screen buffers.
  */
 enum class ClearType {
@@ -114,7 +114,7 @@ enum class ClearType {
     /** Clears from the start of the display area through the cursor position (inclusive). */
     BeforeCursor,
 
-    /** Clears all character cells in the cursor's current line. */
+    /** Clears all character cells in the cursor current line. */
     CurrentLine,
 
     /** Clears from the cursor position (inclusive) to the end of the current line. */
@@ -137,7 +137,7 @@ enum class ClearType {
 /**
  * The window size in characters (columns / rows) as well as pixels.
  *
- * Transliteration of `ratatui_core::backend::WindowSize`.
+ * Transliteration of `ratatuiCore::backend::WindowSize`.
  */
 data class WindowSize(
     /** Size of the window in characters (columns / rows). */
@@ -146,7 +146,7 @@ data class WindowSize(
      * Size of the window in pixels.
      *
      * The `pixels` fields may not be implemented by all terminals and return `0,0`. See
-     * <https://man7.org/linux/man-pages/man4/tty_ioctl.4.html> under section "Get and set window
+     * <https://man7.org/linux/man-pages/man4/ttyIoctl.4.html> under section "Get and set window
      * size" / TIOCGWINSZ where the fields are commented as "unused".
      */
     val pixels: Size
@@ -155,7 +155,7 @@ data class WindowSize(
 /**
  * The `Backend` interface provides an abstraction over different terminal libraries.
  *
- * Transliteration of `ratatui_core::backend::Backend`.
+ * Transliteration of `ratatuiCore::backend::Backend`.
  *
  * Most applications should not need to interact with [Backend] directly as the
  * [ratatui.terminal.Terminal] class provides a higher level interface for interacting with the
@@ -233,7 +233,7 @@ interface Backend {
     }
 
     /**
-     * Clears all character cells in the terminal's visible display area.
+     * Clears all character cells in the terminal visible display area.
      *
      * This operation preserves the cursor position.
      *
@@ -242,7 +242,7 @@ interface Backend {
     fun clear()
 
     /**
-     * Clears a specific region of the terminal's visible display area, as defined by [ClearType].
+     * Clears a specific region of the terminal visible display area, as defined by [ClearType].
      *
      * This operation preserves the cursor position. If the cursor lies within the cleared region,
      * the character cell at the cursor position is cleared. Clearing applies to the active display

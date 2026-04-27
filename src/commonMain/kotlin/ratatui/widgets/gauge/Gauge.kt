@@ -140,7 +140,7 @@ data class Gauge(
         buf.setStyle(gaugeArea, gaugeStyle)
 
         // compute label value and its position
-        // label is put at the center of the gauge_area
+        // label is put at the center of the gaugeArea
         val defaultLabel = Span.raw("${(ratio * 100.0).roundToInt()}%")
         val actualLabel = label ?: defaultLabel
         val clampedLabelWidth = gaugeArea.width.coerceAtMost(actualLabel.width())

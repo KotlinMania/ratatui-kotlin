@@ -322,7 +322,7 @@ class StylizeTest {
      */
     @Test
     fun stylizeDebugBackground() {
-        // Named colors use on_method() format
+        // Named colors use onMethod() format
         assertEquals(".on_black()", Color.Black.stylizeDebug(ColorDebugKind.Background).toString())
         assertEquals(".on_red()", Color.Red.stylizeDebug(ColorDebugKind.Background).toString())
         assertEquals(".on_green()", Color.Green.stylizeDebug(ColorDebugKind.Background).toString())

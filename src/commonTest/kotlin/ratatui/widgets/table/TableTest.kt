@@ -1,4 +1,4 @@
-// port-lint: source ratatui/tests/widgets_table.rs
+// port-lint: source ratatui/tests/widgetsTable.rs
 @file:Suppress("DEPRECATION")
 
 package ratatui.widgets.table

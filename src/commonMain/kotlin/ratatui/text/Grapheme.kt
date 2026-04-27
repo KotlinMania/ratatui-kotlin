@@ -15,7 +15,7 @@ private const val ZWSP: String = "\u200B"
  * mostly for rendering purposes. A [Span] consists of components that can be split into
  * [StyledGrapheme]s, but it does not contain a collection of [StyledGrapheme]s.
  *
- * Transliteration of `ratatui_core::text::grapheme::StyledGrapheme`.
+ * Transliteration of `ratatuiCore::text::grapheme::StyledGrapheme`.
  */
 data class StyledGrapheme(
     val symbol: String,

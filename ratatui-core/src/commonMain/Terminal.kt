@@ -17,7 +17,6 @@
 //!
 //! let backend = CrosstermBackend::new(stdout());
 //! let mut terminal = Terminal::new(backend)?;
-//! terminal.draw(|frame| {
 //!     let area = frame.area();
 //!     frame.render_widget(Paragraph::new("Hello world!"), area);
 //! })?;

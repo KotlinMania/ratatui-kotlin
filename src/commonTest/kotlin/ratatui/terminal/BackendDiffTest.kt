@@ -1,4 +1,4 @@
-// port-lint: source ratatui/tests/backend_termion.rs
+// port-lint: source ratatui/tests/backendTermion.rs
 package ratatui.terminal
 
 import ratatui.backend.Backend
@@ -20,7 +20,7 @@ import kotlin.test.assertEquals
  * diff between the previous and current buffers and calls [Backend.draw] with only the changed
  * cells.
  *
- * Transliteration target: `ratatui/tests/backend_termion.rs`.
+ * Transliteration target: `ratatui/tests/backendTermion.rs`.
  */
 class BackendDiffTest {
     private class RecordingBackend(
@@ -36,7 +36,7 @@ class BackendDiffTest {
             while (content.hasNext()) {
                 val item = content.next()
                 // BufferDiff.Item holds a reference to the live Cell in the active buffer; clone it
-                // so later buffer swaps/resets don't mutate recorded expectations.
+                // so later buffer swaps/resets do not mutate recorded expectations.
                 items.add(BufferDiff.Item(item.x, item.y, item.cell.clone()))
             }
             draws.add(items)

@@ -6,7 +6,7 @@ package ratatui.buffer
  *
  * # Panics
  * When the buffers differ this method panics and displays the differences similar to
- * `assert_eq!()`.
+ * `assertEq!()`.
  */
 @Deprecated("use assertEquals(actual, expected)")
 fun assertBufferEq(actual: Buffer, expected: Buffer) {

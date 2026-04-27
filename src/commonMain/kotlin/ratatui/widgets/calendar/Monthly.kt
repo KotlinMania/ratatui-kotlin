@@ -67,7 +67,7 @@ data class Monthly<DS : DateStyler>(
     /**
      * Fill the calendar slots for days not in the current month also, this causes each line to be
      * completely filled. If there is an event style for a date, this style will be patched with
-     * the event's style.
+     * the event style.
      *
      * @param style The style for surrounding days
      * @return A new Monthly with surrounding days shown
@@ -210,7 +210,7 @@ data class Monthly<DS : DateStyler>(
             val spans = ArrayList<Span>(14)
             for (i in 0 until 7) {
                 // Draw the gutter. Do it here so we can avoid worrying about
-                // styling the ' ' in the format_date method
+                // styling the ' ' in the formatDate method
                 if (i == 0) {
                     spans.add(Span.styled(" ", Style.default()))
                 } else {
@@ -274,7 +274,7 @@ class CalendarEventStore(
         /**
          * Constructs an empty event store.
          *
-         * This mirrors Rust's common `Default::default()` usage in tests and examples.
+         * This mirrors the upstream common `Default::default()` usage in tests and examples.
          */
         fun default(): CalendarEventStore = CalendarEventStore()
 

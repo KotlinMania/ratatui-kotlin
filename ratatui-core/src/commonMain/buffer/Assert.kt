@@ -1,8 +1,10 @@
-/// Assert that two buffers are equal by comparing their areas and content.
-///
-/// # Panics
-/// When the buffers differ this method panics and displays the differences similar to
-/// `assert_eq!()`.
+/**
+ * Assert that two buffers are equal by comparing their areas and content.
+ *
+ * # Panics
+ * When the buffers differ this method panics and displays the differences similar to
+ * `assert_eq!()`.
+ */
 #[deprecated = "use `assert_eq!(&actual, &expected)`"]
 #[macro_export]
 macro_rules! assert_buffer_eq {

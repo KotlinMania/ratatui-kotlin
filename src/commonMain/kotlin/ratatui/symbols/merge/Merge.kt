@@ -31,7 +31,7 @@ enum class MergeStrategy {
     Exact,
 
     /**
-     * Merges symbols even if an exact composite unicode character doesn't exist, using the closest
+     * Merges symbols even if an exact composite unicode character does not exist, using the closest
      * match.
      *
      * If required unicode symbol exists, acts exactly like [Exact], if not, the following rules
@@ -40,7 +40,7 @@ enum class MergeStrategy {
      * 1. Dashed segments are replaced with plain or thick equivalents.
      * 2. Rounded segments are replaced with plain.
      * 3. Double and thick segments are merged based on the second symbol.
-     * 4. Some combinations of double and plain that don't exist are merged based on the second symbol.
+     * 4. Some combinations of double and plain that do not exist are merged based on the second symbol.
      */
     Fuzzy;
 
@@ -149,7 +149,7 @@ internal data class BorderSymbol(
             }
         }
 
-        // Some Plain + Double variants don't exist.
+        // Some Plain + Double variants do not exist.
         if (result.toStringOrNull() == null) {
             result = if (other.contains(LineStyle.Double)) {
                 result.replace(LineStyle.Plain, LineStyle.Double)

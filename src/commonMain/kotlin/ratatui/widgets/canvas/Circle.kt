@@ -8,8 +8,8 @@ import kotlin.math.sin
 /**
  * A circle with a given center and radius and with a given color.
  *
- * @property x x coordinate of the circle's center
- * @property y y coordinate of the circle's center
+ * @property x x coordinate of the circle center
+ * @property y y coordinate of the circle center
  * @property radius Radius of the circle
  * @property color Color of the circle
  */

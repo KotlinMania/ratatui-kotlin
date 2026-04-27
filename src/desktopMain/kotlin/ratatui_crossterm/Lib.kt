@@ -5,8 +5,8 @@
  *
  * ## Crossterm Version and Re-export
  *
- * Rust `ratatui-crossterm` uses feature flags (`crossterm_0_xx`) to select a Crossterm version and
- * re-exports it as `ratatui_crossterm::crossterm` to avoid dependency graph version conflicts.
+ * Rust `ratatui-crossterm` uses feature flags (`crossterm0Xx`) to select a Crossterm version and
+ * re-exports it as `ratatuiCrossterm::crossterm` to avoid dependency graph version conflicts.
  *
  * This Kotlin port targets the published `io.github.kotlinmania:crossterm-kotlin` dependency.
  *

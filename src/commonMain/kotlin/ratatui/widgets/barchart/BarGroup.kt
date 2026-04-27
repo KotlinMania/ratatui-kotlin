@@ -1,4 +1,4 @@
-// port-lint: source ratatui-widgets/src/barchart/bar_group.rs
+// port-lint: source ratatui-widgets/src/barchart/barGroup.rs
 package ratatui.widgets.barchart
 
 import ratatui.buffer.Buffer
@@ -51,7 +51,7 @@ data class BarGroup(
 
     internal fun renderLabel(buf: Buffer, area: Rect, defaultLabelStyle: Style) {
         val labelLine = label ?: return
-        // align the label. Necessary to do it this way as we don't want to set the style
+        // align the label. Necessary to do it this way as we do not want to set the style
         // of the whole area, just the label area
         val width = labelLine.width().coerceAtMost(area.width)
         val labelArea = when (labelLine.alignment) {

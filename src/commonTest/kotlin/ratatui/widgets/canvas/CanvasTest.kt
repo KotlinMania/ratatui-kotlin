@@ -1,4 +1,4 @@
-// port-lint: source ratatui/tests/widgets_canvas.rs
+// port-lint: source ratatui/tests/widgetsCanvas.rs
 package ratatui.widgets.canvas
 
 import ratatui.backend.TestBackend

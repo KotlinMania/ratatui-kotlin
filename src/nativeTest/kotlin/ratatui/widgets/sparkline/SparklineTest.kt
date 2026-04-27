@@ -125,7 +125,7 @@ class SparklineTest {
             .dataFromNullable(listOf(1uL, null, 3uL))
             .absentValueStyle(Style.default().fg(Color.Red))
         sparkline.render(buffer.area, buffer)
-        // Just verify it doesn't panic
+        // Just verify it does not panic
     }
 }
 

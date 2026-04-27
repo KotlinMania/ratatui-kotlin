@@ -81,7 +81,7 @@ class RatatuiLogoTest {
         val buffer = Buffer.empty(Rect.new(0, 0, 20, 3))
         val logo = RatatuiLogo.tiny()
         logo.render(buffer.area, buffer)
-        // Just verify it doesn't panic
+        // Just verify it does not panic
     }
 
     @Test
@@ -89,7 +89,7 @@ class RatatuiLogoTest {
         val buffer = Buffer.empty(Rect.new(0, 0, 30, 3))
         val logo = RatatuiLogo.small()
         logo.render(buffer.area, buffer)
-        // Just verify it doesn't panic
+        // Just verify it does not panic
     }
 }
 
@@ -146,7 +146,7 @@ class RatatuiMascotTest {
         val buffer = Buffer.empty(Rect.new(0, 0, 35, 18))
         val mascot = RatatuiMascot.default()
         mascot.render(buffer.area, buffer)
-        // Just verify it doesn't panic
+        // Just verify it does not panic
     }
 
     @Test
@@ -155,7 +155,7 @@ class RatatuiMascotTest {
         val mascot = RatatuiMascot.default()
             .setEye(MascotEyeColor.Red)
         mascot.render(buffer.area, buffer)
-        // Just verify it doesn't panic
+        // Just verify it does not panic
     }
 }
 

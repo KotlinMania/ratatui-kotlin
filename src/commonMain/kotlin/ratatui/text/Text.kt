@@ -83,7 +83,7 @@ import ratatui.widgets.Widget
  *
  * ## Styling Text
  *
- * The text's [Style] is used by the rendering widget to determine how to style the text. Each
+ * The text [Style] is used by the rendering widget to determine how to style the text. Each
  * [Line] in the text will be styled with the [Style] of the text, and then with its own
  * [Style]. `Text` also implements [Styled] which means you can use the methods of the
  * `Stylize` trait.
@@ -99,7 +99,7 @@ import ratatui.widgets.Widget
  *
  * ## Aligning Text
  *
- * The text's [HorizontalAlignment] can be set using [Text.alignment] or the related helper methods.
+ * The text [HorizontalAlignment] can be set using [Text.alignment] or the related helper methods.
  * Lines composing the text can also be individually aligned with [Line.alignment].
  *
  * ```kotlin
@@ -117,7 +117,7 @@ import ratatui.widgets.Widget
  * `Text` implements the [Widget] trait, which means it can be rendered to a [Buffer].
  *
  * ```kotlin
- * // within another widget's render method:
+ * // within another widget render method:
  * val text = Text.from("The first line\nThe second line")
  * text.render(area, buf)
  * ```
@@ -191,7 +191,7 @@ data class Text(
      *
      * This is useful for when you want to apply a style to a text that already has some styling.
      * In contrast to [Text.style], this method will not overwrite the existing style, but
-     * instead will add the given style's modifiers to this text's style.
+     * instead will add the given style modifiers to this text style.
      *
      * `Text` also implements [Styled] which means you can use the methods of the
      * `Stylize` extension functions.
@@ -242,14 +242,14 @@ data class Text(
      * Setting the alignment of a Text generally overrides the alignment of its
      * parent Widget.
      *
-     * Alignment can be set individually on each line to override this text's alignment.
+     * Alignment can be set individually on each line to override this text alignment.
      *
      * # Examples
      *
      * Set alignment to the whole text.
      *
      * ```kotlin
-     * val text = Text.from("Hi, what's up?")
+     * val text = Text.from("Hi, what up?")
      * assertNull(text.alignment)
      * assertEquals(
      *     HorizontalAlignment.Right,
@@ -286,12 +286,12 @@ data class Text(
      * Setting the alignment of a Text generally overrides the alignment of its
      * parent Widget, with the default alignment being inherited from the parent.
      *
-     * Alignment can be set individually on each line to override this text's alignment.
+     * Alignment can be set individually on each line to override this text alignment.
      *
      * # Examples
      *
      * ```kotlin
-     * val text = Text.from("Hi, what's up?").leftAligned()
+     * val text = Text.from("Hi, what up?").leftAligned()
      * ```
      */
     fun leftAligned(): Text = alignment(HorizontalAlignment.Left)
@@ -303,12 +303,12 @@ data class Text(
      * Setting the alignment of a Text generally overrides the alignment of its
      * parent Widget, with the default alignment being inherited from the parent.
      *
-     * Alignment can be set individually on each line to override this text's alignment.
+     * Alignment can be set individually on each line to override this text alignment.
      *
      * # Examples
      *
      * ```kotlin
-     * val text = Text.from("Hi, what's up?").centered()
+     * val text = Text.from("Hi, what up?").centered()
      * ```
      */
     fun centered(): Text = alignment(HorizontalAlignment.Center)
@@ -320,12 +320,12 @@ data class Text(
      * Setting the alignment of a Text generally overrides the alignment of its
      * parent Widget, with the default alignment being inherited from the parent.
      *
-     * Alignment can be set individually on each line to override this text's alignment.
+     * Alignment can be set individually on each line to override this text alignment.
      *
      * # Examples
      *
      * ```kotlin
-     * val text = Text.from("Hi, what's up?").rightAligned()
+     * val text = Text.from("Hi, what up?").rightAligned()
      * ```
      */
     fun rightAligned(): Text = alignment(HorizontalAlignment.Right)
@@ -431,7 +431,7 @@ data class Text(
         var y = area.y
         while (lineIterator.hasNext() && y < area.bottom()) {
             val line = lineIterator.next()
-            // Apply text's style and alignment to the line
+            // Apply text style and alignment to the line
             val effectiveAlignment = line.alignment ?: alignment ?: HorizontalAlignment.Left
             val lineWidth = line.width()
             val x = when (effectiveAlignment) {

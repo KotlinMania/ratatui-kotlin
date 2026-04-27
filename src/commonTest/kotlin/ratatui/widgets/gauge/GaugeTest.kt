@@ -1,4 +1,4 @@
-// port-lint: source ratatui/tests/widgets_gauge.rs
+// port-lint: source ratatui/tests/widgetsGauge.rs
 package ratatui.widgets.gauge
 
 import kotlin.test.Test

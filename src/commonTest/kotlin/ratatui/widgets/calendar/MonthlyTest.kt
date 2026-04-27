@@ -1,4 +1,4 @@
-// port-lint: source ratatui/tests/widgets_calendar.rs
+// port-lint: source ratatui/tests/widgetsCalendar.rs
 package ratatui.widgets.calendar
 
 import kotlinx.datetime.LocalDate

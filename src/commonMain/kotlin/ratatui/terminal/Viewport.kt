@@ -28,8 +28,8 @@ sealed class Viewport {
     /**
      * The viewport is inline with the rest of the terminal.
      *
-     * The viewport's height is fixed and specified in number of lines. The width is the same as
-     * the terminal's width. The viewport is drawn below the cursor position.
+     * The viewport height is fixed and specified in number of lines. The width is the same as
+     * the terminal width. The viewport is drawn below the cursor position.
      *
      * @param height The height of the inline viewport in lines
      */

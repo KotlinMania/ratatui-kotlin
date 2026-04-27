@@ -30,7 +30,7 @@ enum class ListDirection {
  * A list is a collection of [ListItem]s.
  *
  * This is different from a Table because it does not handle columns, headers or footers and
- * the item's height is automatically determined. A List can also be put in reverse order (i.e.
+ * the item height is automatically determined. A List can also be put in reverse order (i.e.
  * *bottom to top*) whereas a Table cannot.
  *
  * List items can be aligned using [ratatui.text.Text.alignment], for more details see [ListItem].
@@ -125,7 +125,7 @@ data class List(
      * Sets the base style of the widget.
      *
      * All text rendered by the widget will use this style, unless overridden by [Block.style],
-     * [ListItem.style], or the styles of the ListItem's content.
+     * [ListItem.style], or the styles of the ListItem content.
      *
      * @param style The base style for the list
      * @return A new List with the style set
@@ -249,7 +249,7 @@ data class List(
             listHeight
         )
 
-        // Important: this changes the state's offset to be the beginning of the now viewable items
+        // Important: this changes the state offset to be the beginning of the now viewable items
         state.offset = firstVisibleIndex
 
         // Get our set highlighted symbol (if one was set)
@@ -343,7 +343,7 @@ data class List(
             lastVisibleIndex++
         }
 
-        // Get the selected index and apply scroll_padding to it, but still honor the offset if
+        // Get the selected index and apply scrollPadding to it, but still honor the offset if
         // nothing is selected.
         val indexToDisplay = applyScrollPaddingToSelectedIndex(
             selected,
@@ -358,7 +358,7 @@ data class List(
             heightFromOffset += items[lastVisibleIndex].height()
             lastVisibleIndex++
 
-            // Now we need to hide previous items since we didn't have space
+            // Now we need to hide previous items since we did not have space
             // for the selected/offset item
             while (heightFromOffset > maxHeight && firstVisibleIndex < lastVisibleIndex) {
                 heightFromOffset -= items[firstVisibleIndex].height()
@@ -366,7 +366,7 @@ data class List(
             }
         }
 
-        // If the selected item index is not in the viewable area, let's try to show the item
+        // If the selected item index is not in the viewable area, let try to show the item
         while (indexToDisplay < firstVisibleIndex && firstVisibleIndex > 0) {
             firstVisibleIndex--
             heightFromOffset += items[firstVisibleIndex].height()

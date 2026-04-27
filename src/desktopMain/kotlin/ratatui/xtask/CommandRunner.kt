@@ -31,7 +31,7 @@ internal fun runCargo(args: List<String>) {
 }
 
 internal fun runCargoNightly(args: List<String>) {
-    // Rust uses `env_remove("CARGO")` and sets `RUSTUP_TOOLCHAIN=nightly`.
+    // Rust uses `envRemove("CARGO")` and sets `RUSTUP_TOOLCHAIN=nightly`.
     // Here we invoke through `env` to scope the variable to this command.
     cmd("env", listOf("RUSTUP_TOOLCHAIN=nightly", "cargo") + args).runWithTrace()
 }

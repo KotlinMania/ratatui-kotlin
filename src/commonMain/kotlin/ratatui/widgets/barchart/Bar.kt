@@ -103,7 +103,7 @@ data class Bar(
             // Since the value may be longer than the bar itself, we need to use 2 different styles
             // while rendering. Render the first part with the default value style
             buf.setStringn(area.x, area.y, text, barLength, style)
-            // render the second part with the bar_style
+            // render the second part with the barStyle
             if (text.length > barLength) {
                 val first = text.take(barLength)
                 val second = text.drop(barLength)
@@ -152,7 +152,7 @@ data class Bar(
         y: Int,
         defaultLabelStyle: Style
     ) {
-        // center the label. Necessary to do it this way as we don't want to set the style
+        // center the label. Necessary to do it this way as we do not want to set the style
         // of the whole area, just the label area
         val labelLine = label ?: return
         val width = labelLine.width().coerceAtMost(maxWidth)

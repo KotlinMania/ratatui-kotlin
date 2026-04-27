@@ -10,7 +10,7 @@ import ratatui.text.Text
 /**
  * A single item in a [List].
  *
- * The item's height is defined by the number of lines it contains. This can be queried using
+ * The item height is defined by the number of lines it contains. This can be queried using
  * [height]. Similarly, [width] will return the maximum width of all lines.
  *
  * You can set the style of an item with [style]. This [Style] will be combined with the [Style]

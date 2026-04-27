@@ -11,7 +11,7 @@ import ratatui.layout.Rect
 import ratatui.layout.Size
 
 /**
- * An interface to interact and draw [Frame]s on the user's terminal.
+ * An interface to interact and draw [Frame]s on the user terminal.
  *
  * This is the main entry point for Ratatui. It is responsible for drawing and maintaining the
  * state of the buffers, cursor and viewport.
@@ -159,7 +159,7 @@ class Terminal<B : Backend>(
     }
 
     /**
-     * Queries the backend for size and resizes if it doesn't match the previous size.
+     * Queries the backend for size and resizes if it does not match the previous size.
      */
     fun autoresize() {
         if (viewport is Viewport.Fullscreen || viewport is Viewport.Inline) {
@@ -319,7 +319,7 @@ class Terminal<B : Backend>(
      * Insert some content before the current inline viewport. This has no effect when the
      * viewport is not inline.
      *
-     * Transliteration of `Terminal::insert_before` (non-scrolling-regions implementation).
+     * Transliteration of `Terminal::insertBefore` (non-scrolling-regions implementation).
      */
     fun insertBefore(height: UShort, drawFn: (Buffer) -> Unit) {
         if (viewport !is Viewport.Inline) return

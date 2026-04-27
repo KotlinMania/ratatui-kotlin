@@ -71,7 +71,7 @@ internal interface Grid {
     /**
      * Get the resolution of the grid in number of dots.
      *
-     * This doesn't have to be the same as the number of rows and columns of the grid.
+     * This does not have to be the same as the number of rows and columns of the grid.
      */
     fun resolution(): Pair<Double, Double>
 

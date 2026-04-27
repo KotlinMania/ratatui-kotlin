@@ -82,7 +82,7 @@ package ratatui.style
  */
 /**
  * Value class wrapper for modifier bit flags.
- * Note: In Kotlin/Native, value classes don't have the same inline optimization as JVM,
+ * Note: In Kotlin/Native, value classes do not have the same inline optimization as JVM,
  * but they still provide type safety and a clean API.
  */
 data class Modifier(val bits: UShort) {
@@ -313,7 +313,7 @@ data class Style(
      * This uses a non-standard ANSI escape sequence. It is supported by most terminal emulators,
      * but is only implemented in the crossterm backend.
      *
-     * See [Wikipedia](https://en.wikipedia.org/wiki/ANSI_escape_code#SGR_(Select_Graphic_Rendition)_parameters)
+     * See [Wikipedia](https://en.wikipedia.org/wiki/ANSIEscapeCode#SGR_(SelectGraphicRendition)_parameters)
      * code `58` and `59` for more information.
      *
      * ## Examples

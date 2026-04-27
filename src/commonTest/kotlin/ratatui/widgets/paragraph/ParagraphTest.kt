@@ -1,4 +1,4 @@
-// port-lint: source ratatui/tests/widgets_paragraph.rs
+// port-lint: source ratatui/tests/widgetsParagraph.rs
 package ratatui.widgets.paragraph
 
 import kotlin.test.Test

@@ -7,7 +7,7 @@ import ratatui.style.Color
 import ratatui.widgets.Widget
 
 /**
- * State for the mascot's eye
+ * State for the mascot eye
  */
 enum class MascotEyeColor {
     /** The default eye color */
@@ -24,19 +24,19 @@ enum class MascotEyeColor {
 data class RatatuiMascot(
     private val eyeState: MascotEyeColor = MascotEyeColor.Default,
     /** The color of the rat */
-    private val ratColor: Color = Color.Indexed(252u),        // light_gray #d0d0d0
-    /** The color of the rat's eye */
-    private val ratEyeColor: Color = Color.Indexed(236u),     // dark_charcoal #303030
-    /** The color of the rat's eye when blinking */
+    private val ratColor: Color = Color.Indexed(252u),        // lightGray #d0d0d0
+    /** The color of the rat eye */
+    private val ratEyeColor: Color = Color.Indexed(236u),     // darkCharcoal #303030
+    /** The color of the rat eye when blinking */
     private val ratEyeBlink: Color = Color.Indexed(196u),     // red #ff0000
-    /** The color of the rat's hat */
+    /** The color of the rat hat */
     private val hatColor: Color = Color.Indexed(231u),        // white #ffffff
     /** The color of the terminal */
-    private val termColor: Color = Color.Indexed(232u),       // vampire_black #080808
+    private val termColor: Color = Color.Indexed(232u),       // vampireBlack #080808
     /** The color of the terminal border */
     private val termBorderColor: Color = Color.Indexed(237u), // gray #808080
     /** The color of the terminal cursor */
-    private val termCursorColor: Color = Color.Indexed(248u)  // dark_gray #a8a8a8
+    private val termCursorColor: Color = Color.Indexed(248u)  // darkGray #a8a8a8
 ) : Widget {
 
     /**
@@ -64,7 +64,7 @@ data class RatatuiMascot(
      * Use half block characters to render a logo based on the `RATATUI_MASCOT` const.
      *
      * The logo colors are hardcoded in the widget.
-     * The eye color depends on whether it's open / blinking
+     * The eye color depends on whether it open / blinking
      */
     override fun render(area: Rect, buf: Buffer) {
         val clippedArea = area.intersection(buf.area)

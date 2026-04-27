@@ -43,16 +43,16 @@ enum class TitlePosition {
  * A `Block` is a foundational widget that creates visual containers by drawing borders around an
  * area. It serves as a wrapper or frame for other widgets, providing structure and visual
  * separation in terminal UIs. Most built-in widgets in Ratatui use a pattern where they accept an
- * optional `Block` parameter that wraps the widget's content.
+ * optional `Block` parameter that wraps the widget content.
  *
- * When a widget renders with a block, the widget's style is applied first, then the block's style,
- * and finally the widget's content is rendered within the inner area calculated by the block. This
+ * When a widget renders with a block, the widget style is applied first, then the block style,
+ * and finally the widget content is rendered within the inner area calculated by the block. This
  * layered approach allows for flexible styling where the block can provide background colors,
  * borders, and padding while the inner widget handles its own content styling.
  *
  * Multiple blocks can be nested within each other. The [Block.inner] method calculates the area
  * available for content after accounting for borders, titles, and padding, making it easy to nest
- * blocks or position widgets within a block's boundaries.
+ * blocks or position widgets within a block boundaries.
  *
  * # Constructor Methods
  *
@@ -115,9 +115,9 @@ data class Block(
     private val titles: MutableList<Pair<TitlePosition?, Line>> = mutableListOf(),
     /** The style to be patched to all titles of the block */
     private val titlesStyle: Style = Style.default(),
-    /** The default alignment of the titles that don't have one */
+    /** The default alignment of the titles that do not have one */
     private val titlesAlignment: HorizontalAlignment = HorizontalAlignment.Left,
-    /** The default position of the titles that don't have one */
+    /** The default position of the titles that do not have one */
     private val titlesPosition: TitlePosition = TitlePosition.Top,
     /** Visible borders */
     private val borderFlags: Borders = Borders.NONE,
@@ -315,7 +315,7 @@ data class Block(
     fun padding(padding: Padding): Block = copy(blockPadding = padding)
 
     /**
-     * Sets the block's [MergeStrategy] for overlapping characters.
+     * Sets the block [MergeStrategy] for overlapping characters.
      *
      * Changing the strategy to [MergeStrategy.Exact] or [MergeStrategy.Fuzzy] collapses border
      * characters that intersect with any previously rendered borders.

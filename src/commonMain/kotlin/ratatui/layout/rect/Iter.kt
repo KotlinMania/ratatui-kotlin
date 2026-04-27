@@ -7,7 +7,7 @@ import ratatui.layout.Rect
 /**
  * An iterator over rows within a Rect.
  *
- * Transliteration of `ratatui_core::layout::rect::iter::Rows`.
+ * Transliteration of `ratatuiCore::layout::rect::iter::Rows`.
  */
 class Rows private constructor(
     private val rect: Rect,
@@ -46,7 +46,7 @@ class Rows private constructor(
 /**
  * An iterator over columns within a Rect.
  *
- * Transliteration of `ratatui_core::layout::rect::iter::Columns`.
+ * Transliteration of `ratatuiCore::layout::rect::iter::Columns`.
  */
 class Columns private constructor(
     private val rect: Rect,
@@ -87,7 +87,7 @@ class Columns private constructor(
  *
  * The iterator yields positions in row-major order.
  *
- * Transliteration of `ratatui_core::layout::rect::iter::Positions`.
+ * Transliteration of `ratatuiCore::layout::rect::iter::Positions`.
  */
 class Positions private constructor(
     private val rect: Rect,

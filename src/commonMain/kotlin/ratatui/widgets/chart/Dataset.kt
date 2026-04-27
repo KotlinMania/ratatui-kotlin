@@ -13,7 +13,7 @@ import ratatui.text.Line
  * A dataset can be [named][Dataset.name]. Only named datasets will be rendered in the legend.
  *
  * After that, you can pass it data with [Dataset.data]. Data is a list of `Pair<Double, Double>`,
- * the first element being X and the second Y. It's also worth noting that, unlike
+ * the first element being X and the second Y. It also worth noting that, unlike
  * the [Rect][ratatui.layout.Rect], here the Y axis is bottom to top, as in math.
  *
  * You can also customize the rendering by using [Dataset.marker] and [Dataset.graphType].
@@ -47,11 +47,11 @@ data class Dataset(
     /**
      * Sets the name of the dataset
      *
-     * The dataset's name is used when displaying the chart legend. Datasets don't require a name
-     * and can be created without specifying one. Once assigned, a name can't be removed, only
+     * The dataset name is used when displaying the chart legend. Datasets do not require a name
+     * and can be created without specifying one. Once assigned, a name cannot be removed, only
      * changed.
      *
-     * The name can be styled (see [Line] for that), but the dataset's style will always have
+     * The name can be styled (see [Line] for that), but the dataset style will always have
      * precedence.
      *
      * @param name The name as a string
@@ -74,7 +74,7 @@ data class Dataset(
      * depending on [Dataset.graphType].
      *
      * Data consist in a list of `Pair<Double, Double>`, the first element being X and the
-     * second Y. It's also worth noting that, unlike the [Rect][ratatui.layout.Rect], here the
+     * second Y. It also worth noting that, unlike the [Rect][ratatui.layout.Rect], here the
      * Y axis is bottom to top, as in math.
      *
      * @param data The list of data points as pairs

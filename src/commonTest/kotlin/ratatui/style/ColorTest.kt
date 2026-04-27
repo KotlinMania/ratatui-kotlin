@@ -86,9 +86,9 @@ class ColorTest {
         val badColors = listOf(
             "invalid_color", // not a color string
             "abcdef0",       // 7 chars is not a color
-            " bcdefa",       // doesn't start with a '#'
+            " bcdefa",       // does not start with a '#'
             "#abcdef00",     // too many chars
-            "#1\uD83E\uDD80" + "2", // len 7 but on char boundaries shouldn't panic
+            "#1\uD83E\uDD80" + "2", // len 7 but on char boundaries should not panic
             "resets",        // typo
             "lightblackk",   // typo
         )

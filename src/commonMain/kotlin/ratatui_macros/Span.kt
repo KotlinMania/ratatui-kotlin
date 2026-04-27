@@ -9,10 +9,10 @@ import ratatui.text.Span
 /**
  * A macro for creating a [Span] using formatting syntax.
  *
- * `span` is similar in spirit to Rust's `format!`, but it returns a [Span] instead of a [String].
+ * `span` is similar in spirit to the upstream `format!`, but it returns a [Span] instead of a [String].
  *
  * Rust supports compile-time format string checking; Kotlin does not. This Kotlin transliteration
- * provides a small subset of the Rust formatting surface used in Ratatui's docs/tests:
+ * provides a small subset of the Rust formatting surface used in Ratatui docs/tests:
  * - positional placeholders: `{}` (consume `args` in order)
  * - named placeholders: `{name}` (resolved via `namedArgs`)
  * - zero padding width specifier for numbers: `{name:04}`
@@ -115,7 +115,7 @@ private fun rustFormat(format: String, namedArgs: Map<String, Any?>, args: Array
         error("Unmatched '}' in format string: $format")
     }
 
-    // Mirror Rust's strictness loosely: extra args are likely a bug.
+    // Mirror the upstream strictness loosely: extra args are likely a bug.
     require(positionalIndex == args.size) {
         "Too many format args for: $format (expected $positionalIndex, got ${args.size})"
     }

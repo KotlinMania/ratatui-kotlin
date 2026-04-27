@@ -1,4 +1,4 @@
-// port-lint: source ratatui/tests/widgets_tabs.rs
+// port-lint: source ratatui/tests/widgetsTabs.rs
 package ratatui.widgets.tabs
 
 import ratatui.backend.TestBackend

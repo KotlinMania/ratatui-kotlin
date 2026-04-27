@@ -160,7 +160,7 @@ data class Chart(
     /**
      * Sets the constraints used to determine whether the legend should be shown or not.
      *
-     * The tuple's first constraint is used for the width and the second for the height. If the
+     * The tuple first constraint is used for the width and the second for the height. If the
      * legend takes more space than what is allowed by any constraint, the legend is hidden.
      * [Constraint.Min] is an exception and will always show the legend.
      *

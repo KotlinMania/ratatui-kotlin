@@ -6,7 +6,7 @@ import ratatui.layout.Rect
 /**
  * A zero-allocation iterator over the differences between two buffers of the same width.
  *
- * Transliteration of `ratatui_core::buffer::diff::BufferDiff`.
+ * Transliteration of `ratatuiCore::buffer::diff::BufferDiff`.
  *
  * Yields `(x, y, cell)` tuples for each cell in `next` that differs from the corresponding cell in
  * `prev`. Handles multi-width characters (including VS16 emoji trailing cells) and CellDiffOption
@@ -18,7 +18,7 @@ class BufferDiff private constructor(
     private val area: Rect
 ) : Iterator<BufferDiff.Item> {
     /**
-     * Transliteration of Rust's iterator item: `(x, y, &Cell)`.
+     * Transliteration of the upstream iterator item: `(x, y, &Cell)`.
      *
      * Rust declares this as `type Item = (u16, u16, &'next Cell)` in the `Iterator` implementation.
      */

@@ -7,7 +7,7 @@ import kotlin.test.assertFailsWith
 /**
  * Negative tests for macro-like helpers.
  *
- * Upstream uses `trybuild` compile-fail tests; Kotlin doesn't have an equivalent mechanism in
+ * Upstream uses `trybuild` compile-fail tests; Kotlin does not have an equivalent mechanism in
  * commonTest, so we assert that invalid uses throw at runtime.
  *
  * Transliteration target: `ratatui-macros/tests/ui/fails.rs`.

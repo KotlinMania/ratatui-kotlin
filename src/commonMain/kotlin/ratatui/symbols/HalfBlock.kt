@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/src/symbols/half_block.rs
+// port-lint: source ratatui-core/src/symbols/halfBlock.rs
 package ratatui.symbols
 
 /**

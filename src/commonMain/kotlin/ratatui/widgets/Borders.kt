@@ -271,7 +271,7 @@ enum class BorderType {
 /**
  * Construct a combination of [Borders] from any number of individual border flags.
  *
- * Mirrors Rust's `border!()` macro, using function call syntax.
+ * Mirrors the upstream `border!()` macro, using function call syntax.
  *
  * ## Examples
  *
