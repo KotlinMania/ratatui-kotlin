@@ -1,0 +1,16 @@
+# CMake generated Testfile for 
+# Source directory: /Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance
+# Build directory: /Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/build
+# 
+# This file includes the relevant testing commands required for 
+# testing this directory and lists subdirectories to be tested as well.
+add_test([=[doc_comment_parsing]=] "/opt/homebrew/anaconda3/envs/py312/bin/python3.12" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/tests/test_doc_comment_parsing.py" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/build/ast_distance" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/tests/fixtures/kotlin_doc_comments.kt")
+set_tests_properties([=[doc_comment_parsing]=] PROPERTIES  _BACKTRACE_TRIPLES "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/CMakeLists.txt;142;add_test;/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/CMakeLists.txt;0;")
+add_test([=[kotlin_comment_contamination]=] "/opt/homebrew/anaconda3/envs/py312/bin/python3.12" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/tests/test_kotlin_comment_contamination.py" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/build/ast_distance")
+set_tests_properties([=[kotlin_comment_contamination]=] PROPERTIES  _BACKTRACE_TRIPLES "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/CMakeLists.txt;150;add_test;/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/CMakeLists.txt;0;")
+add_test([=[mod_rs_reexport_hints]=] "/opt/homebrew/anaconda3/envs/py312/bin/python3.12" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/tests/test_mod_rs_reexport_hints.py" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/build/ast_distance")
+set_tests_properties([=[mod_rs_reexport_hints]=] PROPERTIES  _BACKTRACE_TRIPLES "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/CMakeLists.txt;157;add_test;/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/CMakeLists.txt;0;")
+add_test([=[cli_filter_guard]=] "/opt/homebrew/anaconda3/envs/py312/bin/python3.12" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/tests/test_cli_filter_guard.py" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/build/ast_distance")
+set_tests_properties([=[cli_filter_guard]=] PROPERTIES  _BACKTRACE_TRIPLES "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/CMakeLists.txt;164;add_test;/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/CMakeLists.txt;0;")
+add_test([=[provenance_fallback_report]=] "/opt/homebrew/anaconda3/envs/py312/bin/python3.12" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/tests/test_provenance_fallback_report.py" "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/build/ast_distance")
+set_tests_properties([=[provenance_fallback_report]=] PROPERTIES  _BACKTRACE_TRIPLES "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/CMakeLists.txt;171;add_test;/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/CMakeLists.txt;0;")

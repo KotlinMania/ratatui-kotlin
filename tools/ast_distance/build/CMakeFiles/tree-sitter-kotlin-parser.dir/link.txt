@@ -1,0 +1,2 @@
+/usr/bin/ar qc libtree-sitter-kotlin-parser.a "CMakeFiles/tree-sitter-kotlin-parser.dir/vendor/tree-sitter-kotlin/src/parser.c.o" "CMakeFiles/tree-sitter-kotlin-parser.dir/vendor/tree-sitter-kotlin/src/scanner.c.o"
+/usr/bin/ranlib libtree-sitter-kotlin-parser.a

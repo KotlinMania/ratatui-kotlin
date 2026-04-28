@@ -1,0 +1,22 @@
+{
+  "type": "port",
+  "name": "build",
+  "source": {
+    "path": "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/tests/fixtures/kotlin_doc_comments.kt",
+    "lang": "kotlin"
+  },
+  "target": {
+    "path": "/Volumes/stuff/Projects/kotlinmania/ratatui-kotlin/tools/ast_distance/tests/fixtures/kotlin_doc_comments.kt",
+    "lang": "kotlin"
+  },
+  "checks": {
+    "deep": true,
+    "missing": true,
+    "todos": true,
+    "lint": true
+  },
+  "reexport_modules": [
+    "mod.rs",
+    "lib.rs"
+  ]
+}

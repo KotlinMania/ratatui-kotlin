@@ -1,0 +1,6 @@
+doc_comment_parsing 1 0.290599
+kotlin_comment_contamination 1 0.057418
+mod_rs_reexport_hints 1 0.0493585
+cli_filter_guard 1 1.83264
+provenance_fallback_report 1 0.0696439
+---
