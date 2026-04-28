@@ -43,7 +43,7 @@ while adapting to idiomatic Kotlin patterns.
 
 ```kotlin
 dependencies {
-    implementation("io.github.kotlinmania:ratatui-kotlin:0.1.18")
+    implementation("io.github.kotlinmania:ratatui-kotlin:0.1.7")
 }
 ```
 
