@@ -5245,27 +5245,13 @@ int main(int argc, char* argv[]) {
                           << (report.stub_guarded ? "yes" : "no") << "\n";
             }
 
-            size_t pair_count = funcs1.size() * funcs2.size();
-            if (pair_count > 10000) {
-                std::cout << "\nFunction similarity matrix omitted: " << pair_count
-                          << " all-pairs cells would obscure the strict per-function parity report.\n";
-            } else {
-                std::cout << "\n=== Function Similarity Matrix ===\n\n";
-                std::cout << std::setw(20) << "";
-                for (const auto& func2 : funcs2) {
-                    std::cout << std::setw(12) << func2.name.substr(0, 10);
-                }
-                std::cout << "\n";
+            // Per-function parity is 1:1 — each Rust function paired with its
+            // strict-name Kotlin counterpart, one line per pair. The
+            // unmatched-source / unmatched-target lists above already surface
+            // the gaps. An N x M Cartesian product of "every Rust function vs
+            // every Kotlin function" is not a faithfulness check and is not
+            // emitted: this is a gap tester, not a cross-similarity explorer.
 
-                for (const auto& func1 : funcs1) {
-                    std::cout << std::setw(20) << func1.name.substr(0, 18);
-                    for (const auto& func2 : funcs2) {
-                        std::cout << std::setw(12) << std::fixed << std::setprecision(3)
-                                  << guarded_combined_similarity(func1, func2);
-                    }
-                    std::cout << "\n";
-                }
-            }
             write_missing_config_after_comparison(
                 {file1, language_config_name(lang1)},
                 {file2, language_config_name(lang2)});
