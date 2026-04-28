@@ -84,15 +84,3 @@ fun Widget?.render(area: Rect, buf: Buffer) {
         this.render(area, buf)
     }
 }
-
-/**
- * Renders an optional string as a widget.
- *
- * When the receiver is non-null the string is drawn via the [render] extension above; otherwise
- * this is a no-op.
- */
-fun String?.render(area: Rect, buf: Buffer) {
-    if (this != null) {
-        this.render(area, buf)
-    }
-}

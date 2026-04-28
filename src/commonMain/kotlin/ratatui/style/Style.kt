@@ -82,8 +82,7 @@ package ratatui.style
  */
 /**
  * Value class wrapper for modifier bit flags.
- * Note: In Kotlin/Native, value classes do not have the same inline optimization as JVM,
- * but they still provide type safety and a clean API.
+ * The wrapper keeps modifier flags type-safe while preserving a clean API.
  */
 data class Modifier(val bits: UShort) {
 
