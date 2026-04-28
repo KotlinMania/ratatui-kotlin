@@ -173,8 +173,6 @@ sealed class Color {
 
         /**
          * Converts `(r, g, b)` values to a [Color.Rgb] instance.
-         *
-         * Mirrors Rust `impl From<(u8, u8, u8)> for Color`.
          */
         fun from(r: UByte, g: UByte, b: UByte): Color = Rgb(r, g, b)
 
@@ -185,8 +183,6 @@ sealed class Color {
 
         /**
          * Converts `(r, g, b, a)` values to a [Color.Rgb] instance (ignoring alpha).
-         *
-         * Mirrors Rust `impl From<(u8, u8, u8, u8)> for Color`.
          */
         fun from(r: UByte, g: UByte, b: UByte, @Suppress("UNUSED_PARAMETER") a: UByte): Color =
             Rgb(r, g, b)
