@@ -5,6 +5,9 @@ import io.github.kotlinmania.crossterm.terminal.EnterAlternateScreen
 import io.github.kotlinmania.crossterm.terminal.LeaveAlternateScreen
 import io.github.kotlinmania.crossterm.terminal.sys.disableRawMode
 import io.github.kotlinmania.crossterm.terminal.sys.enableRawMode
+import kotlin.experimental.ExperimentalNativeApi
+import kotlin.native.getUnhandledExceptionHook
+import kotlin.native.setUnhandledExceptionHook
 import ratatui.terminal.Terminal
 import ratatui.terminal.TerminalOptions
 import ratatui_crossterm.CrosstermBackend
@@ -56,9 +59,9 @@ import ratatui_crossterm.CrosstermBackend
  *
  * # Panic Hook
  *
- * On JVM platforms, all initialization functions install a default uncaught-exception handler
- * that automatically restores the terminal state before propagating the exception. This ensures
- * that even if your application throws, the terminal will be left in a usable state.
+ * On Kotlin/Native desktop targets, all initialization functions install an unhandled-exception
+ * hook that automatically restores the terminal state before propagating the exception. This
+ * ensures that even if your application throws, the terminal will be left in a usable state.
  */
 
 private class StdoutBuffer : Appendable {
@@ -248,10 +251,11 @@ fun tryRestore() {
  * original handler. This ensures that the terminal is left in a good state when an exception
  * propagates out of the application main thread.
  */
+@OptIn(ExperimentalNativeApi::class)
 private fun setPanicHook() {
-    val previous = Thread.getDefaultUncaughtExceptionHandler()
-    Thread.setDefaultUncaughtExceptionHandler { thread, throwable ->
+    val previous = getUnhandledExceptionHook()
+    setUnhandledExceptionHook { throwable ->
         restore()
-        previous?.uncaughtException(thread, throwable)
+        previous?.invoke(throwable)
     }
 }
