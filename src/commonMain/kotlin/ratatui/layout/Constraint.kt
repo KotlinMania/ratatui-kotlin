@@ -169,8 +169,6 @@ sealed class Constraint {
 
     /**
      * Get a reference to self.
-     *
-     * Mirrors Rust `AsRef<Self> for Constraint`.
      */
     fun asRef(): Constraint = this
 
@@ -183,8 +181,6 @@ sealed class Constraint {
 
         /**
          * Create a constraint from another constraint (copy).
-         *
-         * Mirrors Rust `From<&Self> for Constraint`.
          */
         fun from(constraint: Constraint): Constraint = constraint
 

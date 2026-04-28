@@ -150,7 +150,5 @@ data class Position(
 
 /**
  * Moves the position by the given offset.
- *
- * Mirrors Rust `impl Add<Position> for Offset`.
  */
 operator fun Offset.plus(position: Position): Position = position + this
