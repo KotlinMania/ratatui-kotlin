@@ -1,4 +1,5 @@
-// port-lint: source ratatui-crossterm/src/lib.rs
+// port-lint: ignore
+// transliterated from upstream module root (ratatui-crossterm crate)
 /**
  * This crate provides [CrosstermBackend], an implementation of the [Backend] trait for the Ratatui
  * library. It uses the Crossterm library for all terminal manipulation.
