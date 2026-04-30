@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/src/layout/rect/iter.rs
+// port-lint: source layout/rect/iter.rs
 package ratatui.layout.rect
 
 import ratatui.layout.Position
@@ -41,6 +41,8 @@ class Rows private constructor(
         val count = (rect.height - startCount - endCount).coerceAtLeast(0)
         return Pair(count, count)
     }
+
+    fun asSequence(): Sequence<Rect> = generateSequence(::next)
 }
 
 /**
@@ -80,6 +82,8 @@ class Columns private constructor(
         val count = (rect.width - startCount - endCount).coerceAtLeast(0)
         return Pair(count, count)
     }
+
+    fun asSequence(): Sequence<Rect> = generateSequence(::next)
 }
 
 /**
