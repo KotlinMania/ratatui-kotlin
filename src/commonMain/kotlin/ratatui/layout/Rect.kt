@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/src/layout/rect.rs
+// port-lint: source layout/rect.rs
 /**
  * A rectangular area in the terminal.
  *
@@ -45,6 +45,10 @@
  * For comprehensive layout documentation and examples, see the layout module.
  */
 package ratatui.layout
+
+import ratatui.layout.rect.Columns
+import ratatui.layout.rect.Positions
+import ratatui.layout.rect.Rows
 
 /**
  * A rectangular area in the terminal.
@@ -275,26 +279,66 @@ data class Rect(
     override fun toString(): String = "${width}x${height}+${x}+${y}"
 
     /**
-     * Returns an iterator over the columns of the Rect.
-     *
-     * Each column is a Rect with width 1 and the same height and y-coordinate as this Rect.
+     * An iterator over columns within the Rect.
      */
-    fun columns(): Iterator<Rect> = iterator {
-        for (col in x until right()) {
-            yield(Rect(col, y, 1, height))
-        }
+    fun columns(): Columns = Columns.new(this)
+
+    /**
+     * An iterator over rows within the Rect.
+     */
+    fun rows(): Rows = Rows.new(this)
+
+    /**
+     * An iterator over positions within the Rect.
+     */
+    fun positions(): Positions = Positions.new(this)
+
+    /**
+     * Returns a new Rect, centered horizontally based on the provided constraint.
+     */
+    fun centeredHorizontally(constraint: Constraint): Rect {
+        val areas = Layout.horizontal(listOf(constraint)).flex(Flex.Center).split(this)
+        return areas[0]
     }
 
     /**
-     * Returns an iterator over the rows of the Rect.
-     *
-     * Each row is a Rect with height 1 and the same width and x-coordinate as this Rect.
+     * Returns a new Rect, centered vertically based on the provided constraint.
      */
-    fun rows(): Iterator<Rect> = iterator {
-        for (row in y until bottom()) {
-            yield(Rect(x, row, width, 1))
-        }
+    fun centeredVertically(constraint: Constraint): Rect {
+        val areas = Layout.vertical(listOf(constraint)).flex(Flex.Center).split(this)
+        return areas[0]
     }
+
+    /**
+     * Returns a new Rect, centered horizontally and vertically based on the provided constraints.
+     */
+    fun centered(horizontalConstraint: Constraint, verticalConstraint: Constraint): Rect =
+        this.centeredHorizontally(horizontalConstraint).centeredVertically(verticalConstraint)
+
+    /**
+     * Split the rect into a number of sub-rects according to the given [Layout].
+     *
+     * An ergonomic wrapper around [Layout.split] that returns a list of [Rect]s. In Rust this
+     * returns a fixed-size array `[Rect; N]`; without const generics in Kotlin we return a
+     * `List<Rect>` whose size matches the number of constraints.
+     */
+    fun layout(layout: Layout): List<Rect> = layout.split(this)
+
+    /**
+     * Split the rect into a number of sub-rects according to the given [Layout].
+     *
+     * An ergonomic wrapper around [Layout.split] that returns a [List] of [Rect]s.
+     */
+    fun layoutVec(layout: Layout): List<Rect> = layout.split(this)
+
+    /**
+     * Try to split the rect into a number of sub-rects according to the given [Layout].
+     *
+     * An ergonomic wrapper around [Layout.split]; in Kotlin this never fails because there is no
+     * fixed array length to satisfy, so the result is always [Result.success]. Mirrors the Rust
+     * `try_layout` API.
+     */
+    fun tryLayout(layout: Layout): Result<List<Rect>> = Result.success(layout.split(this))
 
     /**
      * Returns a new Rect with the x coordinate indented by the given width.
