@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/src/layout/rect/ops.rs
+// port-lint: source layout/rect/ops.rs
 package ratatui.layout.rect
 
 import ratatui.layout.Offset

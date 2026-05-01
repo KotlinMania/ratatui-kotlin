@@ -23,3 +23,12 @@ local.properties
 /ratatui-core/src/*.rs
 /ratatui-widgets/src/*.rs
 tools/port_linter.py
+tools/ast_distance/build/CMakeFiles/ast_distance.dir/src/main.cpp.o
+tools/ast_distance/build/ast_distance
+tools/ast_distance/build/libtree-sitter-core.a
+tools/ast_distance/build/libtree-sitter-cpp-parser.a
+tools/ast_distance/build/libtree-sitter-kotlin-parser.a
+tools/ast_distance/build/libtree-sitter-python-parser.a
+tools/ast_distance/build/libtree-sitter-rust-parser.a
+tools/ast_distance/build/libtree-sitter-typescript-parser.a
+tools/ast_distance/ast_distance

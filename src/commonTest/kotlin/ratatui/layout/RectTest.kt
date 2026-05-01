@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/tests/rect.rs
+// port-lint: source layout/rect.rs
 package ratatui.layout
 
 import ratatui.buffer.Buffer
@@ -153,4 +153,3 @@ class RectTest {
         assertEquals(expected, buf)
     }
 }
-

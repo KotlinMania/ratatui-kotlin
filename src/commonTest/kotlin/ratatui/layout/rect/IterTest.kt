@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/src/layout/rect/iter.rs
+// port-lint: source layout/rect/iter.rs
 package ratatui.layout.rect
 
 import ratatui.layout.Position
