@@ -22,6 +22,23 @@ class BufferTest {
     }
 
     @Test
+    fun debugGraphemeOverride() {
+        val buffer = Buffer.withLines("a🦀b")
+        val expected = """
+            Buffer {
+                area: Rect { x: 0, y: 0, width: 4, height: 1 },
+                content: [
+                    "a🦀b", // hidden by multi-width symbols: [(2, " ")]
+                ],
+                styles: [
+                    x: 0, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
+                ]
+            }
+        """.trimIndent()
+        assertEquals(expected, buffer.toString())
+    }
+
+    @Test
     fun debugSomeExample() {
         val buffer = Buffer.empty(Rect.new(0, 0, 12, 2))
         buffer.setString(0, 0, "Hello World!", Style.default())

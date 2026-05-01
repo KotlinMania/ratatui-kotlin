@@ -11,16 +11,16 @@ This list is complete and includes function/type detail for every matched file. 
 | Rank | Source | Target | Function similarity | Deps | Functions | Missing functions | Types | Missing types | SymDeficit | SrcSymbols | Priority |
 |------|--------|--------|------------|------|-----------|-------------------|-------|---------------|-----------|------------|----------|
 | 1 | `buffer` | `buffer.BufferTest [STUB] [PROVENANCE-FALLBACK]` | 0.00 | 12 | 0/0 matched (target 44) | _none_ | 0/0 matched (target 1) | _none_ | 0 | 0 | 12000010.0 |
-| 2 | `layout.rect` | `layout.Rect` | 0.29 | 9 | 23/47 matched (target 33) | `fmt`, `centered_horizontally`, `centered_vertically`, `centered`, `layout`, `layout_vec`, `try_layout`, `to_string`, `negative_offset`, `negative_offset_saturate`, `offset_saturate_max`, `intersection_underflow`, `mutual_intersect`, `size_truncation`, `size_preservation`, `resize_updates_size`, `resize_clamps_at_bounds`, `can_be_const`, `split`, `split_invalid_number_of_recs`, `from_position_and_size`, `from_size`, `layout_invalid_number_of_rects`, `try_layout_invalid_number_of_rects` | 1/1 matched (target 3) | _none_ | 24 | 48 | 9244807.0 |
+| 2 | `layout.rect` | `layout.Rect [ZERO]` | 0.00 | 9 | 45/47 matched (target 81) | `fmt`, `to_string` | 1/1 matched (target 4) | _none_ | 2 | 48 | 9024810.0 |
 | 3 | `backend` | `backend.Backend [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 6 | 3/5 matched (target 4) | `clear_type_tostring`, `clear_type_from_str` | 3/3 matched | _none_ | 2 | 8 | 6020810.0 |
 | 4 | `widgets.widget` | `widgets.Widget [PROVENANCE-FALLBACK]` | 0.72 | 6 | 7/8 matched (target 11) | `buf` | 2/2 matched (target 3) | _none_ | 1 | 10 | 6011003.0 |
-| 5 | `rect.iter` | `rect.Iter` | 0.74 | 5 | 14/16 matched (target 21) | `columns_max`, `columns_min` | 3/4 matched | `Item` | 3 | 20 | 5032002.5 |
+| 5 | `rect.iter` | `rect.Iter` | 0.74 | 5 | 14/16 matched (target 23) | `columns_max`, `columns_min` | 3/4 matched | `Item` | 3 | 20 | 5032002.5 |
 | 6 | `layout.position` | `layout.Position [PROVENANCE-FALLBACK]` | 0.51 | 4 | 10/16 matched (target 21) | `fmt`, `add`, `sub`, `add_assign`, `sub_assign`, `to_string` | 1/2 matched | `Output` | 7 | 18 | 4071805.0 |
 | 7 | `style.color` | `style.Color [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 4 | 16/21 matched (target 40) | `fmt`, `test_hsl_to_rgb`, `test_hsluv_to_rgb`, `deserialize_error`, `test_from_array_and_tuple_conversions` | 4/5 matched (target 30) | `Err` | 6 | 26 | 4062610.0 |
 | 8 | `text.line` | `text.Line [PROVENANCE-FALLBACK]` | 0.17 | 3 | 20/80 matched (target 32) | `fmt`, `cow_to_spans`, `iter`, `iter_mut`, `width_cjk`, `into_iter`, `add`, `add_assign`, `extend`, `spans_after_width`, `small_buf`, `raw_str`, `styled_str`, `styled_string`, `styled_cow`, `spans_vec`, `spans_iter`, `stylize`, `from_string`, `from_str`, `from_vec`, `from_slice_of_spans`, `from_slice_of_strs`, `from_slice_of_strings`, `collect`, `from_span`, `add_span`, `add_line`, `add_assign_span`, `into_string`, `display_line_from_vec`, `display_styled_line`, `display_line_from_styled_span`, `hello_world`, `render_out_of_bounds`, `render_only_styles_line_area`, `render_only_styles_first_line`, `render_truncates`, `render_centered`, `render_right_aligned`, `render_truncates_left`, `render_truncates_right`, `render_truncates_center`, `regression_1032`, `crab_emoji_width`, `render_truncates_emoji`, `render_truncates_emoji_center`, `render_truncates_away_from_0x0`, `render_right_aligned_multi_span`, `flag_emoji`, `render_truncates_flag`, `render_truncates_very_long_line_of_many_spans`, `render_truncates_very_long_single_span_line`, `render_with_newlines`, `into_iter_ref`, `into_iter_mut_ref`, `for_loop_ref`, `for_loop_mut_ref`, `for_loop_into`, `debug` | 2/5 matched (target 2) | `Item`, `IntoIter`, `Output` | 63 | 85 | 3638508.2 |
-| 9 | `style.stylize` | `style.Stylize [PROVENANCE-FALLBACK]` | 0.31 | 3 | 7/20 matched (target 391) | `fmt`, `str_styled`, `string_styled`, `cow_string_styled`, `temporary_string_styled`, `other_primitives_styled`, `color_modifier`, `fg_bg`, `repeated_attributes`, `all_chained`, `stylize_debug_foreground`, `stylize_debug_background`, `stylize_debug_underline` | 4/5 matched (target 7) | `Item` | 14 | 25 | 3142507.0 |
+| 9 | `style.stylize` | `style.Stylize [PROVENANCE-FALLBACK]` | 0.31 | 3 | 7/20 matched (target 390) | `fmt`, `str_styled`, `string_styled`, `cow_string_styled`, `temporary_string_styled`, `other_primitives_styled`, `color_modifier`, `fg_bg`, `repeated_attributes`, `all_chained`, `stylize_debug_foreground`, `stylize_debug_background`, `stylize_debug_underline` | 4/5 matched (target 7) | `Item` | 14 | 25 | 3142507.0 |
 | 10 | `style` | `style.Style [PROVENANCE-FALLBACK]` | 0.63 | 3 | 25/33 matched (target 102) | `fmt`, `deserialize_modifier`, `fmt_stylize`, `combine_individual_modifiers`, `style_can_be_const`, `serialize_then_deserialize`, `deserialize_defaults`, `deserialize_null_modifiers` | 1/1 matched (target 3) | _none_ | 8 | 34 | 3083403.8 |
-| 11 | `buffer.cell` | `buffer.Cell [PROVENANCE-FALLBACK]` | 0.79 | 3 | 19/21 matched (target 50) | `eq`, `hash` | 2/2 matched (target 7) | _none_ | 2 | 23 | 3022302.0 |
+| 11 | `buffer.cell` | `buffer.Cell [PROVENANCE-FALLBACK]` | 0.79 | 3 | 19/21 matched (target 50) | `eq`, `hash` | 2/2 matched (target 7) | _none_ | 2 | 23 | 3022302.2 |
 | 12 | `layout.size` | `layout.Size [PROVENANCE-FALLBACK]` | 0.24 | 2 | 3/8 matched (target 6) | `fmt`, `from_tuple`, `to_tuple`, `from_rect`, `display` | 1/1 matched | _none_ | 5 | 9 | 2050907.6 |
 | 13 | `layout.constraint` | `layout.Constraint [PROVENANCE-FALLBACK]` | 0.73 | 2 | 10/12 matched (target 32) | `fmt`, `to_string` | 1/1 matched (target 8) | _none_ | 2 | 13 | 2021302.8 |
 | 14 | `terminal` | `terminal.Terminal [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 2 | 0/1 matched (target 38) | `drop` | 2/2 matched (target 3) | _none_ | 1 | 3 | 2010310.0 |
@@ -57,12 +57,13 @@ This list is complete and includes function/type detail for every matched file. 
 | 45 | `palette.tailwind` | `tailwind.Tailwind [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0 | 0/0 matched | _none_ | 1/1 matched | _none_ | 0 | 1 | 110.0 |
 | 46 | `symbols.half_block` | `symbols.HalfBlock [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | 0 | 0 | 10.0 |
 | 47 | `symbols.shade` | `shade.Shade [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | 0 | 0 | 10.0 |
-| 48 | `symbols.braille` | `symbols.Braille [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | 0 | 0 | 10.0 |
-| 49 | `symbols.pixel` | `symbols.Pixel [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | 0 | 0 | 10.0 |
+| 48 | `symbols.pixel` | `symbols.Pixel [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | 0 | 0 | 10.0 |
+| 49 | `symbols.braille` | `symbols.Braille [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | 0 | 0 | 10.0 |
 
 ## Cheat Detection / Scoring Failures
 
 - `buffer` -> `buffer.BufferTest [STUB] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. target contains TODO/stub/placeholder markers in function bodies; no source functions found; report scoring is function-by-function only
+- `layout.rect` -> `layout.Rect [ZERO]`: function-by-function score forced to 0. Rect.kt: snake_case identifier `try_layout` in Kotlin comments; RectUnitTest.kt: snake_case identifier `no_intersect` in Kotlin comments; RectUnitTest.kt: Rust attribute syntax in Kotlin comments
 - `backend` -> `backend.Backend [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. Backend.kt: score-padding suppression annotation `@Suppress` in Kotlin code
 - `style.color` -> `style.Color [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. Color.kt: Rust `match` expression in Kotlin comments; Color.kt: score-padding suppression annotation `@Suppress` in Kotlin code
 - `terminal` -> `terminal.Terminal [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. Terminal.kt: Rust `match` expression in Kotlin comments
@@ -74,8 +75,8 @@ This list is complete and includes function/type detail for every matched file. 
 - `palette.tailwind` -> `tailwind.Tailwind [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. no source functions found; report scoring is function-by-function only
 - `symbols.half_block` -> `symbols.HalfBlock [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. no source functions found; report scoring is function-by-function only
 - `symbols.shade` -> `shade.Shade [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. no source functions found; report scoring is function-by-function only
-- `symbols.braille` -> `symbols.Braille [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. no source functions found; report scoring is function-by-function only
 - `symbols.pixel` -> `symbols.Pixel [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. no source functions found; report scoring is function-by-function only
+- `symbols.braille` -> `symbols.Braille [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. no source functions found; report scoring is function-by-function only
 
 ## Critical Issues (Function Similarity < 0.60 with Dependencies)
 
@@ -91,13 +92,14 @@ These files need immediate attention:
   - Scoring failure: target contains TODO/stub/placeholder markers in function bodies; no source functions found; report scoring is function-by-function only
   - Lint issues: 1
 
-- **layout.rect** → `layout.Rect`
-  - Function similarity: 0.29
+- **layout.rect** → `layout.Rect [ZERO]`
+  - Function similarity: 0.00
   - Dependencies: 9
-  - Functions: 23/47 matched (target 33)
-  - Missing functions: `fmt`, `centered_horizontally`, `centered_vertically`, `centered`, `layout`, `layout_vec`, `try_layout`, `to_string`, `negative_offset`, `negative_offset_saturate`, `offset_saturate_max`, `intersection_underflow`, `mutual_intersect`, `size_truncation`, `size_preservation`, `resize_updates_size`, `resize_clamps_at_bounds`, `can_be_const`, `split`, `split_invalid_number_of_recs`, `from_position_and_size`, `from_size`, `layout_invalid_number_of_rects`, `try_layout_invalid_number_of_rects`
-  - Types: 1/1 matched (target 3)
+  - Functions: 45/47 matched (target 81)
+  - Missing functions: `fmt`, `to_string`
+  - Types: 1/1 matched (target 4)
   - Missing types: _none_
+  - Scoring failure: Rect.kt: snake_case identifier `try_layout` in Kotlin comments; RectUnitTest.kt: snake_case identifier `no_intersect` in Kotlin comments; RectUnitTest.kt: Rust attribute syntax in Kotlin comments
 
 - **backend** → `backend.Backend [ZERO] [PROVENANCE-FALLBACK]`
   - Function similarity: 0.00
@@ -140,7 +142,7 @@ These files need immediate attention:
 - **style.stylize** → `style.Stylize [PROVENANCE-FALLBACK]`
   - Function similarity: 0.31
   - Dependencies: 3
-  - Functions: 7/20 matched (target 391)
+  - Functions: 7/20 matched (target 390)
   - Missing functions: `fmt`, `str_styled`, `string_styled`, `cow_string_styled`, `temporary_string_styled`, `other_primitives_styled`, `color_modifier`, `fg_bg`, `repeated_attributes`, `all_chained`, `stylize_debug_foreground`, `stylize_debug_background`, `stylize_debug_underline`
   - Types: 4/5 matched (target 7)
   - Missing types: `Item`

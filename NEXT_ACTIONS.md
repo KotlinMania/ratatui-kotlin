@@ -5,10 +5,10 @@ Based on AST analysis, here are the concrete next steps.
 ## Summary
 
 - **Files Present:** 49/61 (80.3%)
-- **Function parity:** 346/829 matched (target 1250) — 41.7%
-- **Class/type parity:** 68/95 matched (target 166) — 71.6%
-- **Combined symbol parity:** 414/924 matched (target 1416) — 44.8%
-- **Cheat-zeroed Files:** 14
+- **Function parity:** 368/829 matched (target 1299) — 44.4%
+- **Class/type parity:** 68/95 matched (target 167) — 71.6%
+- **Combined symbol parity:** 436/924 matched (target 1466) — 47.2%
+- **Cheat-zeroed Files:** 15
 - **Critical Issues:** 36 files with <0.60 function similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
@@ -49,15 +49,15 @@ Every matched file is listed below with function and type symbol parity.
 
 ### 2. layout.rect
 
-- **Target:** `layout.Rect`
-- **Similarity:** 0.29
+- **Target:** `layout.Rect [ZERO]`
+- **Similarity:** 0.00
 - **Dependents:** 9
-- **Priority Score:** 9244807.0
-- **Functions:** 23/47 matched (target 33)
-- **Missing functions:** `fmt`, `centered_horizontally`, `centered_vertically`, `centered`, `layout`, `layout_vec`, `try_layout`, `to_string`, `negative_offset`, `negative_offset_saturate`, `offset_saturate_max`, `intersection_underflow`, `mutual_intersect`, `size_truncation`, `size_preservation`, `resize_updates_size`, `resize_clamps_at_bounds`, `can_be_const`, `split`, `split_invalid_number_of_recs`, `from_position_and_size`, `from_size`, `layout_invalid_number_of_rects`, `try_layout_invalid_number_of_rects`
-- **Types:** 1/1 matched (target 3)
+- **Priority Score:** 9024810.0
+- **Functions:** 45/47 matched (target 81)
+- **Missing functions:** `fmt`, `to_string`
+- **Types:** 1/1 matched (target 4)
 - **Missing types:** _none_
-- **Tests:** 0/17 matched
+- **Tests:** 16/17 matched
 
 ### 3. backend
 
@@ -97,7 +97,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Similarity:** 0.74
 - **Dependents:** 5
 - **Priority Score:** 5032002.5
-- **Functions:** 14/16 matched (target 21)
+- **Functions:** 14/16 matched (target 23)
 - **Missing functions:** `columns_max`, `columns_min`
 - **Types:** 3/4 matched
 - **Missing types:** `Item`
@@ -158,7 +158,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Similarity:** 0.31
 - **Dependents:** 3
 - **Priority Score:** 3142507.0
-- **Functions:** 7/20 matched (target 391)
+- **Functions:** 7/20 matched (target 390)
 - **Missing functions:** `fmt`, `str_styled`, `string_styled`, `cow_string_styled`, `temporary_string_styled`, `other_primitives_styled`, `color_modifier`, `fg_bg`, `repeated_attributes`, `all_chained`, `stylize_debug_foreground`, `stylize_debug_background`, `stylize_debug_underline`
 - **Types:** 4/5 matched (target 7)
 - **Missing types:** `Item`
@@ -191,7 +191,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Target:** `buffer.Cell [PROVENANCE-FALLBACK]`
 - **Similarity:** 0.79
 - **Dependents:** 3
-- **Priority Score:** 3022302.0
+- **Priority Score:** 3022302.2
 - **Functions:** 19/21 matched (target 50)
 - **Missing functions:** `eq`, `hash`
 - **Types:** 2/2 matched (target 7)
@@ -767,21 +767,7 @@ Every matched file is listed below with function and type symbol parity.
 - **Proposed provenance header:** `// port-lint: source symbols/shade.rs` (current: `// port-lint: source ratatui-core/src/symbols/shade.rs`)
 - **Lint issues:** 1
 
-### 48. symbols.braille
-
-- **Target:** `symbols.Braille [ZERO] [PROVENANCE-FALLBACK]`
-- **Similarity:** 0.00
-- **Dependents:** 0
-- **Priority Score:** 10.0
-- **Functions:** 0/0 matched
-- **Missing functions:** _none_
-- **Types:** 0/0 matched (target 1)
-- **Missing types:** _none_
-- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `ratatui-core/src/symbols/braille.rs` vs expected `symbols/braille.rs`
-- **Proposed provenance header:** `// port-lint: source symbols/braille.rs` (current: `// port-lint: source ratatui-core/src/symbols/braille.rs`)
-- **Lint issues:** 1
-
-### 49. symbols.pixel
+### 48. symbols.pixel
 
 - **Target:** `symbols.Pixel [ZERO] [PROVENANCE-FALLBACK]`
 - **Similarity:** 0.00
@@ -793,6 +779,20 @@ Every matched file is listed below with function and type symbol parity.
 - **Missing types:** _none_
 - **Provenance warning:** port-lint provenance header matched only after fallback normalization: `ratatui-core/src/symbols/pixel.rs` vs expected `symbols/pixel.rs`
 - **Proposed provenance header:** `// port-lint: source symbols/pixel.rs` (current: `// port-lint: source ratatui-core/src/symbols/pixel.rs`)
+- **Lint issues:** 1
+
+### 49. symbols.braille
+
+- **Target:** `symbols.Braille [ZERO] [PROVENANCE-FALLBACK]`
+- **Similarity:** 0.00
+- **Dependents:** 0
+- **Priority Score:** 10.0
+- **Functions:** 0/0 matched
+- **Missing functions:** _none_
+- **Types:** 0/0 matched (target 1)
+- **Missing types:** _none_
+- **Provenance warning:** port-lint provenance header matched only after fallback normalization: `ratatui-core/src/symbols/braille.rs` vs expected `symbols/braille.rs`
+- **Proposed provenance header:** `// port-lint: source symbols/braille.rs` (current: `// port-lint: source ratatui-core/src/symbols/braille.rs`)
 - **Lint issues:** 1
 
 ## Success Criteria

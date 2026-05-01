@@ -1,6 +1,6 @@
 # Code Port - Progress Report
 
-**Generated:** 2026-04-29
+**Generated:** 2026-05-01
 **Source:** ratatui-core/src
 **Target:** src/commonMain/kotlin/ratatui
 
@@ -8,17 +8,17 @@
 
 | Metric | Count | Percentage |
 |--------|-------|------------|
-| Function parity | 346/829 matched (target 1250) | 41.7% |
-| Class/type parity | 68/95 matched (target 166) | 71.6% |
-| Combined symbol parity | 414/924 matched (target 1416) | 44.8% |
+| Function parity | 368/829 matched (target 1299) | 44.4% |
+| Class/type parity | 68/95 matched (target 167) | 71.6% |
+| Combined symbol parity | 436/924 matched (target 1466) | 47.2% |
 | Average function body similarity | 0.32 | required score |
 | Missing source functions | 81 | 0% parity until ported |
 | Missing source classes/types | 3 | 0% parity until ported |
 | Missing source symbol files | 6 | 84 symbols |
-| Cheat/scoring failures | 14 | forced to 0% |
+| Cheat/scoring failures | 15 | forced to 0% |
 | Total source files | 61 | 100% |
-| Target units (paired) | 127 | - |
-| Target files (total) | 127 | - |
+| Target units (paired) | 128 | - |
+| Target files (total) | 128 | - |
 | Porting progress | 49 | 80.3% (matched) |
 | Missing files | 11 | 18.0% |
 | Reexport/wiring files | 1 | consult-only |
@@ -40,35 +40,35 @@ Every matched file is listed from lowest function body/parameter similarity upwa
 | Rank | Source | Target | Function similarity | Functions | Missing functions | Types | Missing types | Tests | Symbol deficit | Priority |
 |------|--------|--------|---------------------|-----------|-------------------|-------|---------------|-------|----------------|----------|
 | 1 | `buffer` | `buffer.BufferTest [STUB] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched (target 44) | _none_ | 0/0 matched (target 1) | _none_ | - | 0 | 12000010.0 |
-| 2 | `backend` | `backend.Backend [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 3/5 matched (target 4) | `clear_type_tostring`, `clear_type_from_str` | 3/3 matched | _none_ | 0/2 | 2 | 6020810.0 |
-| 3 | `style.color` | `style.Color [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 16/21 matched (target 40) | `fmt`, `test_hsl_to_rgb`, `test_hsluv_to_rgb`, `deserialize_error`, `test_from_array_and_tuple_conversions` | 4/5 matched (target 30) | `Err` | 7/11 | 6 | 4062610.0 |
-| 4 | `terminal` | `terminal.Terminal [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/1 matched (target 38) | `drop` | 2/2 matched (target 3) | _none_ | - | 1 | 2010310.0 |
-| 5 | `text.masked` | `text.Masked [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 4/9 matched (target 12) | `fmt`, `from`, `debug`, `display`, `into_cow` | 1/1 matched (target 2) | _none_ | 1/4 | 5 | 1051010.0 |
-| 6 | `layout.flex` | `layout.Flex [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched (target 7) | _none_ | 1/1 matched | _none_ | - | 0 | 1000110.0 |
-| 7 | `symbols.merge` | `merge.Merge [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 6/10 matched (target 11) | `new`, `replace_merge_strategy`, `exact_merge_strategy`, `fuzzy_merge_strategy` | 3/4 matched (target 3) | `BorderSymbolError` | 0/3 | 5 | 51410.0 |
-| 8 | `buffer.diff` | `buffer.BufferDiff [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 14/14 matched (target 17) | _none_ | 3/3 matched (target 4) | _none_ | 10/10 | 0 | 1710.0 |
-| 9 | `palette.tailwind` | `tailwind.Tailwind [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched | _none_ | 1/1 matched | _none_ | - | 0 | 110.0 |
-| 10 | `symbols.braille` | `symbols.Braille [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | - | 0 | 10.0 |
-| 11 | `symbols.half_block` | `symbols.HalfBlock [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | - | 0 | 10.0 |
-| 12 | `symbols.pixel` | `symbols.Pixel [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | - | 0 | 10.0 |
-| 13 | `symbols.scrollbar` | `scrollbar.Scrollbar [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched (target 38) | _none_ | 1/1 matched (target 5) | _none_ | - | 0 | 110.0 |
-| 14 | `symbols.shade` | `shade.Shade [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | - | 0 | 10.0 |
-| 15 | `terminal.viewport` | `terminal.Viewport [PROVENANCE-FALLBACK]` | 0.00 | 0/2 matched (target 7) | `fmt`, `viewport_to_string` | 1/1 matched (target 4) | _none_ | 0/1 | 2 | 1020310.0 |
-| 16 | `rect.ops` | `rect.Ops [PROVENANCE-FALLBACK]` | 0.00 | 0/9 matched (target 10) | `neg`, `add`, `sub`, `add_assign`, `sub_assign`, `add_offset`, `sub_offset`, `add_assign_offset`, `sub_assign_offset` | 0/1 matched (target 0) | `Output` | 0/4 | 10 | 101010.0 |
-| 17 | `terminal.backend` | `backend.ClearTypeTest [PROVENANCE-FALLBACK]` | 0.00 | 0/6 matched (target 2) | `backend`, `backend_mut`, `size`, `backend_returns_shared_reference`, `backend_mut_allows_mutating_backend_state`, `size_queries_underlying_backend_size` | 0/0 matched (target 1) | _none_ | 0/3 | 6 | 60610.0 |
-| 18 | `buffer.assert` | `buffer.Assert [PROVENANCE-FALLBACK]` | 0.00 | 0/3 matched (target 4) | `assert_buffer_eq_does_not_panic_on_equal_buffers`, `assert_buffer_eq_panics_on_unequal_area`, `assert_buffer_eq_panics_on_unequal_style` | 0/0 matched (target 1) | _none_ | 0/3 | 3 | 30310.0 |
-| 19 | `symbols.border` | `border.Border [PROVENANCE-FALLBACK]` | 0.08 | 2/22 matched (target 2) | `render`, `border_set_from_line_set`, `plain`, `rounded`, `double`, `thick`, `light_double_dashed`, `heavy_double_dashed`, `light_triple_dashed`, `heavy_triple_dashed`, `light_quadruple_dashed`, `heavy_quadruple_dashed`, `quadrant_outside`, `quadrant_inside`, `one_eighth_wide`, `one_eighth_tall`, `proportional_wide`, `proportional_tall`, `full`, `empty` | 1/1 matched (target 3) | _none_ | 0/20 | 20 | 202309.2 |
-| 20 | `symbols.line` | `line.Line [PROVENANCE-FALLBACK]` | 0.14 | 1/6 matched (target 3) | `render`, `normal`, `rounded`, `double`, `thick` | 1/1 matched (target 3) | _none_ | 0/5 | 5 | 50708.6 |
-| 21 | `layout.margin` | `layout.Margin [PROVENANCE-FALLBACK]` | 0.15 | 1/6 matched (target 3) | `from`, `fmt`, `margin_to_string`, `margin_new`, `from_u16` | 1/1 matched | _none_ | 0/3 | 5 | 1050708.5 |
-| 22 | `layout.direction` | `layout.Direction [PROVENANCE-FALLBACK]` | 0.17 | 1/4 matched (target 2) | `direction_to_string`, `direction_from_str`, `other` | 1/1 matched | _none_ | 0/3 | 3 | 1030508.3 |
-| 23 | `text.line` | `text.Line [PROVENANCE-FALLBACK]` | 0.17 | 20/80 matched (target 32) | `fmt`, `cow_to_spans`, `iter`, `iter_mut`, `width_cjk`, `into_iter`, `add`, `add_assign`, `extend`, `spans_after_width`, `small_buf`, `raw_str`, `styled_str`, `styled_string`, `styled_cow`, `spans_vec`, `spans_iter`, `stylize`, `from_string`, `from_str`, `from_vec`, `from_slice_of_spans`, `from_slice_of_strs`, `from_slice_of_strings`, `collect`, `from_span`, `add_span`, `add_line`, `add_assign_span`, `into_string`, `display_line_from_vec`, `display_styled_line`, `display_line_from_styled_span`, `hello_world`, `render_out_of_bounds`, `render_only_styles_line_area`, `render_only_styles_first_line`, `render_truncates`, `render_centered`, `render_right_aligned`, `render_truncates_left`, `render_truncates_right`, `render_truncates_center`, `regression_1032`, `crab_emoji_width`, `render_truncates_emoji`, `render_truncates_emoji_center`, `render_truncates_away_from_0x0`, `render_right_aligned_multi_span`, `flag_emoji`, `render_truncates_flag`, `render_truncates_very_long_line_of_many_spans`, `render_truncates_very_long_single_span_line`, `render_with_newlines`, `into_iter_ref`, `into_iter_mut_ref`, `for_loop_ref`, `for_loop_mut_ref`, `for_loop_into`, `debug` | 2/5 matched (target 2) | `Item`, `IntoIter`, `Output` | 0/50 | 63 | 3638508.2 |
-| 24 | `text.text` | `text.Text [PROVENANCE-FALLBACK]` | 0.19 | 19/70 matched (target 33) | `fmt`, `iter`, `iter_mut`, `width_cjk`, `into_iter`, `add`, `add_assign`, `small_buf`, `from_string`, `from_str`, `from_cow`, `from_span`, `from_line`, `from_slice_of_spans`, `from_slice_of_lines`, `from_slice_of_strs`, `from_slice_of_strings`, `from_vec_line`, `from_iterator`, `collect`, `add_line`, `add_text`, `add_assign_text`, `add_assign_line`, `extend_from_iter`, `extend_from_iter_str`, `display_raw_text`, `display_styled_text`, `display_text_from_vec`, `display_extended_text`, `stylize`, `push_line_empty`, `push_span_empty`, `render_out_of_bounds`, `render_right_aligned`, `render_centered_odd`, `render_centered_even`, `render_right_aligned_with_truncation`, `render_centered_odd_with_truncation`, `render_centered_even_with_truncation`, `render_one_line_right`, `render_only_styles_line_area`, `render_truncates`, `hello_world`, `into_iter_ref`, `into_iter_mut_ref`, `for_loop_ref`, `for_loop_mut_ref`, `for_loop_into`, `debug`, `debug_alternate` | 2/5 matched (target 2) | `Item`, `IntoIter`, `Output` | 0/44 | 54 | 547508.1 |
-| 25 | `text.span` | `text.Span [PROVENANCE-FALLBACK]` | 0.24 | 15/52 matched (target 27) | `fmt`, `to_left_aligned_line`, `to_centered_line`, `to_right_aligned_line`, `width_cjk`, `add`, `small_buf`, `default`, `raw_str`, `raw_string`, `styled_str`, `styled_string`, `set_content`, `from_ref_str_borrowed_cow`, `from_string_ref_str_borrowed_cow`, `from_string_owned_cow`, `from_ref_string_borrowed_cow`, `stylize`, `display_span`, `display_newline_span`, `display_styled_span`, `left_aligned`, `centered`, `right_aligned`, `render_out_of_bounds`, `render_truncates_too_long_content`, `render_patches_existing_style`, `render_multi_width_symbol`, `render_multi_width_symbol_truncates_entire_symbol`, `render_overflowing_area_truncates`, `render_first_zero_width`, `render_second_zero_width`, `render_middle_zero_width`, `render_last_zero_width`, `render_with_newlines`, `issue_1160`, `debug` | 2/4 matched (target 3) | `Output`, `Item` | 0/31 | 39 | 1395607.6 |
-| 26 | `layout.size` | `layout.Size [PROVENANCE-FALLBACK]` | 0.24 | 3/8 matched (target 6) | `fmt`, `from_tuple`, `to_tuple`, `from_rect`, `display` | 1/1 matched | _none_ | 0/4 | 5 | 2050907.6 |
-| 27 | `buffer.buffer` | `buffer.Buffer [PROVENANCE-FALLBACK]` | 0.25 | 22/63 matched (target 35) | `index`, `index_mut`, `fmt`, `debug_empty_buffer`, `debug_grapheme_override`, `debug_some_example`, `it_translates_to_and_from_coordinates`, `pos_of_panics_on_out_of_bounds`, `index_of_panics_on_out_of_bounds`, `test_cell`, `test_cell_mut`, `index_out_of_bounds_panics`, `index_mut_out_of_bounds_panics`, `set_string_multi_width_overwrite`, `set_string_zero_width`, `set_string_double_width`, `small_one_line_buffer`, `set_line_raw`, `set_line_styled`, `set_style_does_not_panic_when_out_of_area`, `diff_empty_empty`, `diff_empty_filled`, `diff_filled_filled`, `diff_single_width`, `diff_multi_width`, `diff_multi_width_offset`, `merge_diff_idempotent`, `merge_diff_forcedwidth`, `merge_diff_link`, `merge_diff_split_link`, `merge_diff_image_sequences`, `diff_skip`, `merge_with_offset`, `merge_skip`, `with_lines_accepts_into_lines`, `control_sequence_rendered_full`, `control_sequence_rendered_partially`, `renders_emoji`, `index_pos_of_u16_max`, `diff_clears_trailing_cell_for_wide_grapheme`, `diff_ignores_style_only_changes_in_trailing_cells` | 1/2 matched (target 3) | `Output` | 0/38 | 42 | 426507.4 |
-| 28 | `layout.layout` | `layout.Layout [PROVENANCE-FALLBACK]` | 0.26 | 29/75 matched (target 41) | `init_cache`, `resize_cache`, `areas`, `try_areas`, `spacers`, `cached_split`, `split_layout`, `round`, `debug_elements`, `strength_is_valid`, `cache_size`, `margins`, `letters`, `length`, `max`, `min`, `percentage`, `percentage_start`, `percentage_spacebetween`, `ratio`, `ratio_start`, `ratio_spacebetween`, `vertical_split_by_height`, `edge_cases`, `constraint_length`, `table_length`, `length_is_higher_priority`, `length_is_higher_priority_in_flex`, `fixed_with_50_width`, `fill`, `percentage_parameterized`, `min_max`, `flex_constraint`, `flex_overlap`, `flex_spacing`, `constraint_specification_tests_for_priority`, `constraint_specification_tests_for_priority_with_spacing`, `fill_vs_flex`, `fill_spacing`, `fill_overlap`, `flex_spacing_lower_priority_than_user_spacing`, `split_with_spacers_no_spacing`, `split_with_spacers_and_spacing`, `split_with_spacers_and_overlap`, `split_with_spacers_and_too_much_spacing`, `legacy_vs_default` | 3/7 matched (target 6) | `Rects`, `Segments`, `Spacers`, `Cache` | 0/37 | 50 | 508207.4 |
-| 29 | `layout.rect` | `layout.Rect` | 0.29 | 23/47 matched (target 33) | `fmt`, `centered_horizontally`, `centered_vertically`, `centered`, `layout`, `layout_vec`, `try_layout`, `to_string`, `negative_offset`, `negative_offset_saturate`, `offset_saturate_max`, `intersection_underflow`, `mutual_intersect`, `size_truncation`, `size_preservation`, `resize_updates_size`, `resize_clamps_at_bounds`, `can_be_const`, `split`, `split_invalid_number_of_recs`, `from_position_and_size`, `from_size`, `layout_invalid_number_of_rects`, `try_layout_invalid_number_of_rects` | 1/1 matched (target 3) | _none_ | 0/17 | 24 | 9244807.0 |
-| 30 | `style.stylize` | `style.Stylize [PROVENANCE-FALLBACK]` | 0.31 | 7/20 matched (target 391) | `fmt`, `str_styled`, `string_styled`, `cow_string_styled`, `temporary_string_styled`, `other_primitives_styled`, `color_modifier`, `fg_bg`, `repeated_attributes`, `all_chained`, `stylize_debug_foreground`, `stylize_debug_background`, `stylize_debug_underline` | 4/5 matched (target 7) | `Item` | 0/12 | 14 | 3142507.0 |
+| 2 | `layout.rect` | `layout.Rect [ZERO]` | 0.00 | 45/47 matched (target 81) | `fmt`, `to_string` | 1/1 matched (target 4) | _none_ | 16/17 | 2 | 9024810.0 |
+| 3 | `backend` | `backend.Backend [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 3/5 matched (target 4) | `clear_type_tostring`, `clear_type_from_str` | 3/3 matched | _none_ | 0/2 | 2 | 6020810.0 |
+| 4 | `style.color` | `style.Color [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 16/21 matched (target 40) | `fmt`, `test_hsl_to_rgb`, `test_hsluv_to_rgb`, `deserialize_error`, `test_from_array_and_tuple_conversions` | 4/5 matched (target 30) | `Err` | 7/11 | 6 | 4062610.0 |
+| 5 | `terminal` | `terminal.Terminal [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/1 matched (target 38) | `drop` | 2/2 matched (target 3) | _none_ | - | 1 | 2010310.0 |
+| 6 | `text.masked` | `text.Masked [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 4/9 matched (target 12) | `fmt`, `from`, `debug`, `display`, `into_cow` | 1/1 matched (target 2) | _none_ | 1/4 | 5 | 1051010.0 |
+| 7 | `layout.flex` | `layout.Flex [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched (target 7) | _none_ | 1/1 matched | _none_ | - | 0 | 1000110.0 |
+| 8 | `symbols.merge` | `merge.Merge [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 6/10 matched (target 11) | `new`, `replace_merge_strategy`, `exact_merge_strategy`, `fuzzy_merge_strategy` | 3/4 matched (target 3) | `BorderSymbolError` | 0/3 | 5 | 51410.0 |
+| 9 | `buffer.diff` | `buffer.BufferDiff [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 14/14 matched (target 17) | _none_ | 3/3 matched (target 4) | _none_ | 10/10 | 0 | 1710.0 |
+| 10 | `palette.tailwind` | `tailwind.Tailwind [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched | _none_ | 1/1 matched | _none_ | - | 0 | 110.0 |
+| 11 | `symbols.braille` | `symbols.Braille [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | - | 0 | 10.0 |
+| 12 | `symbols.half_block` | `symbols.HalfBlock [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | - | 0 | 10.0 |
+| 13 | `symbols.pixel` | `symbols.Pixel [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | - | 0 | 10.0 |
+| 14 | `symbols.scrollbar` | `scrollbar.Scrollbar [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched (target 38) | _none_ | 1/1 matched (target 5) | _none_ | - | 0 | 110.0 |
+| 15 | `symbols.shade` | `shade.Shade [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0/0 matched | _none_ | 0/0 matched (target 1) | _none_ | - | 0 | 10.0 |
+| 16 | `terminal.viewport` | `terminal.Viewport [PROVENANCE-FALLBACK]` | 0.00 | 0/2 matched (target 7) | `fmt`, `viewport_to_string` | 1/1 matched (target 4) | _none_ | 0/1 | 2 | 1020310.0 |
+| 17 | `rect.ops` | `rect.Ops [PROVENANCE-FALLBACK]` | 0.00 | 0/9 matched (target 10) | `neg`, `add`, `sub`, `add_assign`, `sub_assign`, `add_offset`, `sub_offset`, `add_assign_offset`, `sub_assign_offset` | 0/1 matched (target 0) | `Output` | 0/4 | 10 | 101010.0 |
+| 18 | `terminal.backend` | `backend.ClearTypeTest [PROVENANCE-FALLBACK]` | 0.00 | 0/6 matched (target 2) | `backend`, `backend_mut`, `size`, `backend_returns_shared_reference`, `backend_mut_allows_mutating_backend_state`, `size_queries_underlying_backend_size` | 0/0 matched (target 1) | _none_ | 0/3 | 6 | 60610.0 |
+| 19 | `buffer.assert` | `buffer.Assert [PROVENANCE-FALLBACK]` | 0.00 | 0/3 matched (target 4) | `assert_buffer_eq_does_not_panic_on_equal_buffers`, `assert_buffer_eq_panics_on_unequal_area`, `assert_buffer_eq_panics_on_unequal_style` | 0/0 matched (target 1) | _none_ | 0/3 | 3 | 30310.0 |
+| 20 | `symbols.border` | `border.Border [PROVENANCE-FALLBACK]` | 0.08 | 2/22 matched (target 2) | `render`, `border_set_from_line_set`, `plain`, `rounded`, `double`, `thick`, `light_double_dashed`, `heavy_double_dashed`, `light_triple_dashed`, `heavy_triple_dashed`, `light_quadruple_dashed`, `heavy_quadruple_dashed`, `quadrant_outside`, `quadrant_inside`, `one_eighth_wide`, `one_eighth_tall`, `proportional_wide`, `proportional_tall`, `full`, `empty` | 1/1 matched (target 3) | _none_ | 0/20 | 20 | 202309.2 |
+| 21 | `symbols.line` | `line.Line [PROVENANCE-FALLBACK]` | 0.14 | 1/6 matched (target 3) | `render`, `normal`, `rounded`, `double`, `thick` | 1/1 matched (target 3) | _none_ | 0/5 | 5 | 50708.6 |
+| 22 | `layout.margin` | `layout.Margin [PROVENANCE-FALLBACK]` | 0.15 | 1/6 matched (target 3) | `from`, `fmt`, `margin_to_string`, `margin_new`, `from_u16` | 1/1 matched | _none_ | 0/3 | 5 | 1050708.5 |
+| 23 | `layout.direction` | `layout.Direction [PROVENANCE-FALLBACK]` | 0.17 | 1/4 matched (target 2) | `direction_to_string`, `direction_from_str`, `other` | 1/1 matched | _none_ | 0/3 | 3 | 1030508.3 |
+| 24 | `text.line` | `text.Line [PROVENANCE-FALLBACK]` | 0.17 | 20/80 matched (target 32) | `fmt`, `cow_to_spans`, `iter`, `iter_mut`, `width_cjk`, `into_iter`, `add`, `add_assign`, `extend`, `spans_after_width`, `small_buf`, `raw_str`, `styled_str`, `styled_string`, `styled_cow`, `spans_vec`, `spans_iter`, `stylize`, `from_string`, `from_str`, `from_vec`, `from_slice_of_spans`, `from_slice_of_strs`, `from_slice_of_strings`, `collect`, `from_span`, `add_span`, `add_line`, `add_assign_span`, `into_string`, `display_line_from_vec`, `display_styled_line`, `display_line_from_styled_span`, `hello_world`, `render_out_of_bounds`, `render_only_styles_line_area`, `render_only_styles_first_line`, `render_truncates`, `render_centered`, `render_right_aligned`, `render_truncates_left`, `render_truncates_right`, `render_truncates_center`, `regression_1032`, `crab_emoji_width`, `render_truncates_emoji`, `render_truncates_emoji_center`, `render_truncates_away_from_0x0`, `render_right_aligned_multi_span`, `flag_emoji`, `render_truncates_flag`, `render_truncates_very_long_line_of_many_spans`, `render_truncates_very_long_single_span_line`, `render_with_newlines`, `into_iter_ref`, `into_iter_mut_ref`, `for_loop_ref`, `for_loop_mut_ref`, `for_loop_into`, `debug` | 2/5 matched (target 2) | `Item`, `IntoIter`, `Output` | 0/50 | 63 | 3638508.2 |
+| 25 | `text.text` | `text.Text [PROVENANCE-FALLBACK]` | 0.19 | 19/70 matched (target 33) | `fmt`, `iter`, `iter_mut`, `width_cjk`, `into_iter`, `add`, `add_assign`, `small_buf`, `from_string`, `from_str`, `from_cow`, `from_span`, `from_line`, `from_slice_of_spans`, `from_slice_of_lines`, `from_slice_of_strs`, `from_slice_of_strings`, `from_vec_line`, `from_iterator`, `collect`, `add_line`, `add_text`, `add_assign_text`, `add_assign_line`, `extend_from_iter`, `extend_from_iter_str`, `display_raw_text`, `display_styled_text`, `display_text_from_vec`, `display_extended_text`, `stylize`, `push_line_empty`, `push_span_empty`, `render_out_of_bounds`, `render_right_aligned`, `render_centered_odd`, `render_centered_even`, `render_right_aligned_with_truncation`, `render_centered_odd_with_truncation`, `render_centered_even_with_truncation`, `render_one_line_right`, `render_only_styles_line_area`, `render_truncates`, `hello_world`, `into_iter_ref`, `into_iter_mut_ref`, `for_loop_ref`, `for_loop_mut_ref`, `for_loop_into`, `debug`, `debug_alternate` | 2/5 matched (target 2) | `Item`, `IntoIter`, `Output` | 0/44 | 54 | 547508.1 |
+| 26 | `text.span` | `text.Span [PROVENANCE-FALLBACK]` | 0.24 | 15/52 matched (target 27) | `fmt`, `to_left_aligned_line`, `to_centered_line`, `to_right_aligned_line`, `width_cjk`, `add`, `small_buf`, `default`, `raw_str`, `raw_string`, `styled_str`, `styled_string`, `set_content`, `from_ref_str_borrowed_cow`, `from_string_ref_str_borrowed_cow`, `from_string_owned_cow`, `from_ref_string_borrowed_cow`, `stylize`, `display_span`, `display_newline_span`, `display_styled_span`, `left_aligned`, `centered`, `right_aligned`, `render_out_of_bounds`, `render_truncates_too_long_content`, `render_patches_existing_style`, `render_multi_width_symbol`, `render_multi_width_symbol_truncates_entire_symbol`, `render_overflowing_area_truncates`, `render_first_zero_width`, `render_second_zero_width`, `render_middle_zero_width`, `render_last_zero_width`, `render_with_newlines`, `issue_1160`, `debug` | 2/4 matched (target 3) | `Output`, `Item` | 0/31 | 39 | 1395607.6 |
+| 27 | `layout.size` | `layout.Size [PROVENANCE-FALLBACK]` | 0.24 | 3/8 matched (target 6) | `fmt`, `from_tuple`, `to_tuple`, `from_rect`, `display` | 1/1 matched | _none_ | 0/4 | 5 | 2050907.6 |
+| 28 | `buffer.buffer` | `buffer.Buffer [PROVENANCE-FALLBACK]` | 0.25 | 22/63 matched (target 35) | `index`, `index_mut`, `fmt`, `debug_empty_buffer`, `debug_grapheme_override`, `debug_some_example`, `it_translates_to_and_from_coordinates`, `pos_of_panics_on_out_of_bounds`, `index_of_panics_on_out_of_bounds`, `test_cell`, `test_cell_mut`, `index_out_of_bounds_panics`, `index_mut_out_of_bounds_panics`, `set_string_multi_width_overwrite`, `set_string_zero_width`, `set_string_double_width`, `small_one_line_buffer`, `set_line_raw`, `set_line_styled`, `set_style_does_not_panic_when_out_of_area`, `diff_empty_empty`, `diff_empty_filled`, `diff_filled_filled`, `diff_single_width`, `diff_multi_width`, `diff_multi_width_offset`, `merge_diff_idempotent`, `merge_diff_forcedwidth`, `merge_diff_link`, `merge_diff_split_link`, `merge_diff_image_sequences`, `diff_skip`, `merge_with_offset`, `merge_skip`, `with_lines_accepts_into_lines`, `control_sequence_rendered_full`, `control_sequence_rendered_partially`, `renders_emoji`, `index_pos_of_u16_max`, `diff_clears_trailing_cell_for_wide_grapheme`, `diff_ignores_style_only_changes_in_trailing_cells` | 1/2 matched (target 3) | `Output` | 0/38 | 42 | 426507.4 |
+| 29 | `layout.layout` | `layout.Layout [PROVENANCE-FALLBACK]` | 0.26 | 29/75 matched (target 41) | `init_cache`, `resize_cache`, `areas`, `try_areas`, `spacers`, `cached_split`, `split_layout`, `round`, `debug_elements`, `strength_is_valid`, `cache_size`, `margins`, `letters`, `length`, `max`, `min`, `percentage`, `percentage_start`, `percentage_spacebetween`, `ratio`, `ratio_start`, `ratio_spacebetween`, `vertical_split_by_height`, `edge_cases`, `constraint_length`, `table_length`, `length_is_higher_priority`, `length_is_higher_priority_in_flex`, `fixed_with_50_width`, `fill`, `percentage_parameterized`, `min_max`, `flex_constraint`, `flex_overlap`, `flex_spacing`, `constraint_specification_tests_for_priority`, `constraint_specification_tests_for_priority_with_spacing`, `fill_vs_flex`, `fill_spacing`, `fill_overlap`, `flex_spacing_lower_priority_than_user_spacing`, `split_with_spacers_no_spacing`, `split_with_spacers_and_spacing`, `split_with_spacers_and_overlap`, `split_with_spacers_and_too_much_spacing`, `legacy_vs_default` | 3/7 matched (target 6) | `Rects`, `Segments`, `Spacers`, `Cache` | 0/37 | 50 | 508207.4 |
+| 30 | `style.stylize` | `style.Stylize [PROVENANCE-FALLBACK]` | 0.31 | 7/20 matched (target 390) | `fmt`, `str_styled`, `string_styled`, `cow_string_styled`, `temporary_string_styled`, `other_primitives_styled`, `color_modifier`, `fg_bg`, `repeated_attributes`, `all_chained`, `stylize_debug_foreground`, `stylize_debug_background`, `stylize_debug_underline` | 4/5 matched (target 7) | `Item` | 0/12 | 14 | 3142507.0 |
 | 31 | `backend.test` | `backend.TestBackend [PROVENANCE-FALLBACK]` | 0.32 | 25/47 matched (target 29) | `assert_cursor_position`, `fmt`, `scroll_region_up`, `scroll_region_down`, `test_buffer_view`, `buffer_view_with_overwrites`, `assert_buffer_panics`, `assert_scrollback_panics`, `display`, `clear_region_all`, `clear_region_after_cursor`, `clear_region_before_cursor`, `clear_region_current_line`, `clear_region_until_new_line`, `append_lines_not_at_last_line`, `append_lines_at_last_line`, `append_multiple_lines_not_at_last_line`, `append_multiple_lines_past_last_line`, `append_multiple_lines_where_cursor_at_end_appends_height_lines`, `append_multiple_lines_where_cursor_appends_height_lines`, `append_multiple_lines_where_cursor_at_end_appends_more_than_height_lines`, `append_lines_truncates_beyond_u16_max` | 1/3 matched (target 1) | `Result`, `Error` | 0/18 | 24 | 245006.8 |
 | 32 | `layout.alignment` | `layout.Alignment [PROVENANCE-FALLBACK]` | 0.37 | 2/4 matched (target 7) | `alignment_from_str`, `vertical_alignment_from_str` | 3/3 matched (target 4) | _none_ | 2/4 | 2 | 1020706.2 |
 | 33 | `terminal.cursor` | `terminal.CursorTest [PROVENANCE-FALLBACK]` | 0.39 | 5/11 matched (target 5) | `hide_cursor`, `show_cursor`, `get_cursor`, `set_cursor`, `get_cursor_position`, `set_cursor_position` | 0/0 matched (target 1) | _none_ | 5/5 | 6 | 61106.1 |
@@ -80,9 +80,9 @@ Every matched file is listed from lowest function body/parameter similarity upwa
 | 39 | `widgets.widget` | `widgets.Widget [PROVENANCE-FALLBACK]` | 0.72 | 7/8 matched (target 11) | `buf` | 2/2 matched (target 3) | _none_ | 6/7 | 1 | 6011003.0 |
 | 40 | `layout.offset` | `layout.Offset [PROVENANCE-FALLBACK]` | 0.73 | 5/5 matched | _none_ | 1/1 matched (target 2) | _none_ | 3/3 | 0 | 1000602.8 |
 | 41 | `layout.constraint` | `layout.Constraint [PROVENANCE-FALLBACK]` | 0.73 | 10/12 matched (target 32) | `fmt`, `to_string` | 1/1 matched (target 8) | _none_ | 0/1 | 2 | 2021302.8 |
-| 42 | `rect.iter` | `rect.Iter` | 0.74 | 14/16 matched (target 21) | `columns_max`, `columns_min` | 3/4 matched | `Item` | 10/12 | 3 | 5032002.5 |
+| 42 | `rect.iter` | `rect.Iter` | 0.74 | 14/16 matched (target 23) | `columns_max`, `columns_min` | 3/4 matched | `Item` | 10/12 | 3 | 5032002.5 |
 | 43 | `widgets.stateful_widget` | `widgets.StatefulWidget [PROVENANCE-FALLBACK]` | 0.75 | 2/4 matched (target 6) | `buf`, `state` | 3/4 matched | `State` | 2/4 | 3 | 1030802.5 |
-| 44 | `buffer.cell` | `buffer.Cell [PROVENANCE-FALLBACK]` | 0.79 | 19/21 matched (target 50) | `eq`, `hash` | 2/2 matched (target 7) | _none_ | 4/4 | 2 | 3022302.0 |
+| 44 | `buffer.cell` | `buffer.Cell [PROVENANCE-FALLBACK]` | 0.79 | 19/21 matched (target 50) | `eq`, `hash` | 2/2 matched (target 7) | _none_ | 4/4 | 2 | 3022302.2 |
 | 45 | `palette.material` | `material.Material [PROVENANCE-FALLBACK]` | 0.91 | 1/1 matched (target 2) | _none_ | 2/2 matched (target 3) | _none_ | - | 0 | 300.9 |
 | 46 | `text.grapheme` | `text.Grapheme [PROVENANCE-FALLBACK]` | 0.93 | 5/5 matched (target 8) | _none_ | 1/2 matched | `Item` | 1/1 | 1 | 10700.7 |
 | 47 | `terminal.frame` | `terminal.Frame [PROVENANCE-FALLBACK]` | 0.94 | 8/8 matched (target 10) | _none_ | 2/2 matched | _none_ | - | 0 | 1000.6 |
@@ -92,6 +92,7 @@ Every matched file is listed from lowest function body/parameter similarity upwa
 ## Cheat Detection / Scoring Failures
 
 - `buffer` -> `buffer.BufferTest [STUB] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. target contains TODO/stub/placeholder markers in function bodies; no source functions found; report scoring is function-by-function only
+- `layout.rect` -> `layout.Rect [ZERO]`: function-by-function score forced to 0. Rect.kt: snake_case identifier `try_layout` in Kotlin comments; RectUnitTest.kt: snake_case identifier `no_intersect` in Kotlin comments; RectUnitTest.kt: Rust attribute syntax in Kotlin comments
 - `backend` -> `backend.Backend [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. Backend.kt: score-padding suppression annotation `@Suppress` in Kotlin code
 - `style.color` -> `style.Color [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. Color.kt: Rust `match` expression in Kotlin comments; Color.kt: score-padding suppression annotation `@Suppress` in Kotlin code
 - `terminal` -> `terminal.Terminal [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. Terminal.kt: Rust `match` expression in Kotlin comments
@@ -111,6 +112,7 @@ Every matched file is listed from lowest function body/parameter similarity upwa
 These files need significant work:
 
 - `buffer` -> `buffer.BufferTest [STUB] [PROVENANCE-FALLBACK]` (0.00, 12 deps)
+- `layout.rect` -> `layout.Rect [ZERO]` (0.00, 9 deps)
 - `backend` -> `backend.Backend [ZERO] [PROVENANCE-FALLBACK]` (0.00, 6 deps)
 - `style.color` -> `style.Color [ZERO] [PROVENANCE-FALLBACK]` (0.00, 4 deps)
 - `terminal` -> `terminal.Terminal [ZERO] [PROVENANCE-FALLBACK]` (0.00, 2 deps)
@@ -138,7 +140,6 @@ These files need significant work:
 - `layout.size` -> `layout.Size [PROVENANCE-FALLBACK]` (0.24, 2 deps)
 - `buffer.buffer` -> `buffer.Buffer [PROVENANCE-FALLBACK]` (0.25)
 - `layout.layout` -> `layout.Layout [PROVENANCE-FALLBACK]` (0.26)
-- `layout.rect` -> `layout.Rect` (0.29, 9 deps)
 - `style.stylize` -> `style.Stylize [PROVENANCE-FALLBACK]` (0.31, 3 deps)
 - `backend.test` -> `backend.TestBackend [PROVENANCE-FALLBACK]` (0.32)
 - `layout.alignment` -> `layout.Alignment [PROVENANCE-FALLBACK]` (0.37, 1 deps)
@@ -190,13 +191,13 @@ present in the Rust source file.
 
 There is missing documentation that is hurting overall scoring.
 
-**Documentation coverage:** 3816 / 13422 lines (28%)
+**Documentation coverage:** 3844 / 13422 lines (29%)
 
 Documentation gaps (>20%), complete list:
 
 - `layout.layout` - 91% gap (1212 → 110 lines)
 - `palette.material` - 94% gap (854 → 49 lines)
-- `layout.rect` - 83% gap (816 → 139 lines)
+- `layout.rect` - 80% gap (816 → 167 lines)
 - `symbols.merge` - 92% gap (640 → 52 lines)
 - `palette.tailwind` - 97% gap (600 → 20 lines)
 - `text.line` - 63% gap (914 → 338 lines)
@@ -224,8 +225,8 @@ Documentation gaps (>20%), complete list:
 - `layout.size` - 43% gap (96 → 55 lines)
 - `buffer.diff` - 65% gap (40 → 14 lines)
 - `rect.ops` - 50% gap (50 → 25 lines)
-- `layout.margin` - 36% gap (66 → 42 lines)
 - `buffer.cell_width` - 60% gap (40 → 16 lines)
+- `layout.margin` - 36% gap (66 → 42 lines)
 - `text.masked` - 39% gap (46 → 28 lines)
 - `text.grapheme` - 27% gap (22 → 16 lines)
 - `buffer.assert` - 30% gap (10 → 7 lines)

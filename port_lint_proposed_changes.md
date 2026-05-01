@@ -1,6 +1,6 @@
 # port-lint Proposed Changes
 
-**Generated:** 2026-04-29
+**Generated:** 2026-05-01
 **Source:** ratatui-core/src
 **Target:** src/commonMain/kotlin/ratatui
 
@@ -76,5 +76,5 @@ These are review proposals only. They are emitted when a Rust -> Kotlin pair mat
 | `src/commonMain/kotlin/ratatui/style/palette/tailwind/Tailwind.kt` | `// port-lint: source ratatui-core/src/style/palette/tailwind.rs` | `// port-lint: source style/palette/tailwind.rs` | `style/palette/tailwind.rs` | `port-lint provenance header matched only after fallback normalization: 'ratatui-core/src/style/palette/tailwind.rs' vs expected 'style/palette/tailwind.rs'` |
 | `src/commonMain/kotlin/ratatui/symbols/HalfBlock.kt` | `// port-lint: source ratatui-core/src/symbols/halfBlock.rs` | `// port-lint: source symbols/half_block.rs` | `symbols/half_block.rs` | `port-lint provenance header matched only after fallback normalization: 'ratatui-core/src/symbols/halfBlock.rs' vs expected 'symbols/half_block.rs'` |
 | `src/commonMain/kotlin/ratatui/symbols/shade/Shade.kt` | `// port-lint: source ratatui-core/src/symbols/shade.rs` | `// port-lint: source symbols/shade.rs` | `symbols/shade.rs` | `port-lint provenance header matched only after fallback normalization: 'ratatui-core/src/symbols/shade.rs' vs expected 'symbols/shade.rs'` |
-| `src/commonMain/kotlin/ratatui/symbols/Braille.kt` | `// port-lint: source ratatui-core/src/symbols/braille.rs` | `// port-lint: source symbols/braille.rs` | `symbols/braille.rs` | `port-lint provenance header matched only after fallback normalization: 'ratatui-core/src/symbols/braille.rs' vs expected 'symbols/braille.rs'` |
 | `src/commonMain/kotlin/ratatui/symbols/Pixel.kt` | `// port-lint: source ratatui-core/src/symbols/pixel.rs` | `// port-lint: source symbols/pixel.rs` | `symbols/pixel.rs` | `port-lint provenance header matched only after fallback normalization: 'ratatui-core/src/symbols/pixel.rs' vs expected 'symbols/pixel.rs'` |
+| `src/commonMain/kotlin/ratatui/symbols/Braille.kt` | `// port-lint: source ratatui-core/src/symbols/braille.rs` | `// port-lint: source symbols/braille.rs` | `symbols/braille.rs` | `port-lint provenance header matched only after fallback normalization: 'ratatui-core/src/symbols/braille.rs' vs expected 'symbols/braille.rs'` |

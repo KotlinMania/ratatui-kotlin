@@ -113,6 +113,37 @@ class IterTest {
         assertEquals(Pair(0, 0), columns.sizeHint())
     }
 
+    /**
+     * We allow a total of 65536 columns in the range (0..=65535).  In this test we iterate
+     * forward and skip the first 65534 columns, and expect the next column to be 65535 and the
+     * subsequent columns to be null.
+     */
+    @Test
+    fun columnsMax() {
+        val max = UShort.MAX_VALUE.toInt()
+        val rect = Rect.new(0, 0, max, 1)
+        val columns = Columns.new(rect)
+        repeat(max - 1) { columns.next() }
+        assertEquals(Rect.new(max - 1, 0, 1, 1), columns.next())
+        assertEquals(null, columns.next())
+    }
+
+    /**
+     * We allow a total of 65536 columns in the range (0..=65535).  In this test we iterate
+     * backward and skip the last 65534 columns, and expect the next column to be 0 and the
+     * subsequent columns to be null.
+     */
+    @Test
+    fun columnsMin() {
+        val max = UShort.MAX_VALUE.toInt()
+        val rect = Rect.new(0, 0, max, 1)
+        val columns = Columns.new(rect)
+        repeat(max - 1) { columns.nextBack() }
+        assertEquals(Rect.new(0, 0, 1, 1), columns.nextBack())
+        assertEquals(null, columns.nextBack())
+        assertEquals(null, columns.nextBack())
+    }
+
     @Test
     fun positions() {
         val rect = Rect.new(0, 0, 2, 2)
