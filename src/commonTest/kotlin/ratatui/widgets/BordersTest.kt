@@ -34,7 +34,7 @@ class BordersTest {
 
     @Test
     fun borderLeftRight() {
-        val leftRight = Borders.fromBits((Borders.LEFT.bits or Borders.RIGHT.bits).toUByte())
+        val leftRight = Borders.fromBits(Borders.LEFT.bits or Borders.RIGHT.bits)
         assertEquals(leftRight, Borders.fromBits(border(Borders.RIGHT, Borders.LEFT).bits))
     }
 }

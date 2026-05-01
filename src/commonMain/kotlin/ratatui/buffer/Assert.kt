@@ -8,7 +8,6 @@ package ratatui.buffer
  * When the buffers differ this method panics and displays the differences similar to
  * `assertEq!()`.
  */
-@Deprecated("use assertEquals(actual, expected)")
 fun assertBufferEq(actual: Buffer, expected: Buffer) {
     if (actual.area != expected.area) {
         throw AssertionError(
