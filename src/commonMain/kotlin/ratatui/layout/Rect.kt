@@ -336,7 +336,7 @@ data class Rect(
      *
      * An ergonomic wrapper around [Layout.split]; in Kotlin this never fails because there is no
      * fixed array length to satisfy, so the result is always [Result.success]. Mirrors the Rust
-     * `try_layout` API.
+     * [tryLayout] API.
      */
     fun tryLayout(layout: Layout): Result<List<Rect>> = Result.success(layout.split(this))
 

@@ -8,7 +8,7 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
- * Inline unit tests transliterated from the `#[cfg(test)] mod tests` block in
+ * Inline unit tests transliterated from the `tests` module in
  * `ratatui-core/src/layout/rect.rs`.
  *
  * Integration tests from `ratatui-core/tests/rect.rs` live in [RectTest].
@@ -164,7 +164,7 @@ class RectUnitTest {
             Rect.new(0, 0, 10, 10) to Rect.new(10, 10, 20, 20),
             // edge
             Rect.new(0, 0, 10, 10) to Rect.new(10, 0, 20, 10),
-            // no_intersect
+            // no intersect
             Rect.new(0, 0, 10, 10) to Rect.new(11, 11, 20, 20),
             // contains
             Rect.new(0, 0, 20, 20) to Rect.new(5, 5, 10, 10),
@@ -260,9 +260,9 @@ class RectUnitTest {
     }
 
     /**
-     * The Rust test is `#[should_panic(expected = "invalid number of rects")]` — destructuring
-     * a fixed-size array `[_a, _b, _c]` from a 2-element split. Kotlin has no compile-time array
-     * length, so we mirror the failure mode with an out-of-bounds index access.
+     * The Rust test asserts a panic with the message "invalid number of rects" — destructuring
+     * a fixed-size array of three elements from a 2-element split. Kotlin has no compile-time
+     * array length, so we mirror the failure mode with an out-of-bounds index access.
      */
     @Test
     fun splitInvalidNumberOfRecs() {
@@ -440,9 +440,10 @@ class RectUnitTest {
     }
 
     /**
-     * The Rust test calls `try_layout::<3>(...).unwrap_err()` — the `try_into` of a 1-element slice
-     * into a 3-element array fails. In Kotlin without const generics, `tryLayout` always succeeds,
-     * so we mirror the original failure surface by accessing an out-of-bounds element afterwards.
+     * The Rust test calls [tryLayout] with a generic length of 3 and expects the conversion of a
+     * 1-element list into a 3-element array to fail. In Kotlin without const generics, [tryLayout]
+     * always succeeds, so we mirror the original failure surface by accessing an out-of-bounds
+     * element afterwards.
      */
     @Test
     fun tryLayoutInvalidNumberOfRects() {
