@@ -8,7 +8,9 @@
 /.gradle/9.2.1/executionHistory/
 /.gradle/file-system.probe
 *.lock
+kotlin-js-store/*
 !kotlin-js-store/yarn.lock
+!kotlin-js-store/wasm/
 !kotlin-js-store/wasm/yarn.lock
 *.bin
 /tmp/
