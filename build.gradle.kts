@@ -6,12 +6,12 @@ import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
 plugins {
     kotlin("multiplatform") version "2.3.20"
     kotlin("plugin.serialization") version "2.3.20"
-    id("com.android.kotlin.multiplatform.library") version "8.6.0"
+    id("com.android.kotlin.multiplatform.library") version "9.2.0"
     id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
 group = "io.github.kotlinmania"
-version = "0.1.7"
+version = "0.1.8"
 
 val androidSdkDir: String? =
     providers.environmentVariable("ANDROID_SDK_ROOT").orNull
@@ -27,6 +27,10 @@ if (androidSdkDir != null && file(androidSdkDir).exists()) {
 
 kotlin {
     applyDefaultHierarchyTemplate()
+
+    compilerOptions {
+        allWarningsAsErrors.set(true)
+    }
 
     sourceSets.all { languageSettings.optIn("kotlin.time.ExperimentalTime") }
 
@@ -83,8 +87,8 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("io.github.kotlinmania:kasuari-kotlin:0.1.1")
-                api("io.github.kotlinmania:anstyle-kotlin:0.1.3")
+                api("io.github.kotlinmania:kasuari-kotlin:0.1.2")
+                api("io.github.kotlinmania:anstyle-kotlin:0.1.4")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.2")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
@@ -96,7 +100,7 @@ kotlin {
         val desktopMain by creating {
             dependsOn(commonMain)
             dependencies {
-                api("io.github.kotlinmania:crossterm-kotlin:0.1.3")
+                api("io.github.kotlinmania:crossterm-kotlin:0.1.4")
             }
         }
 
