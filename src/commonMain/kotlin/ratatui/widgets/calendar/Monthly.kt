@@ -302,7 +302,6 @@ private fun numberDaysFromSunday(dayOfWeek: DayOfWeek): Int {
         DayOfWeek.THURSDAY -> 4
         DayOfWeek.FRIDAY -> 5
         DayOfWeek.SATURDAY -> 6
-        else -> 0
     }
 }
 
@@ -330,7 +329,6 @@ private fun Month.length(year: Int): Int {
         Month.OCTOBER -> 31
         Month.NOVEMBER -> 30
         Month.DECEMBER -> 31
-        else -> 30
     }
 }
 

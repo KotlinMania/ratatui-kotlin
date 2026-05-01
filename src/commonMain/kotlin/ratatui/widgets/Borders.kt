@@ -34,16 +34,16 @@ data class Borders(val bits: UByte) {
     fun intersects(other: Borders): Boolean = (bits and other.bits) != 0.toUByte()
 
     /** Combines this border set with another using bitwise OR. */
-    infix fun or(other: Borders): Borders = Borders((bits or other.bits).toUByte())
+    infix fun or(other: Borders): Borders = Borders(bits or other.bits)
 
     /** Combines this border set with another using bitwise OR. */
     fun union(other: Borders): Borders = this or other
 
     /** Returns the intersection of this border set with another. */
-    infix fun and(other: Borders): Borders = Borders((bits and other.bits).toUByte())
+    infix fun and(other: Borders): Borders = Borders(bits and other.bits)
 
     /** Returns this border set with the given borders removed. */
-    fun minus(other: Borders): Borders = Borders((bits and other.bits.inv()).toUByte())
+    fun minus(other: Borders): Borders = Borders(bits and other.bits.inv())
 
     /**
      * Display the Borders bitflags as a list of names.
@@ -80,7 +80,7 @@ data class Borders(val bits: UByte) {
         val LEFT: Borders = Borders(0b1000u)
 
         /** Show all borders. */
-        val ALL: Borders = Borders((TOP.bits or RIGHT.bits or BOTTOM.bits or LEFT.bits).toUByte())
+        val ALL: Borders = Borders(TOP.bits or RIGHT.bits or BOTTOM.bits or LEFT.bits)
 
         /** Alias for [ALL]. */
         fun all(): Borders = ALL

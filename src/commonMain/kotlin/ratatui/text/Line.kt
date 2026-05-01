@@ -353,7 +353,7 @@ data class Line(
 
         val effectiveAlignment = alignment ?: parentAlignment
 
-        val areaWidth = renderArea.width.toInt()
+        val areaWidth = renderArea.width
         val canRenderCompleteLine = lineWidth <= areaWidth
         if (canRenderCompleteLine) {
             val indentWidth = when (effectiveAlignment) {
