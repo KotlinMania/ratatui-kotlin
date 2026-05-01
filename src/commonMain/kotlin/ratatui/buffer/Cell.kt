@@ -57,11 +57,16 @@ class Cell private constructor(
     var underlineColor: Color,
     var modifier: Modifier,
     var diffOption: CellDiffOption,
+    private var skipValue: Boolean
+) : CellWidth {
     @Deprecated("use setDiffOption(CellDiffOption.Skip) instead")
     var skip: Boolean
-) : CellWidth {
+        get() = skipValue
+        set(value) {
+            skipValue = value
+        }
+
     companion object {
-        @Suppress("DEPRECATION")
         val EMPTY: Cell
             get() = Cell(
                 symbol = null,
@@ -70,7 +75,7 @@ class Cell private constructor(
                 underlineColor = Color.Reset,
                 modifier = Modifier.empty(),
                 diffOption = CellDiffOption.None,
-                skip = false
+                skipValue = false
             )
 
         fun new(symbol: String): Cell = Cell(
@@ -80,7 +85,7 @@ class Cell private constructor(
             underlineColor = Color.Reset,
             modifier = Modifier.empty(),
             diffOption = CellDiffOption.None,
-            skip = false
+            skipValue = false
         )
 
         fun default(): Cell = EMPTY.clone()
@@ -99,7 +104,7 @@ class Cell private constructor(
         underlineColor = underlineColor,
         modifier = modifier,
         diffOption = diffOption,
-        skip = skip
+        skipValue = skipValue
     )
 
     /**
@@ -188,9 +193,8 @@ class Cell private constructor(
     }
 
     @Deprecated("use setDiffOption(CellDiffOption.Skip) instead")
-    @Suppress("DEPRECATION")
     fun setSkip(skip: Boolean): Cell {
-        this.skip = skip
+        skipValue = skip
         return this
     }
 
@@ -199,7 +203,6 @@ class Cell private constructor(
         return this
     }
 
-    @Suppress("DEPRECATION")
     fun reset() {
         val empty = EMPTY
         symbol = empty.symbol
@@ -208,7 +211,7 @@ class Cell private constructor(
         underlineColor = empty.underlineColor
         modifier = empty.modifier
         diffOption = empty.diffOption
-        skip = empty.skip
+        skipValue = empty.skipValue
     }
 
     override fun equals(other: Any?): Boolean {
@@ -223,8 +226,7 @@ class Cell private constructor(
         if (modifier != other.modifier) return false
         if (diffOption != other.diffOption) return false
 
-        @Suppress("DEPRECATION")
-        if (skip != other.skip) return false
+        if (skipValue != other.skipValue) return false
 
         return true
     }
@@ -236,8 +238,7 @@ class Cell private constructor(
         result = 31 * result + underlineColor.hashCode()
         result = 31 * result + modifier.hashCode()
         result = 31 * result + diffOption.hashCode()
-        @Suppress("DEPRECATION")
-        result = 31 * result + skip.hashCode()
+        result = 31 * result + skipValue.hashCode()
         return result
     }
 }

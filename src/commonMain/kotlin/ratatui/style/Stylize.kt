@@ -435,9 +435,6 @@ fun Double.white(): Span = this.toString().white()
 fun Double.black(): Span = this.toString().black()
 fun Double.gray(): Span = this.toString().gray()
 
-// Color helper extension for stylize debug
-fun Color.stylizeDebug(kind: ColorDebugKind): ColorDebug = ColorDebug(kind, this)
-
 // Extension functions for Line to enable styling
 fun Line.fg(color: Color): Line = patchStyle(Style.default().fg(color))
 fun Line.bg(color: Color): Line = patchStyle(Style.default().bg(color))

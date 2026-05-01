@@ -32,7 +32,10 @@ kotlin {
         allWarningsAsErrors.set(true)
     }
 
-    sourceSets.all { languageSettings.optIn("kotlin.time.ExperimentalTime") }
+    sourceSets.all {
+        languageSettings.optIn("kotlin.ExperimentalUnsignedTypes")
+        languageSettings.optIn("kotlin.time.ExperimentalTime")
+    }
 
     val xcf = XCFramework("Ratatui")
 

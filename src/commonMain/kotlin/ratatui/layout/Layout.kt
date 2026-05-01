@@ -289,19 +289,19 @@ data class Layout(
         for ((constraint, segment) in constraints.zip(segments)) {
             when (constraint) {
                 is Constraint.Max -> {
-                    solver.addConstraint(segment.hasMaxSize(constraint.value.toInt(), Strengths.MAX_SIZE_LE))
-                    solver.addConstraint(segment.hasIntSize(constraint.value.toInt(), Strengths.MAX_SIZE_EQ))
+                    solver.addConstraint(segment.hasMaxSize(constraint.value, Strengths.MAX_SIZE_LE))
+                    solver.addConstraint(segment.hasIntSize(constraint.value, Strengths.MAX_SIZE_EQ))
                 }
                 is Constraint.Min -> {
-                    solver.addConstraint(segment.hasMinSize(constraint.value.toInt(), Strengths.MIN_SIZE_GE))
+                    solver.addConstraint(segment.hasMinSize(constraint.value, Strengths.MIN_SIZE_GE))
                     if (flex.isLegacy()) {
-                        solver.addConstraint(segment.hasIntSize(constraint.value.toInt(), Strengths.MIN_SIZE_EQ))
+                        solver.addConstraint(segment.hasIntSize(constraint.value, Strengths.MIN_SIZE_EQ))
                     } else {
                         solver.addConstraint(segment.hasSize(area, Strengths.FILL_GROW))
                     }
                 }
                 is Constraint.Length -> {
-                    solver.addConstraint(segment.hasIntSize(constraint.value.toInt(), Strengths.LENGTH_SIZE_EQ))
+                    solver.addConstraint(segment.hasIntSize(constraint.value, Strengths.LENGTH_SIZE_EQ))
                 }
                 is Constraint.Percentage -> {
                     val size = scaleExpression(area.size(), constraint.value.toDouble() / 100.0)
