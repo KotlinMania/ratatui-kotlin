@@ -293,17 +293,7 @@ class CalendarEventStore(
 /**
  * Get the number of days from Sunday (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
  */
-private fun numberDaysFromSunday(dayOfWeek: DayOfWeek): Int {
-    return when (dayOfWeek) {
-        DayOfWeek.SUNDAY -> 0
-        DayOfWeek.MONDAY -> 1
-        DayOfWeek.TUESDAY -> 2
-        DayOfWeek.WEDNESDAY -> 3
-        DayOfWeek.THURSDAY -> 4
-        DayOfWeek.FRIDAY -> 5
-        DayOfWeek.SATURDAY -> 6
-    }
-}
+private fun numberDaysFromSunday(dayOfWeek: DayOfWeek): Int = (dayOfWeek.ordinal + 1) % 7
 
 /**
  * Get the next month
@@ -312,24 +302,13 @@ private fun Month.nextMonth(): Month {
     return Month.entries[(this.ordinal + 1) % 12]
 }
 
+private val COMMON_YEAR_MONTH_LENGTHS = intArrayOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
+
 /**
  * Get the number of days in a month
  */
 private fun Month.length(year: Int): Int {
-    return when (this) {
-        Month.JANUARY -> 31
-        Month.FEBRUARY -> if (isLeapYear(year)) 29 else 28
-        Month.MARCH -> 31
-        Month.APRIL -> 30
-        Month.MAY -> 31
-        Month.JUNE -> 30
-        Month.JULY -> 31
-        Month.AUGUST -> 31
-        Month.SEPTEMBER -> 30
-        Month.OCTOBER -> 31
-        Month.NOVEMBER -> 30
-        Month.DECEMBER -> 31
-    }
+    return if (this == Month.FEBRUARY && isLeapYear(year)) 29 else COMMON_YEAR_MONTH_LENGTHS[ordinal]
 }
 
 /**
