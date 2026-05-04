@@ -152,7 +152,7 @@ kotlin {
 }
 
 val enableIosSimulatorTests =
-    providers.gradleProperty("enableIosSimulatorTests").map { it.toBoolean() }.orElse(false)
+    providers.gradleProperty("enableIosSimulatorTests").map { it.toBoolean() }.orElse(true)
 
 tasks.withType<KotlinNativeTest>().configureEach {
     if (!enableIosSimulatorTests.get() && (name == "iosX64Test" || name == "iosSimulatorArm64Test")) {
