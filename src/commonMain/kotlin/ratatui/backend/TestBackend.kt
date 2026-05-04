@@ -112,6 +112,18 @@ class TestBackend private constructor(
     /** Asserts that the backend scrollback buffer is equal to the expected string lines. */
     fun assertScrollbackLines(vararg lines: String) = assertScrollback(Buffer.withLines(*lines))
 
+    /** Asserts that the backend scrollback buffer is equal to the expected string lines. */
+    fun assertScrollbackLines(lines: List<String>) = assertScrollback(Buffer.withLines(lines.map { it.toLine() }))
+
+    /**
+     * Asserts that the cursor position equals [position].
+     *
+     * @throws IllegalStateException When they are not equal.
+     */
+    fun assertCursorPosition(position: Position) {
+        check(pos == position) { "Cursor position mismatch: expected $position but was $pos" }
+    }
+
     override fun draw(content: Iterator<ratatui.buffer.BufferDiff.Item>) {
         while (content.hasNext()) {
             val item = content.next()
@@ -238,10 +250,108 @@ class TestBackend private constructor(
         // no-op
     }
 
+    /**
+     * Scrolls a region of the screen up by the specified amount.
+     *
+     * Mirrors the upstream `scrolling-regions` feature in `TestBackend::scroll_region_up`.
+     */
+    fun scrollRegionUp(region: IntRange, scrollBy: UShort) {
+        val width = buffer.area.width
+        val height = buffer.area.height
+        val cellRegionStart = width * minOf(region.first, height)
+        val cellRegionEnd = width * minOf(region.last + 1, height)
+        val cellRegionLen = cellRegionEnd - cellRegionStart
+        val cellsToScrollBy = width * scrollBy.toInt()
+
+        // Deal with the simple case where nothing needs to be copied into scrollback.
+        if (cellRegionStart > 0) {
+            if (cellsToScrollBy >= cellRegionLen) {
+                // The scroll amount is large enough to clear the whole region.
+                for (i in cellRegionStart until cellRegionEnd) {
+                    buffer.content[i] = Cell.EMPTY.clone()
+                }
+            } else {
+                // Scroll up by rotating, then filling in the bottom with empty cells.
+                rotateLeft(buffer.content, cellRegionStart, cellRegionEnd, cellsToScrollBy)
+                for (i in (cellRegionEnd - cellsToScrollBy) until cellRegionEnd) {
+                    buffer.content[i] = Cell.EMPTY.clone()
+                }
+            }
+            return
+        }
+
+        // The rows inserted into the scrollback will first come from the buffer, and if that is
+        // insufficient, will then be blank rows.
+        val cellsFromRegion = minOf(cellRegionLen, cellsToScrollBy)
+        val moved = ArrayList<Cell>(cellsFromRegion)
+        for (i in 0 until cellsFromRegion) {
+            moved.add(buffer.content[i].clone())
+            buffer.content[i] = Cell.EMPTY.clone()
+        }
+        appendToScrollback(scrollback, moved)
+        if (cellsToScrollBy < cellRegionLen) {
+            // Rotate the remaining cells to the front of the region.
+            rotateLeft(buffer.content, cellRegionStart, cellRegionEnd, cellsFromRegion)
+        } else {
+            // Splice cleared out the region. Insert empty rows in scrollback.
+            appendToScrollback(scrollback, List(cellsToScrollBy - cellRegionLen) { Cell.EMPTY.clone() })
+        }
+    }
+
+    /**
+     * Scrolls a region of the screen down by the specified amount.
+     *
+     * Mirrors the upstream `scrolling-regions` feature in `TestBackend::scroll_region_down`.
+     */
+    fun scrollRegionDown(region: IntRange, scrollBy: UShort) {
+        val width = buffer.area.width
+        val height = buffer.area.height
+        val cellRegionStart = width * minOf(region.first, height)
+        val cellRegionEnd = width * minOf(region.last + 1, height)
+        val cellRegionLen = cellRegionEnd - cellRegionStart
+        val cellsToScrollBy = width * scrollBy.toInt()
+
+        if (cellsToScrollBy >= cellRegionLen) {
+            // The scroll amount is large enough to clear the whole region.
+            for (i in cellRegionStart until cellRegionEnd) {
+                buffer.content[i] = Cell.EMPTY.clone()
+            }
+        } else {
+            // Scroll up by rotating, then filling in the top with empty cells.
+            rotateRight(buffer.content, cellRegionStart, cellRegionEnd, cellsToScrollBy)
+            for (i in cellRegionStart until (cellRegionStart + cellsToScrollBy)) {
+                buffer.content[i] = Cell.EMPTY.clone()
+            }
+        }
+    }
+
     override fun toString(): String = bufferView(buffer)
 }
 
-private fun bufferView(buffer: Buffer): String {
+private fun rotateLeft(list: MutableList<Cell>, from: Int, to: Int, distance: Int) {
+    val len = to - from
+    if (len <= 0 || distance == 0) return
+    val d = distance % len
+    if (d == 0) return
+    val temp = ArrayList<Cell>(d)
+    for (i in 0 until d) temp.add(list[from + i])
+    for (i in 0 until (len - d)) {
+        list[from + i] = list[from + i + d]
+    }
+    for (i in 0 until d) {
+        list[to - d + i] = temp[i]
+    }
+}
+
+private fun rotateRight(list: MutableList<Cell>, from: Int, to: Int, distance: Int) {
+    val len = to - from
+    if (len <= 0 || distance == 0) return
+    val d = distance % len
+    if (d == 0) return
+    rotateLeft(list, from, to, len - d)
+}
+
+internal fun bufferView(buffer: Buffer): String {
     val view = StringBuilder(buffer.content.size + buffer.area.height * 3)
     val width = buffer.area.width
     if (width <= 0) return view.toString()
