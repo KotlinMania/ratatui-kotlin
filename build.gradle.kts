@@ -1,7 +1,6 @@
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
-import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsEnvSpec
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
 import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootEnvSpec
@@ -33,13 +32,14 @@ if (androidSdkDir != null && file(androidSdkDir).exists()) {
 kotlin {
     applyDefaultHierarchyTemplate()
 
-    compilerOptions {
-        allWarningsAsErrors.set(true)
+    sourceSets.all {
+        languageSettings.optIn("kotlin.time.ExperimentalTime")
+        languageSettings.optIn("kotlin.concurrent.atomics.ExperimentalAtomicApi")
     }
 
-    sourceSets.all {
-        languageSettings.optIn("kotlin.ExperimentalUnsignedTypes")
-        languageSettings.optIn("kotlin.time.ExperimentalTime")
+    compilerOptions {
+        allWarningsAsErrors.set(true)
+        freeCompilerArgs.add("-Xexpect-actual-classes")
     }
 
     val xcf = XCFramework("Ratatui")
@@ -204,15 +204,6 @@ rootProject.extensions.configure<NodeJsRootExtension>("kotlinNodeJs") {
     versions.kotlinWebHelpers.version = "3.1.0"
 }
 
-val enableIosSimulatorTests =
-    providers.gradleProperty("enableIosSimulatorTests").map { it.toBoolean() }.orElse(true)
-
-tasks.withType<KotlinNativeTest>().configureEach {
-    if (!enableIosSimulatorTests.get() && name == "iosSimulatorArm64Test") {
-        enabled = false
-    }
-}
-
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
@@ -221,8 +212,8 @@ mavenPublishing {
 
     pom {
         name.set("ratatui-kotlin")
-        description.set("Kotlin Multiplatform port of ratatui - a library for building terminal user interfaces")
-        inceptionYear.set("2024")
+        description.set("Kotlin Multiplatform port of ratatui/ratatu - A library that's all about cooking up terminal user interfaces")
+        inceptionYear.set("2026")
         url.set("https://github.com/KotlinMania/ratatui-kotlin")
 
         licenses {
@@ -248,4 +239,18 @@ mavenPublishing {
             developerConnection.set("scm:git:ssh://github.com/KotlinMania/ratatui-kotlin.git")
         }
     }
+}
+
+tasks.register("test") {
+    group = "verification"
+    description =
+        "Runs a portable test suite (macOS + JS + WasmJS). Android and non-host native targets are intentionally excluded."
+
+    val defaultTestTasks = listOf(
+        "macosArm64Test",
+        "jsNodeTest",
+        "wasmJsNodeTest",
+    )
+
+    dependsOn(defaultTestTasks.mapNotNull { taskName -> tasks.findByName(taskName) })
 }

@@ -1,140 +1,57 @@
-# ratatui-kotlin
+# ratatui-kotlin in Kotlin
 
-[![Kotlin](https://img.shields.io/badge/Kotlin-2.3+-blue.svg?logo=kotlin)](https://kotlinlang.org)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](#license)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.kotlinmania/ratatui-kotlin?color=blue)](https://central.sonatype.com/artifact/io.github.kotlinmania/ratatui-kotlin)
-[![GitHub](https://img.shields.io/badge/github-KotlinMania%2Fratatui--kotlin-blue?logo=github)](https://github.com/KotlinMania/ratatui-kotlin)
+[![GitHub link](https://img.shields.io/badge/GitHub-KotlinMania%2Fratatui--kotlin-blue.svg)](https://github.com/KotlinMania/ratatui-kotlin)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.kotlinmania/ratatui-kotlin)](https://central.sonatype.com/artifact/io.github.kotlinmania/ratatui-kotlin)
+[![Build status](https://img.shields.io/github/actions/workflow/status/KotlinMania/ratatui-kotlin/ci.yml?branch=main)](https://github.com/KotlinMania/ratatui-kotlin/actions)
 
-A **Kotlin Multiplatform** library for building terminal user interfaces (TUIs). This is a port
-of the Rust [ratatui](https://github.com/ratatui/ratatui) crate.
+This is a Kotlin Multiplatform line-by-line transliteration port of [`ratatui/ratatu`](https://github.com/ratatui/ratatui).
 
-## Overview
+**Original Project:** This port is based on [`ratatui/ratatu`](https://github.com/ratatui/ratatui). All design credit and project intent belong to the upstream authors; this repository is a faithful port to Kotlin Multiplatform with no behavioural changes intended.
 
-ratatui-kotlin provides a flexible framework for creating text-based user interfaces in the terminal.
-It can be used for command-line applications, dashboards, and other interactive console programs.
+### Porting status
 
-The library is a faithful transliteration of the original Rust implementation, maintaining API parity
-while adapting to idiomatic Kotlin patterns.
-
-## Features
-
-- **Widgets** - Paragraph, List, Table, Tabs, Block, Gauge, Chart, Canvas, and more
-- **Layout** - Constraint-based layout system powered by the Cassowary algorithm (via kasuari-kotlin)
-- **Styling** - Full color support (16, 256, RGB), text attributes (bold, italic, underline, etc.)
-- **Buffer** - Efficient double-buffered rendering with diff-based terminal updates
-- **Text** - Rich text with spans, lines, and styled content
-- **Backend** - Terminal backend abstraction (via crossterm-kotlin)
-
-## Supported Platforms
-
-| Platform | Status | Notes |
-|----------|--------|-------|
-| macOS (arm64, x64) | Full | Native terminal support |
-| Linux (x64) | Full | Native terminal support |
-| Windows (x64) | Full | Native console API via MinGW |
-| iOS (arm64, x64, simulatorArm64) | Partial | Styling only (no TTY) |
-| Android (API 24+) | Partial | Styling only (no TTY) |
-| JS (Browser, Node.js) | Partial | ANSI output only |
-| WasmJS | Partial | ANSI output only |
-
-## Installation
-
-### Gradle (Kotlin DSL)
-
-```kotlin
-dependencies {
-    implementation("io.github.kotlinmania:ratatui-kotlin:0.1.7")
-}
-```
-
-### As a Git Submodule
-
-```bash
-git submodule add https://github.com/KotlinMania/ratatui-kotlin.git
-```
-
-Then in your `settings.gradle.kts`:
-
-```kotlin
-include(":ratatui-kotlin")
-```
-
-And in your module's `build.gradle.kts`:
-
-```kotlin
-kotlin {
-    sourceSets {
-        val commonMain by getting {
-            dependencies {
-                implementation(project(":ratatui-kotlin"))
-            }
-        }
-    }
-}
-```
-
-## Quick Start
-
-```kotlin
-import ratatui.backend.CrosstermBackend
-import ratatui.terminal.Terminal
-import ratatui.widgets.Block
-import ratatui.widgets.Borders
-import ratatui.widgets.Paragraph
-import ratatui.style.Style
-import ratatui.style.Color
-
-// Create a terminal with the crossterm backend
-val backend = CrosstermBackend()
-val terminal = Terminal(backend)
-
-// Draw a simple UI
-terminal.draw { frame ->
-    val block = Block.default()
-        .title("Hello ratatui-kotlin")
-        .borders(Borders.ALL)
-
-    val paragraph = Paragraph.new("Welcome to TUI programming in Kotlin!")
-        .block(block)
-        .style(Style.default().fg(Color.Cyan))
-
-    frame.renderWidget(paragraph, frame.area())
-}
-```
-
-## Dependencies
-
-ratatui-kotlin builds on other KotlinMania libraries:
-
-- [crossterm-kotlin](https://github.com/KotlinMania/crossterm-kotlin) - Terminal manipulation
-- [kasuari-kotlin](https://github.com/KotlinMania/kasuari-kotlin) - Cassowary constraint solver for layout
-- [anstyle-kotlin](https://github.com/KotlinMania/anstyle-kotlin) - ANSI style definitions
-
-## Building from Source
-
-```bash
-git clone https://github.com/KotlinMania/ratatui-kotlin.git
-cd ratatui-kotlin
-./gradlew assemble
-./gradlew allTests
-```
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit issues and pull requests.
-
-## License
-
-This project is licensed under the [MIT License](./LICENSE).
+This is an **in-progress port**. The goal is feature parity with the upstream Rust crate while providing a native Kotlin Multiplatform API. Every Kotlin file carries a `// port-lint: source <path>` header naming its upstream Rust counterpart so the AST-distance tool can track provenance.
 
 ---
 
-## Acknowledgments
+## About this Kotlin port
 
-This Kotlin Multiplatform port was created by **Sydney Renee** of [The Solace Project](mailto:sydney@solace.ofharmony.ai)
-for [KotlinMania](https://github.com/KotlinMania).
+### Installation
 
-Special thanks to the original authors and community:
+```kotlin
+dependencies {
+    implementation("io.github.kotlinmania:ratatui-kotlin:0.1.9")
+}
+```
 
-- The [Ratatui](https://github.com/ratatui) team for the excellent Rust TUI framework
-- [Florian Dehau](https://github.com/fdehau) for the original [tui-rs](https://crates.io/crates/tui) crate that Ratatui was forked from
+### Building
+
+```bash
+./gradlew build
+./gradlew test
+```
+
+### Targets
+
+- macOS arm64
+- Linux x64
+- Windows mingw-x64
+- iOS arm64 / simulator-arm64 (Swift export + XCFramework)
+- JS (browser + Node.js)
+- Wasm-JS (browser + Node.js)
+- Android (API 24+)
+
+### Porting guidelines
+
+See [AGENTS.md](AGENTS.md) and [CLAUDE.md](CLAUDE.md) for translator discipline, port-lint header convention, and Rust → Kotlin idiom mapping.
+
+### License
+
+This Kotlin port is distributed under the same MIT license as the upstream [`ratatui/ratatu`](https://github.com/ratatui/ratatui). See [LICENSE](LICENSE) (and any sibling `LICENSE-*` / `NOTICE` files mirrored from upstream) for the full text.
+
+Original work copyrighted by the ratatu authors.  
+Kotlin port: Copyright (c) 2026 Sydney Renee and The Solace Project.
+
+### Acknowledgments
+
+Thanks to the [`ratatui/ratatu`](https://github.com/ratatui/ratatui) maintainers and contributors for the original Rust implementation. This port reproduces their work in Kotlin Multiplatform; bug reports about upstream design or behavior should go to the upstream repository.

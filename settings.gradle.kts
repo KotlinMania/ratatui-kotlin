@@ -18,4 +18,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "ratatui-kotlin"
 
-// Published-only dependency resolution: do not composite-include other builds here.
