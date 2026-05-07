@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/rect.rs
 /**
  * A rectangular area in the terminal.
  *
@@ -174,9 +175,7 @@ data class Rect(
      * See [Offset] for details.
      */
     fun offset(offset: Offset): Rect {
-        val newX = (x + offset.x).coerceIn(0, Int.MAX_VALUE - width)
-        val newY = (y + offset.y).coerceIn(0, Int.MAX_VALUE - height)
-        return copy(x = newX, y = newY)
+        return this + offset
     }
 
     /**
@@ -309,7 +308,3 @@ data class Rect(
         return copy(x = newX, width = newWidth)
     }
 }
-
-// Operator extensions for Rect + Offset
-operator fun Rect.plus(offset: Offset): Rect = this.offset(offset)
-operator fun Rect.minus(offset: Offset): Rect = this.offset(Offset(-offset.x, -offset.y))

@@ -11,10 +11,10 @@ import ratatui.widgets.sparkline.Sparkline
 // Sparkline Stylize Extensions
 // ============================================================================
 
-fun Sparkline.fg(color: Color): Sparkline = style(getStyle().fg(color))
-fun Sparkline.bg(color: Color): Sparkline = style(getStyle().bg(color))
-fun Sparkline.addModifier(modifier: Modifier): Sparkline = style(getStyle().addModifier(modifier))
-fun Sparkline.removeModifier(modifier: Modifier): Sparkline = style(getStyle().removeModifier(modifier))
+fun Sparkline.fg(color: Color): Sparkline = style(style().fg(color))
+fun Sparkline.bg(color: Color): Sparkline = style(style().bg(color))
+fun Sparkline.addModifier(modifier: Modifier): Sparkline = style(style().addModifier(modifier))
+fun Sparkline.removeModifier(modifier: Modifier): Sparkline = style(style().removeModifier(modifier))
 
 // Foreground colors
 fun Sparkline.black(): Sparkline = fg(Color.Black)
@@ -63,10 +63,10 @@ fun Sparkline.reversed(): Sparkline = addModifier(Modifier.REVERSED)
 // Dataset Stylize Extensions
 // ============================================================================
 
-fun Dataset.fg(color: Color): Dataset = style(getStyle().fg(color))
-fun Dataset.bg(color: Color): Dataset = style(getStyle().bg(color))
-fun Dataset.addModifier(modifier: Modifier): Dataset = style(getStyle().addModifier(modifier))
-fun Dataset.removeModifier(modifier: Modifier): Dataset = style(getStyle().removeModifier(modifier))
+fun Dataset.fg(color: Color): Dataset = style(style().fg(color))
+fun Dataset.bg(color: Color): Dataset = style(style().bg(color))
+fun Dataset.addModifier(modifier: Modifier): Dataset = style(style().addModifier(modifier))
+fun Dataset.removeModifier(modifier: Modifier): Dataset = style(style().removeModifier(modifier))
 
 // Foreground colors
 fun Dataset.black(): Dataset = fg(Color.Black)
@@ -115,10 +115,10 @@ fun Dataset.reversed(): Dataset = addModifier(Modifier.REVERSED)
 // Axis Stylize Extensions
 // ============================================================================
 
-fun Axis.fg(color: Color): Axis = style(getStyle().fg(color))
-fun Axis.bg(color: Color): Axis = style(getStyle().bg(color))
-fun Axis.addModifier(modifier: Modifier): Axis = style(getStyle().addModifier(modifier))
-fun Axis.removeModifier(modifier: Modifier): Axis = style(getStyle().removeModifier(modifier))
+fun Axis.fg(color: Color): Axis = style(style().fg(color))
+fun Axis.bg(color: Color): Axis = style(style().bg(color))
+fun Axis.addModifier(modifier: Modifier): Axis = style(style().addModifier(modifier))
+fun Axis.removeModifier(modifier: Modifier): Axis = style(style().removeModifier(modifier))
 
 // Foreground colors
 fun Axis.black(): Axis = fg(Color.Black)

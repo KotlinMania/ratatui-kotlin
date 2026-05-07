@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/margin.rs
 /**
  * Represents spacing around rectangular areas.
  *

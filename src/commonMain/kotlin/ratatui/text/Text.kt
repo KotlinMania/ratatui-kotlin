@@ -1,8 +1,8 @@
+// port-lint: source ratatui-core/src/text/text.rs
 package ratatui.text
 
-import kotlin.jvm.JvmName
 import ratatui.buffer.Buffer
-import ratatui.layout.Alignment
+import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.style.Styled
@@ -35,9 +35,9 @@ import ratatui.widgets.Widget
  *
  * - [Text.style] sets the style of this `Text`.
  * - [Text.alignment] sets the alignment for this `Text`.
- * - [Text.leftAligned] sets the alignment to [Alignment.Left].
- * - [Text.centered] sets the alignment to [Alignment.Center].
- * - [Text.rightAligned] sets the alignment to [Alignment.Right].
+ * - [Text.leftAligned] sets the alignment to [HorizontalAlignment.Left].
+ * - [Text.centered] sets the alignment to [HorizontalAlignment.Center].
+ * - [Text.rightAligned] sets the alignment to [HorizontalAlignment.Right].
  *
  * # Iteration Methods
  *
@@ -99,11 +99,11 @@ import ratatui.widgets.Widget
  *
  * ## Aligning Text
  *
- * The text's [Alignment] can be set using [Text.alignment] or the related helper methods.
+ * The text's [HorizontalAlignment] can be set using [Text.alignment] or the related helper methods.
  * Lines composing the text can also be individually aligned with [Line.alignment].
  *
  * ```kotlin
- * val text = Text.from("The first line\nThe second line").alignment(Alignment.Right)
+ * val text = Text.from("The first line\nThe second line").alignment(HorizontalAlignment.Right)
  * val text = Text.from("The first line\nThe second line").rightAligned()
  * val text = Text.from(listOf(
  *     Line.from("The first line").leftAligned(),
@@ -137,11 +137,10 @@ import ratatui.widgets.Widget
  */
 data class Text(
     /** The style of this text. */
-    @get:JvmName("styleValue")
     val style: Style = Style.default(),
 
     /** The alignment of this text. */
-    val alignment: Alignment? = null,
+    val alignment: HorizontalAlignment? = null,
 
     /** The lines that make up this piece of text. */
     val lines: MutableList<Line> = mutableListOf()
@@ -253,8 +252,8 @@ data class Text(
      * val text = Text.from("Hi, what's up?")
      * assertNull(text.alignment)
      * assertEquals(
-     *     Alignment.Right,
-     *     text.alignment(Alignment.Right).alignment
+     *     HorizontalAlignment.Right,
+     *     text.alignment(HorizontalAlignment.Right).alignment
      * )
      * ```
      *
@@ -262,11 +261,11 @@ data class Text(
      *
      * ```kotlin
      * val text = Text.from(listOf(
-     *     Line.from("left").alignment(Alignment.Left),
+     *     Line.from("left").alignment(HorizontalAlignment.Left),
      *     Line.from("default"),
      *     Line.from("default"),
-     *     Line.from("right").alignment(Alignment.Right),
-     * )).alignment(Alignment.Center)
+     *     Line.from("right").alignment(HorizontalAlignment.Right),
+     * )).alignment(HorizontalAlignment.Center)
      * ```
      *
      * Will render the following
@@ -278,12 +277,12 @@ data class Text(
      *       right
      * ```
      */
-    fun alignment(alignment: Alignment): Text = copy(alignment = alignment)
+    fun alignment(alignment: HorizontalAlignment): Text = copy(alignment = alignment)
 
     /**
      * Left-aligns the whole text.
      *
-     * Convenience shortcut for `Text.alignment(Alignment.Left)`.
+     * Convenience shortcut for `Text.alignment(HorizontalAlignment.Left)`.
      * Setting the alignment of a Text generally overrides the alignment of its
      * parent Widget, with the default alignment being inherited from the parent.
      *
@@ -295,12 +294,12 @@ data class Text(
      * val text = Text.from("Hi, what's up?").leftAligned()
      * ```
      */
-    fun leftAligned(): Text = alignment(Alignment.Left)
+    fun leftAligned(): Text = alignment(HorizontalAlignment.Left)
 
     /**
      * Center-aligns the whole text.
      *
-     * Convenience shortcut for `Text.alignment(Alignment.Center)`.
+     * Convenience shortcut for `Text.alignment(HorizontalAlignment.Center)`.
      * Setting the alignment of a Text generally overrides the alignment of its
      * parent Widget, with the default alignment being inherited from the parent.
      *
@@ -312,12 +311,12 @@ data class Text(
      * val text = Text.from("Hi, what's up?").centered()
      * ```
      */
-    fun centered(): Text = alignment(Alignment.Center)
+    fun centered(): Text = alignment(HorizontalAlignment.Center)
 
     /**
      * Right-aligns the whole text.
      *
-     * Convenience shortcut for `Text.alignment(Alignment.Right)`.
+     * Convenience shortcut for `Text.alignment(HorizontalAlignment.Right)`.
      * Setting the alignment of a Text generally overrides the alignment of its
      * parent Widget, with the default alignment being inherited from the parent.
      *
@@ -329,7 +328,7 @@ data class Text(
      * val text = Text.from("Hi, what's up?").rightAligned()
      * ```
      */
-    fun rightAligned(): Text = alignment(Alignment.Right)
+    fun rightAligned(): Text = alignment(HorizontalAlignment.Right)
 
     /**
      * Returns an iterator over the lines of the text.
@@ -422,7 +421,7 @@ data class Text(
     }
 
     // Styled interface implementation
-    override fun getStyle(): Style = style
+    override fun style(): Style = style
     override fun setStyle(style: Style): Text = copy(style = style)
 
     // Widget interface implementation
@@ -433,12 +432,12 @@ data class Text(
         while (lineIterator.hasNext() && y < area.bottom()) {
             val line = lineIterator.next()
             // Apply text's style and alignment to the line
-            val effectiveAlignment = line.alignment ?: alignment ?: Alignment.Left
+            val effectiveAlignment = line.alignment ?: alignment ?: HorizontalAlignment.Left
             val lineWidth = line.width()
             val x = when (effectiveAlignment) {
-                Alignment.Left -> area.x
-                Alignment.Center -> area.x + ((area.width - lineWidth) / 2).coerceAtLeast(0)
-                Alignment.Right -> (area.right() - lineWidth).coerceAtLeast(area.x)
+                HorizontalAlignment.Left -> area.x
+                HorizontalAlignment.Center -> area.x + ((area.width - lineWidth) / 2).coerceAtLeast(0)
+                HorizontalAlignment.Right -> (area.right() - lineWidth).coerceAtLeast(area.x)
             }
             buf.setLine(x, y, line.style(style.patch(line.style)), area.width)
             y++
@@ -531,6 +530,18 @@ operator fun Text.plus(text: Text): Text {
     val result = this.copy(lines = this.lines.toMutableList())
     result.extend(text)
     return result
+}
+
+/**
+ * A trait for converting a value to a [Text].
+ *
+ * This interface provides a way to convert any displayable type to a Text.
+ */
+interface ToText {
+    /**
+     * Converts the value to a [Text].
+     */
+    fun toText(): Text
 }
 
 /**

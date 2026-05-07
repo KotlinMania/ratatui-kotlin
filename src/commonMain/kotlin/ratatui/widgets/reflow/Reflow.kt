@@ -1,7 +1,10 @@
+// port-lint: source ratatui-widgets/src/reflow.rs
 package ratatui.widgets.reflow
 
-import ratatui.layout.Alignment
+import ratatui.buffer.cellWidth
+import ratatui.layout.HorizontalAlignment
 import ratatui.text.StyledGrapheme
+import ratatui.text.graphemes
 
 /**
  * A line that has been wrapped to a certain width.
@@ -12,7 +15,7 @@ data class WrappedLine(
     /** The width of the line */
     val width: Int,
     /** The alignment of the line */
-    val alignment: Alignment
+    val alignment: HorizontalAlignment
 )
 
 /**
@@ -33,13 +36,13 @@ interface LineComposer {
  * @param trim Whether to remove leading whitespace from lines
  */
 class WordWrapper(
-    private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, Alignment>>,
+    private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
     private val maxLineWidth: Int,
     private val trim: Boolean
 ) : LineComposer {
 
     private val wrappedLines = ArrayDeque<MutableList<StyledGrapheme>>()
-    private var currentAlignment = Alignment.Left
+    private var currentAlignment = HorizontalAlignment.Left
     private var currentLine = mutableListOf<StyledGrapheme>()
 
     // Cached allocations
@@ -63,7 +66,7 @@ class WordWrapper(
 
         for (grapheme in lineSymbols) {
             val isWhitespace = grapheme.isWhitespace()
-            val symbolWidth = grapheme.width()
+            val symbolWidth = grapheme.symbol.cellWidth().toInt()
 
             // ignore symbols wider than line limit
             if (symbolWidth > maxLineWidth) {
@@ -119,7 +122,7 @@ class WordWrapper(
                 // remove whitespace up to the end of line
                 while (pendingWhitespace.isNotEmpty()) {
                     val ws = pendingWhitespace.first()
-                    val wsWidth = ws.width()
+                    val wsWidth = ws.symbol.cellWidth().toInt()
 
                     if (wsWidth > remainingWidth) {
                         break
@@ -191,7 +194,7 @@ class WordWrapper(
             // emit next cached line if present
             val cachedLine = wrappedLines.removeFirstOrNull()
             if (cachedLine != null) {
-                val lineWidth = cachedLine.sumOf { it.width() }
+                val lineWidth = cachedLine.sumOf { it.symbol.cellWidth().toInt() }
                 replaceCurrentLine(cachedLine)
                 return WrappedLine(
                     graphemes = currentLine,
@@ -215,7 +218,7 @@ class WordWrapper(
          * Create a new WordWrapper with the given lines and maximum line width.
          */
         fun new(
-            lines: Iterator<Pair<Iterator<StyledGrapheme>, Alignment>>,
+            lines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
             maxLineWidth: Int,
             trim: Boolean
         ): WordWrapper = WordWrapper(lines, maxLineWidth, trim)
@@ -229,7 +232,7 @@ class WordWrapper(
  * @param maxLineWidth Maximum width of each line
  */
 class LineTruncator(
-    private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, Alignment>>,
+    private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
     private val maxLineWidth: Int
 ) : LineComposer {
 
@@ -259,7 +262,7 @@ class LineTruncator(
         var localHorizontalOffset = horizontalOffset
 
         for (grapheme in lineSymbols) {
-            val symbolWidth = grapheme.width()
+            val symbolWidth = grapheme.symbol.cellWidth().toInt()
 
             // Ignore characters wider than the total max width
             if (symbolWidth > maxLineWidth) {
@@ -271,7 +274,7 @@ class LineTruncator(
                 break
             }
 
-            val symbol = if (localHorizontalOffset == 0 || alignment != Alignment.Left) {
+            val symbol = if (localHorizontalOffset == 0 || alignment != HorizontalAlignment.Left) {
                 grapheme.symbol
             } else {
                 val w = symbolWidth
@@ -286,7 +289,7 @@ class LineTruncator(
             }
 
             if (symbol.isNotEmpty()) {
-                currentLineWidth += unicodeWidth(symbol)
+                currentLineWidth += symbol.cellWidth().toInt()
                 currentLine.add(StyledGrapheme(symbol, grapheme.style))
             }
         }
@@ -303,7 +306,7 @@ class LineTruncator(
          * Create a new LineTruncator with the given lines and maximum line width.
          */
         fun new(
-            lines: Iterator<Pair<Iterator<StyledGrapheme>, Alignment>>,
+            lines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
             maxLineWidth: Int
         ): LineTruncator = LineTruncator(lines, maxLineWidth)
     }
@@ -317,7 +320,7 @@ private fun trimOffset(src: String, offset: Int): String {
     var remainingOffset = offset
     var startIndex = 0
     for (grapheme in graphemes(src)) {
-        val w = unicodeWidth(grapheme)
+        val w = grapheme.cellWidth().toInt()
         if (w <= remainingOffset) {
             remainingOffset -= w
             startIndex += grapheme.length
@@ -326,76 +329,4 @@ private fun trimOffset(src: String, offset: Int): String {
         }
     }
     return src.substring(startIndex)
-}
-
-/**
- * Split a string into grapheme clusters.
- * This is a simplified implementation that treats each character as a grapheme.
- * For proper grapheme cluster support, a full Unicode segmentation library would be needed.
- */
-private fun graphemes(s: String): Sequence<String> = sequence {
-    // Simple implementation: each char is a "grapheme"
-    // For proper support, need unicode segmentation library
-    val chars = s.toList()
-    var i = 0
-    while (i < chars.size) {
-        val char = chars[i]
-        // Check for combining characters and zero-width joiners
-        val builder = StringBuilder()
-        builder.append(char)
-        i++
-        // Collect any following combining characters
-        while (i < chars.size) {
-            val next = chars[i]
-            if (isCombining(next) || next == '\u200D') {
-                builder.append(next)
-                i++
-            } else {
-                break
-            }
-        }
-        yield(builder.toString())
-    }
-}
-
-/**
- * Check if a character is a combining character.
- */
-private fun isCombining(c: Char): Boolean {
-    val code = c.code
-    return code in 0x0300..0x036F ||  // Combining Diacritical Marks
-            code in 0x1AB0..0x1AFF ||  // Combining Diacritical Marks Extended
-            code in 0x1DC0..0x1DFF ||  // Combining Diacritical Marks Supplement
-            code in 0x20D0..0x20FF ||  // Combining Diacritical Marks for Symbols
-            code in 0xFE20..0xFE2F     // Combining Half Marks
-}
-
-/**
- * Calculate the unicode display width of a string.
- */
-private fun unicodeWidth(s: String): Int {
-    var width = 0
-    for (char in s) {
-        width += when {
-            char.isISOControl() -> 0
-            // CJK characters are typically 2 columns wide
-            char.code in 0x4E00..0x9FFF -> 2  // CJK Unified Ideographs
-            char.code in 0x3400..0x4DBF -> 2  // CJK Unified Ideographs Extension A
-            char.code in 0x20000..0x2A6DF -> 2  // CJK Unified Ideographs Extension B
-            char.code in 0xF900..0xFAFF -> 2  // CJK Compatibility Ideographs
-            char.code in 0xFF00..0xFF60 -> 2  // Fullwidth Forms
-            char.code in 0xFFE0..0xFFE6 -> 2  // Fullwidth Forms
-            // Zero-width characters
-            char.code == 0x200B -> 0  // Zero Width Space
-            char.code == 0x200C -> 0  // Zero Width Non-Joiner
-            char.code == 0x200D -> 0  // Zero Width Joiner
-            char.code == 0x200E -> 0  // Left-to-Right Mark
-            char.code == 0x200F -> 0  // Right-to-Left Mark
-            char.code == 0xFEFF -> 0  // Zero Width No-Break Space
-            // Combining characters
-            isCombining(char) -> 0
-            else -> 1
-        }
-    }
-    return width
 }

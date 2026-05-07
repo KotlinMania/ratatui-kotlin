@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/mascot.rs
 package ratatui.widgets.mascot
 
 import ratatui.buffer.Buffer
