@@ -1,6 +1,8 @@
+// port-lint: source ratatui-core/src/text/span.rs
 package ratatui.text
 
 import ratatui.buffer.Buffer
+import ratatui.buffer.cellWidth
 import ratatui.layout.Rect
 import ratatui.style.Color
 import ratatui.style.Modifier
@@ -140,7 +142,7 @@ data class Span(
     /**
      * Returns the unicode width of the content held by this span.
      */
-    fun width(): Int = unicodeWidth(content)
+    fun width(): Int = content.cellWidth().toInt()
 
     /**
      * Returns a list of graphemes held by this span.
@@ -205,7 +207,7 @@ data class Span(
     fun intoRightAlignedLine(): Line = Line.from(this).rightAligned()
 
     // Styled implementation
-    override fun getStyle(): Style = style
+    override fun style(): Style = style
 
     override fun setStyle(style: Style): Span = style(style)
 
@@ -218,7 +220,7 @@ data class Span(
         var x = clippedArea.x
         val y = clippedArea.y
         for ((i, grapheme) in styledGraphemes(Style.default()).withIndex()) {
-            val symbolWidth = unicodeWidth(grapheme.symbol)
+            val symbolWidth = grapheme.symbol.cellWidth().toInt()
             val nextX = (x + symbolWidth).coerceAtMost(Int.MAX_VALUE)
             if (nextX > clippedArea.right()) {
                 break
@@ -310,35 +312,6 @@ data class Span(
 }
 
 /**
- * A styled grapheme - a single grapheme cluster with an associated style.
- */
-data class StyledGrapheme(
-    val symbol: String,
-    val style: Style
-) {
-    /**
-     * Returns true if the grapheme is whitespace.
-     * A grapheme is considered whitespace if all its characters are whitespace,
-     * or if it's a zero-width space.
-     */
-    fun isWhitespace(): Boolean {
-        if (symbol.isEmpty()) return false
-        // Zero-width space is considered whitespace for word-wrapping purposes
-        if (symbol == "\u200B") return true
-        return symbol.all { it.isWhitespace() }
-    }
-
-    /**
-     * Returns the display width of this grapheme.
-     */
-    fun width(): Int = unicodeWidth(symbol)
-
-    companion object {
-        fun new(symbol: String, style: Style): StyledGrapheme = StyledGrapheme(symbol, style)
-    }
-}
-
-/**
  * A trait for converting a value to a [Span].
  *
  * This interface provides a way to convert any displayable type to a Span.
@@ -355,45 +328,91 @@ fun Any.toSpan(): Span = Span.raw(this.toString())
 
 /**
  * Split a string into grapheme clusters.
- * This is a simplified implementation that handles basic cases.
- * For full Unicode grapheme cluster support, consider using ICU4C.
+ *
+ * Transliteration target: Rust's use of `unicode_segmentation::UnicodeSegmentation::graphemes(true)`.
+ *
+ * This is a pragmatic, KMP-friendly implementation focused on the cases Ratatui relies on:
+ * - surrogate pairs (non-BMP code points)
+ * - combining marks / variation selectors (attach to the previous code point)
+ * - emoji ZWJ sequences (keep the whole sequence in one cluster)
  */
 internal fun graphemes(s: String): List<String> {
     if (s.isEmpty()) return emptyList()
 
     val result = mutableListOf<String>()
-    val chars = s.toList()
     var i = 0
 
-    while (i < chars.size) {
-        val sb = StringBuilder()
-        sb.append(chars[i])
-        i++
+    while (i < s.length) {
+        val start = i
 
-        // Consume any following combining characters or zero-width joiners
-        while (i < chars.size) {
-            val code = chars[i].code
-            val isCombining = code in 0x0300..0x036F ||
-                code in 0x1AB0..0x1AFF ||
-                code in 0x1DC0..0x1DFF ||
-                code in 0x20D0..0x20FF ||
-                code in 0xFE20..0xFE2F ||
-                code == 0x200D ||  // Zero Width Joiner
-                code == 0x200B ||  // Zero Width Space
-                code == 0x200C ||  // Zero Width Non-Joiner
-                code == 0x200E ||  // Left-to-Right Mark
-                code == 0x200F     // Right-to-Left Mark
+        // Consume the first code point of the cluster.
+        val first = readCodePoint(s, i)
+        i = first.nextIndex
 
-            if (isCombining) {
-                sb.append(chars[i])
-                i++
-            } else {
-                break
-            }
+        // Consume any immediate trailing marks / variation selectors / emoji modifiers.
+        i = consumeTrailingMarks(s, i)
+
+        // Consume any ZWJ sequences: (ZWJ + next code point + marks)*.
+        while (i < s.length) {
+            val cp = readCodePoint(s, i)
+            if (cp.value != ZWJ) break
+            i = cp.nextIndex
+
+            if (i >= s.length) break
+            val afterZwj = readCodePoint(s, i)
+            i = afterZwj.nextIndex
+            i = consumeTrailingMarks(s, i)
         }
 
-        result.add(sb.toString())
+        result.add(s.substring(start, i))
     }
 
     return result
+}
+
+private const val ZWJ: Int = 0x200D
+
+private data class CodePoint(val value: Int, val nextIndex: Int)
+
+private fun readCodePoint(s: String, index: Int): CodePoint {
+    val ch = s[index]
+    return if (ch.isHighSurrogate() && index + 1 < s.length && s[index + 1].isLowSurrogate()) {
+        val high = ch.code - 0xD800
+        val low = s[index + 1].code - 0xDC00
+        CodePoint(0x10000 + ((high shl 10) or low), index + 2)
+    } else {
+        CodePoint(ch.code, index + 1)
+    }
+}
+
+private fun consumeTrailingMarks(s: String, startIndex: Int): Int {
+    var i = startIndex
+    while (i < s.length) {
+        val cp = readCodePoint(s, i)
+        if (!isTrailingMark(cp.value)) break
+        i = cp.nextIndex
+    }
+    return i
+}
+
+private fun isTrailingMark(codePoint: Int): Boolean {
+    return isCombiningMark(codePoint) || isVariationSelector(codePoint) || isEmojiModifier(codePoint)
+}
+
+private fun isVariationSelector(codePoint: Int): Boolean {
+    // Variation Selectors (U+FE00..U+FE0F) + Variation Selectors Supplement (U+E0100..U+E01EF).
+    return codePoint in 0xFE00..0xFE0F || codePoint in 0xE0100..0xE01EF
+}
+
+private fun isCombiningMark(codePoint: Int): Boolean {
+    return codePoint in 0x0300..0x036F || // Combining Diacritical Marks
+        codePoint in 0x1AB0..0x1AFF || // Combining Diacritical Marks Extended
+        codePoint in 0x1DC0..0x1DFF || // Combining Diacritical Marks Supplement
+        codePoint in 0x20D0..0x20FF || // Combining Diacritical Marks for Symbols
+        codePoint in 0xFE20..0xFE2F // Combining Half Marks
+}
+
+private fun isEmojiModifier(codePoint: Int): Boolean {
+    // Fitzpatrick skin tone modifiers.
+    return codePoint in 0x1F3FB..0x1F3FF
 }

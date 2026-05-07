@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/style.rs
 /**
  * `style` contains the primitives used to control how your user interface will look.
  *
@@ -375,6 +376,21 @@ data class Style(
     )
 
     /**
+     * Returns true if the style has the given modifier set.
+     *
+     * ## Examples
+     *
+     * ```kotlin
+     * val style = Style.default().addModifier(Modifier.BOLD or Modifier.ITALIC)
+     * check(style.hasModifier(Modifier.BOLD))
+     * check(style.hasModifier(Modifier.ITALIC))
+     * check(!style.hasModifier(Modifier.UNDERLINED))
+     * ```
+     */
+    fun hasModifier(modifier: Modifier): Boolean =
+        addModifier.contains(modifier) && !subModifier.contains(modifier)
+
+    /**
      * Results in a combined style that is equivalent to applying the two individual styles to
      * a style one after the other.
      *
@@ -743,248 +759,3 @@ private fun modifierToRemoveMethod(modifier: Modifier): String = when (modifier)
     Modifier.CROSSED_OUT -> "notCrossedOut()"
     else -> "removeModifier($modifier)"
 }
-
-// =============================================================================
-// Tests
-// =============================================================================
-
-/**
- * Unit tests for Style and Modifier.
- *
- * In Kotlin, tests would typically be in a separate test source set.
- * These are included here as reference implementations matching the Rust tests.
- */
-internal object StyleTests {
-
-    // -------------------------------------------------------------------------
-    // toString (debug) tests
-    // -------------------------------------------------------------------------
-
-    fun testDebug() {
-        check(Style.new().toString() == "Style.new()")
-        check(Style.default().toString() == "Style.new()")
-        check(Style.new().red().toString() == "Style.new().red()")
-        check(Style.new().onBlue().toString() == "Style.new().onBlue()")
-        check(Style.new().bold().toString() == "Style.new().bold()")
-        check(Style.new().notItalic().toString() == "Style.new().notItalic()")
-        check(
-            Style.new().red().onBlue().bold().italic().notDim().notHidden().toString() ==
-            "Style.new().red().onBlue().bold().italic().notDim().notHidden()"
-        )
-    }
-
-    // -------------------------------------------------------------------------
-    // Patch combination tests
-    // -------------------------------------------------------------------------
-
-    fun testCombinedPatchGivesSameResultAsIndividualPatch() {
-        val styles = listOf(
-            Style.new(),
-            Style.new().fg(Color.Yellow),
-            Style.new().bg(Color.Yellow),
-            Style.new().addModifier(Modifier.BOLD),
-            Style.new().removeModifier(Modifier.BOLD),
-            Style.new().addModifier(Modifier.ITALIC),
-            Style.new().removeModifier(Modifier.ITALIC),
-            Style.new().addModifier(Modifier.ITALIC or Modifier.BOLD),
-            Style.new().removeModifier(Modifier.ITALIC or Modifier.BOLD),
-        )
-        for (a in styles) {
-            for (b in styles) {
-                for (c in styles) {
-                    for (d in styles) {
-                        check(
-                            Style.new().patch(a).patch(b).patch(c).patch(d) ==
-                            Style.new().patch(a.patch(b.patch(c.patch(d))))
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    // Modifier tests
-    // -------------------------------------------------------------------------
-
-    fun testModifierDebug() {
-        check(Modifier.empty().toString() == "NONE")
-        check(Modifier.BOLD.toString() == "BOLD")
-        check(Modifier.DIM.toString() == "DIM")
-        check(Modifier.ITALIC.toString() == "ITALIC")
-        check(Modifier.UNDERLINED.toString() == "UNDERLINED")
-        check(Modifier.SLOW_BLINK.toString() == "SLOW_BLINK")
-        check(Modifier.RAPID_BLINK.toString() == "RAPID_BLINK")
-        check(Modifier.REVERSED.toString() == "REVERSED")
-        check(Modifier.HIDDEN.toString() == "HIDDEN")
-        check(Modifier.CROSSED_OUT.toString() == "CROSSED_OUT")
-        check((Modifier.BOLD or Modifier.DIM).toString() == "BOLD | DIM")
-        check(Modifier.all().toString() ==
-            "BOLD | DIM | ITALIC | UNDERLINED | SLOW_BLINK | RAPID_BLINK | REVERSED | HIDDEN | CROSSED_OUT")
-    }
-
-    // -------------------------------------------------------------------------
-    // Foreground color shorthand tests
-    // -------------------------------------------------------------------------
-
-    fun testFgCanBeStylized() {
-        check(Style.new().black() == Style.new().fg(Color.Black))
-        check(Style.new().red() == Style.new().fg(Color.Red))
-        check(Style.new().green() == Style.new().fg(Color.Green))
-        check(Style.new().yellow() == Style.new().fg(Color.Yellow))
-        check(Style.new().blue() == Style.new().fg(Color.Blue))
-        check(Style.new().magenta() == Style.new().fg(Color.Magenta))
-        check(Style.new().cyan() == Style.new().fg(Color.Cyan))
-        check(Style.new().white() == Style.new().fg(Color.White))
-        check(Style.new().gray() == Style.new().fg(Color.Gray))
-        check(Style.new().darkGray() == Style.new().fg(Color.DarkGray))
-        check(Style.new().lightRed() == Style.new().fg(Color.LightRed))
-        check(Style.new().lightGreen() == Style.new().fg(Color.LightGreen))
-        check(Style.new().lightYellow() == Style.new().fg(Color.LightYellow))
-        check(Style.new().lightBlue() == Style.new().fg(Color.LightBlue))
-        check(Style.new().lightMagenta() == Style.new().fg(Color.LightMagenta))
-        check(Style.new().lightCyan() == Style.new().fg(Color.LightCyan))
-    }
-
-    // -------------------------------------------------------------------------
-    // Background color shorthand tests
-    // -------------------------------------------------------------------------
-
-    fun testBgCanBeStylized() {
-        check(Style.new().onBlack() == Style.new().bg(Color.Black))
-        check(Style.new().onRed() == Style.new().bg(Color.Red))
-        check(Style.new().onGreen() == Style.new().bg(Color.Green))
-        check(Style.new().onYellow() == Style.new().bg(Color.Yellow))
-        check(Style.new().onBlue() == Style.new().bg(Color.Blue))
-        check(Style.new().onMagenta() == Style.new().bg(Color.Magenta))
-        check(Style.new().onCyan() == Style.new().bg(Color.Cyan))
-        check(Style.new().onWhite() == Style.new().bg(Color.White))
-        check(Style.new().onGray() == Style.new().bg(Color.Gray))
-        check(Style.new().onDarkGray() == Style.new().bg(Color.DarkGray))
-        check(Style.new().onLightRed() == Style.new().bg(Color.LightRed))
-        check(Style.new().onLightGreen() == Style.new().bg(Color.LightGreen))
-        check(Style.new().onLightYellow() == Style.new().bg(Color.LightYellow))
-        check(Style.new().onLightBlue() == Style.new().bg(Color.LightBlue))
-        check(Style.new().onLightMagenta() == Style.new().bg(Color.LightMagenta))
-        check(Style.new().onLightCyan() == Style.new().bg(Color.LightCyan))
-    }
-
-    // -------------------------------------------------------------------------
-    // Add modifier shorthand tests
-    // -------------------------------------------------------------------------
-
-    fun testAddModifierCanBeStylized() {
-        check(Style.new().bold() == Style.new().addModifier(Modifier.BOLD))
-        check(Style.new().dim() == Style.new().addModifier(Modifier.DIM))
-        check(Style.new().italic() == Style.new().addModifier(Modifier.ITALIC))
-        check(Style.new().underlined() == Style.new().addModifier(Modifier.UNDERLINED))
-        check(Style.new().slowBlink() == Style.new().addModifier(Modifier.SLOW_BLINK))
-        check(Style.new().rapidBlink() == Style.new().addModifier(Modifier.RAPID_BLINK))
-        check(Style.new().reversed() == Style.new().addModifier(Modifier.REVERSED))
-        check(Style.new().hidden() == Style.new().addModifier(Modifier.HIDDEN))
-        check(Style.new().crossedOut() == Style.new().addModifier(Modifier.CROSSED_OUT))
-    }
-
-    // -------------------------------------------------------------------------
-    // Remove modifier shorthand tests
-    // -------------------------------------------------------------------------
-
-    fun testRemoveModifierCanBeStylized() {
-        check(Style.new().notBold() == Style.new().removeModifier(Modifier.BOLD))
-        check(Style.new().notDim() == Style.new().removeModifier(Modifier.DIM))
-        check(Style.new().notItalic() == Style.new().removeModifier(Modifier.ITALIC))
-        check(Style.new().notUnderlined() == Style.new().removeModifier(Modifier.UNDERLINED))
-        check(Style.new().notSlowBlink() == Style.new().removeModifier(Modifier.SLOW_BLINK))
-        check(Style.new().notRapidBlink() == Style.new().removeModifier(Modifier.RAPID_BLINK))
-        check(Style.new().notReversed() == Style.new().removeModifier(Modifier.REVERSED))
-        check(Style.new().notHidden() == Style.new().removeModifier(Modifier.HIDDEN))
-        check(Style.new().notCrossedOut() == Style.new().removeModifier(Modifier.CROSSED_OUT))
-    }
-
-    // -------------------------------------------------------------------------
-    // From factory tests
-    // -------------------------------------------------------------------------
-
-    fun testFromColor() {
-        check(Style.from(Color.Red) == Style.new().fg(Color.Red))
-    }
-
-    fun testFromColorColor() {
-        check(Style.from(Color.Red, Color.Blue) == Style.new().fg(Color.Red).bg(Color.Blue))
-    }
-
-    fun testFromModifier() {
-        check(
-            Style.from(Modifier.BOLD or Modifier.ITALIC) ==
-            Style.new().addModifier(Modifier.BOLD).addModifier(Modifier.ITALIC)
-        )
-    }
-
-    fun testFromModifierModifier() {
-        check(
-            Style.from(Modifier.BOLD or Modifier.ITALIC, Modifier.DIM) ==
-            Style.new()
-                .addModifier(Modifier.BOLD)
-                .addModifier(Modifier.ITALIC)
-                .removeModifier(Modifier.DIM)
-        )
-    }
-
-    fun testFromColorModifier() {
-        check(
-            Style.from(Color.Red, Modifier.BOLD or Modifier.ITALIC) ==
-            Style.new()
-                .fg(Color.Red)
-                .addModifier(Modifier.BOLD)
-                .addModifier(Modifier.ITALIC)
-        )
-    }
-
-    fun testFromColorColorModifier() {
-        check(
-            Style.from(Color.Red, Color.Blue, Modifier.BOLD or Modifier.ITALIC) ==
-            Style.new()
-                .fg(Color.Red)
-                .bg(Color.Blue)
-                .addModifier(Modifier.BOLD)
-                .addModifier(Modifier.ITALIC)
-        )
-    }
-
-    fun testFromColorColorModifierModifier() {
-        check(
-            Style.from(Color.Red, Color.Blue, Modifier.BOLD or Modifier.ITALIC, Modifier.DIM) ==
-            Style.new()
-                .fg(Color.Red)
-                .bg(Color.Blue)
-                .addModifier(Modifier.BOLD)
-                .addModifier(Modifier.ITALIC)
-                .removeModifier(Modifier.DIM)
-        )
-    }
-
-    // -------------------------------------------------------------------------
-    // Run all tests
-    // -------------------------------------------------------------------------
-
-    fun runAll() {
-        testDebug()
-        testCombinedPatchGivesSameResultAsIndividualPatch()
-        testModifierDebug()
-        testFgCanBeStylized()
-        testBgCanBeStylized()
-        testAddModifierCanBeStylized()
-        testRemoveModifierCanBeStylized()
-        testFromColor()
-        testFromColorColor()
-        testFromModifier()
-        testFromModifierModifier()
-        testFromColorModifier()
-        testFromColorColorModifier()
-        testFromColorColorModifierModifier()
-        println("All Style tests passed!")
-    }
-}
-
-// Note: Serde serialization tests are not ported as Kotlin/Native uses different serialization
-// libraries (kotlinx.serialization). Serialization support can be added separately if needed.

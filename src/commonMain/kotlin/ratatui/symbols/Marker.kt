@@ -1,31 +1,35 @@
+// port-lint: source ratatui-core/src/symbols/marker.rs
 package ratatui.symbols
 
 /**
  * Marker dot symbol.
  */
-const val DOT = "•"
+const val DOT: String = "•"
 
 /**
  * Marker to use when plotting data points.
+ *
+ * Transliteration of `ratatui_core::symbols::marker::Marker`.
  */
-enum class Marker {
+sealed class Marker {
     /**
      * One point per cell in shape of dot (`•`)
      */
-    Dot,
+    data object Dot : Marker()
 
     /**
      * One point per cell in shape of a block (`█`)
      */
-    Block,
+    data object Block : Marker()
 
     /**
      * One point per cell in the shape of a bar (`▄`)
      */
-    Bar,
+    data object Bar : Marker()
 
     /**
-     * Use the Unicode Braille Patterns block to represent data points.
+     * Use the [Unicode Braille Patterns](https://en.wikipedia.org/wiki/Braille_Patterns) block to
+     * represent data points.
      *
      * This is a 2x4 grid of dots, where each dot can be either on or off.
      *
@@ -33,14 +37,14 @@ enum class Marker {
      * Braille Patterns. If your terminal does not support this, you will see unicode replacement
      * characters (`�`) instead of Braille dots (`⠓`, `⣇`, `⣿`).
      */
-    Braille,
+    data object Braille : Marker()
 
     /**
      * Use the unicode block and half block characters (`█`, `▄`, and `▀`) to represent points in
      * a grid that is double the resolution of the terminal. Because each terminal cell is
      * generally about twice as tall as it is wide, this allows for a square grid of pixels.
      */
-    HalfBlock,
+    data object HalfBlock : Marker()
 
     /**
      * Use quadrant characters to represent data points.
@@ -48,36 +52,81 @@ enum class Marker {
      * Quadrant characters display densely packed and regularly spaced pseudo-pixels with a 2x2
      * resolution per character, without visible bands between cells.
      */
-    Quadrant,
+    data object Quadrant : Marker()
 
     /**
-     * Use sextant characters from the Unicode Symbols for Legacy Computing
-     * Supplement to represent data points.
+     * Use sextant characters from the [Unicode Symbols for Legacy Computing
+     * Supplement](https://en.wikipedia.org/wiki/Symbols_for_Legacy_Computing_Supplement) to
+     * represent data points.
      *
      * Sextant characters display densely packed and regularly spaced pseudo-pixels with a 2x3
      * resolution per character, without visible bands between cells.
      *
      * Note: the Symbols for Legacy Computing Supplement block is a relatively recent addition to
-     * unicode that is less broadly supported than Braille dots.
+     * unicode that is less broadly supported than Braille dots. If your terminal does not support
+     * this, you will see unicode replacement characters (`�`) instead of sextants (`🬌`, `🬲`, `🬑`).
      */
-    Sextant,
+    data object Sextant : Marker()
 
     /**
-     * Use octant characters from the Unicode Symbols for Legacy Computing
-     * Supplement to represent data points.
+     * Use octant characters from the [Unicode Symbols for Legacy Computing
+     * Supplement](https://en.wikipedia.org/wiki/Symbols_for_Legacy_Computing_Supplement) to
+     * represent data points.
      *
      * Octant characters have the same 2x4 resolution as Braille characters but display densely
      * packed and regularly spaced pseudo-pixels, without visible bands between cells.
      *
      * Note: the Symbols for Legacy Computing Supplement block is a relatively recent addition to
-     * unicode that is less broadly supported than Braille dots.
+     * unicode that is less broadly supported than Braille dots. If your terminal does not support
+     * this, you will see unicode replacement characters (`�`) instead of octants (`𜴇`, `𜷀`, `𜴷`).
      */
-    Octant;
+    data object Octant : Marker()
+
+    /**
+     * Custom marker where the supplied char is applied once per cell.
+     */
+    data class Custom(val char: Char) : Marker() {
+        override fun toString(): String = "Custom"
+    }
+
+    override fun toString(): String {
+        return when (this) {
+            Bar -> "Bar"
+            Block -> "Block"
+            Braille -> "Braille"
+            Dot -> "Dot"
+            HalfBlock -> "HalfBlock"
+            Octant -> "Octant"
+            Quadrant -> "Quadrant"
+            Sextant -> "Sextant"
+            is Custom -> "Custom"
+        }
+    }
 
     companion object {
         /**
          * Default marker is Dot.
          */
         fun default(): Marker = Dot
+
+        /**
+         * Parse a marker from its string representation.
+         *
+         * Mirrors Rust's `EnumString`-derived parsing used by `"Dot".parse::<Marker>()`.
+         */
+        fun fromStr(value: String): Marker? {
+            return when (value) {
+                "Dot" -> Dot
+                "Block" -> Block
+                "Bar" -> Bar
+                "Braille" -> Braille
+                "HalfBlock" -> HalfBlock
+                "Quadrant" -> Quadrant
+                "Sextant" -> Sextant
+                "Octant" -> Octant
+                "Custom" -> Custom('+') // No payload in string form; choose a stable default.
+                else -> null
+            }
+        }
     }
 }

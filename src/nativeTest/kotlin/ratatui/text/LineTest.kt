@@ -1,6 +1,6 @@
 package ratatui.text
 
-import ratatui.layout.Alignment
+import ratatui.layout.HorizontalAlignment
 import ratatui.style.Color
 import ratatui.style.Modifier
 import ratatui.style.Style
@@ -83,8 +83,8 @@ class LineTest {
 
     @Test
     fun alignment() {
-        val lineLeft = Line.from("This is left").alignment(Alignment.Left)
-        assertEquals(Alignment.Left, lineLeft.alignment)
+        val lineLeft = Line.from("This is left").alignment(HorizontalAlignment.Left)
+        assertEquals(HorizontalAlignment.Left, lineLeft.alignment)
 
         val lineDefault = Line.from("This is default")
         assertNull(lineDefault.alignment)
@@ -243,19 +243,19 @@ class LineTest {
     @Test
     fun leftAligned() {
         val line = Line.from("Hello, world!").leftAligned()
-        assertEquals(Alignment.Left, line.alignment)
+        assertEquals(HorizontalAlignment.Left, line.alignment)
     }
 
     @Test
     fun centered() {
         val line = Line.from("Hello, world!").centered()
-        assertEquals(Alignment.Center, line.alignment)
+        assertEquals(HorizontalAlignment.Center, line.alignment)
     }
 
     @Test
     fun rightAligned() {
         val line = Line.from("Hello, world!").rightAligned()
-        assertEquals(Alignment.Right, line.alignment)
+        assertEquals(HorizontalAlignment.Right, line.alignment)
     }
 
     @Test

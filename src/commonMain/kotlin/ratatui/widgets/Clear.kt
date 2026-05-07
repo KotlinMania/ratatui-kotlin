@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/clear.rs
 package ratatui.widgets
 
 import ratatui.buffer.Buffer
@@ -13,6 +14,7 @@ import ratatui.layout.Rect
  *
  * ```kotlin
  * fun drawOnClear(frame: Frame, area: Rect) {
+ *     val buffer = frame.bufferMut()
  *     val block = Block.bordered().title("Block")
  *     Clear.render(area, buffer) // <- this will clear/reset the area first
  *     block.render(area, buffer) // now render the block widget

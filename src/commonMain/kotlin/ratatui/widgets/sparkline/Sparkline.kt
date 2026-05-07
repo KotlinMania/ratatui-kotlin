@@ -311,7 +311,7 @@ data class Sparkline(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = sparklineStyle
+    override fun style(): Style = sparklineStyle
 
     override fun setStyle(style: Style): Sparkline = style(style)
 

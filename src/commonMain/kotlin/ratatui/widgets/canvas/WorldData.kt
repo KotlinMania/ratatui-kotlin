@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/canvas/world.rs
 package ratatui.widgets.canvas
 
 /**
