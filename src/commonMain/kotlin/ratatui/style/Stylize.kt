@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/style/stylize.rs
 package ratatui.style
 
 import ratatui.text.Line
@@ -15,7 +16,7 @@ interface Styled<T> {
     /**
      * Returns the style of the object.
      */
-    fun getStyle(): Style
+    fun style(): Style
 
     /**
      * Sets the style of the object.
@@ -210,22 +211,22 @@ interface Stylize<T> {
  */
 class StylizeImpl<T>(private val styled: Styled<T>) : Stylize<T> {
     override fun bg(color: Color): T {
-        val style = styled.getStyle().bg(color)
+        val style = styled.style().bg(color)
         return styled.setStyle(style)
     }
 
     override fun fg(color: Color): T {
-        val style = styled.getStyle().fg(color)
+        val style = styled.style().fg(color)
         return styled.setStyle(style)
     }
 
     override fun addModifier(modifier: Modifier): T {
-        val style = styled.getStyle().addModifier(modifier)
+        val style = styled.style().addModifier(modifier)
         return styled.setStyle(style)
     }
 
     override fun removeModifier(modifier: Modifier): T {
-        val style = styled.getStyle().removeModifier(modifier)
+        val style = styled.style().removeModifier(modifier)
         return styled.setStyle(style)
     }
 
@@ -241,7 +242,7 @@ fun String.toStyled(): StringStyled = StringStyled(this)
  * Wrapper class to make String implement Styled.
  */
 class StringStyled(private val content: String) : Styled<Span> {
-    override fun getStyle(): Style = Style.default()
+    override fun style(): Style = Style.default()
 
     override fun setStyle(style: Style): Span = Span.styled(content, style)
 }
@@ -562,3 +563,68 @@ fun Text.notRapidBlink(): Text = removeModifier(Modifier.RAPID_BLINK)
 fun Text.notReversed(): Text = removeModifier(Modifier.REVERSED)
 fun Text.notHidden(): Text = removeModifier(Modifier.HIDDEN)
 fun Text.notCrossedOut(): Text = removeModifier(Modifier.CROSSED_OUT)
+
+// Extension functions for any Styled type, mirroring Rust's Stylize impl for Styled
+fun <T> Styled<T>.fg(color: Color): T = setStyle(style().fg(color))
+fun <T> Styled<T>.bg(color: Color): T = setStyle(style().bg(color))
+fun <T> Styled<T>.reset(): T = setStyle(Style.reset())
+fun <T> Styled<T>.addModifier(modifier: Modifier): T = setStyle(style().addModifier(modifier))
+fun <T> Styled<T>.removeModifier(modifier: Modifier): T = setStyle(style().removeModifier(modifier))
+
+// Color shortcuts (foreground)
+fun <T> Styled<T>.black(): T = fg(Color.Black)
+fun <T> Styled<T>.red(): T = fg(Color.Red)
+fun <T> Styled<T>.green(): T = fg(Color.Green)
+fun <T> Styled<T>.yellow(): T = fg(Color.Yellow)
+fun <T> Styled<T>.blue(): T = fg(Color.Blue)
+fun <T> Styled<T>.magenta(): T = fg(Color.Magenta)
+fun <T> Styled<T>.cyan(): T = fg(Color.Cyan)
+fun <T> Styled<T>.gray(): T = fg(Color.Gray)
+fun <T> Styled<T>.darkGray(): T = fg(Color.DarkGray)
+fun <T> Styled<T>.lightRed(): T = fg(Color.LightRed)
+fun <T> Styled<T>.lightGreen(): T = fg(Color.LightGreen)
+fun <T> Styled<T>.lightYellow(): T = fg(Color.LightYellow)
+fun <T> Styled<T>.lightBlue(): T = fg(Color.LightBlue)
+fun <T> Styled<T>.lightMagenta(): T = fg(Color.LightMagenta)
+fun <T> Styled<T>.lightCyan(): T = fg(Color.LightCyan)
+fun <T> Styled<T>.white(): T = fg(Color.White)
+
+// Color shortcuts (background)
+fun <T> Styled<T>.onBlack(): T = bg(Color.Black)
+fun <T> Styled<T>.onRed(): T = bg(Color.Red)
+fun <T> Styled<T>.onGreen(): T = bg(Color.Green)
+fun <T> Styled<T>.onYellow(): T = bg(Color.Yellow)
+fun <T> Styled<T>.onBlue(): T = bg(Color.Blue)
+fun <T> Styled<T>.onMagenta(): T = bg(Color.Magenta)
+fun <T> Styled<T>.onCyan(): T = bg(Color.Cyan)
+fun <T> Styled<T>.onGray(): T = bg(Color.Gray)
+fun <T> Styled<T>.onDarkGray(): T = bg(Color.DarkGray)
+fun <T> Styled<T>.onLightRed(): T = bg(Color.LightRed)
+fun <T> Styled<T>.onLightGreen(): T = bg(Color.LightGreen)
+fun <T> Styled<T>.onLightYellow(): T = bg(Color.LightYellow)
+fun <T> Styled<T>.onLightBlue(): T = bg(Color.LightBlue)
+fun <T> Styled<T>.onLightMagenta(): T = bg(Color.LightMagenta)
+fun <T> Styled<T>.onLightCyan(): T = bg(Color.LightCyan)
+fun <T> Styled<T>.onWhite(): T = bg(Color.White)
+
+// Modifier shortcuts (add)
+fun <T> Styled<T>.bold(): T = addModifier(Modifier.BOLD)
+fun <T> Styled<T>.dim(): T = addModifier(Modifier.DIM)
+fun <T> Styled<T>.italic(): T = addModifier(Modifier.ITALIC)
+fun <T> Styled<T>.underlined(): T = addModifier(Modifier.UNDERLINED)
+fun <T> Styled<T>.slowBlink(): T = addModifier(Modifier.SLOW_BLINK)
+fun <T> Styled<T>.rapidBlink(): T = addModifier(Modifier.RAPID_BLINK)
+fun <T> Styled<T>.reversed(): T = addModifier(Modifier.REVERSED)
+fun <T> Styled<T>.hidden(): T = addModifier(Modifier.HIDDEN)
+fun <T> Styled<T>.crossedOut(): T = addModifier(Modifier.CROSSED_OUT)
+
+// Modifier shortcuts (remove)
+fun <T> Styled<T>.notBold(): T = removeModifier(Modifier.BOLD)
+fun <T> Styled<T>.notDim(): T = removeModifier(Modifier.DIM)
+fun <T> Styled<T>.notItalic(): T = removeModifier(Modifier.ITALIC)
+fun <T> Styled<T>.notUnderlined(): T = removeModifier(Modifier.UNDERLINED)
+fun <T> Styled<T>.notSlowBlink(): T = removeModifier(Modifier.SLOW_BLINK)
+fun <T> Styled<T>.notRapidBlink(): T = removeModifier(Modifier.RAPID_BLINK)
+fun <T> Styled<T>.notReversed(): T = removeModifier(Modifier.REVERSED)
+fun <T> Styled<T>.notHidden(): T = removeModifier(Modifier.HIDDEN)
+fun <T> Styled<T>.notCrossedOut(): T = removeModifier(Modifier.CROSSED_OUT)

@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/symbols/pixel.rs
 package ratatui.symbols
 
 /**

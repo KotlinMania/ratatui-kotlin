@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/terminal/frame.rs
 package ratatui.terminal
 
 import ratatui.buffer.Buffer
@@ -20,9 +21,9 @@ class Frame internal constructor(
     /** The area of the viewport */
     private val viewportArea: Rect,
     /** The buffer that is used to draw the current frame */
-    val buffer: Buffer,
+    internal val buffer: Buffer,
     /** The frame count indicating the sequence number of this frame */
-    private val frameCount: Int
+    private val count: Int
 ) {
     /**
      * Where should the cursor be after drawing this frame?
@@ -43,6 +44,14 @@ class Frame internal constructor(
      * instead as this is the area of the buffer that is used to render the current frame.
      */
     fun area(): Rect = viewportArea
+
+    /**
+     * The area of the current frame.
+     *
+     * Deprecated in Rust in favor of `area()`.
+     */
+    @Deprecated("use area() instead")
+    fun size(): Rect = viewportArea
 
     /**
      * Render a [Widget] to the current buffer using [Widget.render].
@@ -96,12 +105,30 @@ class Frame internal constructor(
     }
 
     /**
-     * After drawing this frame, make the cursor visible and put it at the specified (x, y)
-     * coordinates. If this method is not called, the cursor will be hidden.
+     * After drawing this frame, make the cursor visible and put it at the specified (x, y) coordinates.
+     *
+     * Mirrors Rust `set_cursor_position((x, y))` (tuple converted via `Into<Position>`).
      */
     fun setCursorPosition(x: Int, y: Int) {
         setCursorPosition(Position(x, y))
     }
+
+    /**
+     * After drawing this frame, make the cursor visible and put it at the specified (x, y) coordinates.
+     *
+     * Deprecated in Rust in favor of `setCursorPosition((x, y))` which takes `impl Into<Position>`.
+     */
+    @Deprecated("use setCursorPosition(Position(x, y)) instead")
+    fun setCursor(x: Int, y: Int) {
+        setCursorPosition(Position(x, y))
+    }
+
+    /**
+     * Gets the buffer that this [Frame] draws into.
+     *
+     * Mirrors Rust `Frame::buffer_mut`.
+     */
+    fun bufferMut(): Buffer = buffer
 
     /**
      * Returns the current frame count.
@@ -118,7 +145,7 @@ class Frame internal constructor(
      * state of the display changes over time. By tracking the frame count, developers can
      * synchronize updates or changes to the content with the rendering process.
      */
-    fun count(): Int = frameCount
+    fun count(): Int = count
 }
 
 /**
@@ -134,4 +161,3 @@ data class CompletedFrame(
     /** The frame count indicating the sequence number of this frame */
     val count: Int
 )
-

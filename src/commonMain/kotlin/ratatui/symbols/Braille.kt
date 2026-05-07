@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/symbols/braille.rs
 package ratatui.symbols
 
 /**

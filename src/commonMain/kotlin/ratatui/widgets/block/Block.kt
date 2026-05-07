@@ -1,13 +1,15 @@
+// port-lint: source ratatui-widgets/src/block.rs
 package ratatui.widgets.block
 
 import ratatui.buffer.Buffer
-import ratatui.layout.Alignment
+import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.symbols.border.Set as BorderSet
 import ratatui.symbols.merge.MergeStrategy
 import ratatui.text.Line
+import ratatui.text.Span
 import ratatui.widgets.Borders
 import ratatui.widgets.BorderType
 import ratatui.widgets.Widget
@@ -114,7 +116,7 @@ data class Block(
     /** The style to be patched to all titles of the block */
     private val titlesStyle: Style = Style.default(),
     /** The default alignment of the titles that don't have one */
-    private val titlesAlignment: Alignment = Alignment.Left,
+    private val titlesAlignment: HorizontalAlignment = HorizontalAlignment.Left,
     /** The default position of the titles that don't have one */
     private val titlesPosition: TitlePosition = TitlePosition.Top,
     /** Visible borders */
@@ -159,6 +161,13 @@ data class Block(
     }
 
     /**
+     * Adds a title to the block using the default position.
+     *
+     * This is a convenience overload to match the Rust API which accepts `Span` titles.
+     */
+    fun title(title: Span): Block = title(Line.from(title))
+
+    /**
      * Adds a title to the top of the block.
      *
      * @param title The title text or Line
@@ -178,6 +187,13 @@ data class Block(
         newTitles.add(TitlePosition.Top to title)
         return copy(titles = newTitles)
     }
+
+    /**
+     * Adds a title to the top of the block.
+     *
+     * This is a convenience overload to match the Rust API which accepts `Span` titles.
+     */
+    fun titleTop(title: Span): Block = titleTop(Line.from(title))
 
     /**
      * Adds a title to the bottom of the block.
@@ -201,6 +217,13 @@ data class Block(
     }
 
     /**
+     * Adds a title to the bottom of the block.
+     *
+     * This is a convenience overload to match the Rust API which accepts `Span` titles.
+     */
+    fun titleBottom(title: Span): Block = titleBottom(Line.from(title))
+
+    /**
      * Applies the style to all titles.
      *
      * This style will be applied to all titles of the block. If a title has a style set, it will
@@ -212,14 +235,14 @@ data class Block(
     fun titleStyle(style: Style): Block = copy(titlesStyle = style)
 
     /**
-     * Sets the default [Alignment] for all block titles.
+     * Sets the default [HorizontalAlignment] for all block titles.
      *
-     * Titles that explicitly set an [Alignment] will ignore this.
+     * Titles that explicitly set an [HorizontalAlignment] will ignore this.
      *
      * @param alignment The default alignment for titles
      * @return A new Block with the title alignment set
      */
-    fun titleAlignment(alignment: Alignment): Block = copy(titlesAlignment = alignment)
+    fun titleAlignment(alignment: HorizontalAlignment): Block = copy(titlesAlignment = alignment)
 
     /**
      * Sets the default [TitlePosition] for all block titles.
@@ -451,7 +474,7 @@ data class Block(
      * Render titles aligned to the right of the block
      */
     private fun renderRightTitles(position: TitlePosition, area: Rect, buf: Buffer) {
-        val rightTitles = filteredTitles(position, Alignment.Right).toList()
+        val rightTitles = filteredTitles(position, HorizontalAlignment.Right).toList()
         var titlesArea = titlesArea(area, position)
 
         // render titles in reverse order to align them to the right
@@ -481,7 +504,7 @@ data class Block(
      */
     private fun renderCenterTitles(position: TitlePosition, area: Rect, buf: Buffer) {
         val centerArea = titlesArea(area, position)
-        val centerTitles = filteredTitles(position, Alignment.Center).toList()
+        val centerTitles = filteredTitles(position, HorizontalAlignment.Center).toList()
 
         // titles are rendered with a space after each title except the last one
         val totalWidth = centerTitles
@@ -562,7 +585,7 @@ data class Block(
      * Render titles aligned to the left of the block
      */
     private fun renderLeftTitles(position: TitlePosition, area: Rect, buf: Buffer) {
-        val leftTitles = filteredTitles(position, Alignment.Left)
+        val leftTitles = filteredTitles(position, HorizontalAlignment.Left)
         var titlesArea = titlesArea(area, position)
 
         for (title in leftTitles) {
@@ -585,7 +608,7 @@ data class Block(
     /**
      * An iterator over the titles that match the position and alignment
      */
-    private fun filteredTitles(position: TitlePosition, alignment: Alignment): Sequence<Line> {
+    private fun filteredTitles(position: TitlePosition, alignment: HorizontalAlignment): Sequence<Line> {
         return titles.asSequence()
             .filter { (pos, _) -> (pos ?: titlesPosition) == position }
             .filter { (_, line) -> (line.alignment ?: titlesAlignment) == alignment }
@@ -636,7 +659,7 @@ data class Block(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = blockStyle
+    override fun style(): Style = blockStyle
 
     override fun setStyle(style: Style): Block = style(style)
 

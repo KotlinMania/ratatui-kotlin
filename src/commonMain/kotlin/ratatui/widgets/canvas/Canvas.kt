@@ -1,12 +1,476 @@
+// port-lint: source ratatui-widgets/src/canvas.rs
 package ratatui.widgets.canvas
 
 import ratatui.buffer.Buffer
 import ratatui.layout.Rect
 import ratatui.style.Color
 import ratatui.style.Style
+import ratatui.symbols.Braille
+import ratatui.symbols.HalfBlock
 import ratatui.symbols.Marker
+import ratatui.symbols.Pixel
+import ratatui.text.Line
 import ratatui.widgets.Widget
 import ratatui.widgets.block.Block
+import kotlin.math.round
+
+/**
+ * Something that can be drawn on a [Canvas].
+ *
+ * You may implement your own canvas custom widgets by implementing this trait.
+ */
+interface Shape {
+    /**
+     * Draws this [Shape] using the given [Painter].
+     *
+     * This is the only method required to implement a custom widget that can be drawn on a
+     * [Canvas].
+     */
+    fun draw(painter: Painter)
+}
+
+/**
+ * Label to draw some text on the canvas.
+ */
+data class Label(
+    val x: Double = 0.0,
+    val y: Double = 0.0,
+    val line: Line = Line()
+)
+
+/**
+ * A cell within a layer.
+ *
+ * If a [Context] contains multiple layers, then the symbol, foreground, and background colors
+ * for a character will be determined by the top-most layer that provides a value for that
+ * character.
+ */
+internal data class LayerCell(
+    val symbol: String?,
+    val fg: Color?,
+    val bg: Color?
+)
+
+/**
+ * A single layer of the canvas.
+ *
+ * This allows the canvas to be drawn in multiple layers. This is useful if you want to draw
+ * multiple shapes on the canvas in specific order.
+ */
+internal data class Layer(
+    val contents: List<LayerCell>
+)
+
+/**
+ * A grid of cells that can be painted on.
+ *
+ * The grid represents a particular screen region measured in rows and columns. The underlying
+ * resolution of the grid might exceed the number of rows and columns.
+ */
+internal interface Grid {
+    /**
+     * Get the resolution of the grid in number of dots.
+     *
+     * This doesn't have to be the same as the number of rows and columns of the grid.
+     */
+    fun resolution(): Pair<Double, Double>
+
+    /**
+     * Paint a point of the grid.
+     *
+     * The point is expressed in number of dots starting at the origin of the grid in the top left
+     * corner.
+     */
+    fun paint(x: Int, y: Int, color: Color)
+
+    /**
+     * Save the current state of the Grid as a layer to be rendered.
+     */
+    fun save(): Layer
+
+    /**
+     * Reset the grid to its initial state.
+     */
+    fun reset()
+}
+
+/**
+ * The pattern and color of a PatternGrid cell.
+ */
+private data class PatternCell(
+    var pattern: Int = 0,
+    var color: Color? = null
+)
+
+/**
+ * The PatternGrid is a grid made up of cells each containing a WxH pattern character.
+ *
+ * This makes it possible to draw shapes with a resolution of e.g. 2x4 (Braille or unicode octant)
+ * per cell.
+ */
+internal class PatternGrid(
+    private val width: Int,
+    private val height: Int,
+    private val cellWidth: Int,
+    private val cellHeight: Int,
+    private val charTable: Array<String>
+) : Grid {
+    private val cells: MutableList<PatternCell> = MutableList(width * height) { PatternCell() }
+
+    override fun resolution(): Pair<Double, Double> {
+        return Pair(width.toDouble() * cellWidth, height.toDouble() * cellHeight)
+    }
+
+    override fun paint(x: Int, y: Int, color: Color) {
+        val cellX = x / cellWidth
+        val cellY = y / cellHeight
+        val index = cellY * width + cellX
+
+        if (index >= 0 && index < cells.size) {
+            val localX = x % cellWidth
+            val localY = y % cellHeight
+            val bitIndex = localX + cellWidth * localY
+            cells[index].pattern = cells[index].pattern or (1 shl bitIndex)
+            cells[index].color = color
+        }
+    }
+
+    override fun save(): Layer {
+        val contents = cells.map { cell ->
+            val symbol = if (cell.pattern == 0) {
+                null
+            } else {
+                charTable.getOrNull(cell.pattern)
+            }
+            LayerCell(
+                symbol = symbol,
+                fg = cell.color,
+                bg = null
+            )
+        }
+        return Layer(contents)
+    }
+
+    override fun reset() {
+        for (i in cells.indices) {
+            cells[i] = PatternCell()
+        }
+    }
+}
+
+/**
+ * The CharGrid is a grid made up of cells each containing a single character.
+ *
+ * This makes it possible to draw shapes with a resolution of 1x1 dots per cell.
+ */
+internal class CharGrid(
+    private val width: Int,
+    private val height: Int,
+    private val cellChar: String,
+    private val applyColorToBg: Boolean = false
+) : Grid {
+    private val cells: MutableList<Color?> = MutableList(width * height) { null }
+
+    override fun resolution(): Pair<Double, Double> {
+        return Pair(width.toDouble(), height.toDouble())
+    }
+
+    override fun paint(x: Int, y: Int, color: Color) {
+        val index = y * width + x
+        if (index >= 0 && index < cells.size) {
+            cells[index] = color
+        }
+    }
+
+    override fun save(): Layer {
+        val contents = cells.map { color ->
+            LayerCell(
+                symbol = if (color != null) cellChar else null,
+                fg = color,
+                bg = if (applyColorToBg) color else null
+            )
+        }
+        return Layer(contents)
+    }
+
+    override fun reset() {
+        for (i in cells.indices) {
+            cells[i] = null
+        }
+    }
+}
+
+/**
+ * The HalfBlockGrid is a grid made up of cells each containing a half block character.
+ *
+ * In terminals, each character is usually twice as tall as it is wide. This allows us to draw
+ * shapes with a resolution of 1x2 "pixels" per cell.
+ */
+internal class HalfBlockGrid(
+    private val width: Int,
+    private val height: Int
+) : Grid {
+    // Represents a single color for each "pixel" arranged in row, column order
+    private val pixels: MutableList<MutableList<Color?>> = MutableList(height * 2) {
+        MutableList(width) { null }
+    }
+
+    override fun resolution(): Pair<Double, Double> {
+        return Pair(width.toDouble(), height.toDouble() * 2.0)
+    }
+
+    override fun paint(x: Int, y: Int, color: Color) {
+        if (y in pixels.indices && x in 0 until width) {
+            pixels[y][x] = color
+        }
+    }
+
+    override fun save(): Layer {
+        // Join each adjacent row together to get vertical pairs of pixels
+        val contents = mutableListOf<LayerCell>()
+
+        for (row in 0 until height) {
+            val upperRow = pixels.getOrNull(row * 2) ?: continue
+            val lowerRow = pixels.getOrNull(row * 2 + 1) ?: continue
+
+            for (col in 0 until width) {
+                val upper = upperRow.getOrNull(col)
+                val lower = lowerRow.getOrNull(col)
+
+                val (symbol, fg, bg) = when {
+                    upper == null && lower == null -> Triple(null, null, null)
+                    upper == null && lower != null -> Triple(HalfBlock.LOWER.toString(), lower, null)
+                    upper != null && lower == null -> Triple(HalfBlock.UPPER.toString(), upper, null)
+                    upper == lower -> Triple(HalfBlock.FULL.toString(), upper, lower)
+                    else -> Triple(HalfBlock.UPPER.toString(), upper, lower)
+                }
+                contents.add(LayerCell(symbol, fg, bg))
+            }
+        }
+
+        return Layer(contents)
+    }
+
+    override fun reset() {
+        for (row in pixels) {
+            for (i in row.indices) {
+                row[i] = null
+            }
+        }
+    }
+}
+
+/**
+ * Create a Grid for the given marker type.
+ */
+internal fun createGrid(width: Int, height: Int, marker: Marker): Grid {
+    return when (marker) {
+        Marker.Block -> CharGrid(width, height, "\u2588", applyColorToBg = true)
+        Marker.Bar -> CharGrid(width, height, "\u2584")
+        Marker.Braille -> PatternGrid(width, height, 2, 4, Braille.PATTERNS.map { it.toString() }.toTypedArray())
+        Marker.HalfBlock -> HalfBlockGrid(width, height)
+        Marker.Quadrant -> PatternGrid(width, height, 2, 2, Pixel.QUADRANTS.map { it.toString() }.toTypedArray())
+        Marker.Sextant -> PatternGrid(width, height, 2, 3, Pixel.SEXTANTS)
+        Marker.Octant -> PatternGrid(width, height, 2, 4, Pixel.OCTANTS)
+        Marker.Dot -> CharGrid(width, height, "•")
+        is Marker.Custom -> CharGrid(width, height, marker.char.toString())
+    }
+}
+
+/**
+ * Holds the state of the [Canvas] when painting to it.
+ *
+ * This is used by the [Canvas] widget to draw shapes on the grid. It can be useful to think of
+ * this as similar to the Frame struct that is used to draw widgets on the terminal.
+ */
+class Context internal constructor(
+    // Width of the canvas in cells (NOT the resolution in dots/pixels)
+    private val width: Int,
+    // Height of the canvas in cells (NOT the resolution in dots/pixels)
+    private val height: Int,
+    // Canvas coordinate system x bounds [left, right]
+    internal val xBounds: DoubleArray,
+    // Canvas coordinate system y bounds [bottom, top]
+    internal val yBounds: DoubleArray,
+    internal var grid: Grid,
+    private var dirty: Boolean = false,
+    internal val layers: MutableList<Layer> = mutableListOf(),
+    internal val labels: MutableList<Label> = mutableListOf()
+) {
+    /**
+     * Create a new Context with the given width and height measured in terminal columns and rows
+     * respectively. The `x` and `y` bounds define the specific area of some coordinate system that
+     * will be drawn on the canvas. The marker defines the type of points used to draw the shapes.
+     *
+     * Applications should not use this directly but rather use the [Canvas] widget. This will be
+     * created by the [Canvas.paint] method and passed to the closure that is used to draw on
+     * the canvas.
+     *
+     * The `x` and `y` bounds should be specified as left/right and bottom/top respectively.
+     */
+    constructor(
+        width: Int,
+        height: Int,
+        xBounds: DoubleArray,
+        yBounds: DoubleArray,
+        marker: Marker
+    ) : this(
+        width = width,
+        height = height,
+        xBounds = xBounds,
+        yBounds = yBounds,
+        grid = createGrid(width, height, marker)
+    )
+
+    /**
+     * Change the marker being used in this context.
+     *
+     * This will save the last layer if necessary and reset the grid to use the new marker.
+     */
+    fun marker(marker: Marker) {
+        finish()
+        grid = createGrid(width, height, marker)
+    }
+
+    /**
+     * Draw the given [Shape] in this context.
+     */
+    fun draw(shape: Shape) {
+        dirty = true
+        val painter = Painter.from(this)
+        shape.draw(painter)
+    }
+
+    /**
+     * Save the existing state of the grid as a layer.
+     *
+     * Save the existing state as a layer to be rendered and reset the grid to its initial
+     * state for the next layer.
+     *
+     * This allows the canvas to be drawn in multiple layers. This is useful if you want to
+     * draw multiple shapes on the [Canvas] in specific order.
+     */
+    fun layer() {
+        layers.add(grid.save())
+        grid.reset()
+        dirty = false
+    }
+
+    /**
+     * Print a text on the [Canvas] at the given position.
+     *
+     * Note that the text is always printed on top of the canvas and is **not** affected by the
+     * layers.
+     */
+    fun print(x: Double, y: Double, line: Line) {
+        labels.add(Label(x, y, line))
+    }
+
+    /**
+     * Print a string on the [Canvas] at the given position.
+     */
+    fun print(x: Double, y: Double, text: String) {
+        labels.add(Label(x, y, Line.raw(text)))
+    }
+
+    /**
+     * Save the last layer if necessary.
+     */
+    internal fun finish() {
+        if (dirty) {
+            layer()
+        }
+    }
+
+    companion object {
+        /**
+         * Create a new Context with the given parameters.
+         */
+        fun new(
+            width: Int,
+            height: Int,
+            xBounds: DoubleArray,
+            yBounds: DoubleArray,
+            marker: Marker
+        ): Context = Context(width, height, xBounds, yBounds, marker)
+    }
+}
+
+/**
+ * Painter is an abstraction over the [Context] that allows to draw shapes on the grid.
+ *
+ * It is used by the [Shape] interface to draw shapes on the grid. It can be useful to think of this
+ * as similar to the Buffer struct that is used to draw widgets on the terminal.
+ */
+class Painter internal constructor(
+    private val context: Context,
+    private val resolution: Pair<Double, Double>
+) {
+    /**
+     * Convert the `(x, y)` coordinates to location of a point on the grid.
+     *
+     * `(x, y)` coordinates are expressed in the coordinate system of the canvas. The origin is in
+     * the lower left corner of the canvas (unlike most other coordinates in Ratatui where the
+     * origin is the upper left corner). The `x` and `y` bounds of the canvas define the specific
+     * area of some coordinate system that will be drawn on the canvas. The resolution of the grid
+     * is used to convert the `(x, y)` coordinates to the location of a point on the grid.
+     *
+     * The grid coordinates are expressed in the coordinate system of the grid. The origin is in
+     * the top left corner of the grid. The x and y bounds of the grid are always `[0, width - 1]`
+     * and `[0, height - 1]` respectively. The resolution of the grid is used to convert the
+     * `(x, y)` coordinates to the location of a point on the grid.
+     *
+     * Points are rounded to the nearest grid cell (with points exactly in the center of a cell
+     * rounding up).
+     *
+     * @return The grid coordinates as (x, y) pair, or null if the point is outside the canvas bounds
+     */
+    fun getPoint(x: Double, y: Double): Pair<Int, Int>? {
+        val left = context.xBounds[0]
+        val right = context.xBounds[1]
+        val bottom = context.yBounds[0]
+        val top = context.yBounds[1]
+
+        if (x < left || x > right || y < bottom || y > top) {
+            return null
+        }
+
+        val width = right - left
+        val height = top - bottom
+
+        if (width <= 0.0 || height <= 0.0) {
+            return null
+        }
+
+        val gridX = round((x - left) * (resolution.first - 1.0) / width).toInt()
+        val gridY = round((top - y) * (resolution.second - 1.0) / height).toInt()
+
+        return Pair(gridX, gridY)
+    }
+
+    /**
+     * Paint a point of the grid.
+     */
+    fun paint(x: Int, y: Int, color: Color) {
+        context.grid.paint(x, y, color)
+    }
+
+    /**
+     * Canvas context bounds by axis.
+     *
+     * @return Pair of (xBounds, yBounds) arrays
+     */
+    fun bounds(): Pair<DoubleArray, DoubleArray> {
+        return Pair(context.xBounds, context.yBounds)
+    }
+
+    companion object {
+        internal fun from(context: Context): Painter {
+            val resolution = context.grid.resolution()
+            return Painter(context, resolution)
+        }
+    }
+}
 
 /**
  * The Canvas widget provides a means to draw shapes (Lines, Rectangles, Circles, etc.) on a grid.
