@@ -33,6 +33,7 @@ kotlin {
     applyDefaultHierarchyTemplate()
 
     sourceSets.all {
+        languageSettings.optIn("kotlin.ExperimentalUnsignedTypes")
         languageSettings.optIn("kotlin.time.ExperimentalTime")
         languageSettings.optIn("kotlin.concurrent.atomics.ExperimentalAtomicApi")
     }
