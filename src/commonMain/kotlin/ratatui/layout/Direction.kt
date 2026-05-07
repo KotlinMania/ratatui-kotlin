@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/direction.rs
 /**
  * Defines the direction of a layout.
  *

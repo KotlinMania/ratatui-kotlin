@@ -146,7 +146,7 @@ data class LineGauge(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = widgetStyle
+    override fun style(): Style = widgetStyle
 
     override fun setStyle(style: Style): LineGauge = style(style)
 
