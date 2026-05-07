@@ -8,29 +8,24 @@
 /.gradle/9.2.1/executionHistory/
 /.gradle/file-system.probe
 *.lock
-kotlin-js-store/*
 !kotlin-js-store/yarn.lock
-!kotlin-js-store/wasm/
 !kotlin-js-store/wasm/yarn.lock
 *.bin
 /tmp/
 
 local.properties
 
+local.properties
+
 
 /.android-sdk/
+
+# Tools (binaries built from ASTDistance project)
+# Note: `tools/ast_distance` is a tracked wrapper script. Built binaries are ignored via `*.bin`.
 
 # Rust reference source files for porting
 **/*.rs
 /ratatui-core/src/*.rs
 /ratatui-widgets/src/*.rs
 tools/port_linter.py
-tools/ast_distance/build/CMakeFiles/ast_distance.dir/src/main.cpp.o
-tools/ast_distance/build/ast_distance
-tools/ast_distance/build/libtree-sitter-core.a
-tools/ast_distance/build/libtree-sitter-cpp-parser.a
-tools/ast_distance/build/libtree-sitter-kotlin-parser.a
-tools/ast_distance/build/libtree-sitter-python-parser.a
-tools/ast_distance/build/libtree-sitter-rust-parser.a
-tools/ast_distance/build/libtree-sitter-typescript-parser.a
-tools/ast_distance/ast_distance
+.DS_Store
