@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/barchart/bar.rs
 package ratatui.widgets.barchart
 
 import ratatui.buffer.Buffer
@@ -166,7 +167,7 @@ data class Bar(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = barStyle
+    override fun style(): Style = barStyle
 
     override fun setStyle(style: Style): Bar = style(style)
 

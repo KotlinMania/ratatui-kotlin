@@ -1,6 +1,13 @@
+// port-lint: source ratatui-core/src/layout/layout.rs
 package ratatui.layout
 
-import kasuari.*
+import kasuari.Expression
+import kasuari.PartialConstraint
+import kasuari.Solver
+import kasuari.Strength
+import kasuari.Term
+import kasuari.Variable
+import kasuari.WeightedRelation
 
 /**
  * Represents the spacing between segments in a layout.
@@ -72,11 +79,43 @@ data class Layout(
     companion object {
         // Multiplier that decides floating point precision when rounding.
         private const val FLOAT_PRECISION_MULTIPLIER: Double = 100.0
+        private const val EPSILON_SCALE: Double = 1e-6
 
         /**
          * Creates a new layout with default values.
          */
         fun default(): Layout = Layout()
+
+        private fun exprFromVariable(variable: Variable): Expression =
+            Expression.fromVariable(variable)
+
+        private fun scaleExpression(expression: Expression, scalar: Double): Expression {
+            val result = expression.copy()
+            result.constant *= scalar
+            for (i in result.terms.indices) {
+                val term = result.terms[i]
+                result.terms[i] = Term.new(term.variable, term.coefficient * scalar)
+            }
+            return result
+        }
+
+        private fun eq(lhs: Expression, strength: Strength, rhs: Double): kasuari.Constraint =
+            PartialConstraint.new(lhs, WeightedRelation.EQ(strength)).to(rhs)
+
+        private fun eq(lhs: Expression, strength: Strength, rhs: Expression): kasuari.Constraint =
+            PartialConstraint.new(lhs, WeightedRelation.EQ(strength)).to(rhs)
+
+        private fun ge(lhs: Expression, strength: Strength, rhs: Expression): kasuari.Constraint =
+            PartialConstraint.new(lhs, WeightedRelation.GE(strength)).to(rhs)
+
+        private fun le(lhs: Expression, strength: Strength, rhs: Expression): kasuari.Constraint =
+            PartialConstraint.new(lhs, WeightedRelation.LE(strength)).to(rhs)
+
+        private fun ge(lhs: Expression, strength: Strength, rhs: Double): kasuari.Constraint =
+            PartialConstraint.new(lhs, WeightedRelation.GE(strength)).to(rhs)
+
+        private fun le(lhs: Expression, strength: Strength, rhs: Double): kasuari.Constraint =
+            PartialConstraint.new(lhs, WeightedRelation.LE(strength)).to(rhs)
 
         /**
          * Creates a new layout with the given direction and constraints.
@@ -209,12 +248,8 @@ data class Layout(
         areaStart: Double,
         areaEnd: Double
     ) {
-        solver.addConstraint(
-            area.start with WeightedRelation.EQ(Strength.REQUIRED) to areaStart
-        )
-        solver.addConstraint(
-            area.end with WeightedRelation.EQ(Strength.REQUIRED) to areaEnd
-        )
+        solver.addConstraint(eq(exprFromVariable(area.start), Strength.REQUIRED, areaStart))
+        solver.addConstraint(eq(exprFromVariable(area.end), Strength.REQUIRED, areaEnd))
     }
 
     private fun configureVariableInAreaConstraints(
@@ -224,12 +259,8 @@ data class Layout(
     ) {
         // All variables are in the range [area.start, area.end]
         for (variable in variables) {
-            solver.addConstraint(
-                variable with WeightedRelation.GE(Strength.REQUIRED) to area.start
-            )
-            solver.addConstraint(
-                variable with WeightedRelation.LE(Strength.REQUIRED) to area.end
-            )
+            solver.addConstraint(ge(exprFromVariable(variable), Strength.REQUIRED, exprFromVariable(area.start)))
+            solver.addConstraint(le(exprFromVariable(variable), Strength.REQUIRED, exprFromVariable(area.end)))
         }
     }
 
@@ -241,7 +272,8 @@ data class Layout(
         for (i in 1 until variables.size step 2) {
             if (i + 1 < variables.size) {
                 solver.addConstraint(
-                    variables[i] with WeightedRelation.LE(Strength.REQUIRED) to variables[i + 1]
+                    PartialConstraint.new(exprFromVariable(variables[i]), WeightedRelation.LE(Strength.REQUIRED))
+                        .to(variables[i + 1])
                 )
             }
         }
@@ -272,13 +304,13 @@ data class Layout(
                     solver.addConstraint(segment.hasIntSize(constraint.value.toInt(), Strengths.LENGTH_SIZE_EQ))
                 }
                 is Constraint.Percentage -> {
-                    val size = area.size() * constraint.value.toDouble() / 100.0
+                    val size = scaleExpression(area.size(), constraint.value.toDouble() / 100.0)
                     solver.addConstraint(segment.hasSize(size, Strengths.PERCENTAGE_SIZE_EQ))
                 }
                 is Constraint.Ratio -> {
                     // Avoid division by zero by using 1 when denominator is 0
                     val den = if (constraint.denominator == 0u) 1u else constraint.denominator
-                    val size = area.size() * constraint.numerator.toDouble() / den.toDouble()
+                    val size = scaleExpression(area.size(), constraint.numerator.toDouble() / den.toDouble())
                     solver.addConstraint(segment.hasSize(size, Strengths.RATIO_SIZE_EQ))
                 }
                 is Constraint.Fill -> {
@@ -443,19 +475,22 @@ data class Layout(
                 val (rightConstraint, rightSegment) = fillSegments[j]
 
                 val leftScalingFactor = when (leftConstraint) {
-                    is Constraint.Fill -> leftConstraint.value.toDouble().coerceAtLeast(1e-6)
+                    is Constraint.Fill -> leftConstraint.value.toDouble().coerceAtLeast(EPSILON_SCALE)
                     is Constraint.Min -> 1.0
                     else -> 1.0
                 }
                 val rightScalingFactor = when (rightConstraint) {
-                    is Constraint.Fill -> rightConstraint.value.toDouble().coerceAtLeast(1e-6)
+                    is Constraint.Fill -> rightConstraint.value.toDouble().coerceAtLeast(EPSILON_SCALE)
                     is Constraint.Min -> 1.0
                     else -> 1.0
                 }
 
                 solver.addConstraint(
-                    (rightScalingFactor * leftSegment.size()) with WeightedRelation.EQ(Strengths.GROW) to
-                        (leftScalingFactor * rightSegment.size())
+                    eq(
+                        scaleExpression(leftSegment.size(), rightScalingFactor),
+                        Strengths.GROW,
+                        scaleExpression(rightSegment.size(), leftScalingFactor)
+                    )
                 )
             }
         }
@@ -498,31 +533,37 @@ data class Layout(
         val start: Variable,
         val end: Variable
     ) {
-        fun size(): Expression = end - start
+        fun size(): Expression =
+            Expression.fromTerms(
+                listOf(
+                    Term.new(end, 1.0),
+                    Term.new(start, -1.0),
+                )
+            )
 
         fun hasMaxSize(size: Int, strength: Strength): kasuari.Constraint =
-            this.size() with WeightedRelation.LE(strength) to (size.toDouble() * FLOAT_PRECISION_MULTIPLIER)
+            le(this.size(), strength, size.toDouble() * FLOAT_PRECISION_MULTIPLIER)
 
         fun hasMinSize(size: Int, strength: Strength): kasuari.Constraint =
-            this.size() with WeightedRelation.GE(strength) to (size.toDouble() * FLOAT_PRECISION_MULTIPLIER)
+            ge(this.size(), strength, size.toDouble() * FLOAT_PRECISION_MULTIPLIER)
 
         fun hasIntSize(size: Int, strength: Strength): kasuari.Constraint =
-            this.size() with WeightedRelation.EQ(strength) to (size.toDouble() * FLOAT_PRECISION_MULTIPLIER)
+            eq(this.size(), strength, size.toDouble() * FLOAT_PRECISION_MULTIPLIER)
 
         fun hasSize(size: Expression, strength: Strength): kasuari.Constraint =
-            this.size() with WeightedRelation.EQ(strength) to size
+            eq(this.size(), strength, size)
 
         fun hasSize(size: Double, strength: Strength): kasuari.Constraint =
-            this.size() with WeightedRelation.EQ(strength) to size
+            eq(this.size(), strength, size)
 
         fun hasSize(other: Element, strength: Strength): kasuari.Constraint =
-            this.size() with WeightedRelation.EQ(strength) to other.size()
+            eq(this.size(), strength, other.size())
 
         fun hasDoubleSize(other: Element, strength: Strength): kasuari.Constraint =
-            this.size() with WeightedRelation.EQ(strength) to (other.size() * 2.0)
+            eq(this.size(), strength, scaleExpression(other.size(), 2.0))
 
         fun isEmpty(): kasuari.Constraint =
-            this.size() with WeightedRelation.EQ(Strength.REQUIRED - Strength.WEAK) to 0.0
+            eq(this.size(), Strength.REQUIRED - Strength.WEAK, 0.0)
     }
 
     /**

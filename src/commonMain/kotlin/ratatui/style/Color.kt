@@ -1,4 +1,30 @@
+// port-lint: source ratatui-core/src/style/color.rs
 package ratatui.style
+
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.SerializationException
+import kotlinx.serialization.descriptors.PrimitiveKind
+import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.json.JsonDecoder
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.jsonArray
+import kotlinx.serialization.json.jsonObject
+import kotlinx.serialization.json.jsonPrimitive
+import kotlinx.serialization.json.int
+import kotlin.math.PI
+import kotlin.math.abs
+import kotlin.math.cos
+import kotlin.math.min
+import kotlin.math.pow
+import kotlin.math.roundToInt
+import kotlin.math.sin
 
 /**
  * ANSI Color
@@ -33,8 +59,8 @@ package ratatui.style
  * - we support `-` and `_` and ` ` as separators for all colors
  * - we support both `gray` and `grey` spellings
  *
- * `Color.toStyle()` is implemented by creating a style with the foreground color set to the
- * given color. This allows you to use colors anywhere that accepts a Style.
+ * `Color` can be used anywhere that accepts a [Style] because
+ * [Style.from][Style.Companion.from] accepts a foreground color.
  *
  * Example:
  * ```kotlin
@@ -49,29 +75,30 @@ package ratatui.style
  * assertEquals(Color.fromStr("white"), Color.White)
  * ```
  */
+@Serializable(with = ColorSerializer::class)
 sealed class Color {
-    /** Resets the foreground or background color */
+    /** Resets the foreground or background color. */
     data object Reset : Color()
 
-    /** ANSI Color: Black. Foreground: 30, Background: 40 */
+    /** ANSI Color: Black. Foreground: 30, Background: 40. */
     data object Black : Color()
 
-    /** ANSI Color: Red. Foreground: 31, Background: 41 */
+    /** ANSI Color: Red. Foreground: 31, Background: 41. */
     data object Red : Color()
 
-    /** ANSI Color: Green. Foreground: 32, Background: 42 */
+    /** ANSI Color: Green. Foreground: 32, Background: 42. */
     data object Green : Color()
 
-    /** ANSI Color: Yellow. Foreground: 33, Background: 43 */
+    /** ANSI Color: Yellow. Foreground: 33, Background: 43. */
     data object Yellow : Color()
 
-    /** ANSI Color: Blue. Foreground: 34, Background: 44 */
+    /** ANSI Color: Blue. Foreground: 34, Background: 44. */
     data object Blue : Color()
 
-    /** ANSI Color: Magenta. Foreground: 35, Background: 45 */
+    /** ANSI Color: Magenta. Foreground: 35, Background: 45. */
     data object Magenta : Color()
 
-    /** ANSI Color: Cyan. Foreground: 36, Background: 46 */
+    /** ANSI Color: Cyan. Foreground: 36, Background: 46. */
     data object Cyan : Color()
 
     /**
@@ -88,27 +115,28 @@ sealed class Color {
      */
     data object DarkGray : Color()
 
-    /** ANSI Color: Bright Red. Foreground: 91, Background: 101 */
+    /** ANSI Color: Bright Red. Foreground: 91, Background: 101. */
     data object LightRed : Color()
 
-    /** ANSI Color: Bright Green. Foreground: 92, Background: 102 */
+    /** ANSI Color: Bright Green. Foreground: 92, Background: 102. */
     data object LightGreen : Color()
 
-    /** ANSI Color: Bright Yellow. Foreground: 93, Background: 103 */
+    /** ANSI Color: Bright Yellow. Foreground: 93, Background: 103. */
     data object LightYellow : Color()
 
-    /** ANSI Color: Bright Blue. Foreground: 94, Background: 104 */
+    /** ANSI Color: Bright Blue. Foreground: 94, Background: 104. */
     data object LightBlue : Color()
 
-    /** ANSI Color: Bright Magenta. Foreground: 95, Background: 105 */
+    /** ANSI Color: Bright Magenta. Foreground: 95, Background: 105. */
     data object LightMagenta : Color()
 
-    /** ANSI Color: Bright Cyan. Foreground: 96, Background: 106 */
+    /** ANSI Color: Bright Cyan. Foreground: 96, Background: 106. */
     data object LightCyan : Color()
 
     /**
-     * ANSI Color: Bright White. Foreground: 97, Background: 107
-     * Sometimes called `bright white` or `light white` in some terminals
+     * ANSI Color: Bright White. Foreground: 97, Background: 107.
+     *
+     * Sometimes called `bright white` or `light white` in some terminals.
      */
     data object White : Color()
 
@@ -121,21 +149,63 @@ sealed class Color {
      *
      * See also: https://en.wikipedia.org/wiki/ANSI_escape_code#24-bit
      */
-    data class Rgb(val r: UByte, val g: UByte, val b: UByte) : Color()
+    data class Rgb(val r: UByte, val g: UByte, val b: UByte) : Color() {
+        override fun toString(): String {
+            val rHex = r.toString(16).padStart(2, '0').uppercase()
+            val gHex = g.toString(16).padStart(2, '0').uppercase()
+            val bHex = b.toString(16).padStart(2, '0').uppercase()
+            return "#$rHex$gHex$bHex"
+        }
+    }
 
     /**
      * An 8-bit 256 color.
      *
      * See also: https://en.wikipedia.org/wiki/ANSI_escape_code#8-bit
      */
-    data class Indexed(val index: UByte) : Color()
+    data class Indexed(val index: UByte) : Color() {
+        override fun toString(): String = index.toString()
+    }
 
     companion object {
-        /** Default color (Reset) */
+        /** Default color (Reset). */
         fun default(): Color = Reset
 
         /**
-         * Convert a UInt to a Color
+         * Converts `(r, g, b)` values to a [Color.Rgb] instance.
+         *
+         * Mirrors Rust `impl From<(u8, u8, u8)> for Color`.
+         */
+        fun from(r: UByte, g: UByte, b: UByte): Color = Rgb(r, g, b)
+
+        /**
+         * Converts a tuple of 3 `u8` values to a [Color.Rgb] instance.
+         */
+        fun from(rgb: Triple<UByte, UByte, UByte>): Color = Rgb(rgb.first, rgb.second, rgb.third)
+
+        /**
+         * Converts `(r, g, b, a)` values to a [Color.Rgb] instance (ignoring alpha).
+         *
+         * Mirrors Rust `impl From<(u8, u8, u8, u8)> for Color`.
+         */
+        fun from(r: UByte, g: UByte, b: UByte, @Suppress("UNUSED_PARAMETER") a: UByte): Color =
+            Rgb(r, g, b)
+
+        /**
+         * Converts an array of 3 or 4 `u8` values to a [Color.Rgb] instance.
+         *
+         * - If `bytes.size == 3`, returns `Rgb(r, g, b)`.
+         * - If `bytes.size == 4`, returns `Rgb(r, g, b)` (ignoring alpha).
+         */
+        fun from(bytes: UByteArray): Color {
+            if (bytes.size != 3 && bytes.size != 4) {
+                throw IllegalArgumentException("Expected 3 or 4 bytes, got ${bytes.size}")
+            }
+            return Rgb(bytes[0], bytes[1], bytes[2])
+        }
+
+        /**
+         * Converts a `UInt` to a `Color`.
          *
          * The UInt should be in the format 0x00RRGGBB.
          */
@@ -147,11 +217,38 @@ sealed class Color {
         }
 
         /**
-         * Parse a string to a Color.
+         * Converts a HSL representation to a [Color.Rgb] instance.
          *
-         * Supports named colors, RGB hex values (#RRGGBB), and indexed colors (0-255).
+         * Hue values are normalized by wrapping. Saturation and lightness are clamped to
+         * `[0.0..1.0]` before conversion.
+         */
+        fun fromHsl(hsl: Hsl): Color {
+            val hue = wrapHueDegrees(hsl.hue)
+            val saturation = hsl.saturation.coerceIn(0.0, 1.0)
+            val lightness = hsl.lightness.coerceIn(0.0, 1.0)
+            val (r, g, b) = hslToRgb(hue, saturation, lightness)
+            return Rgb(r, g, b)
+        }
+
+        /**
+         * Converts a HSLuv representation to a [Color.Rgb] instance.
          *
-         * @throws ParseColorError if the string cannot be parsed
+         * Hue values are normalized by wrapping. Saturation and lightness are clamped to
+         * `[0.0..100.0]` before conversion.
+         */
+        fun fromHsluv(hsluv: Hsluv): Color {
+            val hue = wrapHueDegrees(hsluv.hue)
+            val saturation = hsluv.saturation.coerceIn(0.0, 100.0)
+            val lightness = hsluv.lightness.coerceIn(0.0, 100.0)
+            val (r, g, b) = hsluvToRgb(hue, saturation, lightness)
+            return Rgb(r, g, b)
+        }
+
+        /**
+         * Converts a string representation to a [Color] instance.
+         *
+         * Supports named colors, RGB hex values, and indexed colors. If the string cannot be
+         * parsed, a [ParseColorError] is returned.
          */
         fun fromStr(s: String): Color {
             // There is a mix of different color names and formats in the wild.
@@ -196,38 +293,34 @@ sealed class Color {
                 }
             }
         }
+    }
 
-        /**
-         * Try to parse a string to a Color, returning null on failure.
-         */
-        fun fromStrOrNull(s: String): Color? = try {
-            fromStr(s)
-        } catch (e: ParseColorError) {
-            null
+    internal fun stylizeDebug(kind: ColorDebugKind): ColorDebug = ColorDebug(kind = kind, color = this)
+
+    override fun toString(): String =
+        // Most variants are `data object`s which already use their name as `toString()`.
+        // Keep an explicit match here to mirror Rust's `fmt::Display` arms.
+        when (this) {
+            is Reset -> "Reset"
+            is Black -> "Black"
+            is Red -> "Red"
+            is Green -> "Green"
+            is Yellow -> "Yellow"
+            is Blue -> "Blue"
+            is Magenta -> "Magenta"
+            is Cyan -> "Cyan"
+            is Gray -> "Gray"
+            is DarkGray -> "DarkGray"
+            is LightRed -> "LightRed"
+            is LightGreen -> "LightGreen"
+            is LightYellow -> "LightYellow"
+            is LightBlue -> "LightBlue"
+            is LightMagenta -> "LightMagenta"
+            is LightCyan -> "LightCyan"
+            is White -> "White"
+            is Rgb -> this.toString()
+            is Indexed -> this.toString()
         }
-    }
-
-    override fun toString(): String = when (this) {
-        is Reset -> "Reset"
-        is Black -> "Black"
-        is Red -> "Red"
-        is Green -> "Green"
-        is Yellow -> "Yellow"
-        is Blue -> "Blue"
-        is Magenta -> "Magenta"
-        is Cyan -> "Cyan"
-        is Gray -> "Gray"
-        is DarkGray -> "DarkGray"
-        is LightRed -> "LightRed"
-        is LightGreen -> "LightGreen"
-        is LightYellow -> "LightYellow"
-        is LightBlue -> "LightBlue"
-        is LightMagenta -> "LightMagenta"
-        is LightCyan -> "LightCyan"
-        is White -> "White"
-        is Rgb -> "#${r.toString(16).padStart(2, '0').uppercase()}${g.toString(16).padStart(2, '0').uppercase()}${b.toString(16).padStart(2, '0').uppercase()}"
-        is Indexed -> index.toString()
-    }
 }
 
 /** Error type indicating a failure to parse a color string. */
@@ -243,193 +336,274 @@ private fun parseHexColor(input: String): Triple<UByte, UByte, UByte>? {
     return Triple(r, g, b)
 }
 
-// Extension functions for Color conversion
-fun Triple<UByte, UByte, UByte>.toColor(): Color = Color.Rgb(first, second, third)
-fun UByte.toIndexedColor(): Color = Color.Indexed(this)
-
-// =============================================================================
-// Tests
-// =============================================================================
-// Note: HSL/Hsluv palette tests are not ported as we don't have the palette library.
-// Serde tests are not ported as serialization is handled differently in Kotlin.
-
 /**
- * Unit tests for Color parsing and display.
+ * Hue, Saturation, Lightness representation.
  *
- * In Kotlin, tests would typically be in a separate test source set.
- * These are included here as reference implementations matching the Rust tests.
+ * Mirrors the public API used by Ratatui's optional `palette` feature (`palette::Hsl`).
  */
-internal object ColorTests {
-
-    // -------------------------------------------------------------------------
-    // fromU32 tests
-    // -------------------------------------------------------------------------
-
-    fun testFromU32() {
-        check(Color.fromU32(0x000000u) == Color.Rgb(0u, 0u, 0u))
-        check(Color.fromU32(0xFF0000u) == Color.Rgb(255u, 0u, 0u))
-        check(Color.fromU32(0x00FF00u) == Color.Rgb(0u, 255u, 0u))
-        check(Color.fromU32(0x0000FFu) == Color.Rgb(0u, 0u, 255u))
-        check(Color.fromU32(0xFFFFFFu) == Color.Rgb(255u, 255u, 255u))
-    }
-
-    // -------------------------------------------------------------------------
-    // fromStr RGB color test
-    // -------------------------------------------------------------------------
-
-    fun testFromRgbColor() {
-        val color: Color = Color.fromStr("#FF0000")
-        check(color == Color.Rgb(255u, 0u, 0u))
-    }
-
-    // -------------------------------------------------------------------------
-    // fromStr indexed color test
-    // -------------------------------------------------------------------------
-
-    fun testFromIndexedColor() {
-        val color: Color = Color.fromStr("10")
-        check(color == Color.Indexed(10u))
-    }
-
-    // -------------------------------------------------------------------------
-    // fromStr ANSI color tests
-    // -------------------------------------------------------------------------
-
-    fun testFromAnsiColor() {
-        check(Color.fromStr("reset") == Color.Reset)
-        check(Color.fromStr("black") == Color.Black)
-        check(Color.fromStr("red") == Color.Red)
-        check(Color.fromStr("green") == Color.Green)
-        check(Color.fromStr("yellow") == Color.Yellow)
-        check(Color.fromStr("blue") == Color.Blue)
-        check(Color.fromStr("magenta") == Color.Magenta)
-        check(Color.fromStr("cyan") == Color.Cyan)
-        check(Color.fromStr("gray") == Color.Gray)
-        check(Color.fromStr("darkgray") == Color.DarkGray)
-        check(Color.fromStr("lightred") == Color.LightRed)
-        check(Color.fromStr("lightgreen") == Color.LightGreen)
-        check(Color.fromStr("lightyellow") == Color.LightYellow)
-        check(Color.fromStr("lightblue") == Color.LightBlue)
-        check(Color.fromStr("lightmagenta") == Color.LightMagenta)
-        check(Color.fromStr("lightcyan") == Color.LightCyan)
-        check(Color.fromStr("white") == Color.White)
-
-        // aliases
-        check(Color.fromStr("lightblack") == Color.DarkGray)
-        check(Color.fromStr("lightwhite") == Color.White)
-        check(Color.fromStr("lightgray") == Color.White)
-
-        // silver = grey = gray
-        check(Color.fromStr("grey") == Color.Gray)
-        check(Color.fromStr("silver") == Color.Gray)
-
-        // spaces are ignored
-        check(Color.fromStr("light black") == Color.DarkGray)
-        check(Color.fromStr("light white") == Color.White)
-        check(Color.fromStr("light gray") == Color.White)
-
-        // dashes are ignored
-        check(Color.fromStr("light-black") == Color.DarkGray)
-        check(Color.fromStr("light-white") == Color.White)
-        check(Color.fromStr("light-gray") == Color.White)
-
-        // underscores are ignored
-        check(Color.fromStr("light_black") == Color.DarkGray)
-        check(Color.fromStr("light_white") == Color.White)
-        check(Color.fromStr("light_gray") == Color.White)
-
-        // bright = light
-        check(Color.fromStr("bright-black") == Color.DarkGray)
-        check(Color.fromStr("bright-white") == Color.White)
-
-        // bright = light
-        check(Color.fromStr("brightblack") == Color.DarkGray)
-        check(Color.fromStr("brightwhite") == Color.White)
-    }
-
-    // -------------------------------------------------------------------------
-    // Invalid color parsing tests
-    // -------------------------------------------------------------------------
-
-    fun testFromInvalidColors() {
-        val badColors = listOf(
-            "invalid_color", // not a color string
-            "abcdef0",       // 7 chars is not a color
-            " bcdefa",       // doesn't start with a '#'
-            "#abcdef00",     // too many chars
-            "#1\uD83E\uDD80" + "2", // len 7 but on char boundaries shouldn't panic (crab emoji)
-            "resets",        // typo
-            "lightblackk",   // typo
-        )
-
-        for (badColor in badColors) {
-            val result = Color.fromStrOrNull(badColor)
-            check(result == null) { "bad color: '$badColor'" }
-        }
-    }
-
-    // -------------------------------------------------------------------------
-    // toString (display) tests
-    // -------------------------------------------------------------------------
-
-    fun testDisplay() {
-        check(Color.Black.toString() == "Black")
-        check(Color.Red.toString() == "Red")
-        check(Color.Green.toString() == "Green")
-        check(Color.Yellow.toString() == "Yellow")
-        check(Color.Blue.toString() == "Blue")
-        check(Color.Magenta.toString() == "Magenta")
-        check(Color.Cyan.toString() == "Cyan")
-        check(Color.Gray.toString() == "Gray")
-        check(Color.DarkGray.toString() == "DarkGray")
-        check(Color.LightRed.toString() == "LightRed")
-        check(Color.LightGreen.toString() == "LightGreen")
-        check(Color.LightYellow.toString() == "LightYellow")
-        check(Color.LightBlue.toString() == "LightBlue")
-        check(Color.LightMagenta.toString() == "LightMagenta")
-        check(Color.LightCyan.toString() == "LightCyan")
-        check(Color.White.toString() == "White")
-        check(Color.Indexed(10u).toString() == "10")
-        check(Color.Rgb(255u, 0u, 0u).toString() == "#FF0000")
-        check(Color.Reset.toString() == "Reset")
-    }
-
-    // -------------------------------------------------------------------------
-    // Array and tuple conversion tests
-    // -------------------------------------------------------------------------
-
-    fun testFromArrayAndTupleConversions() {
-        // From Triple (Kotlin equivalent of tuple)
-        val fromTriple = Triple(123.toUByte(), 45.toUByte(), 67.toUByte()).toColor()
-        check(fromTriple == Color.Rgb(123u, 45u, 67u))
-
-        // From list/array (takes first 3 elements)
-        val fromList = listOf(89.toUByte(), 76.toUByte(), 54.toUByte()).toColor()
-        check(fromList == Color.Rgb(89u, 76u, 54u))
-
-        // From list with 4 elements (alpha is ignored, takes first 3)
-        val fromList4 = listOf(10.toUByte(), 20.toUByte(), 30.toUByte(), 255.toUByte()).toColor()
-        check(fromList4 == Color.Rgb(10u, 20u, 30u))
-    }
-
-    // -------------------------------------------------------------------------
-    // Run all tests
-    // -------------------------------------------------------------------------
-
-    fun runAll() {
-        testFromU32()
-        testFromRgbColor()
-        testFromIndexedColor()
-        testFromAnsiColor()
-        testFromInvalidColors()
-        testDisplay()
-        testFromArrayAndTupleConversions()
-        println("All Color tests passed!")
+data class Hsl(
+    val hue: Double,
+    val saturation: Double,
+    val lightness: Double
+) {
+    companion object {
+        fun new(hue: Double, saturation: Double, lightness: Double): Hsl = Hsl(hue, saturation, lightness)
     }
 }
 
-// Extension function to convert a list of UBytes to Color (takes first 3)
-fun List<UByte>.toColor(): Color {
-    require(size >= 3) { "List must have at least 3 elements" }
-    return Color.Rgb(this[0], this[1], this[2])
+/**
+ * Hue, Saturation, Lightness representation in the HSLuv color space.
+ *
+ * Mirrors the public API used by Ratatui's optional `palette` feature (`palette::Hsluv`).
+ */
+data class Hsluv(
+    val hue: Double,
+    val saturation: Double,
+    val lightness: Double
+) {
+    companion object {
+        fun new(hue: Double, saturation: Double, lightness: Double): Hsluv = Hsluv(hue, saturation, lightness)
+    }
+}
+
+/**
+ * Kotlinx-serialization adapter that mirrors Rust's `serde` behavior.
+ *
+ * Rust serializes [Color] via its Display implementation (a string), and deserializes by parsing
+ * that same string form. This serializer also supports the previous map-based encoding:
+ * - `{"Rgb":[255,0,255]}`
+ * - `{"Indexed":10}`
+ */
+object ColorSerializer : KSerializer<Color> {
+    /**
+     * Helper type used to support the previous serde-derived serialization formats.
+     *
+     * Mirrors the local `ColorWrapper` enum in Rust's `impl serde::Deserialize for Color`.
+     */
+    private sealed interface ColorWrapper {
+        data class Rgb(val red: UByte, val green: UByte, val blue: UByte) : ColorWrapper
+
+        data class Indexed(val index: UByte) : ColorWrapper
+    }
+
+    /**
+     * Helper type used to support both the current string-based serialization format and the
+     * previous serde-derived formats.
+     *
+     * Mirrors the local untagged `ColorFormat` enum in Rust.
+     */
+    private sealed interface ColorFormat {
+        data class V2(val value: String) : ColorFormat
+
+        data class V1(val wrapper: ColorWrapper) : ColorFormat
+    }
+
+    override val descriptor: SerialDescriptor =
+        PrimitiveSerialDescriptor("ratatui.style.Color", PrimitiveKind.STRING)
+
+    override fun serialize(encoder: Encoder, value: Color) {
+        encoder.encodeString(value.toString())
+    }
+
+    override fun deserialize(decoder: Decoder): Color {
+        if (decoder is JsonDecoder) {
+            val multiType = decodeColorFormat(decoder.decodeJsonElement())
+            return when (multiType) {
+                is ColorFormat.V2 -> {
+                    try {
+                        Color.fromStr(multiType.value)
+                    } catch (e: ParseColorError) {
+                        throw SerializationException(e.message ?: "Failed to parse Colors")
+                    }
+                }
+                is ColorFormat.V1 -> {
+                    when (val wrapper = multiType.wrapper) {
+                        is ColorWrapper.Rgb -> Color.Rgb(wrapper.red, wrapper.green, wrapper.blue)
+                        is ColorWrapper.Indexed -> Color.Indexed(wrapper.index)
+                    }
+                }
+            }
+        }
+
+        return try {
+            Color.fromStr(decoder.decodeString())
+        } catch (e: ParseColorError) {
+            throw SerializationException(e.message ?: "Failed to parse Colors")
+        }
+    }
+
+    private fun decodeColorFormat(element: JsonElement): ColorFormat {
+        return when (element) {
+            is JsonPrimitive -> ColorFormat.V2(element.content)
+            is JsonObject -> ColorFormat.V1(decodeColorWrapper(element))
+            else -> throw SerializationException("Failed to parse Colors")
+        }
+    }
+
+    private fun decodeColorWrapper(obj: JsonObject): ColorWrapper {
+        obj["Rgb"]?.let { rgb ->
+            val arr = rgb.jsonArray
+            if (arr.size != 3) throw SerializationException("Failed to parse Colors")
+            val red = arr[0].jsonPrimitive.int
+            val green = arr[1].jsonPrimitive.int
+            val blue = arr[2].jsonPrimitive.int
+            if (red !in 0..255 || green !in 0..255 || blue !in 0..255) throw SerializationException("Failed to parse Colors")
+            return ColorWrapper.Rgb(red.toUByte(), green.toUByte(), blue.toUByte())
+        }
+
+        obj["Indexed"]?.let { indexed ->
+            val i = indexed.jsonPrimitive.int
+            if (i !in 0..255) throw SerializationException("Failed to parse Colors")
+            return ColorWrapper.Indexed(i.toUByte())
+        }
+
+        throw SerializationException("Failed to parse Colors")
+    }
+}
+
+private fun wrapHueDegrees(degrees: Double): Double {
+    val wrapped = ((degrees % 360.0) + 360.0) % 360.0
+    // Keep 360 as 0 for downstream math.
+    return if (wrapped == 360.0) 0.0 else wrapped
+}
+
+private fun hslToRgb(hueDegrees: Double, saturation: Double, lightness: Double): Triple<UByte, UByte, UByte> {
+    val c = (1.0 - abs(2.0 * lightness - 1.0)) * saturation
+    val hPrime = (hueDegrees / 60.0) % 6.0
+    val x = c * (1.0 - abs((hPrime % 2.0) - 1.0))
+
+    val (r1, g1, b1) = when {
+        hPrime < 1.0 -> Triple(c, x, 0.0)
+        hPrime < 2.0 -> Triple(x, c, 0.0)
+        hPrime < 3.0 -> Triple(0.0, c, x)
+        hPrime < 4.0 -> Triple(0.0, x, c)
+        hPrime < 5.0 -> Triple(x, 0.0, c)
+        else -> Triple(c, 0.0, x)
+    }
+
+    val m = lightness - c / 2.0
+
+    val r = ((r1 + m) * 255.0).roundToInt().coerceIn(0, 255)
+    val g = ((g1 + m) * 255.0).roundToInt().coerceIn(0, 255)
+    val b = ((b1 + m) * 255.0).roundToInt().coerceIn(0, 255)
+    return Triple(r.toUByte(), g.toUByte(), b.toUByte())
+}
+
+// --- HSLuv conversion (ported from the HSLuv reference algorithm) ---
+
+private const val HSLUV_REF_U: Double = 0.19783000664283
+private const val HSLUV_REF_V: Double = 0.46831999493879
+private const val HSLUV_KAPPA: Double = 903.2962962
+private const val HSLUV_EPSILON: Double = 0.0088564516
+
+private val HSLUV_M: Array<DoubleArray> = arrayOf(
+    doubleArrayOf(3.240969941904521, -1.537383177570093, -0.498610760293),
+    doubleArrayOf(-0.96924363628087, 1.87596750150772, 0.041555057407175),
+    doubleArrayOf(0.055630079696993, -0.20397695888897, 1.056971514242878)
+)
+
+private data class BoundLine(val slope: Double, val intercept: Double)
+
+private fun hsluvToRgb(hueDegrees: Double, saturation: Double, lightness: Double): Triple<UByte, UByte, UByte> {
+    if (lightness <= 0.0) return Triple(0u, 0u, 0u)
+    if (lightness >= 100.0) return Triple(255u, 255u, 255u)
+
+    val l = lightness
+    val s = saturation
+    val hRad = hueDegrees / 360.0 * 2.0 * PI
+
+    val c = if (s <= 0.0) {
+        0.0
+    } else {
+        val max = maxChromaForLh(l, hueDegrees)
+        max / 100.0 * s
+    }
+
+    val u = cos(hRad) * c
+    val v = sin(hRad) * c
+    val (x, y, z) = luvToXyz(l, u, v)
+    return xyzToRgb(x, y, z)
+}
+
+private fun maxChromaForLh(lightness: Double, hueDegrees: Double): Double {
+    val hRad = hueDegrees / 360.0 * 2.0 * PI
+    val bounds = getBounds(lightness)
+    var minLen = Double.POSITIVE_INFINITY
+    for (line in bounds) {
+        val length = lengthOfRayUntilIntersect(hRad, line)
+        if (length >= 0.0) {
+            minLen = min(minLen, length)
+        }
+    }
+    return minLen
+}
+
+private fun lengthOfRayUntilIntersect(theta: Double, line: BoundLine): Double {
+    val denominator = sin(theta) - line.slope * cos(theta)
+    if (abs(denominator) < 1e-12) return Double.POSITIVE_INFINITY
+    return line.intercept / denominator
+}
+
+private fun getBounds(lightness: Double): List<BoundLine> {
+    val result = ArrayList<BoundLine>(6)
+
+    val sub1 = ((lightness + 16.0).pow(3.0)) / 1560896.0
+    val sub2 = if (sub1 > HSLUV_EPSILON) sub1 else lightness / HSLUV_KAPPA
+
+    for (c in 0..2) {
+        val m1 = HSLUV_M[c][0]
+        val m2 = HSLUV_M[c][1]
+        val m3 = HSLUV_M[c][2]
+
+        for (t in 0..1) {
+            val top1 = (284517.0 * m1 - 94839.0 * m3) * sub2
+            val top2 =
+                (838422.0 * m3 + 769860.0 * m2 + 731718.0 * m1) * lightness * sub2 -
+                    769860.0 * t.toDouble() * lightness
+            val bottom = (632260.0 * m3 - 126452.0 * m2) * sub2 + 126452.0 * t.toDouble()
+
+            result.add(BoundLine(slope = top1 / bottom, intercept = top2 / bottom))
+        }
+    }
+
+    return result
+}
+
+private fun luvToXyz(l: Double, u: Double, v: Double): Triple<Double, Double, Double> {
+    if (l == 0.0) return Triple(0.0, 0.0, 0.0)
+
+    val uPrime = u / (13.0 * l) + HSLUV_REF_U
+    val vPrime = v / (13.0 * l) + HSLUV_REF_V
+
+    val y = if (l > 8.0) ((l + 16.0) / 116.0).pow(3.0) else l / HSLUV_KAPPA
+    if (vPrime == 0.0) return Triple(0.0, y, 0.0)
+
+    val x = y * 9.0 * uPrime / (4.0 * vPrime)
+    val z = y * (12.0 - 3.0 * uPrime - 20.0 * vPrime) / (4.0 * vPrime)
+    return Triple(x, y, z)
+}
+
+private fun xyzToRgb(x: Double, y: Double, z: Double): Triple<UByte, UByte, UByte> {
+    val rLinear = HSLUV_M[0][0] * x + HSLUV_M[0][1] * y + HSLUV_M[0][2] * z
+    val gLinear = HSLUV_M[1][0] * x + HSLUV_M[1][1] * y + HSLUV_M[1][2] * z
+    val bLinear = HSLUV_M[2][0] * x + HSLUV_M[2][1] * y + HSLUV_M[2][2] * z
+
+    val r = fromLinear(rLinear)
+    val g = fromLinear(gLinear)
+    val b = fromLinear(bLinear)
+
+    return Triple(
+        (r * 255.0).roundToInt().coerceIn(0, 255).toUByte(),
+        (g * 255.0).roundToInt().coerceIn(0, 255).toUByte(),
+        (b * 255.0).roundToInt().coerceIn(0, 255).toUByte()
+    )
+}
+
+private fun fromLinear(c: Double): Double {
+    val clamped = c.coerceIn(0.0, 1.0)
+    return if (clamped <= 0.0031308) {
+        12.92 * clamped
+    } else {
+        1.055 * clamped.pow(1.0 / 2.4) - 0.055
+    }
 }

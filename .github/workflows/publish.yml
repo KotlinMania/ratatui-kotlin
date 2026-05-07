@@ -4,6 +4,12 @@ on:
   release:
     types: [released]
   workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish and release to Maven Central (requires secrets)"
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   publish:
@@ -14,12 +20,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Checkout kasuari-kotlin (local includeBuild)
-        uses: actions/checkout@v4
-        with:
-          repository: KotlinMania/kasuari-kotlin
-          path: kasuari-kotlin
-
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -29,11 +29,16 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Build (dry run)
+        if: ${{ github.event_name == 'workflow_dispatch' && !inputs.publish }}
+        # Keep workflow_dispatch safe (no publishing), and keep runtime low by focusing on JVM/Android output.
+        run: ./gradlew compileAndroidMain androidSourcesJar --no-configuration-cache
+
       - name: Publish to Maven Central
-        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
+        if: ${{ github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.publish) }}
+        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache --stacktrace
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
-          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_KEY_PASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}

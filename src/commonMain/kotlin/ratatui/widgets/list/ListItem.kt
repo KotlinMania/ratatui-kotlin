@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/list/item.rs
 package ratatui.widgets.list
 
 import ratatui.style.Style
@@ -73,7 +74,7 @@ data class ListItem(
     fun width(): Int = content.width()
 
     // Styled implementation
-    override fun getStyle(): Style = itemStyle
+    override fun style(): Style = itemStyle
 
     override fun setStyle(style: Style): ListItem = style(style)
 
