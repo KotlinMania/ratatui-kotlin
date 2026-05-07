@@ -67,3 +67,5 @@ operator fun Rect.minus(offset: Offset): Rect {
     return copy(x = newX, y = newY)
 }
 
+// Note: Rust implements `AddAssign`/`SubAssign` for `Rect`. In Kotlin, `+=`/`-=` works via `plus`
+// and `minus` when used with a `var` and is lowered to `rect = rect + offset` / `rect = rect - offset`.

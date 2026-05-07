@@ -12,13 +12,13 @@ import ratatui.style.Style
  * and available widgets, see the [ratatui.widgets] package documentation.
  *
  * Prior to Ratatui 0.26.0, widgets generally were created for each frame as they were consumed
- * during rendering. This meant that they were not meant to be stored but used as commands to
+ * during rendering. This meant that they were not meant to be stored but used as *commands* to
  * draw common figures in the UI.
  *
  * Starting with Ratatui 0.26.0, all the internal widgets implement `Widget` so that an existing
  * widget instance can be rendered repeatedly. This allows you to keep a widget in a field and
- * render it later. Widget crates should consider also doing this to allow for more flexibility in
- * how widgets are used.
+ * render it later. Widget libraries should consider also doing this to allow for more flexibility
+ * in how widgets are used.
  *
  * In Ratatui 0.26.0, we also added an unstable [WidgetRef] interface and implemented this on all
  * the internal widgets. In addition to the above benefit of rendering an existing widget, this
@@ -38,7 +38,7 @@ import ratatui.style.Style
  * # Examples
  *
  * ```kotlin
- * val backend = TestBackend.new(5u, 5u)
+ * val backend = TestBackend.new(5, 5)
  * val terminal = Terminal.new(backend)
  *
  * terminal.draw { frame ->
@@ -46,7 +46,7 @@ import ratatui.style.Style
  * }
  * ```
  *
- * It common to render widgets inside other widgets:
+ * It is common to render widgets inside other widgets:
  *
  * ```kotlin
  * class MyWidget : Widget {

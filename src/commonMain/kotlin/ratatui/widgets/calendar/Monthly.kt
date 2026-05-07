@@ -3,13 +3,13 @@ package ratatui.widgets.calendar
 
 import kotlinx.datetime.DatePeriod
 import kotlinx.datetime.DayOfWeek
-import kotlinx.datetime.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.Month
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.minus
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
+import kotlin.time.Clock
 import ratatui.buffer.Buffer
 import ratatui.layout.Constraint
 import ratatui.layout.Layout
@@ -150,7 +150,7 @@ data class Monthly<DS : DateStyler>(
     private fun formatDate(date: LocalDate): Span {
         return if (date.month == displayDate.month) {
             Span.styled(
-                date.dayOfMonth.toString().padStart(2),
+                date.day.toString().padStart(2),
                 defaultStyle.patch(events.getStyle(date))
             )
         } else {
@@ -160,7 +160,7 @@ data class Monthly<DS : DateStyler>(
                     val style = defaultStyle
                         .patch(showSurroundingStyle)
                         .patch(events.getStyle(date))
-                    Span.styled(date.dayOfMonth.toString().padStart(2), style)
+                    Span.styled(date.day.toString().padStart(2), style)
                 }
             }
         }

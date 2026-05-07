@@ -27,29 +27,23 @@ import ratatui.layout.Rect
  *
  * ```kotlin
  * import ratatui.backend.TestBackend
- * import ratatui.widgets.List
- * import ratatui.widgets.ListItem
- * import ratatui.widgets.ListState
- * import ratatui.widgets.StatefulWidget
- * import ratatui.widgets.Widget
  * import ratatui.terminal.Terminal
+ * import ratatui.widgets.list.List as RatatuiList
+ * import ratatui.widgets.list.ListItem
+ * import ratatui.widgets.list.ListState
  *
- * // Let say we have some events to display.
+ * // Let's say we have some events to display.
  * class Events(
  *     // `items` is the state managed by your application.
- *     var items: MutableList<String>,
+ *     var items: List<String>,
  *     // `state` is the state that can be modified by the UI. It stores the index of the selected
  *     // item as well as the offset computed during the previous draw call (used to implement
  *     // natural scrolling).
  *     var state: ListState = ListState.default(),
  * ) {
- *     companion object {
- *         fun new(items: MutableList<String>): Events = Events(items)
- *     }
- *
- *     fun setItems(items: MutableList<String>) {
+ *     fun setItems(items: List<String>) {
  *         this.items = items
- *         // We reset the state as the associated items have changed. This effectively reset
+ *         // We reset the state as the associated items have changed. This effectively resets
  *         // the selection as well as the stored offset.
  *         this.state = ListState.default()
  *     }
@@ -57,7 +51,7 @@ import ratatui.layout.Rect
  *     // Select the next item. This will not be reflected until the widget is drawn in the
  *     // `Terminal.draw` callback using `Frame.renderStatefulWidget`.
  *     fun next() {
- *         val i = when (val selected = state.selected()) {
+ *         val i = when (val selected = state.selected) {
  *             null -> 0
  *             else -> if (selected >= items.size - 1) 0 else selected + 1
  *         }
@@ -67,7 +61,7 @@ import ratatui.layout.Rect
  *     // Select the previous item. This will not be reflected until the widget is drawn in the
  *     // `Terminal.draw` callback using `Frame.renderStatefulWidget`.
  *     fun previous() {
- *         val i = when (val selected = state.selected()) {
+ *         val i = when (val selected = state.selected) {
  *             null -> 0
  *             else -> if (selected == 0) items.size - 1 else selected - 1
  *         }
@@ -81,18 +75,17 @@ import ratatui.layout.Rect
  *     }
  * }
  *
- * val backend = TestBackend.new(5u, 5u)
+ * val backend = TestBackend.new(5, 5)
  * val terminal = Terminal.new(backend)
  *
- * val events = Events.new(mutableListOf("Item 1", "Item 2"))
- *
+ * val events = Events(listOf("Item 1", "Item 2"))
  * while (true) {
  *     terminal.draw { f ->
- *         // The items managed by the application are transformed to something
- *         // that is understood by ratatui.
- *         val items: List<ListItem> = events.items.map { ListItem.new(it) }
+ *         // The items managed by the application are transformed to something that is understood
+ *         // by ratatui.
+ *         val items = events.items.map { ListItem.new(it) }
  *         // The `List` widget is then built with those items.
- *         val list = List.new(items)
+ *         val list = RatatuiList.new(items)
  *         // Finally the widget is rendered using the associated state. `events.state` is
  *         // effectively the only thing that we will "remember" from this draw call.
  *         f.renderStatefulWidget(list, f.size(), events.state)
