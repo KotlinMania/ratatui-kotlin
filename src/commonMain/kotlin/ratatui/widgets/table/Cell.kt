@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/table/cell.rs
 package ratatui.widgets.table
 
 import ratatui.buffer.Buffer
@@ -72,7 +73,7 @@ data class Cell(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = cellStyle
+    override fun style(): Style = cellStyle
 
     override fun setStyle(style: Style): Cell = style(style)
 

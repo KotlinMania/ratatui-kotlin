@@ -128,7 +128,7 @@ data class Dataset(
     fun style(style: Style): Dataset = copy(datasetStyle = style)
 
     // Styled implementation
-    override fun getStyle(): Style = datasetStyle
+    override fun style(): Style = datasetStyle
 
     override fun setStyle(style: Style): Dataset = style(style)
 

@@ -1,11 +1,14 @@
+// port-lint: source ratatui-core/src/terminal.rs
 package ratatui.terminal
 
+import ratatui.backend.Backend
+import ratatui.backend.ClearType
 import ratatui.buffer.Buffer
+import ratatui.buffer.BufferDiff
+import ratatui.buffer.Cell
 import ratatui.layout.Position
 import ratatui.layout.Rect
 import ratatui.layout.Size
-import ratatui.style.Color
-import ratatui.style.Modifier
 
 /**
  * An interface to interact and draw [Frame]s on the user's terminal.
@@ -72,17 +75,14 @@ class Terminal<B : Backend>(
             is Viewport.Fixed -> viewport.area
         }
 
-        viewportArea = when (viewport) {
-            is Viewport.Fullscreen -> area
-            is Viewport.Inline -> computeInlineSize(viewport.height, area.asSize())
-            is Viewport.Fixed -> viewport.area
+        val (initialViewportArea, initialCursorPos) = when (viewport) {
+            is Viewport.Fullscreen -> Pair(area, Position.ORIGIN)
+            is Viewport.Inline -> computeInlineSize(viewport.height, area.asSize(), 0)
+            is Viewport.Fixed -> Pair(viewport.area, viewport.area.asPosition())
         }
 
-        lastKnownCursorPos = when (viewport) {
-            is Viewport.Fullscreen -> Position.ORIGIN
-            is Viewport.Inline -> Position(0, viewportArea.y)
-            is Viewport.Fixed -> viewportArea.asPosition()
-        }
+        viewportArea = initialViewportArea
+        lastKnownCursorPos = initialCursorPos
 
         lastKnownArea = area
         buffers = arrayOf(Buffer.empty(viewportArea), Buffer.empty(viewportArea))
@@ -97,7 +97,7 @@ class Terminal<B : Backend>(
         return Frame(
             viewportArea = viewportArea,
             buffer = buffers[current],
-            frameCount = frameCount
+            count = frameCount
         )
     }
 
@@ -111,6 +111,12 @@ class Terminal<B : Backend>(
      */
     fun backend(): B = backend
 
+    /** Exposes whether the cursor is currently hidden (test-only parity with Rust). */
+    internal fun hiddenCursor(): Boolean = hiddenCursor
+
+    /** Exposes the last known cursor position (test-only parity with Rust). */
+    internal fun lastKnownCursorPos(): Position = lastKnownCursorPos
+
     /**
      * Obtains a difference between the previous and the current buffer and passes it to the
      * current backend for drawing.
@@ -123,7 +129,7 @@ class Terminal<B : Backend>(
             val last = updates.last()
             lastKnownCursorPos = Position(last.x, last.y)
         }
-        backend.draw(updates)
+        backend.draw(updates.iterator())
     }
 
     /**
@@ -137,7 +143,7 @@ class Terminal<B : Backend>(
             is Viewport.Inline -> {
                 val offsetInPreviousViewport = (lastKnownCursorPos.y - viewportArea.top())
                     .coerceAtLeast(0)
-                computeInlineSize(viewport.height, area.asSize(), offsetInPreviousViewport)
+                computeInlineSize(viewport.height, area.asSize(), offsetInPreviousViewport).first
             }
             is Viewport.Fixed, is Viewport.Fullscreen -> area
         }
@@ -242,6 +248,26 @@ class Terminal<B : Backend>(
 
     /**
      * Gets the current cursor position.
+     *
+     * This is the position of the cursor after the last draw call and is returned as a tuple of
+     * `(x, y)` coordinates.
+     */
+    @Deprecated("use getCursorPosition() instead which returns Position")
+    fun getCursor(): Pair<UShort, UShort> {
+        val pos = getCursorPosition()
+        return Pair(pos.x.toUShort(), pos.y.toUShort())
+    }
+
+    /**
+     * Sets the cursor position.
+     */
+    @Deprecated("use setCursorPosition((x, y)) instead which takes Position")
+    fun setCursor(x: UShort, y: UShort) {
+        setCursorPosition(Position(x.toInt(), y.toInt()))
+    }
+
+    /**
+     * Gets the current cursor position.
      */
     fun getCursorPosition(): Position = backend.getCursorPosition()
 
@@ -290,14 +316,109 @@ class Terminal<B : Backend>(
     }
 
     /**
+     * Insert some content before the current inline viewport. This has no effect when the
+     * viewport is not inline.
+     *
+     * Transliteration of `Terminal::insert_before` (non-scrolling-regions implementation).
+     */
+    fun insertBefore(height: UShort, drawFn: (Buffer) -> Unit) {
+        if (viewport !is Viewport.Inline) return
+        insertBeforeNoScrollingRegions(height, drawFn)
+    }
+
+    /**
      * Queries the real size of the backend.
      */
     fun size(): Size = backend.size()
 
-    private fun computeInlineSize(height: UShort, size: Size, offset: Int = 0): Rect {
-        val h = minOf(height.toInt(), size.height)
-        val y = (size.height - h - offset).coerceAtLeast(0)
-        return Rect(x = 0, y = y, width = size.width, height = h)
+    private fun insertBeforeNoScrollingRegions(height: UShort, drawFn: (Buffer) -> Unit) {
+        val area = Rect(
+            x = 0,
+            y = 0,
+            width = viewportArea.width,
+            height = height.toInt()
+        )
+        val buffer = Buffer.empty(area)
+        drawFn(buffer)
+        val cells = buffer.content.toList()
+
+        var bufferIndex = 0
+
+        var drawnHeight = viewportArea.top()
+        var bufferHeight = height.toInt()
+        val viewportHeight = viewportArea.height
+        val screenHeight = lastKnownArea.height
+
+        while (bufferHeight + viewportHeight > screenHeight) {
+            val toDraw = minOf(bufferHeight, screenHeight)
+            val scrollUp = maxOf(0, drawnHeight + toDraw - screenHeight)
+            scrollUp(scrollUp)
+            bufferIndex = drawLines(drawnHeight - scrollUp, toDraw, cells, bufferIndex)
+            drawnHeight += toDraw - scrollUp
+            bufferHeight -= toDraw
+        }
+
+        val scrollUp = maxOf(0, drawnHeight + bufferHeight + viewportHeight - screenHeight)
+        scrollUp(scrollUp)
+        drawLines(drawnHeight - scrollUp, bufferHeight, cells, bufferIndex)
+        drawnHeight += bufferHeight - scrollUp
+
+        setViewportArea(viewportArea.copy(y = drawnHeight))
+        clear()
+    }
+
+    private fun drawLines(
+        yOffset: Int,
+        linesToDraw: Int,
+        cells: List<Cell>,
+        startIndex: Int
+    ): Int {
+        val width = lastKnownArea.width
+        val endIndex = startIndex + (width * linesToDraw)
+        val toDraw = cells.subList(startIndex, endIndex)
+        if (linesToDraw > 0) {
+            val iter = toDraw.asSequence()
+                .withIndex()
+                .map { (i, c) -> BufferDiff.Item(i % width, yOffset + (i / width), c) }
+                .iterator()
+            backend.draw(iter)
+            backend.flush()
+        }
+        return endIndex
+    }
+
+    private fun scrollUp(linesToScroll: Int) {
+        if (linesToScroll > 0) {
+            setCursorPosition(Position(0, (lastKnownArea.height - 1).coerceAtLeast(0)))
+            backend.appendLines(linesToScroll.toUShort())
+        }
+    }
+
+    private fun computeInlineSize(height: UShort, size: Size, offsetInPreviousViewport: Int): Pair<Rect, Position> {
+        val pos = backend.getCursorPosition()
+        var row = pos.y
+
+        val maxHeight = minOf(size.height, height.toInt())
+
+        val linesAfterCursor = (height.toInt() - offsetInPreviousViewport - 1).coerceAtLeast(0)
+        backend.appendLines(linesAfterCursor.toUShort())
+
+        val availableLines = (size.height - row - 1).coerceAtLeast(0)
+        val missingLines = (linesAfterCursor - availableLines).coerceAtLeast(0)
+        if (missingLines > 0) {
+            row = (row - missingLines).coerceAtLeast(0)
+        }
+        row = (row - offsetInPreviousViewport).coerceAtLeast(0)
+
+        return Pair(
+            Rect(
+                x = 0,
+                y = row,
+                width = size.width,
+                height = maxHeight
+            ),
+            pos
+        )
     }
 
     companion object {
@@ -324,79 +445,3 @@ data class TerminalOptions(
     /** Viewport used to draw to the terminal */
     val viewport: Viewport = Viewport.Fullscreen
 )
-
-/**
- * Type of region to clear.
- */
-enum class ClearType {
-    /** Clear the entire screen */
-    All,
-    /** Clear from cursor to end of screen */
-    AfterCursor,
-    /** Clear from start of screen to cursor */
-    BeforeCursor,
-    /** Clear the current line */
-    CurrentLine,
-    /** Clear from cursor to end of line */
-    UntilNewLine
-}
-
-/**
- * A cell update to be drawn to the terminal.
- */
-data class CellUpdate(
-    val x: Int,
-    val y: Int,
-    val symbol: String,
-    val fg: Color,
-    val bg: Color,
-    val modifiers: Modifier
-)
-
-/**
- * Backend interface for terminal operations.
- *
- * Implementations of this interface are responsible for the actual terminal I/O operations.
- */
-interface Backend {
-    /**
-     * Draw the given updates to the terminal.
-     */
-    fun draw(updates: List<CellUpdate>)
-
-    /**
-     * Hide the cursor.
-     */
-    fun hideCursor()
-
-    /**
-     * Show the cursor.
-     */
-    fun showCursor()
-
-    /**
-     * Get the current cursor position.
-     */
-    fun getCursorPosition(): Position
-
-    /**
-     * Set the cursor position.
-     */
-    fun setCursorPosition(position: Position)
-
-    /**
-     * Clear a region of the terminal.
-     */
-    fun clearRegion(clearType: ClearType)
-
-    /**
-     * Get the terminal size.
-     */
-    fun size(): Size
-
-    /**
-     * Flush any buffered output.
-     */
-    fun flush()
-}
-

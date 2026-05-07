@@ -1,3 +1,4 @@
+// port-lint: source ratatui-core/src/layout/offset.rs
 /**
  * Amounts by which to move a [Rect].
  *

@@ -1,34 +1,28 @@
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.plugin.mpp.apple.XCFramework
+import org.jetbrains.kotlin.gradle.targets.native.tasks.KotlinNativeTest
 
 plugins {
-    kotlin("multiplatform") version "2.3.0"
-    kotlin("plugin.serialization") version "2.3.0"
+    kotlin("multiplatform") version "2.3.20"
+    kotlin("plugin.serialization") version "2.3.20"
     id("com.android.kotlin.multiplatform.library") version "8.6.0"
     id("com.vanniktech.maven.publish") version "0.30.0"
 }
 
 group = "io.github.kotlinmania"
-version = "0.1.5"
+version = "0.1.18"
 
-// Android setup
-val sdkDir = file(".android-sdk")
-val licensesDir = sdkDir.resolve("licenses")
-if (!licensesDir.exists()) licensesDir.mkdirs()
-val licenseFile = licensesDir.resolve("android-sdk-license")
-if (!licenseFile.exists()) {
-    licenseFile.writeText(
-        """
-        8933bad161af4178b1185d1a37fbf41ea5269c55
-        d56f5187479451eabf01fb74abc367c344559d7b
-        24333f8a63b6825ea9c5514f83c2829b004d1fee
-        """.trimIndent()
-    )
-}
-val localProperties: File? = rootProject.file("local.properties")
-if (localProperties?.exists() == false) {
-    localProperties.writeText("sdk.dir=${sdkDir.absolutePath}")
+val androidSdkDir: String? =
+    providers.environmentVariable("ANDROID_SDK_ROOT").orNull
+        ?: providers.environmentVariable("ANDROID_HOME").orNull
+
+if (androidSdkDir != null && file(androidSdkDir).exists()) {
+    val localProperties = rootProject.file("local.properties")
+    if (!localProperties.exists()) {
+        val sdkDirPropertyValue = file(androidSdkDir).absolutePath.replace("\\", "/")
+        localProperties.writeText("sdk.dir=$sdkDirPropertyValue")
+    }
 }
 
 kotlin {
@@ -89,28 +83,20 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api("io.github.kotlinmania:kasuari-kotlin:0.1.0")
+                api("io.github.kotlinmania:kasuari-kotlin:0.1.1")
+                api("io.github.kotlinmania:anstyle-kotlin:0.1.3")
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.10.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0")
                 implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
                 implementation("org.jetbrains.kotlinx:kotlinx-io-core:0.6.0")
+            }
+        }
 
-                // Ktor HTTP client for multiplatform
-                implementation("io.ktor:ktor-client-core:3.0.3")
-                implementation("io.ktor:ktor-client-content-negotiation:3.0.3")
-                implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.3")
-                implementation("io.ktor:ktor-client-auth:3.0.3")
-
-                // File I/O
-                implementation("com.squareup.okio:okio:3.9.1")
-
-                // Character encoding support (for legacy codepage conversion)
-                // fleeksoft-io provides JDK-like IO classes for Kotlin Multiplatform
-                implementation("com.fleeksoft.io:io-core:0.0.4")
-                implementation("com.fleeksoft.io:io:0.0.4")
-                implementation("com.fleeksoft.charset:charset:0.0.4")
-                implementation("com.fleeksoft.charset:charset-ext:0.0.4")
+        val desktopMain by creating {
+            dependsOn(commonMain)
+            dependencies {
+                api("io.github.kotlinmania:crossterm-kotlin:0.1.3")
             }
         }
 
@@ -120,44 +106,47 @@ kotlin {
         }
 
         val appleMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-darwin:3.0.3")
-            }
+            dependencies {}
+        }
+
+        val macosMain by getting {
+            dependsOn(desktopMain)
         }
 
         val linuxMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-curl:3.0.3")
-            }
+            dependsOn(desktopMain)
+            dependencies {}
         }
 
         val mingwMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-curl:3.0.3")
-            }
+            dependsOn(desktopMain)
+            dependencies {}
         }
 
         val jsMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-js:3.0.3")
-            }
+            dependencies {}
         }
 
         val wasmJsMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-js:3.0.3")
-            }
+            dependencies {}
         }
 
         val androidMain by getting {
-            dependencies {
-                implementation("io.ktor:ktor-client-okhttp:3.0.3")
-            }
+            dependencies {}
         }
 
         val commonTest by getting { dependencies { implementation(kotlin("test")) } }
     }
     jvmToolchain(21)
+}
+
+val enableIosSimulatorTests =
+    providers.gradleProperty("enableIosSimulatorTests").map { it.toBoolean() }.orElse(false)
+
+tasks.withType<KotlinNativeTest>().configureEach {
+    if (!enableIosSimulatorTests.get() && (name == "iosX64Test" || name == "iosSimulatorArm64Test")) {
+        enabled = false
+    }
 }
 
 

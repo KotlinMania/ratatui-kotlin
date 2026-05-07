@@ -182,7 +182,7 @@ data class Gauge(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = widgetStyle
+    override fun style(): Style = widgetStyle
 
     override fun setStyle(style: Style): Gauge = style(style)
 

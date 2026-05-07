@@ -1,3 +1,4 @@
+// port-lint: source ratatui-widgets/src/tabs.rs
 package ratatui.widgets.tabs
 
 import ratatui.buffer.Buffer
@@ -230,7 +231,7 @@ data class Tabs(
     }
 
     // Styled implementation
-    override fun getStyle(): Style = tabsStyle
+    override fun style(): Style = tabsStyle
 
     override fun setStyle(style: Style): Tabs = style(style)
 
