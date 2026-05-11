@@ -4,10 +4,10 @@ Based on AST analysis, here are the concrete next steps.
 
 ## Summary
 
-- **Current Progress:** 61.4% (164/233 files)
+- **Current Progress:** 61.4% (161/233 files)
 - **Matched Files:** 143
-- **Average Similarity:** 0.39
-- **Critical Issues:** 104 files with <0.60 similarity
+- **Average Similarity:** 0.32
+- **Critical Issues:** 115 files with <0.60 similarity
 
 ## Priority 1: Fix Incomplete High-Dependency Files
 
@@ -18,9 +18,9 @@ Based on AST analysis, here are the concrete next steps.
 - **Action:** Review and complete missing sections
 
 ### 2. widgets.widget
-- **Similarity:** 0.34 (needs 51% improvement)
+- **Similarity:** 0.33 (needs 52% improvement)
 - **Dependencies:** 44
-- **Priority Score:** 29.2
+- **Priority Score:** 29.3
 - **Action:** Deep review - likely missing major functionality
 
 ### 3. ratatui-macros.line
@@ -35,17 +35,17 @@ Based on AST analysis, here are the concrete next steps.
 - **Priority Score:** 9.2
 - **Action:** Deep review - likely missing major functionality
 
-### 5. terminal.frame
+### 5. ratatui-core.text
+- **Similarity:** 0.31 (needs 54% improvement)
+- **Dependencies:** 13
+- **Priority Score:** 9.0
+- **Action:** Deep review - likely missing major functionality
+
+### 6. terminal.frame
 - **Similarity:** 0.69 (needs 16% improvement)
 - **Dependencies:** 22
-- **Priority Score:** 6.9
+- **Priority Score:** 6.7
 - **Action:** Review and complete missing sections
-
-### 6. ratatui-core.text
-- **Similarity:** 0.55 (needs 30% improvement)
-- **Dependencies:** 13
-- **Priority Score:** 5.8
-- **Action:** Deep review - likely missing major functionality
 
 ### 7. commands.format
 - **Similarity:** 0.68 (needs 17% improvement)
@@ -99,6 +99,12 @@ cd /Volumes/stuff/Projects/kotlinmania/ratatui-kotlin
 # Run tests locally (fastest single-target check on macOS arm64)
 ./gradlew macosArm64Test
 ```
+
+Note: `ast_distance` task-assignment flags (`--init-tasks`, `--tasks`, `--assign`, `--complete`, etc.)
+are intentionally disabled in this repo to keep focus on code parity work.
+
+Note: `ast_distance` task-assignment flags (`--init-tasks`, `--tasks`, `--assign`, `--complete`, etc.)
+are intentionally disabled in this repo to keep focus on code parity work.
 
 Note: `ast_distance` task-assignment flags (`--init-tasks`, `--tasks`, `--assign`, `--complete`, etc.)
 are intentionally disabled in this repo to keep focus on code parity work.
