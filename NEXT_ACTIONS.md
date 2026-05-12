@@ -102,3 +102,9 @@ cd /Volumes/stuff/Projects/kotlinmania/ratatui-kotlin
 
 Note: `ast_distance` task-assignment flags (`--init-tasks`, `--tasks`, `--assign`, `--complete`, etc.)
 are intentionally disabled in this repo to keep focus on code parity work.
+
+Note: `ast_distance` task-assignment flags (`--init-tasks`, `--tasks`, `--assign`, `--complete`, etc.)
+are intentionally disabled in this repo to keep focus on code parity work.
+
+Note: `ast_distance` task-assignment flags (`--init-tasks`, `--tasks`, `--assign`, `--complete`, etc.)
+are intentionally disabled in this repo to keep focus on code parity work.
