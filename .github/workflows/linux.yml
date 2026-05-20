@@ -30,6 +30,7 @@ jobs:
         # on x64 hosts (no test execution — needs an arm64 runner or qemu).
         run: >
           ./gradlew
+          setupAndroidSdk
           compileKotlinLinuxX64
           compileKotlinLinuxArm64
           linuxX64Test

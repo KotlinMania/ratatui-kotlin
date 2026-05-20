@@ -32,6 +32,7 @@ jobs:
       - name: Compile Android Native targets
         run: >
           ./gradlew
+          setupAndroidSdk
           compileKotlinAndroidNativeArm32
           compileKotlinAndroidNativeArm64
           compileKotlinAndroidNativeX86

@@ -37,6 +37,7 @@ jobs:
           fi
           echo "XCFramework name: $XCF_NAME → task: assemble${XCF_NAME}XCFramework"
           ./gradlew \
+            setupAndroidSdk \
             compileKotlinIosArm64 \
             compileKotlinIosSimulatorArm64 \
             compileKotlinIosX64 \

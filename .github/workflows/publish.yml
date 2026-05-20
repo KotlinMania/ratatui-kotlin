@@ -54,16 +54,17 @@ jobs:
           npm --version
           yarn --version
 
-      - name: Build (dry run)
+      - name: Build and publish locally (dry run)
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.publish }}
-        # Keep workflow_dispatch safe (no publishing), and keep runtime low by focusing on JVM/Android output.
+        # Keep workflow_dispatch safe from remote publishing while still proving
+        # every target publication exists and can be materialized locally.
         env:
           ORG_GRADLE_PROJECT_kotlin_js_yarn_download: "false"
-        run: ./gradlew compileAndroidMain androidSourcesJar --no-configuration-cache
+        run: ./gradlew setupAndroidSdk build publishToMavenLocal --no-configuration-cache
 
       - name: Publish to Maven Central
         if: ${{ github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.publish) }}
-        run: ./gradlew publishAndReleaseToMavenCentral --no-configuration-cache
+        run: ./gradlew setupAndroidSdk build publishAndReleaseToMavenCentral --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_kotlin_js_yarn_download: "false"
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}

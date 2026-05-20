@@ -28,6 +28,7 @@ jobs:
       - name: Build and test watchOS targets
         run: >
           ./gradlew
+          setupAndroidSdk
           compileKotlinWatchosArm32
           compileKotlinWatchosArm64
           compileKotlinWatchosDeviceArm64
