@@ -1,8 +1,7 @@
 [workspace]
 resolver = "2"
-members = ["ratatui", "ratatui-*", "xtask", "examples/apps/*", "examples/concepts/*"]
+members = ["ratatui-*", "xtask", "examples/apps/*", "examples/concepts/*"]
 default-members = [
-  "ratatui",
   "ratatui-core",
   "ratatui-crossterm",
   # this is not included as it doesn't compile on windows
@@ -50,7 +49,7 @@ palette = "0.7"
 pretty_assertions = "1"
 rand = "0.9"
 rand_chacha = "0.9"
-ratatui = { path = "ratatui", version = "0.30.0-beta.0" }
+ratatui = { version = "0.30", default-features = false }
 ratatui-core = { path = "ratatui-core", version = "0.1.0-beta.0" }
 ratatui-crossterm = { path = "ratatui-crossterm", version = "0.1.0-beta.0" }
 ratatui-macros = { path = "ratatui-macros", version = "0.7.0-beta.0" }
@@ -64,7 +63,7 @@ strum = { version = "0.27", default-features = false, features = ["derive"] }
 termion = "4"
 termwiz = "0.23"
 thiserror = { version = "2", default-features = false }
-time = { version = "0.3", default-features = false }
+time = { version = "0.3.47", default-features = false }
 tokio = "1"
 tokio-stream = "0.1"
 tracing = "0.1"
