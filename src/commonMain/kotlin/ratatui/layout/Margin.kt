@@ -1,11 +1,12 @@
-// port-lint: source ratatui-core/src/layout/margin.rs
+// port-lint: source layout/margin.rs
+package ratatui.layout
+
 /**
  * Represents spacing around rectangular areas.
  *
  * [Margin] defines the horizontal and vertical spacing that should be applied around a rectangular
- * area. It commonly used with [Layout] to add space between the
- * layout boundaries and its contents, or with [Rect.inner] and
- * [Rect.outer] to create padded areas.
+ * area. It is commonly used with [Layout] to add space between the layout's boundaries and its
+ * contents, or with [Rect.inner] and [Rect.outer] to create padded areas.
  *
  * The margin values represent the number of character cells to add on each side. For horizontal
  * margin, the space is applied to both the left and right sides. For vertical margin, the space
@@ -13,8 +14,8 @@
  *
  * ## Construction
  *
- * - [new] - Create a new margin with horizontal and vertical spacing
- * - Default constructor - Create with zero margin
+ * - [Margin.new] - Create a new margin with horizontal and vertical spacing
+ * - [Margin.default] - Create with zero margin
  *
  * ## Examples
  *
@@ -31,12 +32,6 @@
  * ```
  *
  * For comprehensive layout documentation and examples, see the layout module.
- */
-package ratatui.layout
-
-
-/**
- * Represents spacing around rectangular areas.
  *
  * @property horizontal The horizontal spacing in cells (applied to left and right)
  * @property vertical The vertical spacing in cells (applied to top and bottom)
@@ -55,6 +50,9 @@ data class Margin(
 
         /** Create a default (zero) margin */
         fun default(): Margin = ZERO
+
+        /** Build a uniform margin from a single value (horizontal == vertical == value). */
+        fun from(value: Int): Margin = new(value, value)
     }
 
     override fun toString(): String = "${horizontal}x${vertical}"
