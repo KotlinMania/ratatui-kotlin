@@ -278,15 +278,15 @@ kotlin {
                 implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.4.0")
                 implementation("io.github.kotlinmania:anstyle-kotlin:0.1.5")
                 implementation("io.github.kotlinmania:bitflags-kotlin:0.1.1")
-                implementation("io.github.kotlinmania:itertools-kotlin:0.1.0")
-                implementation("io.github.kotlinmania:kasuari-kotlin:0.1.2")
+                implementation("io.github.kotlinmania:itertools-kotlin:0.1.1")
+                implementation("io.github.kotlinmania:kasuari-kotlin:0.1.6")
                 implementation("io.github.kotlinmania:lru-kotlin:0.1.0")
                 implementation("io.github.kotlinmania:serde-kotlin:0.1.1")
                 implementation("io.github.kotlinmania:strum-kotlin:0.1.0")
                 implementation("io.github.kotlinmania:thiserror-kotlin:0.1.0")
                 implementation("io.github.kotlinmania:time-kotlin:0.1.0")
-                implementation("io.github.kotlinmania:unicode-segmentation-kotlin:1.12.0")
-                implementation("io.github.kotlinmania:unicode-width-kotlin:0.1.13")
+                implementation("io.github.kotlinmania:unicode-segmentation-kotlin:0.1.1")
+                implementation("io.github.kotlinmania:unicode-width-kotlin:0.1.0")
             }
         }
         val desktopMain by creating {
