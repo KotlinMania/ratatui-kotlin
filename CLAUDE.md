@@ -333,7 +333,7 @@ Recipe:
 When a function has to work in both the comparator-aware and natural-order
 paths, expose two overloads — the unbounded one takes the comparator
 explicitly, the bounded one is sugar that delegates. The canonical
-implementation lives in [`btree-kotlin`](../btree-kotlin/) `Search.kt::searchTree`
+implementation lives in `btree-kotlin` `Search.kt::searchTree`
 / `searchNode` / `findLowerBoundEdge` / `findUpperBoundEdge` and
 `Navigate.kt::searchTreeForBifurcation` / `lowerBound` / `upperBound`.
 
