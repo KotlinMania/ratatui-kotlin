@@ -147,7 +147,7 @@ preference.
 
 ### Setup
 
-TL;DR: Clone the repo and build it using `cargo xtask`.
+TL;DR: Start from a prepared checkout and build it using `cargo xtask`.
 
 Ratatui is an ordinary Rust project where common tasks are managed with
 [cargo-xtask](https://github.com/matklad/cargo-xtask). It wraps common `cargo` commands with sane
@@ -155,7 +155,7 @@ defaults depending on your platform of choice. Building the project should be as
 `cargo xtask build`.
 
 ```shell
-git clone https://github.com/ratatui/ratatui.git
+# start from a prepared ratatui checkout
 cd ratatui
 cargo xtask build
 ```

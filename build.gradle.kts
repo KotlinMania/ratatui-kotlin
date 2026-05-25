@@ -576,15 +576,15 @@ val requiredPublicationNames = setOf(
     "watchosSimulatorArm64",
 )
 
-fun publishTaskName(publicationName: String): String =
-    "publish${publicationName.replaceFirstChar { it.titlecase() }}PublicationToMavenLocal"
+fun publicationMetadataTaskName(publicationName: String): String =
+    "generateMetadataFileFor${publicationName.replaceFirstChar { it.titlecase() }}Publication"
 
 val verifyPublishedTargetPublications = tasks.register("verifyPublishedTargetPublications") {
     group = "verification"
     description = "Fails when any declared Kotlin target lacks a Maven publication task."
     doLast {
         val missing = requiredPublicationNames
-            .map { it to publishTaskName(it) }
+            .map { it to publicationMetadataTaskName(it) }
             .filterNot { (_, taskName) -> tasks.names.contains(taskName) }
         if (missing.isNotEmpty()) {
             throw GradleException(
@@ -596,10 +596,6 @@ val verifyPublishedTargetPublications = tasks.register("verifyPublishedTargetPub
 }
 
 tasks.named("build") {
-    dependsOn(verifyPublishedTargetPublications)
-}
-
-tasks.named("publishToMavenLocal") {
     dependsOn(verifyPublishedTargetPublications)
 }
 
