@@ -92,10 +92,12 @@ data class Layout(
         private fun scaleExpression(expression: Expression, scalar: Double): Expression {
             val result = expression.copy()
             result.constant *= scalar
-            for (i in result.terms.indices) {
-                val term = result.terms[i]
-                result.terms[i] = Term.new(term.variable, term.coefficient * scalar)
+            val scaledTerms = result.terms.toMutableList()
+            for (i in scaledTerms.indices) {
+                val term = scaledTerms[i]
+                scaledTerms[i] = Term.new(term.variable, term.coefficient * scalar)
             }
+            result.terms = scaledTerms
             return result
         }
 
