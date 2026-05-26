@@ -29,7 +29,7 @@ plugins {
 }
 
 group = "io.github.kotlinmania"
-version = "0.1.10"
+version = "0.1.11"
 
 val androidCommandLineToolsRevision = "14742923"
 val projectCompileSdk = "34"
@@ -536,67 +536,95 @@ tasks.register("setupAndroidSdk") {
     }
 }
 
-val swiftExportSmokeTest = tasks.register("swiftExportSmokeTest") {
+val swiftExportEnvironment = mapOf(
+    "BUILT_PRODUCTS_DIR" to layout.buildDirectory.dir("swift-test").get().asFile.absolutePath,
+    "TARGET_BUILD_DIR" to layout.buildDirectory.dir("swift-test").get().asFile.absolutePath,
+    "SDK_NAME" to "macosx",
+    "CONFIGURATION" to "Debug",
+    "ARCHS" to "arm64",
+    "FRAMEWORKS_FOLDER_PATH" to "Frameworks",
+    "MACOSX_DEPLOYMENT_TARGET" to "14.0",
+    "DEPLOYMENT_TARGET_SETTING_NAME" to "MACOSX_DEPLOYMENT_TARGET",
+)
+
+val buildSwiftExportForSwiftTest = tasks.register<Exec>("buildSwiftExportForSwiftTest") {
     group = "verification"
-    description = "Builds the Swift Export SPM package and runs swift test against it."
-    onlyIf {
-        if (!isMacHost) {
-            logger.lifecycle("swiftExportSmokeTest: skipped because Swift Export smoke tests require macOS")
-        }
-        isMacHost
-    }
+    description = "Builds the Kotlin Swift Export SPM package for the local swift test harness."
+    commandLine(
+        "./gradlew",
+        "--no-daemon",
+        "--console=plain",
+        "--no-configuration-cache",
+        "embedSwiftExportForXcode",
+    )
+    environment(swiftExportEnvironment)
+    outputs.dir(layout.buildDirectory.dir("swift-test"))
+    outputs.dir(layout.buildDirectory.dir("SPMPackage/macosArm64/Debug"))
     outputs.upToDateWhen { false }
+}
 
-    doLast {
-        val execOperations = serviceOf<ExecOperations>()
-        val swiftBuildDir = layout.buildDirectory.dir("swift-test").get().asFile.absolutePath
-        execOperations.exec {
-            workingDir = projectDir
-            commandLine(
-                "./gradlew",
-                "embedSwiftExportForXcode",
-                "--no-configuration-cache",
-                "--no-daemon",
-                "--console=plain",
-            )
-            environment(
-                mapOf(
-                    "BUILT_PRODUCTS_DIR" to swiftBuildDir,
-                    "TARGET_BUILD_DIR" to swiftBuildDir,
-                    "SDK_NAME" to "macosx",
-                    "CONFIGURATION" to "Debug",
-                    "ARCHS" to "arm64",
-                    "FRAMEWORKS_FOLDER_PATH" to "Frameworks",
-                    "MACOSX_DEPLOYMENT_TARGET" to "14.0",
-                    "DEPLOYMENT_TARGET_SETTING_NAME" to "MACOSX_DEPLOYMENT_TARGET",
-                ),
-            )
-        }.assertNormalExitValue()
+val swiftExportTest = tasks.register<Exec>("swiftExportTest") {
+    group = "verification"
+    description = "Runs swift test against the Kotlin Swift Export package."
+    dependsOn(buildSwiftExportForSwiftTest)
+    workingDir(layout.projectDirectory.dir("swift-test-harness"))
+    commandLine("swift", "test")
+    outputs.upToDateWhen { false }
+}
 
-        execOperations.exec {
-            workingDir = layout.projectDirectory.dir("swift-test-harness").asFile
-            commandLine("swift", "test")
-        }.assertNormalExitValue()
-    }
+val defaultTestTasks = listOf(
+    "macosArm64Test",
+    "jvmTest",
+    "jsNodeTest",
+    "wasmJsNodeTest",
+    "compileAndroidMain",
+    "assembleUnitTest",
+)
+
+swiftExportTest.configure {
+    mustRunAfter(defaultTestTasks.mapNotNull { taskName -> tasks.findByName(taskName) })
 }
 
 tasks.register("test") {
     group = "verification"
     description =
-        "Runs the host-portable test suite (macOS + JS + WasmJS + Android unit + Swift smoke test). " +
+        "Runs the host-portable test suite (macOS + JS + WasmJS + Android unit + Swift Export). " +
         "Non-host native targets (mingwX64, linuxX64) only run on their own host."
 
-    val defaultTestTasks = listOf(
-        "macosArm64Test",
-        "jvmTest",
-        "jsNodeTest",
-        "wasmJsNodeTest",
-        "compileAndroidMain",
-        "assembleUnitTest",
-        "swiftExportSmokeTest",
-    )
-
     dependsOn(defaultTestTasks.mapNotNull { taskName -> tasks.findByName(taskName) })
+    dependsOn(swiftExportTest)
+}
+
+val xcodeSwiftExportEnvironmentNames = listOf(
+    "SDK_NAME",
+    "CONFIGURATION",
+    "TARGET_BUILD_DIR",
+    "BUILT_PRODUCTS_DIR",
+    "ARCHS",
+    "FRAMEWORKS_FOLDER_PATH",
+    "DEPLOYMENT_TARGET_SETTING_NAME",
+)
+
+fun hasXcodeSwiftExportEnvironment(): Boolean {
+    if (!xcodeSwiftExportEnvironmentNames.all { !System.getenv(it).isNullOrBlank() }) {
+        return false
+    }
+
+    val deploymentTargetSettingName = System.getenv("DEPLOYMENT_TARGET_SETTING_NAME")
+    return !System.getenv(deploymentTargetSettingName).isNullOrBlank()
+}
+
+val swiftExportTaskDirectlyRequested =
+    gradle.startParameter.taskNames.any { it == "embedSwiftExportForXcode" || it.endsWith(":embedSwiftExportForXcode") }
+
+tasks.matching { it.name == "embedSwiftExportForXcode" }.configureEach {
+    onlyIf {
+        val hasXcodeEnvironment = hasXcodeSwiftExportEnvironment()
+        if (!hasXcodeEnvironment && !swiftExportTaskDirectlyRequested) {
+            logger.lifecycle("embedSwiftExportForXcode: skipped because Xcode environment variables are not present")
+        }
+        hasXcodeEnvironment || swiftExportTaskDirectlyRequested
+    }
 }
 
 val fullTargetBuildTaskNames = setOf(
@@ -646,7 +674,7 @@ val fullTargetBuildTaskNames = setOf(
     "watchosDeviceArm64TestBinaries",
     "watchosSimulatorArm64Binaries",
     "watchosSimulatorArm64TestBinaries",
-    "swiftExportSmokeTest",
+    "swiftExportTest",
     "embedSwiftExportForXcode",
     "assembleRatatuiXCFramework",
 )

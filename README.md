@@ -20,7 +20,7 @@ This is an **in-progress port**. The goal is feature parity with the upstream Ru
 
 ```kotlin
 dependencies {
-    implementation("io.github.kotlinmania:ratatui-kotlin:0.1.10")
+    implementation("io.github.kotlinmania:ratatui-kotlin:0.1.11")
 }
 ```
 
