@@ -234,9 +234,6 @@ kotlin {
         binaries.framework { baseName = "Ratatui"; xcf.add(this) }
     }
 
-    watchosArm32 {
-        binaries.framework { baseName = "Ratatui"; xcf.add(this) }
-    }
     watchosArm64 {
         binaries.framework { baseName = "Ratatui"; xcf.add(this) }
     }
@@ -643,19 +640,32 @@ val fullTargetBuildTaskNames = setOf(
     "tvosArm64TestBinaries",
     "tvosSimulatorArm64Binaries",
     "tvosSimulatorArm64TestBinaries",
-    "watchosArm32Binaries",
-    "watchosArm32TestBinaries",
     "watchosArm64Binaries",
     "watchosArm64TestBinaries",
     "watchosDeviceArm64Binaries",
     "watchosDeviceArm64TestBinaries",
     "watchosSimulatorArm64Binaries",
     "watchosSimulatorArm64TestBinaries",
+    "swiftExportSmokeTest",
+    "embedSwiftExportForXcode",
     "assembleRatatuiXCFramework",
 )
 
 tasks.named("build") {
     dependsOn(fullTargetBuildTaskNames)
+}
+
+afterEvaluate {
+    tasks.named("build") {
+        dependsOn(
+            tasks.matching {
+                name.endsWith("MainClasses") ||
+                    name.endsWith("TestClasses") ||
+                    name.endsWith("Binaries") ||
+                    name.endsWith("XCFramework")
+            },
+        )
+    }
 }
 
 val requiredPublicationNames = setOf(
@@ -677,9 +687,8 @@ val requiredPublicationNames = setOf(
     "macosArm64",
     "mingwX64",
     "tvosArm64",
-    "tvosSimulatorArm64",
-    "watchosArm32",
-    "watchosArm64",
+     "tvosSimulatorArm64",
+     "watchosArm64",
     "watchosDeviceArm64",
     "watchosSimulatorArm64",
 )
