@@ -29,7 +29,6 @@ jobs:
         run: >
           ./gradlew
           setupAndroidSdk
-          compileKotlinWatchosArm32
           compileKotlinWatchosArm64
           compileKotlinWatchosDeviceArm64
           compileKotlinWatchosSimulatorArm64
