@@ -28,7 +28,6 @@ jobs:
       - name: Build and test tvOS targets
         run: >
           ./gradlew
-          setupAndroidSdk
           compileKotlinTvosArm64
           compileKotlinTvosSimulatorArm64
           tvosSimulatorArm64Test

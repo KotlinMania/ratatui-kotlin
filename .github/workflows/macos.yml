@@ -28,7 +28,6 @@ jobs:
       - name: Build and test macOS targets
         run: >
           ./gradlew
-          setupAndroidSdk
           compileKotlinMacosArm64
           macosArm64Test
           --no-configuration-cache
