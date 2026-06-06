@@ -1,5 +1,5 @@
 version = 1
-name = "proc-macro-kotlin"
+name = "ratatui-kotlin"
 
 [setup]
 script = '''

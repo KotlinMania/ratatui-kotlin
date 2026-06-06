@@ -24,11 +24,29 @@ kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serializa
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "collectionsImmutable" }
 
+anstyle-kotlin = { module = "io.github.kotlinmania:anstyle-kotlin", version = "0.1.5" }
+bitflags-kotlin = { module = "io.github.kotlinmania:bitflags-kotlin", version = "0.1.1" }
+itertools-kotlin = { module = "io.github.kotlinmania:itertools-kotlin", version = "0.1.1" }
+kasuari-kotlin = { module = "io.github.kotlinmania:kasuari-kotlin", version = "0.1.6" }
+serde-kotlin = { module = "io.github.kotlinmania:serde-kotlin", version = "0.1.1" }
+strum-kotlin = { module = "io.github.kotlinmania:strum-kotlin", version = "0.1.0" }
+unicode-segmentation-kotlin = { module = "io.github.kotlinmania:unicode-segmentation-kotlin", version = "0.1.1" }
+unicode-width-kotlin = { module = "io.github.kotlinmania:unicode-width-kotlin", version = "0.1.0" }
+crossterm-kotlin = { module = "io.github.kotlinmania:crossterm-kotlin", version = "0.1.4" }
 [bundles]
 ratatui-commonMain = [
-  "kotlinx-coroutines-core",
-  "kotlinx-serialization-core",
-  "kotlinx-serialization-json",
-  "kotlinx-datetime",
-  "collections-immutable",
+    "kotlinx-coroutines-core",
+    "kotlinx-serialization-core",
+    "kotlinx-serialization-json",
+    "kotlinx-datetime",
+    "collections-immutable",
+    "anstyle-kotlin",
+    "bitflags-kotlin",
+    "itertools-kotlin",
+    "kasuari-kotlin",
+    "serde-kotlin",
+    "strum-kotlin",
+    "unicode-segmentation-kotlin",
+    "unicode-width-kotlin",
+    "crossterm-kotlin",
 ]
