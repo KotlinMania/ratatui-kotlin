@@ -19,7 +19,7 @@ permissions:
 jobs:
   publish:
     name: Publish to Maven Central
-    runs-on: macos-26
+    runs-on: macos-latest
 
     permissions:
       contents: read
@@ -54,15 +54,16 @@ jobs:
           npm --version
           yarn --version
 
-      - name: Build
+      - name: Build (dry run)
         if: ${{ github.event_name == 'workflow_dispatch' && !inputs.publish }}
+        # Keep workflow_dispatch safe (no publishing), and keep runtime low by focusing on JVM/Android output.
         env:
           ORG_GRADLE_PROJECT_kotlin_js_yarn_download: "false"
-        run: ./gradlew setupAndroidSdk build --no-configuration-cache
+        run: ./gradlew setupAndroidSdk compileAndroidMain androidSourcesJar --no-configuration-cache
 
       - name: Publish to Maven Central
         if: ${{ github.event_name == 'release' || (github.event_name == 'workflow_dispatch' && inputs.publish) }}
-        run: ./gradlew setupAndroidSdk build publishAndReleaseToMavenCentral --no-configuration-cache
+        run: ./gradlew setupAndroidSdk publishAndReleaseToMavenCentral --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_kotlin_js_yarn_download: "false"
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
