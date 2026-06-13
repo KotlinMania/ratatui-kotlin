@@ -29,9 +29,9 @@ bitflags-kotlin = { module = "io.github.kotlinmania:bitflags-kotlin", version = 
 itertools-kotlin = { module = "io.github.kotlinmania:itertools-kotlin", version = "0.1.1" }
 kasuari-kotlin = { module = "io.github.kotlinmania:kasuari-kotlin", version = "0.1.6" }
 serde-kotlin = { module = "io.github.kotlinmania:serde-kotlin", version = "0.1.1" }
-strum-kotlin = { module = "io.github.kotlinmania:strum-kotlin", version = "0.1.0" }
+strum-kotlin = { module = "io.github.kotlinmania:strum-kotlin", version = "0.1.1" }
 unicode-segmentation-kotlin = { module = "io.github.kotlinmania:unicode-segmentation-kotlin", version = "0.1.1" }
-unicode-width-kotlin = { module = "io.github.kotlinmania:unicode-width-kotlin", version = "0.1.0" }
+unicode-width-kotlin = { module = "io.github.kotlinmania:unicode-width-kotlin", version = "0.1.1" }
 crossterm-kotlin = { module = "io.github.kotlinmania:crossterm-kotlin", version = "0.1.4" }
 [bundles]
 ratatui-commonMain = [
