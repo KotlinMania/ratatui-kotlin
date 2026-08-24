@@ -74,7 +74,7 @@ data class ListItem(
     fun width(): Int = content.width()
 
     // Styled implementation
-    override fun style(): Style = itemStyle
+    override val style: Style get() = itemStyle
 
     override fun setStyle(style: Style): ListItem = style(style)
 

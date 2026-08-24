@@ -432,7 +432,7 @@ data class Table(
     }
 
     // Styled implementation
-    override fun style(): Style = tableStyle
+    override val style: Style get() = tableStyle
 
     override fun setStyle(style: Style): Table = style(style)
 

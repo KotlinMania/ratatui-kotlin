@@ -19,7 +19,7 @@ private const val ZWSP: String = "\u200B"
  */
 data class StyledGrapheme(
     val symbol: String,
-    val style: Style,
+    override val style: Style,
 ) : Styled<StyledGrapheme> {
     /**
      * Creates a new [StyledGrapheme] with the given symbol and style.
@@ -35,8 +35,6 @@ data class StyledGrapheme(
         val symbol = this.symbol
         return symbol == ZWSP || (symbol.all { it.isWhitespace() } && symbol != NBSP)
     }
-
-    override fun style(): Style = style
 
     override fun setStyle(style: Style): StyledGrapheme = copy(style = style)
 }

@@ -31,7 +31,7 @@ import ratatui.text.Line
  *     .red()
  * ```
  */
-data class Dataset(
+class Dataset internal constructor(
     /** Name of the dataset (used in the legend if shown) */
     internal val datasetName: Line? = null,
     /** A reference to the actual data */
@@ -43,6 +43,33 @@ data class Dataset(
     /** Style used to plot this dataset */
     internal val datasetStyle: Style = Style.default()
 ) : Styled<Dataset> {
+
+    internal fun copy(
+        datasetName: Line? = this.datasetName,
+        dataPoints: List<Pair<Double, Double>> = this.dataPoints,
+        datasetMarker: Marker = this.datasetMarker,
+        datasetGraphType: GraphType = this.datasetGraphType,
+        datasetStyle: Style = this.datasetStyle
+    ): Dataset = Dataset(datasetName, dataPoints, datasetMarker, datasetGraphType, datasetStyle)
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Dataset) return false
+        return datasetName == other.datasetName &&
+            dataPoints == other.dataPoints &&
+            datasetMarker == other.datasetMarker &&
+            datasetGraphType == other.datasetGraphType &&
+            datasetStyle == other.datasetStyle
+    }
+
+    override fun hashCode(): Int {
+        var result = datasetName?.hashCode() ?: 0
+        result = 31 * result + dataPoints.hashCode()
+        result = 31 * result + datasetMarker.hashCode()
+        result = 31 * result + datasetGraphType.hashCode()
+        result = 31 * result + datasetStyle.hashCode()
+        return result
+    }
 
     /**
      * Sets the name of the dataset
@@ -80,7 +107,7 @@ data class Dataset(
      * @param data The list of data points as pairs
      * @return A new Dataset with the data set
      */
-    fun data(data: List<Pair<Double, Double>>): Dataset = copy(dataPoints = data)
+    internal fun data(data: List<Pair<Double, Double>>): Dataset = copy(dataPoints = data)
 
     /**
      * Sets the data points of this dataset from vararg pairs
@@ -88,7 +115,7 @@ data class Dataset(
      * @param data The data points
      * @return A new Dataset with the data set
      */
-    fun data(vararg data: Pair<Double, Double>): Dataset = copy(dataPoints = data.toList())
+    internal fun data(vararg data: Pair<Double, Double>): Dataset = copy(dataPoints = data.toList())
 
     /**
      * Sets the kind of character to use to display this dataset
@@ -128,7 +155,7 @@ data class Dataset(
     fun style(style: Style): Dataset = copy(datasetStyle = style)
 
     // Styled implementation
-    override fun style(): Style = datasetStyle
+    override val style: Style get() = datasetStyle
 
     override fun setStyle(style: Style): Dataset = style(style)
 

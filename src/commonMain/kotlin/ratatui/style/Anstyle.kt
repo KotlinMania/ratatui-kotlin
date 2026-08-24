@@ -15,13 +15,13 @@ import ai.solace.tui.anstyle.Style as AnstyleStyle
  */
 
 /** Error type for converting between `anstyle` colors and [Color]. */
-enum class TryFromColorError(val description: String) {
+enum class TryFromColorError(val message: String) {
     Ansi256("cannot convert Ratatui Color to an Ansi256Color as it is not an indexed color"),
     Ansi("cannot convert Ratatui Color to AnsiColor as it is not a 4-bit color"),
     RgbColor("cannot convert Ratatui Color to RgbColor as it is not an RGB color")
 }
 
-class TryFromColorException(val error: TryFromColorError) : IllegalArgumentException(error.description)
+class TryFromColorException(val error: TryFromColorError) : IllegalArgumentException(error.message)
 
 fun Ansi256Color.toRatatuiColor(): Color = Color.Indexed(index)
 

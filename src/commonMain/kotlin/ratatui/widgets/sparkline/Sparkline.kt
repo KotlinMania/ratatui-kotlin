@@ -311,7 +311,7 @@ data class Sparkline(
     }
 
     // Styled implementation
-    override fun style(): Style = sparklineStyle
+    override val style: Style get() = sparklineStyle
 
     override fun setStyle(style: Style): Sparkline = style(style)
 

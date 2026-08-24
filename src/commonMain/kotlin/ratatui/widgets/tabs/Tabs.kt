@@ -43,7 +43,7 @@ data class Tabs(
     /** The index of the selected tab */
     private val selected: Int? = null,
     /** The style used to draw the text */
-    private val style: Style = Style.default(),
+    override val style: Style = Style.default(),
     /** Style to apply to the selected item */
     private val highlightStyle: Style = DEFAULT_HIGHLIGHT_STYLE,
     /** Tab divider */
@@ -231,8 +231,6 @@ data class Tabs(
     }
 
     // Styled implementation
-    override fun style(): Style = style
-
     override fun setStyle(style: Style): Tabs = style(style)
 
     companion object {

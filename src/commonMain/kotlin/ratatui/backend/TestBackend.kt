@@ -128,7 +128,7 @@ class TestBackend private constructor(
         while (content.hasNext()) {
             val item = content.next()
             val index = buffer.indexOf(item.x, item.y)
-            buffer.content[index] = item.cell.clone()
+            buffer.mutableContent[index] = item.cell.clone()
         }
     }
 
@@ -151,41 +151,20 @@ class TestBackend private constructor(
     }
 
     override fun clearRegion(clearType: ClearType) {
-        when (clearType) {
-            ClearType.All -> {
-                clear()
-                return
-            }
+        val width = buffer.area.width
+        val height = buffer.area.height
+        val (curX, curY) = pos
 
-            ClearType.AfterCursor -> {
-                val index = buffer.indexOf(pos.x, pos.y)
-                for (cell in buffer.content.subList(index, buffer.content.size)) {
-                    cell.reset()
-                }
-            }
+        val cellRegion = when (clearType) {
+            ClearType.All -> 0 until buffer.mutableContent.size
+            ClearType.AfterCursor -> buffer.indexOf(curX, curY) until buffer.mutableContent.size
+            ClearType.BeforeCursor -> 0..buffer.indexOf(curX, curY)
+            ClearType.CurrentLine -> (curY * width) until ((curY + 1) * width)
+            ClearType.UntilNewLine -> buffer.indexOf(curX, curY) until ((curY + 1) * width)
+        }
 
-            ClearType.BeforeCursor -> {
-                val index = buffer.indexOf(pos.x, pos.y)
-                for (cell in buffer.content.subList(0, index + 1)) {
-                    cell.reset()
-                }
-            }
-
-            ClearType.CurrentLine -> {
-                val lineStartIndex = buffer.indexOf(0, pos.y)
-                val lineEndIndex = buffer.indexOf(buffer.area.width - 1, pos.y)
-                for (cell in buffer.content.subList(lineStartIndex, lineEndIndex + 1)) {
-                    cell.reset()
-                }
-            }
-
-            ClearType.UntilNewLine -> {
-                val index = buffer.indexOf(pos.x, pos.y)
-                val lineEndIndex = buffer.indexOf(buffer.area.width - 1, pos.y)
-                for (cell in buffer.content.subList(index, lineEndIndex + 1)) {
-                    cell.reset()
-                }
-            }
+        for (i in cellRegion) {
+            buffer.mutableContent[i] = Cell.EMPTY.clone()
         }
     }
 
@@ -211,18 +190,18 @@ class TestBackend private constructor(
         if (lineCount > linesAfterCursor) {
             val scrollBy = lineCount - linesAfterCursor
             val maxScrollCells = width * scrollBy
-            val cellsToScrollback = minOf(buffer.content.size, maxScrollCells)
+            val cellsToScrollback = minOf(buffer.mutableContent.size, maxScrollCells)
 
-            val removed = buffer.content.subList(0, cellsToScrollback).map { it.clone() }
+            val removed = buffer.mutableContent.subList(0, cellsToScrollback).map { it.clone() }
             for (i in 0 until cellsToScrollback) {
-                buffer.content[i] = Cell.EMPTY
+                buffer.mutableContent[i] = Cell.EMPTY
             }
             appendToScrollback(scrollback, removed)
 
             if (cellsToScrollback > 0) {
-                val rotated = buffer.content.drop(cellsToScrollback) + buffer.content.take(cellsToScrollback)
-                buffer.content.clear()
-                buffer.content.addAll(rotated)
+                val rotated = buffer.mutableContent.drop(cellsToScrollback) + buffer.mutableContent.take(cellsToScrollback)
+                buffer.mutableContent.clear()
+                buffer.mutableContent.addAll(rotated)
             }
 
             val extra = (width * scrollBy) - cellsToScrollback
@@ -268,13 +247,13 @@ class TestBackend private constructor(
             if (cellsToScrollBy >= cellRegionLen) {
                 // The scroll amount is large enough to clear the whole region.
                 for (i in cellRegionStart until cellRegionEnd) {
-                    buffer.content[i] = Cell.EMPTY.clone()
+                    buffer.mutableContent[i] = Cell.EMPTY.clone()
                 }
             } else {
                 // Scroll up by rotating, then filling in the bottom with empty cells.
-                rotateLeft(buffer.content, cellRegionStart, cellRegionEnd, cellsToScrollBy)
+                rotateLeft(buffer.mutableContent, cellRegionStart, cellRegionEnd, cellsToScrollBy)
                 for (i in (cellRegionEnd - cellsToScrollBy) until cellRegionEnd) {
-                    buffer.content[i] = Cell.EMPTY.clone()
+                    buffer.mutableContent[i] = Cell.EMPTY.clone()
                 }
             }
             return
@@ -285,13 +264,13 @@ class TestBackend private constructor(
         val cellsFromRegion = minOf(cellRegionLen, cellsToScrollBy)
         val moved = ArrayList<Cell>(cellsFromRegion)
         for (i in 0 until cellsFromRegion) {
-            moved.add(buffer.content[i].clone())
-            buffer.content[i] = Cell.EMPTY.clone()
+            moved.add(buffer.mutableContent[i].clone())
+            buffer.mutableContent[i] = Cell.EMPTY.clone()
         }
         appendToScrollback(scrollback, moved)
         if (cellsToScrollBy < cellRegionLen) {
             // Rotate the remaining cells to the front of the region.
-            rotateLeft(buffer.content, cellRegionStart, cellRegionEnd, cellsFromRegion)
+            rotateLeft(buffer.mutableContent, cellRegionStart, cellRegionEnd, cellsFromRegion)
         } else {
             // Splice cleared out the region. Insert empty rows in scrollback.
             appendToScrollback(scrollback, List(cellsToScrollBy - cellRegionLen) { Cell.EMPTY.clone() })
@@ -314,13 +293,13 @@ class TestBackend private constructor(
         if (cellsToScrollBy >= cellRegionLen) {
             // The scroll amount is large enough to clear the whole region.
             for (i in cellRegionStart until cellRegionEnd) {
-                buffer.content[i] = Cell.EMPTY.clone()
+                buffer.mutableContent[i] = Cell.EMPTY.clone()
             }
         } else {
             // Scroll up by rotating, then filling in the top with empty cells.
-            rotateRight(buffer.content, cellRegionStart, cellRegionEnd, cellsToScrollBy)
+            rotateRight(buffer.mutableContent, cellRegionStart, cellRegionEnd, cellsToScrollBy)
             for (i in cellRegionStart until (cellRegionStart + cellsToScrollBy)) {
-                buffer.content[i] = Cell.EMPTY.clone()
+                buffer.mutableContent[i] = Cell.EMPTY.clone()
             }
         }
     }
@@ -379,19 +358,19 @@ internal fun bufferView(buffer: Buffer): String {
 }
 
 private fun appendToScrollback(scrollback: Buffer, cells: Iterable<Cell>) {
-    scrollback.content.addAll(cells)
+    scrollback.mutableContent.addAll(cells)
     val width = scrollback.area.width
     if (width <= 0) {
         scrollback.area = scrollback.area.copy(height = 0)
-        scrollback.content.clear()
+        scrollback.mutableContent.clear()
         return
     }
 
     val maxHeight = UShort.MAX_VALUE.toInt()
-    val newHeight = (scrollback.content.size / width).coerceAtMost(maxHeight)
-    val keepFrom = (scrollback.content.size - (width * maxHeight)).coerceAtLeast(0)
+    val newHeight = (scrollback.mutableContent.size / width).coerceAtMost(maxHeight)
+    val keepFrom = (scrollback.mutableContent.size - (width * maxHeight)).coerceAtLeast(0)
     if (keepFrom > 0) {
-        scrollback.content.subList(0, keepFrom).clear()
+        scrollback.mutableContent.subList(0, keepFrom).clear()
     }
     scrollback.area = scrollback.area.copy(height = newHeight)
 }

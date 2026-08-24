@@ -501,11 +501,11 @@ class Painter internal constructor(
  *     }
  * ```
  */
-class Canvas<F : (Context) -> Unit>(
+class Canvas(
     private var block: Block? = null,
     private var xBounds: DoubleArray = doubleArrayOf(0.0, 0.0),
     private var yBounds: DoubleArray = doubleArrayOf(0.0, 0.0),
-    private var paintFunc: F? = null,
+    private var paintFunc: ((Context) -> Unit)? = null,
     private var backgroundColor: Color = Color.Reset,
     private var marker: Marker = Marker.Braille
 ) : Widget {
@@ -513,7 +513,7 @@ class Canvas<F : (Context) -> Unit>(
     /**
      * Wraps the canvas with a custom [Block] widget.
      */
-    fun block(block: Block): Canvas<F> {
+    fun block(block: Block): Canvas {
         this.block = block
         return this
     }
@@ -524,7 +524,7 @@ class Canvas<F : (Context) -> Unit>(
      * If you were to "zoom" to a certain part of the world you may want to choose different
      * bounds.
      */
-    fun xBounds(bounds: DoubleArray): Canvas<F> {
+    fun xBounds(bounds: DoubleArray): Canvas {
         this.xBounds = bounds
         return this
     }
@@ -535,7 +535,7 @@ class Canvas<F : (Context) -> Unit>(
      * If you were to "zoom" to a certain part of the world you may want to choose different
      * bounds.
      */
-    fun yBounds(bounds: DoubleArray): Canvas<F> {
+    fun yBounds(bounds: DoubleArray): Canvas {
         this.yBounds = bounds
         return this
     }
@@ -543,7 +543,7 @@ class Canvas<F : (Context) -> Unit>(
     /**
      * Store the closure that will be used to draw to the [Canvas].
      */
-    fun paint(f: F): Canvas<F> {
+    fun paint(f: (Context) -> Unit): Canvas {
         this.paintFunc = f
         return this
     }
@@ -551,7 +551,7 @@ class Canvas<F : (Context) -> Unit>(
     /**
      * Change the background [Color] of the entire canvas.
      */
-    fun backgroundColor(color: Color): Canvas<F> {
+    fun backgroundColor(color: Color): Canvas {
         this.backgroundColor = color
         return this
     }
@@ -563,7 +563,7 @@ class Canvas<F : (Context) -> Unit>(
      * but you might want to use the simple [Marker.Dot] or [Marker.Block] instead if the targeted
      * terminal does not support those symbols.
      */
-    fun marker(marker: Marker): Canvas<F> {
+    fun marker(marker: Marker): Canvas {
         this.marker = marker
         return this
     }
@@ -645,7 +645,7 @@ class Canvas<F : (Context) -> Unit>(
         /**
          * Create a new Canvas with default settings.
          */
-        operator fun invoke(): Canvas<(Context) -> Unit> = Canvas(
+        operator fun invoke(): Canvas = Canvas(
             block = null,
             xBounds = doubleArrayOf(0.0, 0.0),
             yBounds = doubleArrayOf(0.0, 0.0),
@@ -657,6 +657,6 @@ class Canvas<F : (Context) -> Unit>(
         /**
          * Create a default Canvas.
          */
-        fun default(): Canvas<(Context) -> Unit> = invoke()
+        fun default(): Canvas = invoke()
     }
 }

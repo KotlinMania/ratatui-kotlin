@@ -108,14 +108,14 @@ data class BarGroup(
         /**
          * Creates a BarGroup from a list of (label, value) pairs.
          */
-        fun from(data: List<Pair<String, Long>>): BarGroup = BarGroup(
+        internal fun from(data: List<Pair<String, Long>>): BarGroup = BarGroup(
             bars = data.map { (label, value) -> Bar.withLabel(label, value) }
         )
 
         /**
          * Creates a BarGroup from vararg (label, value) pairs.
          */
-        fun from(vararg data: Pair<String, Long>): BarGroup = from(data.toList())
+        internal fun from(vararg data: Pair<String, Long>): BarGroup = from(data.toList())
 
         /**
          * Creates a default empty BarGroup.

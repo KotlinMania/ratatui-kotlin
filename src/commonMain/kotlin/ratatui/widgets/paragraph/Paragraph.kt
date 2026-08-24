@@ -101,7 +101,7 @@ data class Paragraph(
     /** A block to wrap the widget in */
     private val block: Block? = null,
     /** Widget style */
-    private val style: Style = Style.default(),
+    override val style: Style = Style.default(),
     /** How to wrap the text */
     private val wrap: Wrap? = null,
     /** The text to display */
@@ -340,8 +340,6 @@ data class Paragraph(
     }
 
     // Styled implementation
-    override fun style(): Style = style
-
     override fun setStyle(style: Style): Paragraph = style(style)
 
     companion object {

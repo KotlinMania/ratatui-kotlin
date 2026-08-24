@@ -110,9 +110,17 @@ enum class TitlePosition {
  *     .titleBottom("Status: OK")
  * ```
  */
+/**
+ * A title and its position within a [Block].
+ */
+data class BlockTitle(
+    val position: TitlePosition? = null,
+    val line: Line = Line()
+)
+
 data class Block(
     /** List of titles with their optional positions */
-    private val titles: MutableList<Pair<TitlePosition?, Line>> = mutableListOf(),
+    private val titles: List<BlockTitle> = emptyList(),
     /** The style to be patched to all titles of the block */
     private val titlesStyle: Style = Style.default(),
     /** The default alignment of the titles that do not have one */
@@ -145,20 +153,12 @@ data class Block(
      * @param title The title text or Line
      * @return A new Block with the title added
      */
-    fun title(title: String): Block {
-        val newTitles = titles.toMutableList()
-        newTitles.add(null to Line.from(title))
-        return copy(titles = newTitles)
-    }
+    fun title(title: String): Block = copy(titles = titles + BlockTitle(null, Line.from(title)))
 
     /**
      * Adds a title to the block using the default position.
      */
-    fun title(title: Line): Block {
-        val newTitles = titles.toMutableList()
-        newTitles.add(null to title)
-        return copy(titles = newTitles)
-    }
+    fun title(title: Line): Block = copy(titles = titles + BlockTitle(null, title))
 
     /**
      * Adds a title to the block using the default position.
@@ -173,20 +173,12 @@ data class Block(
      * @param title The title text or Line
      * @return A new Block with the title added at the top
      */
-    fun titleTop(title: String): Block {
-        val newTitles = titles.toMutableList()
-        newTitles.add(TitlePosition.Top to Line.from(title))
-        return copy(titles = newTitles)
-    }
+    fun titleTop(title: String): Block = copy(titles = titles + BlockTitle(TitlePosition.Top, Line.from(title)))
 
     /**
      * Adds a title to the top of the block.
      */
-    fun titleTop(title: Line): Block {
-        val newTitles = titles.toMutableList()
-        newTitles.add(TitlePosition.Top to title)
-        return copy(titles = newTitles)
-    }
+    fun titleTop(title: Line): Block = copy(titles = titles + BlockTitle(TitlePosition.Top, title))
 
     /**
      * Adds a title to the top of the block.
@@ -201,20 +193,12 @@ data class Block(
      * @param title The title text or Line
      * @return A new Block with the title added at the bottom
      */
-    fun titleBottom(title: String): Block {
-        val newTitles = titles.toMutableList()
-        newTitles.add(TitlePosition.Bottom to Line.from(title))
-        return copy(titles = newTitles)
-    }
+    fun titleBottom(title: String): Block = copy(titles = titles + BlockTitle(TitlePosition.Bottom, Line.from(title)))
 
     /**
      * Adds a title to the bottom of the block.
      */
-    fun titleBottom(title: Line): Block {
-        val newTitles = titles.toMutableList()
-        newTitles.add(TitlePosition.Bottom to title)
-        return copy(titles = newTitles)
-    }
+    fun titleBottom(title: Line): Block = copy(titles = titles + BlockTitle(TitlePosition.Bottom, title))
 
     /**
      * Adds a title to the bottom of the block.
@@ -367,7 +351,7 @@ data class Block(
      * Checks if there is a title at the given position.
      */
     private fun hasTitleAtPosition(position: TitlePosition): Boolean {
-        return titles.any { (pos, _) -> (pos ?: titlesPosition) == position }
+        return titles.any { (it.position ?: titlesPosition) == position }
     }
 
     // Widget implementation
@@ -610,9 +594,9 @@ data class Block(
      */
     private fun filteredTitles(position: TitlePosition, alignment: HorizontalAlignment): Sequence<Line> {
         return titles.asSequence()
-            .filter { (pos, _) -> (pos ?: titlesPosition) == position }
-            .filter { (_, line) -> (line.alignment ?: titlesAlignment) == alignment }
-            .map { (_, line) -> line }
+            .filter { (it.position ?: titlesPosition) == position }
+            .filter { (it.line.alignment ?: titlesAlignment) == alignment }
+            .map { it.line }
     }
 
     /**
@@ -659,7 +643,7 @@ data class Block(
     }
 
     // Styled implementation
-    override fun style(): Style = blockStyle
+    override val style: Style get() = blockStyle
 
     override fun setStyle(style: Style): Block = style(style)
 

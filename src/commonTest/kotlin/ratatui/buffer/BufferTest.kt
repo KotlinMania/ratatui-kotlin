@@ -593,7 +593,7 @@ class BufferTest {
             }
 
             one.merge(two)
-            val skipped = one.content().map { it.diffOption }
+            val skipped = one.content.map { it.diffOption }
             assertEquals(expected, skipped)
         }
 

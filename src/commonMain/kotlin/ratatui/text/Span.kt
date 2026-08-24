@@ -70,7 +70,7 @@ data class Span(
     /** The content of the span. */
     val content: String = "",
     /** The style of the span. */
-    val style: Style = Style.default()
+    override val style: Style = Style.default()
 ) : Styled<Span>, Widget {
 
     /**
@@ -207,8 +207,6 @@ data class Span(
     fun intoRightAlignedLine(): Line = Line.from(this).rightAligned()
 
     // Styled implementation
-    override fun style(): Style = style
-
     override fun setStyle(style: Style): Span = style(style)
 
     // Widget implementation

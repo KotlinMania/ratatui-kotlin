@@ -118,8 +118,7 @@ data class ScrollbarState(
         }
     }
 
-    /** Returns the current position within the scrollable content. */
-    fun position(): Int = position
+
 
     companion object {
         /**

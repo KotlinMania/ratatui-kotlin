@@ -16,7 +16,7 @@ interface Styled<T> {
     /**
      * Returns the style of the object.
      */
-    fun style(): Style
+    val style: Style
 
     /**
      * Sets the style of the object.
@@ -211,22 +211,22 @@ interface Stylize<T> {
  */
 class StylizeImpl<T>(private val styled: Styled<T>) : Stylize<T> {
     override fun bg(color: Color): T {
-        val style = styled.style().bg(color)
+        val style = styled.style.bg(color)
         return styled.setStyle(style)
     }
 
     override fun fg(color: Color): T {
-        val style = styled.style().fg(color)
+        val style = styled.style.fg(color)
         return styled.setStyle(style)
     }
 
     override fun addModifier(modifier: Modifier): T {
-        val style = styled.style().addModifier(modifier)
+        val style = styled.style.addModifier(modifier)
         return styled.setStyle(style)
     }
 
     override fun removeModifier(modifier: Modifier): T {
-        val style = styled.style().removeModifier(modifier)
+        val style = styled.style.removeModifier(modifier)
         return styled.setStyle(style)
     }
 
@@ -242,7 +242,7 @@ fun String.toStyled(): StringStyled = StringStyled(this)
  * Wrapper class to make String implement Styled.
  */
 class StringStyled(private val content: String) : Styled<Span> {
-    override fun style(): Style = Style.default()
+    override val style: Style get() = Style.default()
 
     override fun setStyle(style: Style): Span = Span.styled(content, style)
 }
@@ -562,11 +562,11 @@ fun Text.notHidden(): Text = removeModifier(Modifier.HIDDEN)
 fun Text.notCrossedOut(): Text = removeModifier(Modifier.CROSSED_OUT)
 
 // Extension functions for any Styled type, mirroring the upstream Stylize impl for Styled
-fun <T> Styled<T>.fg(color: Color): T = setStyle(style().fg(color))
-fun <T> Styled<T>.bg(color: Color): T = setStyle(style().bg(color))
+fun <T> Styled<T>.fg(color: Color): T = setStyle(style.fg(color))
+fun <T> Styled<T>.bg(color: Color): T = setStyle(style.bg(color))
 fun <T> Styled<T>.reset(): T = setStyle(Style.reset())
-fun <T> Styled<T>.addModifier(modifier: Modifier): T = setStyle(style().addModifier(modifier))
-fun <T> Styled<T>.removeModifier(modifier: Modifier): T = setStyle(style().removeModifier(modifier))
+fun <T> Styled<T>.addModifier(modifier: Modifier): T = setStyle(style.addModifier(modifier))
+fun <T> Styled<T>.removeModifier(modifier: Modifier): T = setStyle(style.removeModifier(modifier))
 
 // Color shortcuts (foreground)
 fun <T> Styled<T>.black(): T = fg(Color.Black)

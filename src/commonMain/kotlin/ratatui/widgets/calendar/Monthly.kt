@@ -47,7 +47,7 @@ import ratatui.widgets.block.innerIfSome
  *     .block(Block.bordered().title("Calendar"))
  * ```
  */
-data class Monthly<DS : DateStyler>(
+internal data class Monthly<DS : DateStyler>(
     /** The date to display (any day in the target month) */
     val displayDate: LocalDate,
     /** The event styler */
@@ -244,7 +244,7 @@ data class Monthly<DS : DateStyler>(
  * Provides a method for styling a given date. [Monthly] is generic on this interface, so any type
  * that implements this interface can be used.
  */
-interface DateStyler {
+internal interface DateStyler {
     /** Given a date, return a style for that date. */
     fun getStyle(date: LocalDate): Style
 }
@@ -252,7 +252,7 @@ interface DateStyler {
 /**
  * A simple [DateStyler] based on a [MutableMap].
  */
-class CalendarEventStore(
+internal class CalendarEventStore(
     internal val events: MutableMap<LocalDate, Style> = mutableMapOf()
 ) : DateStyler {
     /**

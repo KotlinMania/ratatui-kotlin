@@ -135,16 +135,49 @@ import ratatui.widgets.Widget
  * paragraph.render(area, buf)
  * ```
  */
-data class Text(
+class Text internal constructor(
     /** The style of this text. */
-    val style: Style = Style.default(),
+    override val style: Style,
 
     /** The alignment of this text. */
-    val alignment: HorizontalAlignment? = null,
+    val alignment: HorizontalAlignment?,
+
+    internal val mutableLines: MutableList<Line>
+) : Styled<Text>, Widget, Iterable<Line> {
 
     /** The lines that make up this piece of text. */
-    val lines: MutableList<Line> = mutableListOf()
-) : Styled<Text>, Widget, Iterable<Line> {
+    val lines: List<Line> get() = mutableLines
+
+    /**
+     * Creates a new [Text] with the given lines, style, and alignment.
+     */
+    constructor(
+        lines: List<Line> = emptyList(),
+        style: Style = Style.default(),
+        alignment: HorizontalAlignment? = null
+    ) : this(style, alignment, lines.toMutableList())
+
+    /**
+     * Returns a copy of this [Text] with the specified fields replaced.
+     */
+    fun copy(
+        style: Style = this.style,
+        alignment: HorizontalAlignment? = this.alignment,
+        lines: List<Line> = this.mutableLines
+    ): Text = Text(style, alignment, lines.toMutableList())
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Text) return false
+        return style == other.style && alignment == other.alignment && lines == other.lines
+    }
+
+    override fun hashCode(): Int {
+        var result = style.hashCode()
+        result = 31 * result + (alignment?.hashCode() ?: 0)
+        result = 31 * result + lines.hashCode()
+        return result
+    }
 
     /**
      * Returns the max width of all the lines.
@@ -335,7 +368,7 @@ data class Text(
      *
      * Note: In Kotlin, Text implements [Iterable], so you can iterate directly.
      */
-    override fun iterator(): Iterator<Line> = lines.iterator()
+    override fun iterator(): Iterator<Line> = mutableLines.iterator()
 
     /**
      * Adds a line to the text.
@@ -350,21 +383,21 @@ data class Text(
      * ```
      */
     fun pushLine(line: Line) {
-        lines.add(line)
+        mutableLines.add(line)
     }
 
     /**
      * Adds a line from a Span to the text.
      */
     fun pushLine(span: Span) {
-        lines.add(Line.from(span))
+        mutableLines.add(Line.from(span))
     }
 
     /**
      * Adds a line from a String to the text.
      */
     fun pushLine(content: String) {
-        lines.add(Line.from(content))
+        mutableLines.add(Line.from(content))
     }
 
     /**
@@ -381,11 +414,11 @@ data class Text(
      * ```
      */
     fun pushSpan(span: Span) {
-        val last = lines.lastOrNull()
+        val last = mutableLines.lastOrNull()
         if (last != null) {
             last.pushSpan(span)
         } else {
-            lines.add(Line.from(span))
+            mutableLines.add(Line.from(span))
         }
     }
 
@@ -400,14 +433,14 @@ data class Text(
      * Extends this text with lines from the given iterable.
      */
     fun extend(iter: Iterable<Line>) {
-        lines.addAll(iter)
+        mutableLines.addAll(iter)
     }
 
     /**
      * Extends this text with lines from the given text.
      */
     fun extend(other: Text) {
-        lines.addAll(other.lines)
+        mutableLines.addAll(other.lines)
     }
 
     /**
@@ -421,7 +454,6 @@ data class Text(
     }
 
     // Styled interface implementation
-    override fun style(): Style = style
     override fun setStyle(style: Style): Text = copy(style = style)
 
     // Widget interface implementation
