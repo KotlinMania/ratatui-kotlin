@@ -112,9 +112,10 @@ data class Chart(
     private val datasetsList: List<Dataset> = emptyList(),
     /** The widget base style */
     private val chartStyle: Style = Style.default(),
-    /** Constraints used to determine whether the legend should be shown or not */
-    private val hiddenLegendConstraintsConfig: Pair<Constraint, Constraint> =
-        Pair(Constraint.Ratio(1u, 4u), Constraint.Ratio(1u, 4u)),
+    /** Horizontal constraint used to determine whether the legend should be shown or not */
+    private val hiddenLegendConstraintsHorizontal: Constraint = Constraint.Ratio(1u, 4u),
+    /** Vertical constraint used to determine whether the legend should be shown or not */
+    private val hiddenLegendConstraintsVertical: Constraint = Constraint.Ratio(1u, 4u),
     /** The position determine where the legend is shown or hide regardless of constraints */
     private val legendPositionConfig: LegendPosition? = LegendPosition.default()
 ) : Widget, Styled<Chart> {
@@ -160,18 +161,21 @@ data class Chart(
     /**
      * Sets the constraints used to determine whether the legend should be shown or not.
      *
-     * The tuple first constraint is used for the width and the second for the height. If the
-     * legend takes more space than what is allowed by any constraint, the legend is hidden.
-     * [Constraint.Min] is an exception and will always show the legend.
-     *
-     * If this is not set, the default behavior is to hide the legend if it is greater than 25% of
-     * the chart, either horizontally or vertically.
-     *
-     * @param constraints The width and height constraints
+     * @param horizontal The width constraint
+     * @param vertical The height constraint
      * @return A new Chart with the hidden legend constraints set
      */
-    fun hiddenLegendConstraints(constraints: Pair<Constraint, Constraint>): Chart =
-        copy(hiddenLegendConstraintsConfig = constraints)
+    fun hiddenLegendConstraints(horizontal: Constraint, vertical: Constraint): Chart =
+        copy(
+            hiddenLegendConstraintsHorizontal = horizontal,
+            hiddenLegendConstraintsVertical = vertical
+        )
+
+    /**
+     * Sets the constraints used to determine whether the legend should be shown or not.
+     */
+    internal fun hiddenLegendConstraints(constraints: Pair<Constraint, Constraint>): Chart =
+        hiddenLegendConstraints(constraints.first, constraints.second)
 
     /**
      * Sets the position of a legend or hide it
@@ -247,7 +251,7 @@ data class Chart(
                 val legendHeight = legends.size + 2
 
                 // Simplified constraint check - just check if it fits
-                val maxLegendWidth = when (val c = hiddenLegendConstraintsConfig.first) {
+                val maxLegendWidth = when (val c = hiddenLegendConstraintsHorizontal) {
                     is Constraint.Min -> Int.MAX_VALUE
                     is Constraint.Ratio -> (graphArea.width.toUInt() * c.numerator / c.denominator).toInt()
                     is Constraint.Percentage -> graphArea.width * c.value / 100
@@ -256,7 +260,7 @@ data class Chart(
                     is Constraint.Fill -> graphArea.width
                 }
 
-                val maxLegendHeight = when (val c = hiddenLegendConstraintsConfig.second) {
+                val maxLegendHeight = when (val c = hiddenLegendConstraintsVertical) {
                     is Constraint.Min -> Int.MAX_VALUE
                     is Constraint.Ratio -> (graphArea.height.toUInt() * c.numerator / c.denominator).toInt()
                     is Constraint.Percentage -> graphArea.height * c.value / 100
@@ -422,7 +426,7 @@ data class Chart(
         }
 
         // Render datasets using Canvas
-        Canvas<(ratatui.widgets.canvas.Context) -> Unit>()
+        Canvas()
             .backgroundColor(chartStyle.bg ?: Color.Reset)
             .xBounds(xAxisConfig.axisBounds)
             .yBounds(yAxisConfig.axisBounds)
@@ -506,7 +510,7 @@ data class Chart(
     }
 
     // Styled implementation
-    override fun style(): Style = chartStyle
+    override val style: Style get() = chartStyle
 
     override fun setStyle(style: Style): Chart = style(style)
 

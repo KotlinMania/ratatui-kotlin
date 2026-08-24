@@ -110,7 +110,7 @@ class BufferDiff private constructor(
                 else -> {
                     // Skip diffing when the deprecated skip field is set (and diff option is None).
                     if (isSkip(current)) {
-                        Unit
+                        continue
                     } else if (option is CellDiffOption.ForcedWidth) {
                         pos += (option.width.get().toInt() - 1).coerceAtLeast(0)
                         if (current != previous) {

@@ -711,8 +711,7 @@ mavenPublishing {
 tasks.register("test") {
     group = "verification"
     description = "Runs the commonTest-backed KMP suite, Android host tests, and Swift Export smoke test."
-    dependsOn("allTests")
-    dependsOn("testAndroidHostTest")
+    dependsOn("hostTests")
     dependsOn("swiftExportSmokeTest")
 }
 
@@ -806,7 +805,7 @@ tasks.register("swiftExportSmokeTest") {
         execOperations
             .exec {
                 workingDir = layout.projectDirectory.dir("swift-test-harness").asFile
-                commandLine("swift", "test")
+                commandLine("swift", "run", "SwiftTestHarnessTests")
             }.assertNormalExitValue()
     }
 }

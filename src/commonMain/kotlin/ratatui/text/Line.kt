@@ -110,16 +110,36 @@ import ratatui.widgets.Widget
  * line.render(area, buf)
  * ```
  */
-data class Line(
+class Line internal constructor(
     /** The style of this line of text. */
-    val style: Style = Style.default(),
+    override val style: Style,
 
     /** The alignment of this line of text. */
-    val alignment: HorizontalAlignment? = null,
+    val alignment: HorizontalAlignment?,
+
+    internal val mutableSpans: MutableList<Span>
+) : Styled<Line>, Widget, Iterable<Span> {
 
     /** The spans that make up this line of text. */
-    val spans: MutableList<Span> = mutableListOf()
-) : Styled<Line>, Widget, Iterable<Span> {
+    val spans: List<Span> get() = mutableSpans
+
+    /**
+     * Creates a new [Line] with the given spans, style, and alignment.
+     */
+    constructor(
+        spans: List<Span> = emptyList(),
+        style: Style = Style.default(),
+        alignment: HorizontalAlignment? = null
+    ) : this(style, alignment, spans.toMutableList())
+
+    /**
+     * Returns a copy of this [Line] with the specified fields replaced.
+     */
+    fun copy(
+        style: Style = this.style,
+        alignment: HorizontalAlignment? = this.alignment,
+        spans: List<Span> = this.mutableSpans
+    ): Line = Line(style, alignment, spans.toMutableList())
 
     /**
      * Sets the spans of this line of text.
@@ -133,7 +153,7 @@ data class Line(
      * val line = Line.default().spans(listOf("Hello".blue(), " world!".green()))
      * ```
      */
-    fun spans(spans: List<Span>): Line = copy(spans = spans.toMutableList())
+    fun spans(spans: List<Span>): Line = copy(spans = spans)
 
     /**
      * Sets the style of this line of text.
@@ -307,22 +327,20 @@ data class Line(
      * ```
      */
     fun pushSpan(span: Span) {
-        spans.add(span)
+        mutableSpans.add(span)
     }
 
     /**
      * Adds a span to the line from a string.
      */
     fun pushSpan(content: String) {
-        spans.add(Span.raw(content))
+        mutableSpans.add(Span.raw(content))
     }
 
     // Iterable implementation
-    override fun iterator(): Iterator<Span> = spans.iterator()
+    override fun iterator(): Iterator<Span> = mutableSpans.iterator()
 
     // Styled implementation
-    override fun style(): Style = style
-
     override fun setStyle(style: Style): Line = style(style)
 
     // Widget implementation
@@ -392,6 +410,19 @@ data class Line(
      * Operator + to combine two Lines into a Text.
      */
     operator fun plus(other: Line): Text = Text.from(listOf(this, other))
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Line) return false
+        return style == other.style && alignment == other.alignment && spans == other.spans
+    }
+
+    override fun hashCode(): Int {
+        var result = style.hashCode()
+        result = 31 * result + (alignment?.hashCode() ?: 0)
+        result = 31 * result + spans.hashCode()
+        return result
+    }
 
     companion object {
         /**

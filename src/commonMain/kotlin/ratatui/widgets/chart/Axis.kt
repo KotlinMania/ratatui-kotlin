@@ -142,7 +142,7 @@ data class Axis(
     fun labelsAlignment(alignment: HorizontalAlignment): Axis = copy(labelsAlign = alignment)
 
     // Styled implementation
-    override fun style(): Style = axisStyle
+    override val style: Style get() = axisStyle
 
     override fun setStyle(style: Style): Axis = style(style)
 

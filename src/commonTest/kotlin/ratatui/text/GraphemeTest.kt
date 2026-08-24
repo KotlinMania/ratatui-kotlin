@@ -21,7 +21,7 @@ class GraphemeTest {
     fun style() {
         val style = Style.new().yellow()
         val sg = StyledGrapheme.new("a", style)
-        assertEquals(style, sg.style())
+        assertEquals(style, sg.style)
     }
 
     @Test

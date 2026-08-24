@@ -42,12 +42,13 @@ import ratatui.text.graphemes
  * check(r.symbol() == "r")
  * ```
  */
-data class Buffer(
+class Buffer internal constructor(
     /** The area represented by this buffer */
     var area: Rect,
-    /** The content of the buffer */
-    val content: MutableList<Cell>
+    internal val mutableContent: MutableList<Cell>
 ) {
+    /** The content of the buffer */
+    val content: List<Cell> get() = mutableContent
     companion object {
         /** Returns a Buffer with all cells set to the default one */
         fun empty(area: Rect): Buffer {
@@ -78,11 +79,7 @@ data class Buffer(
         }
     }
 
-    /** Returns the content of the buffer as a list */
-    fun content(): List<Cell> = content
 
-    /** Returns the area covered by this buffer */
-    fun area(): Rect = area
 
     /**
      * Returns a reference to the [Cell] at the given coordinates.
@@ -295,17 +292,17 @@ data class Buffer(
     /** Resize the buffer */
     fun resize(area: Rect) {
         val length = area.area().toInt()
-        if (content.size > length) {
-            while (content.size > length) content.removeLast()
+        if (mutableContent.size > length) {
+            while (mutableContent.size > length) mutableContent.removeLast()
         } else {
-            while (content.size < length) content.add(Cell.EMPTY)
+            while (mutableContent.size < length) mutableContent.add(Cell.EMPTY)
         }
         this.area = area
     }
 
     /** Reset all cells in the buffer */
     fun reset() {
-        for (cell in content) {
+        for (cell in mutableContent) {
             cell.reset()
         }
     }
@@ -315,8 +312,8 @@ data class Buffer(
         val newArea = this.area.union(other.area)
 
         val newLength = newArea.area().toInt()
-        while (content.size < newLength) content.add(Cell.EMPTY)
-        while (content.size > newLength) content.removeLast()
+        while (mutableContent.size < newLength) mutableContent.add(Cell.EMPTY)
+        while (mutableContent.size > newLength) mutableContent.removeLast()
 
         // Move original content to the appropriate space.
         val size = this.area.area().toInt()
@@ -324,8 +321,8 @@ data class Buffer(
             val (x, y) = posOf(i)
             val k = ((y - newArea.y) * newArea.width + (x - newArea.x))
             if (i != k) {
-                content[k] = content[i].clone()
-                content[i].reset()
+                mutableContent[k] = mutableContent[i].clone()
+                mutableContent[i].reset()
             }
         }
 
@@ -334,7 +331,7 @@ data class Buffer(
         for (i in 0 until otherSize) {
             val (x, y) = other.posOf(i)
             val k = ((y - newArea.y) * newArea.width + (x - newArea.x))
-            content[k] = other.content[i].clone()
+            mutableContent[k] = other.content[i].clone()
         }
 
         this.area = newArea

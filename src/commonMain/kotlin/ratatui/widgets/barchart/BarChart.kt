@@ -77,7 +77,7 @@ data class BarChart(
     /** Style for the widget */
     private val chartStyle: Style = Style.default(),
     /** Vector of groups containing bars */
-    private val data: MutableList<BarGroup> = mutableListOf(),
+    private val data: List<BarGroup> = emptyList(),
     /** Value necessary for a bar to reach the maximum height */
     private val max: Long? = null,
     /** Direction of the bars */
@@ -89,9 +89,7 @@ data class BarChart(
      */
     fun data(group: BarGroup): BarChart {
         if (group.bars.isNotEmpty()) {
-            val newData = data.toMutableList()
-            newData.add(group)
-            return copy(data = newData)
+            return copy(data = data + group)
         }
         return this
     }
@@ -414,7 +412,7 @@ data class BarChart(
     }
 
     // Styled implementation
-    override fun style(): Style = chartStyle
+    override val style: Style get() = chartStyle
 
     override fun setStyle(style: Style): BarChart = style(style)
 
@@ -441,7 +439,7 @@ data class BarChart(
          * Creates a new BarChart widget with a horizontal direction.
          */
         fun horizontal(bars: List<Bar>): BarChart = BarChart(
-            data = mutableListOf(BarGroup.new(bars)),
+            data = listOf(BarGroup.new(bars)),
             direction = Direction.Horizontal
         )
 
@@ -449,7 +447,7 @@ data class BarChart(
          * Creates a new BarChart widget with a group of bars.
          */
         fun grouped(groups: List<BarGroup>): BarChart = BarChart(
-            data = groups.toMutableList()
+            data = groups
         )
 
         /**

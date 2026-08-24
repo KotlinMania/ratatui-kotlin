@@ -9,7 +9,7 @@ import ratatui.text.graphemes
 /**
  * A line that has been wrapped to a certain width.
  */
-data class WrappedLine(
+internal data class WrappedLine(
     /** One line reflowed to the correct width */
     val graphemes: List<StyledGrapheme>,
     /** The width of the line */
@@ -21,7 +21,7 @@ data class WrappedLine(
 /**
  * A state machine to pack styled symbols into lines.
  */
-interface LineComposer {
+internal interface LineComposer {
     /**
      * Get the next wrapped line, or null if there are no more lines.
      */
@@ -35,7 +35,7 @@ interface LineComposer {
  * @param maxLineWidth Maximum width of each wrapped line
  * @param trim Whether to remove leading whitespace from lines
  */
-class WordWrapper(
+internal class WordWrapper(
     private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
     private val maxLineWidth: Int,
     private val trim: Boolean
@@ -231,7 +231,7 @@ class WordWrapper(
  * @param inputLines Iterator providing (line graphemes, alignment) pairs
  * @param maxLineWidth Maximum width of each line
  */
-class LineTruncator(
+internal class LineTruncator(
     private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
     private val maxLineWidth: Int
 ) : LineComposer {
