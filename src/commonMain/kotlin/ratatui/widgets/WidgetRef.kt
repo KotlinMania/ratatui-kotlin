@@ -1,4 +1,4 @@
-// port-lint: source ratatui/src/widgets/widgetRef.rs
+// port-lint: source widgets/widget_ref.rs
 package ratatui.widgets
 
 import ratatui.buffer.Buffer
