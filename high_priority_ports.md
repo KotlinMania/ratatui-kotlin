@@ -10,12 +10,11 @@ This list is complete and includes function/type detail for every matched file. 
 
 | Rank | Source | Target | Function similarity | Deps | Functions | Missing functions | Types | Missing types | SymDeficit | SrcSymbols | Priority |
 |------|--------|--------|------------|------|-----------|-------------------|-------|---------------|-----------|------------|----------|
-| 1 | `widgets.widget_ref` | `widgets.WidgetRef [PROVENANCE-FALLBACK]` | 0.16 | 0 | 1/11 matched (target 6) | `buf`, `render`, `render_ref_box`, `render_ref_box_vec`, `render_ref_some`, `render_ref_none`, `render_ref_str`, `render_ref_option_str`, `render_ref_string`, `render_ref_option_string` | 1/3 matched (target 1) | `Greeting`, `Farewell` | 12 | 14 | 121408.4 |
-| 2 | `widgets.stateful_widget_ref` | `widgets.StatefulWidgetRef [PROVENANCE-FALLBACK]` | 0.09 | 0 | 1/7 matched (target 2) | `buf`, `state`, `render`, `box_render_ref`, `render_stateful_widget_ref_with_unsized_state`, `render_stateful_widget_with_unsized_state` | 1/4 matched (target 1) | `State`, `PersonalGreeting`, `Bytes` | 9 | 11 | 91109.1 |
+| 1 | `buffer` | `Buffer [ZERO] [PROVENANCE-FALLBACK]` | 0.00 | 0 | 22/63 matched (target 38) | `content`, `area`, `fmt`, `debug_empty_buffer`, `debug_grapheme_override`, `debug_some_example`, `it_translates_to_and_from_coordinates`, `pos_of_panics_on_out_of_bounds`, `index_of_panics_on_out_of_bounds`, `test_cell`, `test_cell_mut`, `index_out_of_bounds_panics`, `index_mut_out_of_bounds_panics`, `set_string_multi_width_overwrite`, `set_string_zero_width`, `set_string_double_width`, `small_one_line_buffer`, `set_line_raw`, `set_line_styled`, `set_style_does_not_panic_when_out_of_area`, `diff_empty_empty`, `diff_empty_filled`, `diff_filled_filled`, `diff_single_width`, `diff_multi_width`, `diff_multi_width_offset`, `merge_diff_idempotent`, `merge_diff_forcedwidth`, `merge_diff_link`, `merge_diff_split_link`, `merge_diff_image_sequences`, `diff_skip`, `merge_with_offset`, `merge_skip`, `with_lines_accepts_into_lines`, `control_sequence_rendered_full`, `control_sequence_rendered_partially`, `renders_emoji`, `index_pos_of_u16_max`, `diff_clears_trailing_cell_for_wide_grapheme`, `diff_ignores_style_only_changes_in_trailing_cells` | 1/2 matched (target 3) | `Output` | 42 | 65 | 426510.0 |
 
 ## Cheat Detection / Scoring Failures
 
-_None detected._
+- `buffer` -> `Buffer [ZERO] [PROVENANCE-FALLBACK]`: function-by-function score forced to 0. Buffer.kt: score-padding suppression annotation `@Suppress` in Kotlin code
 
 ## Critical Issues (Function Similarity < 0.60 with Dependencies)
 
@@ -23,22 +22,5 @@ No critical issues with dependencies.
 
 ## Missing Files (by Dependents)
 
-| Rank | Source file | Expected target | Deps | Functions | Classes/types | Symbols | Source path | Expected path |
-|------|-------------|-----------------|------|-----------|---------------|---------|-------------|---------------|
-| 1 | `init` | `Init` | 0 | 8 | 1 | 9 | `init.rs` | `Init.kt` |
-| 2 | `prelude` | `Prelude` | 0 | 0 | 0 | 0 | `prelude.rs` | `Prelude.kt` |
-| 3 | `widgets` | `widgets.Widgets` | 0 | 2 | 1 | 3 | `widgets.rs` | `widgets/Widgets.kt` |
-
-## Reexport / Wiring Modules
-
-These files match `reexport_modules` patterns in `.ast_distance_config.json`. They are filtered out of
-normal priority and missing-file ladders because they are wiring
-modules, not direct logic ports. Consult them for call-site routing;
-do not treat them as the next implementation target by default.
-
-### Missing
-
-| Source | Expected target | Deps | Source path | Expected path |
-|--------|-----------------|------|-------------|---------------|
-| `lib` | `Lib` | 0 | `lib.rs` | `Lib.kt` |
+No missing files detected.
 
