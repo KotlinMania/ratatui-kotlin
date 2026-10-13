@@ -15,7 +15,7 @@ import ratatui.layout.Rect
 class BufferDiff private constructor(
     private val next: List<Cell>,
     private val prev: List<Cell>,
-    private val area: Rect
+    private val area: Rect,
 ) : Iterator<BufferDiff.Item> {
     /**
      * Transliteration of the upstream iterator item: `(x, y, &Cell)`.
@@ -25,7 +25,7 @@ class BufferDiff private constructor(
     data class Item(
         val x: Int,
         val y: Int,
-        val cell: Cell
+        val cell: Cell,
     )
 
     private var pos: Int = 0
@@ -35,7 +35,7 @@ class BufferDiff private constructor(
 
     private data class TrailingState(
         var nextIndex: Int,
-        val end: Int
+        val end: Int,
     )
 
     companion object {

@@ -9,7 +9,8 @@ enum class RenderDirection {
     /** The first value is on the left, going to the right */
     LeftToRight,
     /** The first value is on the right, going to the left */
-    RightToLeft;
+    RightToLeft,
+    ;
 
     /**
      * Returns the string representation of this direction.

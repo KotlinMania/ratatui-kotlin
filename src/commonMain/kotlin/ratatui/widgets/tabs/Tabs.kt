@@ -51,9 +51,9 @@ data class Tabs(
     /** Tab left padding */
     private val paddingLeft: Line = Line.from(" "),
     /** Tab right padding */
-    private val paddingRight: Line = Line.from(" ")
-) : Widget, Styled<Tabs> {
-
+    private val paddingRight: Line = Line.from(" "),
+) : Widget,
+    Styled<Tabs> {
     /**
      * Sets the titles of the tabs.
      */

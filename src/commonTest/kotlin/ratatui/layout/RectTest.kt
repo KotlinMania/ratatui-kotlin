@@ -16,7 +16,7 @@ class RectTest {
      * A minimal widget that fills its entire area with the given symbol.
      */
     private class Filled(
-        private val symbol: String
+        private val symbol: String,
     ) : Widget {
         override fun render(area: Rect, buf: Buffer) {
             for (y in area.top() until area.bottom()) {

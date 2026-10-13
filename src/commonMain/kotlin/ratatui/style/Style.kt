@@ -84,8 +84,9 @@ package ratatui.style
  * Value class wrapper for modifier bit flags.
  * The wrapper keeps modifier flags type-safe while preserving a clean API.
  */
-data class Modifier(val bits: UShort) {
-
+data class Modifier(
+    val bits: UShort,
+) {
     /** Check if the modifier is empty (no flags set) */
     fun isEmpty(): Boolean = bits == 0.toUShort()
 
@@ -277,9 +278,8 @@ data class Style(
     /** The modifiers to add. */
     val addModifier: Modifier = Modifier.empty(),
     /** The modifiers to remove. */
-    val subModifier: Modifier = Modifier.empty()
+    val subModifier: Modifier = Modifier.empty(),
 ) {
-
     /**
      * Returns a copy with the foreground color changed.
      *

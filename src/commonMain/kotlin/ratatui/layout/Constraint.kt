@@ -60,13 +60,14 @@ package ratatui.layout
  * A constraint that defines the size of a layout element.
  */
 sealed class Constraint {
-
     /**
      * Applies a minimum size constraint to the element.
      *
      * The element size is set to at least the specified amount.
      */
-    data class Min(val value: Int) : Constraint() {
+    data class Min(
+        val value: Int,
+    ) : Constraint() {
         override fun toString(): String = "Min($value)"
     }
 
@@ -75,7 +76,9 @@ sealed class Constraint {
      *
      * The element size is set to at most the specified amount.
      */
-    data class Max(val value: Int) : Constraint() {
+    data class Max(
+        val value: Int,
+    ) : Constraint() {
         override fun toString(): String = "Max($value)"
     }
 
@@ -84,7 +87,9 @@ sealed class Constraint {
      *
      * The element size is set to the specified amount.
      */
-    data class Length(val value: Int) : Constraint() {
+    data class Length(
+        val value: Int,
+    ) : Constraint() {
         override fun toString(): String = "Length($value)"
     }
 
@@ -97,7 +102,9 @@ sealed class Constraint {
      * Note: Certain percentages that cannot be represented exactly (e.g. 1/3) are not possible.
      * You might want to use [Constraint.Ratio] or [Constraint.Fill] in such cases.
      */
-    data class Percentage(val value: Int) : Constraint() {
+    data class Percentage(
+        val value: Int,
+    ) : Constraint() {
         override fun toString(): String = "Percentage($value)"
     }
 
@@ -107,7 +114,10 @@ sealed class Constraint {
      * Converts the given ratio to a floating-point value and multiplies that with area.
      * This value is rounded back to an integer as part of the layout split calculation.
      */
-    data class Ratio(val numerator: UInt, val denominator: UInt) : Constraint() {
+    data class Ratio(
+        val numerator: UInt,
+        val denominator: UInt,
+    ) : Constraint() {
         override fun toString(): String = "Ratio($numerator, $denominator)"
     }
 
@@ -118,7 +128,9 @@ sealed class Constraint {
      * The element will only expand or fill into excess available space, proportionally matching
      * other [Constraint.Fill] elements while satisfying all other constraints.
      */
-    data class Fill(val value: Int) : Constraint() {
+    data class Fill(
+        val value: Int,
+    ) : Constraint() {
         override fun toString(): String = "Fill($value)"
     }
 

@@ -2,7 +2,6 @@
 package ratatui.symbols.border
 
 import ratatui.symbols.block.Block
-import ratatui.symbols.line.Line
 import ratatui.symbols.line.NORMAL as LINE_NORMAL
 import ratatui.symbols.line.ROUNDED as LINE_ROUNDED
 import ratatui.symbols.line.DOUBLE as LINE_DOUBLE
@@ -25,7 +24,7 @@ data class Set(
     val verticalLeft: String,
     val verticalRight: String,
     val horizontalTop: String,
-    val horizontalBottom: String
+    val horizontalBottom: String,
 ) {
     companion object {
         /**

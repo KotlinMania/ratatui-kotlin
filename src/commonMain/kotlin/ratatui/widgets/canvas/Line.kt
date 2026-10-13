@@ -18,16 +18,14 @@ data class Line(
     val y1: Double = 0.0,
     val x2: Double = 0.0,
     val y2: Double = 0.0,
-    val color: Color = Color.Reset
+    val color: Color = Color.Reset,
 ) : Shape {
-
     override fun draw(painter: Painter) {
         val (xBounds, yBounds) = painter.bounds()
         val clipped = clipLine(xBounds, yBounds, x1, y1, x2, y2) ?: return
 
-        val (worldX1, worldY1, worldX2, worldY2) = clipped
-        val p1 = painter.getPoint(worldX1, worldY1) ?: return
-        val p2 = painter.getPoint(worldX2, worldY2) ?: return
+        val p1 = painter.getPoint(clipped.x1, clipped.y1) ?: return
+        val p2 = painter.getPoint(clipped.x2, clipped.y2) ?: return
 
         val (px1, py1) = p1
         val (px2, py2) = p2
@@ -83,7 +81,12 @@ data class Line(
 /**
  * Result of line clipping.
  */
-private data class ClippedLine(val x1: Double, val y1: Double, val x2: Double, val y2: Double)
+private data class ClippedLine(
+    val x1: Double,
+    val y1: Double,
+    val x2: Double,
+    val y2: Double,
+)
 
 /**
  * Cohen-Sutherland line clipping algorithm.
@@ -95,7 +98,7 @@ private fun clipLine(
     x1: Double,
     y1: Double,
     x2: Double,
-    y2: Double
+    y2: Double,
 ): ClippedLine? {
     val xMin = xBounds[0]
     val xMax = xBounds[1]
@@ -164,10 +167,16 @@ private const val TOP = 8
 
 private fun computeOutCode(x: Double, y: Double, xMin: Double, xMax: Double, yMin: Double, yMax: Double): Int {
     var code = INSIDE
-    if (x < xMin) code = code or LEFT
-    else if (x > xMax) code = code or RIGHT
-    if (y < yMin) code = code or BOTTOM
-    else if (y > yMax) code = code or TOP
+    if (x < xMin) {
+        code = code or LEFT
+    } else if (x > xMax) {
+        code = code or RIGHT
+    }
+    if (y < yMin) {
+        code = code or BOTTOM
+    } else if (y > yMax) {
+        code = code or TOP
+    }
     return code
 }
 

@@ -51,7 +51,7 @@ data class AccentedPalette(
     val a100: Color,
     val a200: Color,
     val a400: Color,
-    val a700: Color
+    val a700: Color,
 ) {
     companion object {
         /**
@@ -97,7 +97,7 @@ data class NonAccentedPalette(
     val c600: Color,
     val c700: Color,
     val c800: Color,
-    val c900: Color
+    val c900: Color,
 ) {
     companion object {
         /**

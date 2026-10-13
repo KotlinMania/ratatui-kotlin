@@ -20,7 +20,9 @@ enum class GraphType {
     /**
      * Draw a bar chart. This will draw a bar for each point in the dataset.
      */
-    Bar;
+    Bar,
+
+    ;
 
     /**
      * Returns the string representation of this graph type.

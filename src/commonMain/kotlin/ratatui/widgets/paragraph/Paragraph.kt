@@ -9,7 +9,6 @@ import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.text.Line
-import ratatui.text.StyledGrapheme
 import ratatui.text.Text
 import ratatui.widgets.Widget
 import ratatui.widgets.block.Block
@@ -48,7 +47,7 @@ import ratatui.widgets.reflow.WrappedLine
  */
 data class Wrap(
     /** Should leading whitespace be trimmed */
-    val trim: Boolean = false
+    val trim: Boolean = false,
 )
 
 /**
@@ -109,9 +108,9 @@ data class Paragraph(
     /** Scroll offset (y, x) */
     private val scroll: Position = Position.ORIGIN,
     /** Alignment of the text */
-    private val alignment: HorizontalAlignment = HorizontalAlignment.Left
-) : Widget, Styled<Paragraph> {
-
+    private val alignment: HorizontalAlignment = HorizontalAlignment.Left,
+) : Widget,
+    Styled<Paragraph> {
     /**
      * Surrounds the Paragraph widget with a [Block].
      *

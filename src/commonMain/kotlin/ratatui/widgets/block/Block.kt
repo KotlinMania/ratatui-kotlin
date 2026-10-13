@@ -34,7 +34,7 @@ enum class TitlePosition {
     /** Position the title at the top of the block. */
     Top,
     /** Position the title at the bottom of the block. */
-    Bottom
+    Bottom,
 }
 
 /**
@@ -115,7 +115,7 @@ enum class TitlePosition {
  */
 data class BlockTitle(
     val position: TitlePosition? = null,
-    val line: Line = Line()
+    val line: Line = Line(),
 )
 
 data class Block(
@@ -138,9 +138,9 @@ data class Block(
     /** Block padding */
     private val blockPadding: Padding = Padding.ZERO,
     /** Border merging strategy */
-    private val mergeBordersStrategy: MergeStrategy = MergeStrategy.Replace
-) : Widget, Styled<Block> {
-
+    private val mergeBordersStrategy: MergeStrategy = MergeStrategy.Replace,
+) : Widget,
+    Styled<Block> {
     /**
      * Adds a title to the block using the default position.
      *
@@ -424,7 +424,12 @@ data class Block(
     }
 
     private fun renderCorners(area: Rect, buf: Buffer) {
-        data class Corner(val border: Borders, val x: Int, val y: Int, val symbol: String)
+        data class Corner(
+            val border: Borders,
+            val x: Int,
+            val y: Int,
+            val symbol: String,
+        )
 
         val corners = listOf(
             Corner(Borders.RIGHT or Borders.BOTTOM, area.right() - 1, area.bottom() - 1, borderSet.bottomRight),
@@ -507,7 +512,7 @@ data class Block(
         titles: List<Line>,
         totalWidth: Int,
         area: Rect,
-        buf: Buffer
+        buf: Buffer,
     ) {
         // titles fit in the area, center them
         val x = area.left() + (area.width - totalWidth) / 2
@@ -530,7 +535,7 @@ data class Block(
         titles: List<Line>,
         totalWidth: Int,
         area: Rect,
-        buf: Buffer
+        buf: Buffer,
     ) {
         var currentArea = area
         // titles do not fit in the area, truncate the left side using an offset

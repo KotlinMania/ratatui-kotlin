@@ -12,7 +12,7 @@ import ratatui.symbols.merge.MergeStrategy
  * This mirrors the upstream `core::num::NonZeroU16`.
  */
 class NonZeroUShort private constructor(
-    private val value: UShort
+    private val value: UShort,
 ) {
     fun get(): UShort = value
 
@@ -42,7 +42,9 @@ sealed class CellDiffOption {
      *
      * Escape sequences can have a computed width that does not match what is written to the screen.
      */
-    data class ForcedWidth(val width: NonZeroUShort) : CellDiffOption()
+    data class ForcedWidth(
+        val width: NonZeroUShort,
+    ) : CellDiffOption()
 }
 
 /**
@@ -57,7 +59,7 @@ class Cell private constructor(
     var underlineColor: Color,
     var modifier: Modifier,
     var diffOption: CellDiffOption,
-    private var skipValue: Boolean
+    private var skipValue: Boolean,
 ) : CellWidth {
     @Deprecated("use setDiffOption(CellDiffOption.Skip) instead")
     var skip: Boolean

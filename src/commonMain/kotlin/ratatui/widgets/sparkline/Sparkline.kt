@@ -74,9 +74,9 @@ data class Sparkline(
     /** A set of bar symbols used to represent the given data */
     private val barSetSymbols: BarSet = NINE_LEVELS,
     /** The direction to render the sparkline */
-    private val renderDirection: RenderDirection = RenderDirection.LeftToRight
-) : Widget, Styled<Sparkline> {
-
+    private val renderDirection: RenderDirection = RenderDirection.LeftToRight,
+) : Widget,
+    Styled<Sparkline> {
     /**
      * Wraps the sparkline with the given [block].
      *

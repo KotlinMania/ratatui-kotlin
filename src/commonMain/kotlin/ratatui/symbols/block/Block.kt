@@ -28,7 +28,7 @@ data class Set(
     val threeEighths: String,
     val oneQuarter: String,
     val oneEighth: String,
-    val empty: String
+    val empty: String,
 ) {
     companion object {
         /**

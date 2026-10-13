@@ -14,7 +14,6 @@ import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 class TestBackendTest {
-
     @Test
     fun testNew() {
         val backend = TestBackend.new(10, 2)

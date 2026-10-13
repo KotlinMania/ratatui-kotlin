@@ -234,10 +234,12 @@ class ParagraphTest {
             )
         )
 
-        val paragraphWithCenteredLine = Paragraph.new(listOf(
-            Line.from("This is always centered.").alignment(HorizontalAlignment.Center),
-            Line.from(SAMPLE_STRING),
-        ))
+        val paragraphWithCenteredLine = Paragraph.new(
+            listOf(
+                Line.from("This is always centered.").alignment(HorizontalAlignment.Center),
+                Line.from(SAMPLE_STRING),
+            )
+        )
             .block(block)
             .wrap(Wrap(trim = true))
 

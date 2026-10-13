@@ -16,7 +16,6 @@ import kotlin.test.assertEquals
  * - ColorDebug produces correct debug output
  */
 class StylizeTest {
-
     /**
      * Tests that string slices properly implement the Stylize extension functions.
      */

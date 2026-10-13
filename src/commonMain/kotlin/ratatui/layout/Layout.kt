@@ -29,9 +29,13 @@ import kasuari.WeightedRelation
  */
 sealed class Spacing {
     /** Positive spacing between segments */
-    data class Space(val value: Int) : Spacing()
+    data class Space(
+        val value: Int,
+    ) : Spacing()
     /** Negative spacing (overlap) between segments */
-    data class Overlap(val value: Int) : Spacing()
+    data class Overlap(
+        val value: Int,
+    ) : Spacing()
 
     companion object {
         fun default(): Spacing = Space(0)
@@ -74,7 +78,7 @@ data class Layout(
     private val constraints: List<Constraint> = emptyList(),
     private val margin: Margin = Margin.default(),
     private val flex: Flex = Flex.Start,
-    private val spacing: Spacing = Spacing.default()
+    private val spacing: Spacing = Spacing.default(),
 ) {
     companion object {
         // Multiplier that decides floating point precision when rounding.
@@ -248,7 +252,7 @@ data class Layout(
         solver: Solver,
         area: Element,
         areaStart: Double,
-        areaEnd: Double
+        areaEnd: Double,
     ) {
         solver.addConstraint(eq(exprFromVariable(area.start), Strength.REQUIRED, areaStart))
         solver.addConstraint(eq(exprFromVariable(area.end), Strength.REQUIRED, areaEnd))
@@ -257,7 +261,7 @@ data class Layout(
     private fun configureVariableInAreaConstraints(
         solver: Solver,
         variables: List<Variable>,
-        area: Element
+        area: Element,
     ) {
         // All variables are in the range [area.start, area.end]
         for (variable in variables) {
@@ -268,7 +272,7 @@ data class Layout(
 
     private fun configureVariableConstraints(
         solver: Solver,
-        variables: List<Variable>
+        variables: List<Variable>,
     ) {
         // Ensure variables are in order (left <= right for each pair)
         for (i in 1 until variables.size step 2) {
@@ -286,7 +290,7 @@ data class Layout(
         area: Element,
         segments: List<Element>,
         constraints: List<Constraint>,
-        flex: Flex
+        flex: Flex,
     ) {
         for ((constraint, segment) in constraints.zip(segments)) {
             when (constraint) {
@@ -328,7 +332,7 @@ data class Layout(
         area: Element,
         spacers: List<Element>,
         flex: Flex,
-        spacing: Int
+        spacing: Int,
     ) {
         val spacersExceptFirstAndLast = if (spacers.size > 2) {
             spacers.subList(1, spacers.size - 1)
@@ -465,7 +469,7 @@ data class Layout(
         solver: Solver,
         segments: List<Element>,
         constraints: List<Constraint>,
-        flex: Flex
+        flex: Flex,
     ) {
         val fillSegments = constraints.zip(segments).filter { (c, _) ->
             c is Constraint.Fill || (!flex.isLegacy() && c is Constraint.Min)
@@ -502,7 +506,7 @@ data class Layout(
         changes: Map<Variable, Double>,
         elements: List<Element>,
         area: Rect,
-        direction: Direction
+        direction: Direction,
     ): List<Rect> {
         return elements.map { element ->
             val start = changes[element.start] ?: 0.0
@@ -533,7 +537,7 @@ data class Layout(
      */
     private data class Element(
         val start: Variable,
-        val end: Variable
+        val end: Variable,
     ) {
         fun size(): Expression =
             Expression.fromTerms(

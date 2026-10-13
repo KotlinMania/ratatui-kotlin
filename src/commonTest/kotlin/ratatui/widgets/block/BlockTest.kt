@@ -181,86 +181,133 @@ class BlockTest {
 
     @Test
     fun widgetsBlockTitleAlignmentTop() {
-        data class Case(val alignment: HorizontalAlignment, val borders: Borders, val expected: List<String>)
+        data class Case(
+            val alignment: HorizontalAlignment,
+            val borders: Borders,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
-            Case(HorizontalAlignment.Left, Borders.ALL, listOf(
-                " ┌Title──────┐ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(HorizontalAlignment.Left, Borders.LEFT or Borders.BOTTOM or Borders.RIGHT, listOf(
-                " │Title      │ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(HorizontalAlignment.Left, Borders.TOP or Borders.RIGHT or Borders.BOTTOM, listOf(
-                " Title───────┐ ",
-                "             │ ",
-                " ────────────┘ ",
-            )),
-            Case(HorizontalAlignment.Left, Borders.LEFT or Borders.TOP or Borders.BOTTOM, listOf(
-                " ┌Title─────── ",
-                " │             ",
-                " └──────────── ",
-            )),
-            Case(HorizontalAlignment.Left, Borders.NONE, listOf(
-                " Title         ",
-                "               ",
-                "               ",
-            )),
-
-            Case(HorizontalAlignment.Center, Borders.ALL, listOf(
-                " ┌───Title───┐ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(HorizontalAlignment.Center, Borders.LEFT or Borders.BOTTOM or Borders.RIGHT, listOf(
-                " │   Title   │ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(HorizontalAlignment.Center, Borders.TOP or Borders.RIGHT or Borders.BOTTOM, listOf(
-                " ───Title────┐ ",
-                "             │ ",
-                " ────────────┘ ",
-            )),
-            Case(HorizontalAlignment.Center, Borders.LEFT or Borders.TOP or Borders.BOTTOM, listOf(
-                " ┌───Title──── ",
-                " │             ",
-                " └──────────── ",
-            )),
-            Case(HorizontalAlignment.Center, Borders.NONE, listOf(
-                "     Title     ",
-                "               ",
-                "               ",
-            )),
-
-            Case(HorizontalAlignment.Right, Borders.ALL, listOf(
-                " ┌──────Title┐ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(HorizontalAlignment.Right, Borders.LEFT or Borders.BOTTOM or Borders.RIGHT, listOf(
-                " │      Title│ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(HorizontalAlignment.Right, Borders.TOP or Borders.RIGHT or Borders.BOTTOM, listOf(
-                " ───────Title┐ ",
-                "             │ ",
-                " ────────────┘ ",
-            )),
-            Case(HorizontalAlignment.Right, Borders.LEFT or Borders.TOP or Borders.BOTTOM, listOf(
-                " ┌───────Title ",
-                " │             ",
-                " └──────────── ",
-            )),
-            Case(HorizontalAlignment.Right, Borders.NONE, listOf(
-                "         Title ",
-                "               ",
-                "               ",
-            )),
+            Case(
+                HorizontalAlignment.Left, Borders.ALL,
+                listOf(
+                    " ┌Title──────┐ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Left, Borders.LEFT or Borders.BOTTOM or Borders.RIGHT,
+                listOf(
+                    " │Title      │ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Left, Borders.TOP or Borders.RIGHT or Borders.BOTTOM,
+                listOf(
+                    " Title───────┐ ",
+                    "             │ ",
+                    " ────────────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Left, Borders.LEFT or Borders.TOP or Borders.BOTTOM,
+                listOf(
+                    " ┌Title─────── ",
+                    " │             ",
+                    " └──────────── ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Left, Borders.NONE,
+                listOf(
+                    " Title         ",
+                    "               ",
+                    "               ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Center, Borders.ALL,
+                listOf(
+                    " ┌───Title───┐ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Center, Borders.LEFT or Borders.BOTTOM or Borders.RIGHT,
+                listOf(
+                    " │   Title   │ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Center, Borders.TOP or Borders.RIGHT or Borders.BOTTOM,
+                listOf(
+                    " ───Title────┐ ",
+                    "             │ ",
+                    " ────────────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Center, Borders.LEFT or Borders.TOP or Borders.BOTTOM,
+                listOf(
+                    " ┌───Title──── ",
+                    " │             ",
+                    " └──────────── ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Center, Borders.NONE,
+                listOf(
+                    "     Title     ",
+                    "               ",
+                    "               ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Right, Borders.ALL,
+                listOf(
+                    " ┌──────Title┐ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Right, Borders.LEFT or Borders.BOTTOM or Borders.RIGHT,
+                listOf(
+                    " │      Title│ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Right, Borders.TOP or Borders.RIGHT or Borders.BOTTOM,
+                listOf(
+                    " ───────Title┐ ",
+                    "             │ ",
+                    " ────────────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Right, Borders.LEFT or Borders.TOP or Borders.BOTTOM,
+                listOf(
+                    " ┌───────Title ",
+                    " │             ",
+                    " └──────────── ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Right, Borders.NONE,
+                listOf(
+                    "         Title ",
+                    "               ",
+                    "               ",
+                )
+            ),
         )
 
         val backend = TestBackend.new(15, 3)
@@ -283,86 +330,133 @@ class BlockTest {
 
     @Test
     fun widgetsBlockTitleAlignmentBottom() {
-        data class Case(val alignment: HorizontalAlignment, val borders: Borders, val expected: List<String>)
+        data class Case(
+            val alignment: HorizontalAlignment,
+            val borders: Borders,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
-            Case(HorizontalAlignment.Left, Borders.ALL, listOf(
-                " ┌───────────┐ ",
-                " │           │ ",
-                " └Title──────┘ ",
-            )),
-            Case(HorizontalAlignment.Left, Borders.LEFT or Borders.TOP or Borders.RIGHT, listOf(
-                " ┌───────────┐ ",
-                " │           │ ",
-                " │Title      │ ",
-            )),
-            Case(HorizontalAlignment.Left, Borders.TOP or Borders.RIGHT or Borders.BOTTOM, listOf(
-                " ────────────┐ ",
-                "             │ ",
-                " Title───────┘ ",
-            )),
-            Case(HorizontalAlignment.Left, Borders.LEFT or Borders.TOP or Borders.BOTTOM, listOf(
-                " ┌──────────── ",
-                " │             ",
-                " └Title─────── ",
-            )),
-            Case(HorizontalAlignment.Left, Borders.NONE, listOf(
-                "               ",
-                "               ",
-                " Title         ",
-            )),
-
-            Case(HorizontalAlignment.Center, Borders.ALL, listOf(
-                " ┌───────────┐ ",
-                " │           │ ",
-                " └───Title───┘ ",
-            )),
-            Case(HorizontalAlignment.Center, Borders.LEFT or Borders.TOP or Borders.RIGHT, listOf(
-                " ┌───────────┐ ",
-                " │           │ ",
-                " │   Title   │ ",
-            )),
-            Case(HorizontalAlignment.Center, Borders.TOP or Borders.RIGHT or Borders.BOTTOM, listOf(
-                " ────────────┐ ",
-                "             │ ",
-                " ───Title────┘ ",
-            )),
-            Case(HorizontalAlignment.Center, Borders.LEFT or Borders.TOP or Borders.BOTTOM, listOf(
-                " ┌──────────── ",
-                " │             ",
-                " └───Title──── ",
-            )),
-            Case(HorizontalAlignment.Center, Borders.NONE, listOf(
-                "               ",
-                "               ",
-                "     Title     ",
-            )),
-
-            Case(HorizontalAlignment.Right, Borders.ALL, listOf(
-                " ┌───────────┐ ",
-                " │           │ ",
-                " └──────Title┘ ",
-            )),
-            Case(HorizontalAlignment.Right, Borders.LEFT or Borders.TOP or Borders.RIGHT, listOf(
-                " ┌───────────┐ ",
-                " │           │ ",
-                " │      Title│ ",
-            )),
-            Case(HorizontalAlignment.Right, Borders.TOP or Borders.RIGHT or Borders.BOTTOM, listOf(
-                " ────────────┐ ",
-                "             │ ",
-                " ───────Title┘ ",
-            )),
-            Case(HorizontalAlignment.Right, Borders.LEFT or Borders.TOP or Borders.BOTTOM, listOf(
-                " ┌──────────── ",
-                " │             ",
-                " └───────Title ",
-            )),
-            Case(HorizontalAlignment.Right, Borders.NONE, listOf(
-                "               ",
-                "               ",
-                "         Title ",
-            )),
+            Case(
+                HorizontalAlignment.Left, Borders.ALL,
+                listOf(
+                    " ┌───────────┐ ",
+                    " │           │ ",
+                    " └Title──────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Left, Borders.LEFT or Borders.TOP or Borders.RIGHT,
+                listOf(
+                    " ┌───────────┐ ",
+                    " │           │ ",
+                    " │Title      │ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Left, Borders.TOP or Borders.RIGHT or Borders.BOTTOM,
+                listOf(
+                    " ────────────┐ ",
+                    "             │ ",
+                    " Title───────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Left, Borders.LEFT or Borders.TOP or Borders.BOTTOM,
+                listOf(
+                    " ┌──────────── ",
+                    " │             ",
+                    " └Title─────── ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Left, Borders.NONE,
+                listOf(
+                    "               ",
+                    "               ",
+                    " Title         ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Center, Borders.ALL,
+                listOf(
+                    " ┌───────────┐ ",
+                    " │           │ ",
+                    " └───Title───┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Center, Borders.LEFT or Borders.TOP or Borders.RIGHT,
+                listOf(
+                    " ┌───────────┐ ",
+                    " │           │ ",
+                    " │   Title   │ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Center, Borders.TOP or Borders.RIGHT or Borders.BOTTOM,
+                listOf(
+                    " ────────────┐ ",
+                    "             │ ",
+                    " ───Title────┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Center, Borders.LEFT or Borders.TOP or Borders.BOTTOM,
+                listOf(
+                    " ┌──────────── ",
+                    " │             ",
+                    " └───Title──── ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Center, Borders.NONE,
+                listOf(
+                    "               ",
+                    "               ",
+                    "     Title     ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Right, Borders.ALL,
+                listOf(
+                    " ┌───────────┐ ",
+                    " │           │ ",
+                    " └──────Title┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Right, Borders.LEFT or Borders.TOP or Borders.RIGHT,
+                listOf(
+                    " ┌───────────┐ ",
+                    " │           │ ",
+                    " │      Title│ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Right, Borders.TOP or Borders.RIGHT or Borders.BOTTOM,
+                listOf(
+                    " ────────────┐ ",
+                    "             │ ",
+                    " ───────Title┘ ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Right, Borders.LEFT or Borders.TOP or Borders.BOTTOM,
+                listOf(
+                    " ┌──────────── ",
+                    " │             ",
+                    " └───────Title ",
+                )
+            ),
+            Case(
+                HorizontalAlignment.Right, Borders.NONE,
+                listOf(
+                    "               ",
+                    "               ",
+                    "         Title ",
+                )
+            ),
         )
 
         val backend = TestBackend.new(15, 3)
@@ -381,86 +475,134 @@ class BlockTest {
 
     @Test
     fun widgetsBlockMultipleTitles() {
-        data class Case(val titleA: Line, val titleB: Line, val borders: Borders, val expected: List<String>)
+        data class Case(
+            val titleA: Line,
+            val titleB: Line,
+            val borders: Borders,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
-            Case(Line.from("foo"), Line.from("bar"), Borders.ALL, listOf(
-                " ┌foo─bar────┐ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(Line.from("foo"), Line.from("bar"), Borders.LEFT or Borders.BOTTOM or Borders.RIGHT, listOf(
-                " │foo bar    │ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(Line.from("foo"), Line.from("bar"), Borders.TOP or Borders.RIGHT or Borders.BOTTOM, listOf(
-                " foo─bar─────┐ ",
-                "             │ ",
-                " ────────────┘ ",
-            )),
-            Case(Line.from("foo"), Line.from("bar"), Borders.LEFT or Borders.TOP or Borders.BOTTOM, listOf(
-                " ┌foo─bar───── ",
-                " │             ",
-                " └──────────── ",
-            )),
-            Case(Line.from("foo"), Line.from("bar"), Borders.NONE, listOf(
-                " foo bar       ",
-                "               ",
-                "               ",
-            )),
-
-            Case(Line.from("foo").centered(), Line.from("bar").centered(), Borders.ALL, listOf(
-                " ┌──foo─bar──┐ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(Line.from("foo").centered(), Line.from("bar").centered(), Borders.LEFT or Borders.BOTTOM or Borders.RIGHT, listOf(
-                " │  foo bar  │ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(Line.from("foo").centered(), Line.from("bar").centered(), Borders.TOP or Borders.RIGHT or Borders.BOTTOM, listOf(
-                " ──foo─bar───┐ ",
-                "             │ ",
-                " ────────────┘ ",
-            )),
-            Case(Line.from("foo").centered(), Line.from("bar").centered(), Borders.LEFT or Borders.TOP or Borders.BOTTOM, listOf(
-                " ┌──foo─bar─── ",
-                " │             ",
-                " └──────────── ",
-            )),
-            Case(Line.from("foo").centered(), Line.from("bar").centered(), Borders.NONE, listOf(
-                "    foo bar    ",
-                "               ",
-                "               ",
-            )),
-
-            Case(Line.from("foo").rightAligned(), Line.from("bar").rightAligned(), Borders.ALL, listOf(
-                " ┌────foo─bar┐ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(Line.from("foo").rightAligned(), Line.from("bar").rightAligned(), Borders.LEFT or Borders.BOTTOM or Borders.RIGHT, listOf(
-                " │    foo bar│ ",
-                " │           │ ",
-                " └───────────┘ ",
-            )),
-            Case(Line.from("foo").rightAligned(), Line.from("bar").rightAligned(), Borders.TOP or Borders.RIGHT or Borders.BOTTOM, listOf(
-                " ─────foo─bar┐ ",
-                "             │ ",
-                " ────────────┘ ",
-            )),
-            Case(Line.from("foo").rightAligned(), Line.from("bar").rightAligned(), Borders.LEFT or Borders.TOP or Borders.BOTTOM, listOf(
-                " ┌─────foo─bar ",
-                " │             ",
-                " └──────────── ",
-            )),
-            Case(Line.from("foo").rightAligned(), Line.from("bar").rightAligned(), Borders.NONE, listOf(
-                "       foo bar ",
-                "               ",
-                "               ",
-            )),
+            Case(
+                Line.from("foo"), Line.from("bar"), Borders.ALL,
+                listOf(
+                    " ┌foo─bar────┐ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                Line.from("foo"), Line.from("bar"), Borders.LEFT or Borders.BOTTOM or Borders.RIGHT,
+                listOf(
+                    " │foo bar    │ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                Line.from("foo"), Line.from("bar"), Borders.TOP or Borders.RIGHT or Borders.BOTTOM,
+                listOf(
+                    " foo─bar─────┐ ",
+                    "             │ ",
+                    " ────────────┘ ",
+                )
+            ),
+            Case(
+                Line.from("foo"), Line.from("bar"), Borders.LEFT or Borders.TOP or Borders.BOTTOM,
+                listOf(
+                    " ┌foo─bar───── ",
+                    " │             ",
+                    " └──────────── ",
+                )
+            ),
+            Case(
+                Line.from("foo"), Line.from("bar"), Borders.NONE,
+                listOf(
+                    " foo bar       ",
+                    "               ",
+                    "               ",
+                )
+            ),
+            Case(
+                Line.from("foo").centered(), Line.from("bar").centered(), Borders.ALL,
+                listOf(
+                    " ┌──foo─bar──┐ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                Line.from("foo").centered(), Line.from("bar").centered(), Borders.LEFT or Borders.BOTTOM or Borders.RIGHT,
+                listOf(
+                    " │  foo bar  │ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                Line.from("foo").centered(), Line.from("bar").centered(), Borders.TOP or Borders.RIGHT or Borders.BOTTOM,
+                listOf(
+                    " ──foo─bar───┐ ",
+                    "             │ ",
+                    " ────────────┘ ",
+                )
+            ),
+            Case(
+                Line.from("foo").centered(), Line.from("bar").centered(), Borders.LEFT or Borders.TOP or Borders.BOTTOM,
+                listOf(
+                    " ┌──foo─bar─── ",
+                    " │             ",
+                    " └──────────── ",
+                )
+            ),
+            Case(
+                Line.from("foo").centered(), Line.from("bar").centered(), Borders.NONE,
+                listOf(
+                    "    foo bar    ",
+                    "               ",
+                    "               ",
+                )
+            ),
+            Case(
+                Line.from("foo").rightAligned(), Line.from("bar").rightAligned(), Borders.ALL,
+                listOf(
+                    " ┌────foo─bar┐ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                Line.from("foo").rightAligned(), Line.from("bar").rightAligned(), Borders.LEFT or Borders.BOTTOM or Borders.RIGHT,
+                listOf(
+                    " │    foo bar│ ",
+                    " │           │ ",
+                    " └───────────┘ ",
+                )
+            ),
+            Case(
+                Line.from("foo").rightAligned(), Line.from("bar").rightAligned(), Borders.TOP or Borders.RIGHT or Borders.BOTTOM,
+                listOf(
+                    " ─────foo─bar┐ ",
+                    "             │ ",
+                    " ────────────┘ ",
+                )
+            ),
+            Case(
+                Line.from("foo").rightAligned(), Line.from("bar").rightAligned(), Borders.LEFT or Borders.TOP or Borders.BOTTOM,
+                listOf(
+                    " ┌─────foo─bar ",
+                    " │             ",
+                    " └──────────── ",
+                )
+            ),
+            Case(
+                Line.from("foo").rightAligned(), Line.from("bar").rightAligned(), Borders.NONE,
+                listOf(
+                    "       foo bar ",
+                    "               ",
+                    "               ",
+                )
+            ),
         )
 
         val backend = TestBackend.new(15, 3)

@@ -138,13 +138,12 @@ import ratatui.widgets.Widget
 class Text internal constructor(
     /** The style of this text. */
     override val style: Style,
-
     /** The alignment of this text. */
     val alignment: HorizontalAlignment?,
-
-    internal val mutableLines: MutableList<Line>
-) : Styled<Text>, Widget, Iterable<Line> {
-
+    internal val mutableLines: MutableList<Line>,
+) : Styled<Text>,
+    Widget,
+    Iterable<Line> {
     /** The lines that make up this piece of text. */
     val lines: List<Line> get() = mutableLines
 
@@ -154,7 +153,7 @@ class Text internal constructor(
     constructor(
         lines: List<Line> = emptyList(),
         style: Style = Style.default(),
-        alignment: HorizontalAlignment? = null
+        alignment: HorizontalAlignment? = null,
     ) : this(style, alignment, lines.toMutableList())
 
     /**
@@ -163,7 +162,7 @@ class Text internal constructor(
     fun copy(
         style: Style = this.style,
         alignment: HorizontalAlignment? = this.alignment,
-        lines: List<Line> = this.mutableLines
+        lines: List<Line> = this.mutableLines,
     ): Text = Text(style, alignment, lines.toMutableList())
 
     override fun equals(other: Any?): Boolean {

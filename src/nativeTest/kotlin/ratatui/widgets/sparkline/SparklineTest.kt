@@ -4,7 +4,6 @@ import ratatui.buffer.Buffer
 import ratatui.layout.Rect
 import ratatui.style.Color
 import ratatui.style.Style
-import ratatui.symbols.bar.NINE_LEVELS
 import ratatui.symbols.bar.THREE_LEVELS
 import ratatui.widgets.block.Block
 import ratatui.widgets.red
@@ -18,7 +17,6 @@ import kotlin.test.assertNull
  * Tests for the Sparkline widget.
  */
 class SparklineTest {
-
     @Test
     fun sparklineDefault() {
         val sparkline = Sparkline.default()
@@ -133,7 +131,6 @@ class SparklineTest {
  * Tests for RenderDirection enum.
  */
 class RenderDirectionTest {
-
     @Test
     fun renderDirectionToString() {
         assertEquals("LeftToRight", RenderDirection.LeftToRight.toString())
@@ -169,7 +166,6 @@ class RenderDirectionTest {
  * Tests for SparklineBar.
  */
 class SparklineBarTest {
-
     @Test
     fun sparklineBarFromULong() {
         val bar = SparklineBar.from(5uL)

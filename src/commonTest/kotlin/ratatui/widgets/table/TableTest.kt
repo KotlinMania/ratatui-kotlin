@@ -20,57 +20,72 @@ import ratatui.widgets.block.Block
 class TableTest {
     @Test
     fun widgetsTableColumnSpacingCanBeChanged() {
-        data class Case(val columnSpacing: Int, val expected: List<String>)
+        data class Case(
+            val columnSpacing: Int,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
-            Case(0, listOf(
-                "┌────────────────────────────┐",
-                "│Head1Head2Head3             │",
-                "│                            │",
-                "│Row11Row12Row13             │",
-                "│Row21Row22Row23             │",
-                "│Row31Row32Row33             │",
-                "│Row41Row42Row43             │",
-                "│                            │",
-                "│                            │",
-                "└────────────────────────────┘",
-            )),
-            Case(1, listOf(
-                "┌────────────────────────────┐",
-                "│Head1 Head2 Head3           │",
-                "│                            │",
-                "│Row11 Row12 Row13           │",
-                "│Row21 Row22 Row23           │",
-                "│Row31 Row32 Row33           │",
-                "│Row41 Row42 Row43           │",
-                "│                            │",
-                "│                            │",
-                "└────────────────────────────┘",
-            )),
-            Case(6, listOf(
-                "┌────────────────────────────┐",
-                "│Head1      Head2      Head3 │",
-                "│                            │",
-                "│Row11      Row12      Row13 │",
-                "│Row21      Row22      Row23 │",
-                "│Row31      Row32      Row33 │",
-                "│Row41      Row42      Row43 │",
-                "│                            │",
-                "│                            │",
-                "└────────────────────────────┘",
-            )),
-            Case(7, listOf(
-                "┌────────────────────────────┐",
-                "│Head1       Head       Head3│",
-                "│                            │",
-                "│Row11       Row1       Row13│",
-                "│Row21       Row2       Row23│",
-                "│Row31       Row3       Row33│",
-                "│Row41       Row4       Row43│",
-                "│                            │",
-                "│                            │",
-                "└────────────────────────────┘",
-            )),
+            Case(
+                0,
+                listOf(
+                    "┌────────────────────────────┐",
+                    "│Head1Head2Head3             │",
+                    "│                            │",
+                    "│Row11Row12Row13             │",
+                    "│Row21Row22Row23             │",
+                    "│Row31Row32Row33             │",
+                    "│Row41Row42Row43             │",
+                    "│                            │",
+                    "│                            │",
+                    "└────────────────────────────┘",
+                )
+            ),
+            Case(
+                1,
+                listOf(
+                    "┌────────────────────────────┐",
+                    "│Head1 Head2 Head3           │",
+                    "│                            │",
+                    "│Row11 Row12 Row13           │",
+                    "│Row21 Row22 Row23           │",
+                    "│Row31 Row32 Row33           │",
+                    "│Row41 Row42 Row43           │",
+                    "│                            │",
+                    "│                            │",
+                    "└────────────────────────────┘",
+                )
+            ),
+            Case(
+                6,
+                listOf(
+                    "┌────────────────────────────┐",
+                    "│Head1      Head2      Head3 │",
+                    "│                            │",
+                    "│Row11      Row12      Row13 │",
+                    "│Row21      Row22      Row23 │",
+                    "│Row31      Row32      Row33 │",
+                    "│Row41      Row42      Row43 │",
+                    "│                            │",
+                    "│                            │",
+                    "└────────────────────────────┘",
+                )
+            ),
+            Case(
+                7,
+                listOf(
+                    "┌────────────────────────────┐",
+                    "│Head1       Head       Head3│",
+                    "│                            │",
+                    "│Row11       Row1       Row13│",
+                    "│Row21       Row2       Row23│",
+                    "│Row31       Row3       Row33│",
+                    "│Row41       Row4       Row43│",
+                    "│                            │",
+                    "│                            │",
+                    "└────────────────────────────┘",
+                )
+            ),
         )
 
         val backend = TestBackend.new(30, 10)
@@ -102,7 +117,10 @@ class TableTest {
 
     @Test
     fun widgetsTableColumnsWidthsCanUseFixedLengthConstraints() {
-        data class Case(val widths: List<Constraint>, val expected: List<String>)
+        data class Case(
+            val widths: List<Constraint>,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
             Case(
@@ -176,7 +194,10 @@ class TableTest {
 
     @Test
     fun widgetsTableColumnsWidthsCanUsePercentageConstraints() {
-        data class Case(val widths: List<Constraint>, val expected: List<String>)
+        data class Case(
+            val widths: List<Constraint>,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
             Case(
@@ -266,7 +287,10 @@ class TableTest {
 
     @Test
     fun widgetsTableColumnsWidthsCanUseMixedConstraints() {
-        data class Case(val widths: List<Constraint>, val expected: List<String>)
+        data class Case(
+            val widths: List<Constraint>,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
             Case(
@@ -355,7 +379,10 @@ class TableTest {
 
     @Test
     fun widgetsTableColumnsWidthsCanUseRatioConstraints() {
-        data class Case(val widths: List<Constraint>, val expected: List<String>)
+        data class Case(
+            val widths: List<Constraint>,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
             Case(
@@ -445,7 +472,10 @@ class TableTest {
 
     @Test
     fun widgetsTableCanHaveRowsWithMultiLines() {
-        data class Case(val selected: Int?, val expected: List<String>)
+        data class Case(
+            val selected: Int?,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
             Case(
@@ -532,69 +562,91 @@ class TableTest {
 
     @Test
     fun widgetsTableEnableAlwaysHighlightSpacing() {
-        data class Case(val selected: Int?, val space: HighlightSpacing, val expected: List<String>)
+        data class Case(
+            val selected: Int?,
+            val space: HighlightSpacing,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
-            Case(null, HighlightSpacing.WhenSelected, listOf(
-                "┌────────────────────────────┐",
-                "│Head1 Head2 Head3           │",
-                "│                            │",
-                "│Row11 Row12 Row13           │",
-                "│Row21 Row22 Row23           │",
-                "│                            │",
-                "│Row31 Row32 Row33           │",
-                "└────────────────────────────┘",
-            )),
-            Case(null, HighlightSpacing.Always, listOf(
-                "┌────────────────────────────┐",
-                "│   Head1 Head2 Head3        │",
-                "│                            │",
-                "│   Row11 Row12 Row13        │",
-                "│   Row21 Row22 Row23        │",
-                "│                            │",
-                "│   Row31 Row32 Row33        │",
-                "└────────────────────────────┘",
-            )),
-            Case(null, HighlightSpacing.Never, listOf(
-                "┌────────────────────────────┐",
-                "│Head1 Head2 Head3           │",
-                "│                            │",
-                "│Row11 Row12 Row13           │",
-                "│Row21 Row22 Row23           │",
-                "│                            │",
-                "│Row31 Row32 Row33           │",
-                "└────────────────────────────┘",
-            )),
-            Case(0, HighlightSpacing.WhenSelected, listOf(
-                "┌────────────────────────────┐",
-                "│   Head1 Head2 Head3        │",
-                "│                            │",
-                "│>> Row11 Row12 Row13        │",
-                "│   Row21 Row22 Row23        │",
-                "│                            │",
-                "│   Row31 Row32 Row33        │",
-                "└────────────────────────────┘",
-            )),
-            Case(0, HighlightSpacing.Always, listOf(
-                "┌────────────────────────────┐",
-                "│   Head1 Head2 Head3        │",
-                "│                            │",
-                "│>> Row11 Row12 Row13        │",
-                "│   Row21 Row22 Row23        │",
-                "│                            │",
-                "│   Row31 Row32 Row33        │",
-                "└────────────────────────────┘",
-            )),
-            Case(0, HighlightSpacing.Never, listOf(
-                "┌────────────────────────────┐",
-                "│Head1 Head2 Head3           │",
-                "│                            │",
-                "│Row11 Row12 Row13           │",
-                "│Row21 Row22 Row23           │",
-                "│                            │",
-                "│Row31 Row32 Row33           │",
-                "└────────────────────────────┘",
-            )),
+            Case(
+                null, HighlightSpacing.WhenSelected,
+                listOf(
+                    "┌────────────────────────────┐",
+                    "│Head1 Head2 Head3           │",
+                    "│                            │",
+                    "│Row11 Row12 Row13           │",
+                    "│Row21 Row22 Row23           │",
+                    "│                            │",
+                    "│Row31 Row32 Row33           │",
+                    "└────────────────────────────┘",
+                )
+            ),
+            Case(
+                null, HighlightSpacing.Always,
+                listOf(
+                    "┌────────────────────────────┐",
+                    "│   Head1 Head2 Head3        │",
+                    "│                            │",
+                    "│   Row11 Row12 Row13        │",
+                    "│   Row21 Row22 Row23        │",
+                    "│                            │",
+                    "│   Row31 Row32 Row33        │",
+                    "└────────────────────────────┘",
+                )
+            ),
+            Case(
+                null, HighlightSpacing.Never,
+                listOf(
+                    "┌────────────────────────────┐",
+                    "│Head1 Head2 Head3           │",
+                    "│                            │",
+                    "│Row11 Row12 Row13           │",
+                    "│Row21 Row22 Row23           │",
+                    "│                            │",
+                    "│Row31 Row32 Row33           │",
+                    "└────────────────────────────┘",
+                )
+            ),
+            Case(
+                0, HighlightSpacing.WhenSelected,
+                listOf(
+                    "┌────────────────────────────┐",
+                    "│   Head1 Head2 Head3        │",
+                    "│                            │",
+                    "│>> Row11 Row12 Row13        │",
+                    "│   Row21 Row22 Row23        │",
+                    "│                            │",
+                    "│   Row31 Row32 Row33        │",
+                    "└────────────────────────────┘",
+                )
+            ),
+            Case(
+                0, HighlightSpacing.Always,
+                listOf(
+                    "┌────────────────────────────┐",
+                    "│   Head1 Head2 Head3        │",
+                    "│                            │",
+                    "│>> Row11 Row12 Row13        │",
+                    "│   Row21 Row22 Row23        │",
+                    "│                            │",
+                    "│   Row31 Row32 Row33        │",
+                    "└────────────────────────────┘",
+                )
+            ),
+            Case(
+                0, HighlightSpacing.Never,
+                listOf(
+                    "┌────────────────────────────┐",
+                    "│Head1 Head2 Head3           │",
+                    "│                            │",
+                    "│Row11 Row12 Row13           │",
+                    "│Row21 Row22 Row23           │",
+                    "│                            │",
+                    "│Row31 Row32 Row33           │",
+                    "└────────────────────────────┘",
+                )
+            ),
         )
 
         for (case in cases) {

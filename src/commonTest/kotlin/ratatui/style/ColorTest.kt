@@ -1,8 +1,6 @@
 // port-lint: source ratatui-core/src/style/color.rs
 package ratatui.style
 
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -85,12 +83,12 @@ class ColorTest {
     fun fromInvalidColors() {
         val badColors = listOf(
             "invalid_color", // not a color string
-            "abcdef0",       // 7 chars is not a color
-            " bcdefa",       // does not start with a '#'
-            "#abcdef00",     // too many chars
+            "abcdef0", // 7 chars is not a color
+            " bcdefa", // does not start with a '#'
+            "#abcdef00", // too many chars
             "#1\uD83E\uDD80" + "2", // len 7 but on char boundaries should not panic
-            "resets",        // typo
-            "lightblackk",   // typo
+            "resets", // typo
+            "lightblackk", // typo
         )
 
         for (badColor in badColors) {

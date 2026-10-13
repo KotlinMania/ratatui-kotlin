@@ -86,6 +86,7 @@ class RandomSignal private constructor(
     override fun hasNext(): Boolean = true
 
     override fun next(): ULong {
+        if (!hasNext()) throw NoSuchElementException()
         val lower = distributionLower.toLong()
         val upper = distributionUpper.toLong()
         return rng.nextLong(lower, upper).toULong()
@@ -110,6 +111,7 @@ class SinSignal private constructor(
     override fun hasNext(): Boolean = true
 
     override fun next(): Pair<Double, Double> {
+        if (!hasNext()) throw NoSuchElementException()
         val point = Pair(x, sin(x * 1.0 / period) * scale)
         x += interval
         return point

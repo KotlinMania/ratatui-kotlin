@@ -88,7 +88,7 @@ data class Set(
     val verticalRight: String,
     val horizontalDown: String,
     val horizontalUp: String,
-    val cross: String
+    val cross: String,
 ) {
     companion object {
         /**

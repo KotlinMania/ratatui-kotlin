@@ -12,7 +12,7 @@ data class SparklineBar(
     /** The value of the bar. If `null`, the bar is absent. */
     val value: ULong?,
     /** The style of the bar. If `null`, the bar will use the style of the sparkline. */
-    val barStyle: Style? = null
+    val barStyle: Style? = null,
 ) {
     /**
      * Sets the style of the bar.

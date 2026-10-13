@@ -36,9 +36,8 @@ data class Axis(
     /** The style used to draw the axis itself */
     internal val axisStyle: Style = Style.default(),
     /** The alignment of the labels of the Axis */
-    internal val labelsAlign: HorizontalAlignment = HorizontalAlignment.Left
+    internal val labelsAlign: HorizontalAlignment = HorizontalAlignment.Left,
 ) : Styled<Axis> {
-
     /**
      * Sets the axis title
      *

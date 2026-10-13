@@ -20,7 +20,7 @@ data class Set(
     val track: String,
     val thumb: String,
     val begin: String,
-    val end: String
+    val end: String,
 ) {
     companion object {
         /**

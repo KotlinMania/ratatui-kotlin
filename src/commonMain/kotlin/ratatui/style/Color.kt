@@ -9,13 +9,11 @@ import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonObject
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.int
 import kotlin.math.PI
@@ -149,7 +147,11 @@ sealed class Color {
      *
      * See also: https://en.wikipedia.org/wiki/ANSIEscapeCode#24-bit
      */
-    data class Rgb(val r: UByte, val g: UByte, val b: UByte) : Color() {
+    data class Rgb(
+        val r: UByte,
+        val g: UByte,
+        val b: UByte,
+    ) : Color() {
         override fun toString(): String {
             val rHex = r.toString(16).padStart(2, '0').uppercase()
             val gHex = g.toString(16).padStart(2, '0').uppercase()
@@ -163,7 +165,9 @@ sealed class Color {
      *
      * See also: https://en.wikipedia.org/wiki/ANSIEscapeCode#8-bit
      */
-    data class Indexed(val index: UByte) : Color() {
+    data class Indexed(
+        val index: UByte,
+    ) : Color() {
         override fun toString(): String = index.toString()
     }
 
@@ -340,7 +344,7 @@ private fun parseHexColor(input: String): Triple<UByte, UByte, UByte>? {
 data class Hsl(
     val hue: Double,
     val saturation: Double,
-    val lightness: Double
+    val lightness: Double,
 ) {
     companion object {
         fun new(hue: Double, saturation: Double, lightness: Double): Hsl = Hsl(hue, saturation, lightness)
@@ -355,7 +359,7 @@ data class Hsl(
 data class Hsluv(
     val hue: Double,
     val saturation: Double,
-    val lightness: Double
+    val lightness: Double,
 ) {
     companion object {
         fun new(hue: Double, saturation: Double, lightness: Double): Hsluv = Hsluv(hue, saturation, lightness)
@@ -377,9 +381,15 @@ object ColorSerializer : KSerializer<Color> {
      * Mirrors the local `ColorWrapper` enum in the upstream `impl serde::Deserialize for Color`.
      */
     private sealed interface ColorWrapper {
-        data class Rgb(val red: UByte, val green: UByte, val blue: UByte) : ColorWrapper
+        data class Rgb(
+            val red: UByte,
+            val green: UByte,
+            val blue: UByte,
+        ) : ColorWrapper
 
-        data class Indexed(val index: UByte) : ColorWrapper
+        data class Indexed(
+            val index: UByte,
+        ) : ColorWrapper
     }
 
     /**
@@ -389,9 +399,13 @@ object ColorSerializer : KSerializer<Color> {
      * Mirrors the local untagged `ColorFormat` enum in Rust.
      */
     private sealed interface ColorFormat {
-        data class V2(val value: String) : ColorFormat
+        data class V2(
+            val value: String,
+        ) : ColorFormat
 
-        data class V1(val wrapper: ColorWrapper) : ColorFormat
+        data class V1(
+            val wrapper: ColorWrapper,
+        ) : ColorFormat
     }
 
     override val descriptor: SerialDescriptor =
@@ -498,7 +512,10 @@ private val HSLUV_M: Array<DoubleArray> = arrayOf(
     doubleArrayOf(0.055630079696993, -0.20397695888897, 1.056971514242878)
 )
 
-private data class BoundLine(val slope: Double, val intercept: Double)
+private data class BoundLine(
+    val slope: Double,
+    val intercept: Double,
+)
 
 private fun hsluvToRgb(hueDegrees: Double, saturation: Double, lightness: Double): Triple<UByte, UByte, UByte> {
     if (lightness <= 0.0) return Triple(0u, 0u, 0u)

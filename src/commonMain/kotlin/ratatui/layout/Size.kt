@@ -46,9 +46,8 @@ package ratatui.layout
  */
 data class Size(
     val width: Int,
-    val height: Int
+    val height: Int,
 ) {
-
     companion object {
         /** A zero sized Size */
         val ZERO: Size = Size(0, 0)
@@ -79,5 +78,5 @@ data class Size(
     /** Convert to a pair of dimensions */
     fun toPair(): Pair<Int, Int> = Pair(width, height)
 
-    override fun toString(): String = "${width}x${height}"
+    override fun toString(): String = "${width}x$height"
 }

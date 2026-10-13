@@ -3,7 +3,6 @@ package ratatui.widgets.table
 
 import ratatui.buffer.Buffer
 import ratatui.layout.Constraint
-import ratatui.layout.Direction
 import ratatui.layout.Flex
 import ratatui.layout.Layout
 import ratatui.layout.Rect
@@ -105,9 +104,10 @@ data class Table(
     /** Decides when to allocate spacing for the row selection */
     private val highlightSpacing: HighlightSpacing = HighlightSpacing.WhenSelected,
     /** Controls how to distribute extra space among the columns */
-    private val flex: Flex = Flex.Start
-) : Widget, StatefulWidget<TableState>, Styled<Table> {
-
+    private val flex: Flex = Flex.Start,
+) : Widget,
+    StatefulWidget<TableState>,
+    Styled<Table> {
     /**
      * Set the rows of the table.
      */
@@ -239,15 +239,17 @@ data class Table(
         val footerHeight = footer?.height ?: 0
         val footerBottomMargin = footer?.bottomMargin ?: 0
 
-        val layout = Layout.vertical(listOf(
-            Constraint.Length(headerTopMargin),
-            Constraint.Length(headerHeight),
-            Constraint.Length(headerBottomMargin),
-            Constraint.Min(0),
-            Constraint.Length(footerTopMargin),
-            Constraint.Length(footerHeight),
-            Constraint.Length(footerBottomMargin)
-        )).split(area)
+        val layout = Layout.vertical(
+            listOf(
+                Constraint.Length(headerTopMargin),
+                Constraint.Length(headerHeight),
+                Constraint.Length(headerBottomMargin),
+                Constraint.Min(0),
+                Constraint.Length(footerTopMargin),
+                Constraint.Length(footerHeight),
+                Constraint.Length(footerBottomMargin)
+            )
+        ).split(area)
 
         return Triple(layout[1], layout[3], layout[5])
     }
@@ -279,7 +281,7 @@ data class Table(
         buf: Buffer,
         state: TableState,
         selectionWidth: Int,
-        columnWidths: List<Pair<Int, Int>>
+        columnWidths: List<Pair<Int, Int>>,
     ) {
         if (rows.isEmpty()) {
             return

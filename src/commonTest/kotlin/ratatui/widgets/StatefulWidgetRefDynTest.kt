@@ -11,7 +11,9 @@ private interface AnyWindow : StatefulWidgetRef<Any> {
     fun title(): String = "stateful_widget_ref_dyn::${this::class.simpleName}"
 }
 
-private class Window1State(val value: Int)
+private class Window1State(
+    val value: Int,
+)
 
 private class Window1 : AnyWindow {
     override fun renderRef(area: Rect, buf: Buffer, state: Any) {
@@ -20,7 +22,9 @@ private class Window1 : AnyWindow {
     }
 }
 
-private class Window2State(val value: String)
+private class Window2State(
+    val value: String,
+)
 
 private class Window2 : AnyWindow {
     override fun renderRef(area: Rect, buf: Buffer, state: Any) {

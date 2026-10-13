@@ -17,7 +17,6 @@ import kotlin.test.assertNull
  * These tests are transliterated from the Rust ratatui-core tests.
  */
 class LineTest {
-
     @Test
     fun rawStr() {
         val line = Line.raw("test content")
@@ -49,10 +48,12 @@ class LineTest {
 
     @Test
     fun spansVec() {
-        val line = Line.default().spans(listOf(
-            Span.styled("Hello", Style.new().blue()),
-            Span.styled(" world!", Style.new().green())
-        ))
+        val line = Line.default().spans(
+            listOf(
+                Span.styled("Hello", Style.new().blue()),
+                Span.styled(" world!", Style.new().green())
+            )
+        )
         assertEquals(
             listOf(
                 Span.styled("Hello", Style.new().blue()),
@@ -92,10 +93,12 @@ class LineTest {
 
     @Test
     fun width() {
-        val line = Line.from(listOf(
-            Span.styled("My", Style.default().fg(Color.Yellow)),
-            Span.raw(" text")
-        ))
+        val line = Line.from(
+            listOf(
+                Span.styled("My", Style.default().fg(Color.Yellow)),
+                Span.raw(" text")
+            )
+        )
         assertEquals(7, line.width())
 
         val emptyLine = Line.default()
@@ -150,10 +153,12 @@ class LineTest {
 
     @Test
     fun fromIter() {
-        val line = Line.fromIter(listOf(
-            Span.styled("Hello", Style.new().blue()),
-            Span.styled(" world!", Style.new().green())
-        ))
+        val line = Line.fromIter(
+            listOf(
+                Span.styled("Hello", Style.new().blue()),
+                Span.styled(" world!", Style.new().green())
+            )
+        )
         assertEquals(
             listOf(
                 Span.styled("Hello", Style.new().blue()),
@@ -185,10 +190,12 @@ class LineTest {
 
     @Test
     fun intoString() {
-        val line = Line.from(listOf(
-            Span.styled("Hello,", Style.default().fg(Color.Red)),
-            Span.styled(" world!", Style.default().fg(Color.Green))
-        ))
+        val line = Line.from(
+            listOf(
+                Span.styled("Hello,", Style.default().fg(Color.Red)),
+                Span.styled(" world!", Style.default().fg(Color.Green))
+            )
+        )
         val s = line.toString()
         assertEquals("Hello, world!", s)
     }
@@ -202,11 +209,13 @@ class LineTest {
         val greenOnWhite = Style.new().green().onWhite()
         val blueOnWhite = Style.new().blue().onWhite()
 
-        val line = Line.from(listOf(
-            Span.styled("He", red),
-            Span.styled("ll", green),
-            Span.styled("o!", blue)
-        ))
+        val line = Line.from(
+            listOf(
+                Span.styled("He", red),
+                Span.styled("ll", green),
+                Span.styled("o!", blue)
+            )
+        )
         val styledGraphemes = line.styledGraphemes(Style.new().bg(Color.White))
         assertEquals(
             listOf(
@@ -274,11 +283,12 @@ class LineTest {
  * Iterator tests for Line.
  */
 class LineIteratorTest {
-
-    private fun helloWorld(): Line = Line.from(listOf(
-        Span.styled("Hello ", Style.default().fg(Color.Blue)),
-        Span.styled("world!", Style.default().fg(Color.Green))
-    ))
+    private fun helloWorld(): Line = Line.from(
+        listOf(
+            Span.styled("Hello ", Style.default().fg(Color.Blue)),
+            Span.styled("world!", Style.default().fg(Color.Green))
+        )
+    )
 
     @Test
     fun iter() {

@@ -13,7 +13,7 @@ enum class MascotEyeColor {
     /** The default eye color */
     Default,
     /** The red eye color */
-    Red
+    Red,
 }
 
 /**
@@ -23,22 +23,21 @@ enum class MascotEyeColor {
  */
 data class RatatuiMascot(
     private val eyeState: MascotEyeColor = MascotEyeColor.Default,
-    /** The color of the rat */
-    private val ratColor: Color = Color.Indexed(252u),        // lightGray #d0d0d0
-    /** The color of the rat eye */
-    private val ratEyeColor: Color = Color.Indexed(236u),     // darkCharcoal #303030
-    /** The color of the rat eye when blinking */
-    private val ratEyeBlink: Color = Color.Indexed(196u),     // red #ff0000
-    /** The color of the rat hat */
-    private val hatColor: Color = Color.Indexed(231u),        // white #ffffff
-    /** The color of the terminal */
-    private val termColor: Color = Color.Indexed(232u),       // vampireBlack #080808
-    /** The color of the terminal border */
-    private val termBorderColor: Color = Color.Indexed(237u), // gray #808080
-    /** The color of the terminal cursor */
-    private val termCursorColor: Color = Color.Indexed(248u)  // darkGray #a8a8a8
+    /** The color of the rat (lightGray #d0d0d0) */
+    private val ratColor: Color = Color.Indexed(252u),
+    /** The color of the rat eye (darkCharcoal #303030) */
+    private val ratEyeColor: Color = Color.Indexed(236u),
+    /** The color of the rat eye when blinking (red #ff0000) */
+    private val ratEyeBlink: Color = Color.Indexed(196u),
+    /** The color of the rat hat (white #ffffff) */
+    private val hatColor: Color = Color.Indexed(231u),
+    /** The color of the terminal (vampireBlack #080808) */
+    private val termColor: Color = Color.Indexed(232u),
+    /** The color of the terminal border (gray #808080) */
+    private val termBorderColor: Color = Color.Indexed(237u),
+    /** The color of the terminal cursor (darkGray #a8a8a8) */
+    private val termCursorColor: Color = Color.Indexed(248u),
 ) : Widget {
-
     /**
      * Set the eye state (open / blinking)
      *
@@ -135,40 +134,41 @@ data class RatatuiMascot(
         private const val TERM_BORDER = '▒'
         private const val TERM_CURSOR = '▓'
 
-        private val RATATUI_MASCOT = """
-                   hhh
-                 hhhhhh
-                hhhhhhh
-               hhhhhhhh
-              hhhhhhhhh
-             hhhhhhhhhh
-            hhhhhhhhhhhh
-            hhhhhhhhhhhhh
-            hhhhhhhhhhhhh     ██████
-             hhhhhhhhhhh    ████████
-                  hhhhh ███████████
-                   hhh ██ee████████
-                    h █████████████
-                ████ █████████████
-               █████████████████
-               ████████████████
-               ████████████████
-                ███ ██████████
-              ▒▒    █████████
-             ▒░░▒   █████████
-            ▒░░░░▒ ██████████
-           ▒░░▓░░░▒ █████████
-          ▒░░▓▓░░░░▒ ████████
-         ▒░░░░░░░░░░▒ ██████████
-        ▒░░░░░░░░░░░░▒ ██████████
-       ▒░░░░░░░▓▓░░░░░▒ █████████
-      ▒░░░░░░░░░▓▓░░░░░▒ ████  ███
-     ▒░░░░░░░░░░░░░░░░░░▒ ██   ███
-    ▒░░░░░░░░░░░░░░░░░░░░▒ █   ███
-    ▒░░░░░░░░░░░░░░░░░░░░░▒   ███
-     ▒░░░░░░░░░░░░░░░░░░░░░▒ ███
-      ▒░░░░░░░░░░░░░░░░░░░░░▒ █
-        """.trimIndent()
+        private val RATATUI_MASCOT =
+            """
+                           hhh
+                         hhhhhh
+                        hhhhhhh
+                       hhhhhhhh
+                      hhhhhhhhh
+                     hhhhhhhhhh
+                    hhhhhhhhhhhh
+                    hhhhhhhhhhhhh
+                    hhhhhhhhhhhhh     ██████
+                     hhhhhhhhhhh    ████████
+                          hhhhh ███████████
+                           hhh ██ee████████
+                            h █████████████
+                        ████ █████████████
+                       █████████████████
+                       ████████████████
+                       ████████████████
+                        ███ ██████████
+                      ▒▒    █████████
+                     ▒░░▒   █████████
+                    ▒░░░░▒ ██████████
+                   ▒░░▓░░░▒ █████████
+                  ▒░░▓▓░░░░▒ ████████
+                 ▒░░░░░░░░░░▒ ██████████
+                ▒░░░░░░░░░░░░▒ ██████████
+               ▒░░░░░░░▓▓░░░░░▒ █████████
+              ▒░░░░░░░░░▓▓░░░░░▒ ████  ███
+             ▒░░░░░░░░░░░░░░░░░░▒ ██   ███
+            ▒░░░░░░░░░░░░░░░░░░░░▒ █   ███
+            ▒░░░░░░░░░░░░░░░░░░░░░▒   ███
+             ▒░░░░░░░░░░░░░░░░░░░░░▒ ███
+              ▒░░░░░░░░░░░░░░░░░░░░░▒ █
+            """.trimIndent()
 
         /**
          * Create a new Ratatui mascot widget

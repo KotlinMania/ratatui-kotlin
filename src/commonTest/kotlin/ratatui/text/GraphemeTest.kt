@@ -3,8 +3,6 @@ package ratatui.text
 
 import ratatui.style.Style
 import ratatui.style.green
-import ratatui.style.onRed
-import ratatui.style.yellow
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

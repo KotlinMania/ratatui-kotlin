@@ -35,7 +35,7 @@ data class ListState(
     /** Index of the first item to be displayed */
     var offset: Int = 0,
     /** Index of the selected item, or null if no item is selected */
-    var selected: Int? = null
+    var selected: Int? = null,
 ) {
     /**
      * Sets the index of the first item to be displayed.

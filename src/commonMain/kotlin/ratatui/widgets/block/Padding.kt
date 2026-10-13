@@ -29,7 +29,7 @@ data class Padding(
     /** Top padding */
     val top: Int,
     /** Bottom padding */
-    val bottom: Int
+    val bottom: Int,
 ) {
     companion object {
         /** Padding with all fields set to 0 */

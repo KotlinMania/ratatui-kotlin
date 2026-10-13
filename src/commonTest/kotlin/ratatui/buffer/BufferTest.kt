@@ -24,7 +24,8 @@ class BufferTest {
     @Test
     fun debugGraphemeOverride() {
         val buffer = Buffer.withLines("a🦀b")
-        val expected = """
+        val expected =
+            """
             Buffer {
                 area: Rect { x: 0, y: 0, width: 4, height: 1 },
                 content: [
@@ -34,7 +35,7 @@ class BufferTest {
                     x: 0, y: 0, fg: Reset, bg: Reset, underline: Reset, modifier: NONE,
                 ]
             }
-        """.trimIndent()
+            """.trimIndent()
         assertEquals(expected, buffer.toString())
     }
 
@@ -52,7 +53,8 @@ class BufferTest {
                 .addModifier(Modifier.BOLD)
         )
 
-        val expected = """
+        val expected =
+            """
             Buffer {
                 area: Rect { x: 0, y: 0, width: 12, height: 2 },
                 content: [
@@ -64,7 +66,7 @@ class BufferTest {
                     x: 0, y: 1, fg: Green, bg: Yellow, underline: Reset, modifier: BOLD,
                 ]
             }
-        """.trimIndent()
+            """.trimIndent()
         assertEquals(expected, buffer.toString())
     }
 
@@ -733,11 +735,11 @@ class BufferTest {
 
         val diff = prev.diff(next)
 
-        check(diff.any { (x, y, _c) -> x == 0 && y == 0 }) {
+        check(diff.any { (x, y, _) -> x == 0 && y == 0 }) {
             "Diff should include first cell (0,0) because the symbol changed"
         }
 
-        check(!diff.any { (x, y, _c) -> x == 1 && y == 0 }) {
+        check(!diff.any { (x, y, _) -> x == 1 && y == 0 }) {
             "Diff should not include trailing cell (1,0) when only style changed. Found updates: " +
                 diff.map { (x, y, c) -> Triple(x, y, "${c.symbol()} ${c.fg}") }
         }

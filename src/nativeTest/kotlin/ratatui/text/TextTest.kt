@@ -22,7 +22,6 @@ import kotlin.test.assertNull
  * These tests are transliterated from the Rust ratatui-core tests.
  */
 class TextTest {
-
     @Test
     fun raw() {
         val text = Text.raw("The first line\nThe second line")
@@ -88,10 +87,14 @@ class TextTest {
         val style = Style.new().yellow().italic()
         val text = Text.from(Span.styled("The first line\nThe second line", style))
         assertEquals(
-            listOf(Line.from(Span.styled(
-                "The first line\nThe second line",
-                style
-            ))),
+            listOf(
+                Line.from(
+                    Span.styled(
+                        "The first line\nThe second line",
+                        style
+                    )
+                )
+            ),
             text.lines
         )
     }
@@ -119,10 +122,12 @@ class TextTest {
 
     @Test
     fun fromVecLine() {
-        val text = Text.from(listOf(
-            Line.from("The first line"),
-            Line.from("The second line")
-        ))
+        val text = Text.from(
+            listOf(
+                Line.from("The first line"),
+                Line.from("The second line")
+            )
+        )
         assertEquals(
             listOf(Line.from("The first line"), Line.from("The second line")),
             text.lines
@@ -131,10 +136,12 @@ class TextTest {
 
     @Test
     fun fromIterator() {
-        val text = Text.fromIter(listOf(
-            Line.from("The first line"),
-            Line.from("The second line")
-        ))
+        val text = Text.fromIter(
+            listOf(
+                Line.from("The first line"),
+                Line.from("The second line")
+            )
+        )
         assertEquals(
             listOf(Line.from("The first line"), Line.from("The second line")),
             text.lines
@@ -177,10 +184,12 @@ class TextTest {
     @Test
     fun extend() {
         val text = Text.from("The first line\nThe second line")
-        text.extend(listOf(
-            Line.from("The third line"),
-            Line.from("The fourth line")
-        ))
+        text.extend(
+            listOf(
+                Line.from("The third line"),
+                Line.from("The fourth line")
+            )
+        )
         assertEquals(
             listOf(
                 Line.from("The first line"),
@@ -216,10 +225,12 @@ class TextTest {
 
     @Test
     fun displayTextFromVec() {
-        val textFromVec = Text.from(listOf(
-            Line.from("The first line"),
-            Line.from("The second line")
-        ))
+        val textFromVec = Text.from(
+            listOf(
+                Line.from("The first line"),
+                Line.from("The second line")
+            )
+        )
 
         assertEquals("The first line\nThe second line", textFromVec.toString())
     }
@@ -230,10 +241,12 @@ class TextTest {
 
         assertEquals("The first line\nThe second line", text.toString())
 
-        text.extend(listOf(
-            Line.from("The third line"),
-            Line.from("The fourth line")
-        ))
+        text.extend(
+            listOf(
+                Line.from("The third line"),
+                Line.from("The fourth line")
+            )
+        )
 
         assertEquals(
             "The first line\nThe second line\nThe third line\nThe fourth line",
@@ -299,11 +312,15 @@ class TextTest {
         text.pushSpan(Span.raw("B"))
         text.pushSpan("C")
         assertEquals(
-            listOf(Line.from(listOf(
-                Span.raw("A"),
-                Span.raw("B"),
-                Span.raw("C")
-            ))),
+            listOf(
+                Line.from(
+                    listOf(
+                        Span.raw("A"),
+                        Span.raw("B"),
+                        Span.raw("C")
+                    )
+                )
+            ),
             text.lines
         )
     }
@@ -338,11 +355,12 @@ class TextTest {
  * Iterator tests for Text.
  */
 class TextIteratorTest {
-
-    private fun helloWorld(): Text = Text.from(listOf(
-        Line.styled("Hello ", Style.default().fg(Color.Blue)),
-        Line.styled("world!", Style.default().fg(Color.Green))
-    ))
+    private fun helloWorld(): Text = Text.from(
+        listOf(
+            Line.styled("Hello ", Style.default().fg(Color.Blue)),
+            Line.styled("world!", Style.default().fg(Color.Green))
+        )
+    )
 
     @Test
     fun iter() {

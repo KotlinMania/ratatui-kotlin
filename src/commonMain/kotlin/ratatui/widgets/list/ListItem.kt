@@ -50,9 +50,8 @@ data class ListItem(
     /** The content of the list item */
     val content: Text,
     /** The style of the list item */
-    val itemStyle: Style = Style.default()
+    val itemStyle: Style = Style.default(),
 ) : Styled<ListItem> {
-
     /**
      * Sets the item style.
      *

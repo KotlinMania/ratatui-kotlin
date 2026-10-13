@@ -12,7 +12,7 @@ import ratatui.layout.Rect
 class Rows private constructor(
     private val rect: Rect,
     private var currentRowFwd: Int,
-    private var currentRowBack: Int
+    private var currentRowBack: Int,
 ) {
     companion object {
         fun new(rect: Rect): Rows = Rows(
@@ -53,7 +53,7 @@ class Rows private constructor(
 class Columns private constructor(
     private val rect: Rect,
     private var currentColumnFwd: Int,
-    private var currentColumnBack: Int
+    private var currentColumnBack: Int,
 ) {
     companion object {
         fun new(rect: Rect): Columns = Columns(
@@ -95,7 +95,7 @@ class Columns private constructor(
  */
 class Positions private constructor(
     private val rect: Rect,
-    private var currentPosition: Position
+    private var currentPosition: Position,
 ) {
     companion object {
         fun new(rect: Rect): Positions = Positions(

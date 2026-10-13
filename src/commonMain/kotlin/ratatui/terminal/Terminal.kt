@@ -43,7 +43,7 @@ class Terminal<B : Backend>(
     /** The backend used to interface with the terminal */
     private val backend: B,
     /** Terminal options including viewport configuration */
-    options: TerminalOptions = TerminalOptions()
+    options: TerminalOptions = TerminalOptions(),
 ) {
     /** Holds the results of the current and previous draw calls */
     private val buffers: Array<Buffer>
@@ -371,7 +371,7 @@ class Terminal<B : Backend>(
         yOffset: Int,
         linesToDraw: Int,
         cells: List<Cell>,
-        startIndex: Int
+        startIndex: Int,
     ): Int {
         val width = lastKnownArea.width
         val endIndex = startIndex + (width * linesToDraw)
@@ -443,5 +443,5 @@ class Terminal<B : Backend>(
  */
 data class TerminalOptions(
     /** Viewport used to draw to the terminal */
-    val viewport: Viewport = Viewport.Fullscreen
+    val viewport: Viewport = Viewport.Fullscreen,
 )

@@ -50,9 +50,9 @@ data class LineGauge(
     private val filledSymbol: String = LineSymbols.HORIZONTAL,
     private val unfilledSymbol: String = LineSymbols.HORIZONTAL,
     private val filledStyle: Style = Style.default(),
-    private val unfilledStyle: Style = Style.default()
-) : Widget, Styled<LineGauge> {
-
+    private val unfilledStyle: Style = Style.default(),
+) : Widget,
+    Styled<LineGauge> {
     /**
      * Surrounds the `LineGauge` with a [Block].
      */

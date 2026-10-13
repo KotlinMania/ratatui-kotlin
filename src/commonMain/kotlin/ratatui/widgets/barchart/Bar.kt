@@ -39,9 +39,8 @@ data class Bar(
     /** Style of the value printed at the bottom of the bar */
     internal val valueStyle: Style = Style.default(),
     /** Optional textValue to be shown on the bar instead of the actual value */
-    internal val textValue: String? = null
+    internal val textValue: String? = null,
 ) : Styled<Bar> {
-
     /**
      * Set the value of this bar.
      *
@@ -94,7 +93,7 @@ data class Bar(
         area: Rect,
         barLength: Int,
         defaultValueStyle: Style,
-        defaultBarStyle: Style
+        defaultBarStyle: Style,
     ) {
         val text = textValue ?: value.toString()
 
@@ -126,7 +125,7 @@ data class Bar(
         x: Int,
         y: Int,
         defaultValueStyle: Style,
-        ticks: Long
+        ticks: Long,
     ) {
         if (value != 0L) {
             val ticksPerLine = 8L
@@ -150,7 +149,7 @@ data class Bar(
         maxWidth: Int,
         x: Int,
         y: Int,
-        defaultLabelStyle: Style
+        defaultLabelStyle: Style,
     ) {
         // center the label. Necessary to do it this way as we do not want to set the style
         // of the whole area, just the label area

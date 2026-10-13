@@ -24,7 +24,7 @@ import kotlin.test.assertEquals
  */
 class BackendDiffTest {
     private class RecordingBackend(
-        private val fixedSize: Size
+        private val fixedSize: Size,
     ) : Backend {
         val draws: MutableList<List<BufferDiff.Item>> = mutableListOf()
 

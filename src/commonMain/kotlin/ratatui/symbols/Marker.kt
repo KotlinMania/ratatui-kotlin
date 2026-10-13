@@ -85,7 +85,9 @@ sealed class Marker {
     /**
      * Custom marker where the supplied char is applied once per cell.
      */
-    data class Custom(val char: Char) : Marker() {
+    data class Custom(
+        val char: Char,
+    ) : Marker() {
         override fun toString(): String = "Custom"
     }
 

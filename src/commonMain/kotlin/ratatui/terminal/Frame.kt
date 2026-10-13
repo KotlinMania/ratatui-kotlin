@@ -24,7 +24,7 @@ class Frame internal constructor(
     /** The buffer that is used to draw the current frame */
     internal val buffer: Buffer,
     /** The frame count indicating the sequence number of this frame */
-    private val count: Int
+    private val count: Int,
 ) {
     /**
      * Where should the cursor be after drawing this frame?
@@ -163,5 +163,5 @@ data class CompletedFrame(
     /** The size of the last frame */
     val area: Rect,
     /** The frame count indicating the sequence number of this frame */
-    val count: Int
+    val count: Int,
 )

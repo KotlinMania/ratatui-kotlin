@@ -42,7 +42,7 @@ data class TableState(
     var selected: Int? = null,
     /** Index of the selected column, or null if no column is selected */
     @SerialName("selected_column")
-    var selectedColumn: Int? = null
+    var selectedColumn: Int? = null,
 ) {
     /**
      * Sets the index of the first row to be displayed.

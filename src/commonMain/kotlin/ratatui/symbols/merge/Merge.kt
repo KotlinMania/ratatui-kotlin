@@ -42,7 +42,9 @@ enum class MergeStrategy {
      * 3. Double and thick segments are merged based on the second symbol.
      * 4. Some combinations of double and plain that do not exist are merged based on the second symbol.
      */
-    Fuzzy;
+    Fuzzy,
+
+    ;
 
     /**
      * Merges two symbols using this merge strategy.
@@ -91,7 +93,8 @@ internal enum class LineStyle {
     TripleDash,
     TripleDashThick,
     QuadrupleDash,
-    QuadrupleDashThick;
+    QuadrupleDashThick,
+    ;
 
     fun merge(other: LineStyle): LineStyle {
         return if (other == Nothing) this else other
@@ -105,7 +108,7 @@ internal data class BorderSymbol(
     val right: LineStyle,
     val up: LineStyle,
     val left: LineStyle,
-    val down: LineStyle
+    val down: LineStyle,
 ) {
     fun merge(other: BorderSymbol, strategy: MergeStrategy): BorderSymbol {
         val exactResult = BorderSymbol(
@@ -163,19 +166,27 @@ internal data class BorderSymbol(
 
     private fun isStraight(): Boolean {
         return (up == down && left == right) &&
-                (up == LineStyle.Nothing || left == LineStyle.Nothing)
+            (up == LineStyle.Nothing || left == LineStyle.Nothing)
     }
 
     private fun isCorner(): Boolean {
         return when {
-            up != LineStyle.Nothing && right != LineStyle.Nothing &&
-                    down == LineStyle.Nothing && left == LineStyle.Nothing -> up == right
-            right != LineStyle.Nothing && down != LineStyle.Nothing &&
-                    up == LineStyle.Nothing && left == LineStyle.Nothing -> right == down
-            down != LineStyle.Nothing && left != LineStyle.Nothing &&
-                    up == LineStyle.Nothing && right == LineStyle.Nothing -> down == left
-            up != LineStyle.Nothing && left != LineStyle.Nothing &&
-                    right == LineStyle.Nothing && down == LineStyle.Nothing -> up == left
+            up != LineStyle.Nothing &&
+                right != LineStyle.Nothing &&
+                down == LineStyle.Nothing &&
+                left == LineStyle.Nothing -> up == right
+            right != LineStyle.Nothing &&
+                down != LineStyle.Nothing &&
+                up == LineStyle.Nothing &&
+                left == LineStyle.Nothing -> right == down
+            down != LineStyle.Nothing &&
+                left != LineStyle.Nothing &&
+                up == LineStyle.Nothing &&
+                right == LineStyle.Nothing -> down == left
+            up != LineStyle.Nothing &&
+                left != LineStyle.Nothing &&
+                right == LineStyle.Nothing &&
+                down == LineStyle.Nothing -> up == left
             else -> false
         }
     }

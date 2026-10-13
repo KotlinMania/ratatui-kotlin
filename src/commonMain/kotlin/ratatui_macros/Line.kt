@@ -37,17 +37,13 @@ fun line(): Line = Line.default()
 
 /**
  * Create a [Line] from a given [Span] repeated some amount of times.
- *
- * Mirrors the Rust `line![$span; $n]` form.
  */
 fun line(span: Any, n: Int): Line {
     return Line.from(List(n) { intoSpan(span) })
 }
 
 /**
- * Create a [Line] containing a vector of [Span]s.
- *
- * Mirrors the Rust `line![$($span),+]` form.
+ * Create a [Line] containing a list of [Span]s.
  */
 fun line(vararg spans: Any): Line {
     return Line.from(spans.map { intoSpan(it) })

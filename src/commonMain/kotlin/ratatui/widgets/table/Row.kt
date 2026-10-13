@@ -42,9 +42,8 @@ data class Row(
     /** The bottom margin of this row */
     internal val bottomMargin: Int = 0,
     /** The style of this row */
-    internal val rowStyle: Style = Style.default()
+    internal val rowStyle: Style = Style.default(),
 ) : Styled<Row> {
-
     /**
      * Set the cells of the [Row].
      */

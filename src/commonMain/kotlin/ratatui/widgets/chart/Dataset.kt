@@ -41,15 +41,14 @@ class Dataset internal constructor(
     /** Determines graph type used for drawing points */
     internal val datasetGraphType: GraphType = GraphType.Scatter,
     /** Style used to plot this dataset */
-    internal val datasetStyle: Style = Style.default()
+    internal val datasetStyle: Style = Style.default(),
 ) : Styled<Dataset> {
-
     internal fun copy(
         datasetName: Line? = this.datasetName,
         dataPoints: List<Pair<Double, Double>> = this.dataPoints,
         datasetMarker: Marker = this.datasetMarker,
         datasetGraphType: GraphType = this.datasetGraphType,
-        datasetStyle: Style = this.datasetStyle
+        datasetStyle: Style = this.datasetStyle,
     ): Dataset = Dataset(datasetName, dataPoints, datasetMarker, datasetGraphType, datasetStyle)
 
     override fun equals(other: Any?): Boolean {
