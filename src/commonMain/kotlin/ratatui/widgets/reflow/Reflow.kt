@@ -15,7 +15,7 @@ internal data class WrappedLine(
     /** The width of the line */
     val width: Int,
     /** The alignment of the line */
-    val alignment: HorizontalAlignment
+    val alignment: HorizontalAlignment,
 )
 
 /**
@@ -38,9 +38,8 @@ internal interface LineComposer {
 internal class WordWrapper(
     private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
     private val maxLineWidth: Int,
-    private val trim: Boolean
+    private val trim: Boolean,
 ) : LineComposer {
-
     private val wrappedLines = ArrayDeque<MutableList<StyledGrapheme>>()
     private var currentAlignment = HorizontalAlignment.Left
     private var currentLine = mutableListOf<StyledGrapheme>()
@@ -76,16 +75,16 @@ internal class WordWrapper(
             val wordFound = nonWhitespacePrevious && isWhitespace
             // current word would overflow after removing whitespace
             val trimmedOverflow = pendingLine.isEmpty() &&
-                    trim &&
-                    wordWidth + symbolWidth > maxLineWidth
+                trim &&
+                wordWidth + symbolWidth > maxLineWidth
             // separated whitespace would overflow on its own
             val whitespaceOverflow = pendingLine.isEmpty() &&
-                    trim &&
-                    whitespaceWidth + symbolWidth > maxLineWidth
+                trim &&
+                whitespaceWidth + symbolWidth > maxLineWidth
             // current full word (including whitespace) would overflow
             val untrimmedOverflow = pendingLine.isEmpty() &&
-                    !trim &&
-                    wordWidth + whitespaceWidth + symbolWidth > maxLineWidth
+                !trim &&
+                wordWidth + whitespaceWidth + symbolWidth > maxLineWidth
 
             // append finished segment to current line
             if (wordFound || trimmedOverflow || whitespaceOverflow || untrimmedOverflow) {
@@ -108,7 +107,7 @@ internal class WordWrapper(
             val lineFull = lineWidth >= maxLineWidth
             // pending word would overflow line limit
             val pendingWordOverflow = symbolWidth > 0 &&
-                    lineWidth + whitespaceWidth + wordWidth >= maxLineWidth
+                lineWidth + whitespaceWidth + wordWidth >= maxLineWidth
 
             // add finished wrapped line to remaining lines
             if (lineFull || pendingWordOverflow) {
@@ -220,7 +219,7 @@ internal class WordWrapper(
         fun new(
             lines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
             maxLineWidth: Int,
-            trim: Boolean
+            trim: Boolean,
         ): WordWrapper = WordWrapper(lines, maxLineWidth, trim)
     }
 }
@@ -233,9 +232,8 @@ internal class WordWrapper(
  */
 internal class LineTruncator(
     private val inputLines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
-    private val maxLineWidth: Int
+    private val maxLineWidth: Int,
 ) : LineComposer {
-
     private var currentLine = mutableListOf<StyledGrapheme>()
     private var horizontalOffset = 0
 
@@ -307,7 +305,7 @@ internal class LineTruncator(
          */
         fun new(
             lines: Iterator<Pair<Iterator<StyledGrapheme>, HorizontalAlignment>>,
-            maxLineWidth: Int
+            maxLineWidth: Int,
         ): LineTruncator = LineTruncator(lines, maxLineWidth)
     }
 }

@@ -34,7 +34,7 @@ data class Palette(
     val c700: Color,
     val c800: Color,
     val c900: Color,
-    val c950: Color
+    val c950: Color,
 )
 
 val BLACK: Color = Color.fromU32(0x000000u)

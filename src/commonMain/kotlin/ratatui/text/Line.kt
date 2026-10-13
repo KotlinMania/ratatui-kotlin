@@ -113,13 +113,12 @@ import ratatui.widgets.Widget
 class Line internal constructor(
     /** The style of this line of text. */
     override val style: Style,
-
     /** The alignment of this line of text. */
     val alignment: HorizontalAlignment?,
-
-    internal val mutableSpans: MutableList<Span>
-) : Styled<Line>, Widget, Iterable<Span> {
-
+    internal val mutableSpans: MutableList<Span>,
+) : Styled<Line>,
+    Widget,
+    Iterable<Span> {
     /** The spans that make up this line of text. */
     val spans: List<Span> get() = mutableSpans
 
@@ -129,7 +128,7 @@ class Line internal constructor(
     constructor(
         spans: List<Span> = emptyList(),
         style: Style = Style.default(),
-        alignment: HorizontalAlignment? = null
+        alignment: HorizontalAlignment? = null,
     ) : this(style, alignment, spans.toMutableList())
 
     /**
@@ -138,7 +137,7 @@ class Line internal constructor(
     fun copy(
         style: Style = this.style,
         alignment: HorizontalAlignment? = this.alignment,
-        spans: List<Span> = this.mutableSpans
+        spans: List<Span> = this.mutableSpans,
     ): Line = Line(style, alignment, spans.toMutableList())
 
     /**
@@ -355,7 +354,7 @@ class Line internal constructor(
     internal fun renderWithAlignment(
         area: Rect,
         buf: Buffer,
-        parentAlignment: HorizontalAlignment?
+        parentAlignment: HorizontalAlignment?,
     ) {
         val clippedArea = area.intersection(buf.area)
         if (clippedArea.isEmpty()) {

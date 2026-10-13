@@ -16,7 +16,7 @@ package ratatui.text
  */
 class Masked private constructor(
     private val inner: String,
-    private val maskChar: Char
+    private val maskChar: Char,
 ) : ToText {
     companion object {
         fun new(s: String, maskChar: Char): Masked = Masked(inner = s, maskChar = maskChar)

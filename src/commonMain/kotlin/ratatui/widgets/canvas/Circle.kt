@@ -17,9 +17,8 @@ data class Circle(
     val x: Double = 0.0,
     val y: Double = 0.0,
     val radius: Double = 0.0,
-    val color: Color = Color.Reset
+    val color: Color = Color.Reset,
 ) : Shape {
-
     override fun draw(painter: Painter) {
         for (angle in 0 until 360) {
             val radians = angle.toDouble() * kotlin.math.PI / 180.0

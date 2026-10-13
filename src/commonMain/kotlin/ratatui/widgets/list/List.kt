@@ -21,7 +21,7 @@ enum class ListDirection {
     /** The first value is on the top, going to the bottom */
     TopToBottom,
     /** The first value is on the bottom, going to the top */
-    BottomToTop
+    BottomToTop,
 }
 
 /**
@@ -94,9 +94,10 @@ data class List(
     /** Decides when to allocate spacing for the selection symbol */
     private val highlightSpacing: HighlightSpacing = HighlightSpacing.WhenSelected,
     /** How many items to try to keep visible before and after the selected item */
-    private val scrollPadding: Int = 0
-) : Widget, StatefulWidget<ListState>, Styled<List> {
-
+    private val scrollPadding: Int = 0,
+) : Widget,
+    StatefulWidget<ListState>,
+    Styled<List> {
     /**
      * Set the items.
      *
@@ -322,7 +323,7 @@ data class List(
     private fun getItemsBounds(
         selected: Int?,
         offset: Int,
-        maxHeight: Int
+        maxHeight: Int,
     ): Pair<Int, Int> {
         val safeOffset = offset.coerceAtMost((items.size - 1).coerceAtLeast(0))
 
@@ -389,7 +390,7 @@ data class List(
         selected: Int?,
         maxHeight: Int,
         firstVisibleIndex: Int,
-        lastVisibleIndex: Int
+        lastVisibleIndex: Int,
     ): Int? {
         if (selected == null) return null
 

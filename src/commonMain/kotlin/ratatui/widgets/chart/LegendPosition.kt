@@ -23,14 +23,15 @@ enum class LegendPosition {
     /** Legend is in the bottom-right corner */
     BottomRight,
     /** Legend is in the bottom-left corner */
-    BottomLeft;
+    BottomLeft,
+    ;
 
     internal fun layout(
         area: Rect,
         legendWidth: Int,
         legendHeight: Int,
         xTitleWidth: Int,
-        yTitleWidth: Int
+        yTitleWidth: Int,
     ): Rect? {
         var heightMargin = area.height - legendHeight
         if (xTitleWidth != 0) {

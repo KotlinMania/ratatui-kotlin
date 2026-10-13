@@ -47,8 +47,6 @@ fun row(): Row = Row.default()
 
 /**
  * Create a [Row] from a given cell-like value repeated some amount of times.
- *
- * Mirrors the Rust `row![$cell; $n]` form.
  */
 fun row(cell: Any, n: Int): Row {
     require(n >= 0) { "n must be non-negative, got $n" }
@@ -57,8 +55,6 @@ fun row(cell: Any, n: Int): Row {
 
 /**
  * Create a [Row] containing a list of [Cell]s.
- *
- * Mirrors the Rust `row![$($cell),+]` form.
  */
 fun row(vararg cells: Any): Row {
     if (cells.isEmpty()) return Row.default()

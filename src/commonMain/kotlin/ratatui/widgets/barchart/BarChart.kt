@@ -81,9 +81,9 @@ data class BarChart(
     /** Value necessary for a bar to reach the maximum height */
     private val max: Long? = null,
     /** Direction of the bars */
-    private val direction: Direction = Direction.Vertical
-) : Widget, Styled<BarChart> {
-
+    private val direction: Direction = Direction.Vertical,
+) : Widget,
+    Styled<BarChart> {
     /**
      * Add group of bars to the BarChart.
      */
@@ -376,7 +376,7 @@ data class BarChart(
         area: Rect,
         buf: Buffer,
         labelInfo: LabelInfo,
-        groupTicks: List<List<Long>>
+        groupTicks: List<List<Long>>,
     ) {
         // print labels and values in one go
         var barX = area.left()
@@ -463,5 +463,5 @@ data class BarChart(
 private data class LabelInfo(
     val groupLabelVisible: Boolean,
     val barLabelVisible: Boolean,
-    val height: Int
+    val height: Int,
 )

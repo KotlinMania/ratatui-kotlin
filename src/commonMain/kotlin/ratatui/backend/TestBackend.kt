@@ -3,7 +3,6 @@ package ratatui.backend
 
 import ratatui.buffer.Buffer
 import ratatui.buffer.Cell
-import ratatui.buffer.cellWidth
 import ratatui.layout.Position
 import ratatui.layout.Rect
 import ratatui.layout.Size
@@ -18,7 +17,7 @@ class TestBackend private constructor(
     private val buffer: Buffer,
     private val scrollback: Buffer,
     private var cursor: Boolean,
-    private var pos: Position
+    private var pos: Position,
 ) : Backend {
     companion object {
         /** Creates a new [TestBackend] with the specified width and height. */

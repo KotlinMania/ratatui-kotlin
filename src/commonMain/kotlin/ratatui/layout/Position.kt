@@ -58,9 +58,8 @@ package ratatui.layout
  */
 data class Position(
     var x: Int,
-    var y: Int
+    var y: Int,
 ) : Comparable<Position> {
-
     companion object {
         private const val U16_MAX: Int = 0xFFFF
 

@@ -44,9 +44,9 @@ data class Gauge(
     private val label: Span? = null,
     private val useUnicode: Boolean = false,
     private val gaugeStyle: Style = Style.default(),
-    private val widgetStyle: Style = Style.default()
-) : Widget, Styled<Gauge> {
-
+    private val widgetStyle: Style = Style.default(),
+) : Widget,
+    Styled<Gauge> {
     /**
      * Surrounds the `Gauge` with a [Block].
      *

@@ -45,7 +45,7 @@ import ratatui.text.graphemes
 class Buffer internal constructor(
     /** The area represented by this buffer */
     var area: Rect,
-    internal val mutableContent: MutableList<Cell>
+    internal val mutableContent: MutableList<Cell>,
 ) {
     /** The content of the buffer */
     val content: List<Cell> get() = mutableContent
@@ -379,7 +379,7 @@ class Buffer internal constructor(
             val fg: ratatui.style.Color,
             val bg: ratatui.style.Color,
             val underlineColor: ratatui.style.Color,
-            val modifier: ratatui.style.Modifier
+            val modifier: ratatui.style.Modifier,
         )
 
         data class StyleEntry(
@@ -388,7 +388,7 @@ class Buffer internal constructor(
             val fg: ratatui.style.Color,
             val bg: ratatui.style.Color,
             val underlineColor: ratatui.style.Color,
-            val modifier: ratatui.style.Modifier
+            val modifier: ratatui.style.Modifier,
         )
 
         fun String.debugQuoted(): String {

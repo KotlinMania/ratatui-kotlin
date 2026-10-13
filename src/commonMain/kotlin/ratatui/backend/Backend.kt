@@ -118,7 +118,9 @@ enum class ClearType {
     CurrentLine,
 
     /** Clears from the cursor position (inclusive) to the end of the current line. */
-    UntilNewLine;
+    UntilNewLine,
+
+    ;
 
     companion object {
         fun fromString(value: String): ClearType? {
@@ -149,7 +151,7 @@ data class WindowSize(
      * <https://man7.org/linux/man-pages/man4/ttyIoctl.4.html> under section "Get and set window
      * size" / TIOCGWINSZ where the fields are commented as "unused".
      */
-    val pixels: Size
+    val pixels: Size,
 )
 
 /**

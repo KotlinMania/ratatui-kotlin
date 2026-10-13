@@ -180,10 +180,10 @@ class RectUnitTest {
     fun contains() {
         val rect = Rect.new(1, 2, 3, 4)
         val cases = listOf(
-            Triple(rect, Position(x = 1, y = 2), true),  // inside_top_left
-            Triple(rect, Position(x = 3, y = 2), true),  // inside_top_right
-            Triple(rect, Position(x = 1, y = 5), true),  // inside_bottom_left
-            Triple(rect, Position(x = 3, y = 5), true),  // inside_bottom_right
+            Triple(rect, Position(x = 1, y = 2), true), // inside_top_left
+            Triple(rect, Position(x = 3, y = 2), true), // inside_top_right
+            Triple(rect, Position(x = 1, y = 5), true), // inside_bottom_left
+            Triple(rect, Position(x = 3, y = 5), true), // inside_bottom_right
             Triple(rect, Position(x = 0, y = 2), false), // outside_left
             Triple(rect, Position(x = 4, y = 2), false), // outside_right
             Triple(rect, Position(x = 1, y = 1), false), // outside_top

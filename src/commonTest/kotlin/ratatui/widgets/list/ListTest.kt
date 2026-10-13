@@ -101,7 +101,7 @@ class ListTest {
         data class TruncateTestCase(
             val selected: Int?,
             val items: kotlin.collections.List<ListItem>,
-            val expected: Buffer
+            val expected: Buffer,
         )
 
         val backend = TestBackend.new(10, 2)
@@ -280,69 +280,91 @@ class ListTest {
 
     @Test
     fun widgetsListEnableAlwaysHighlightSpacing() {
-        data class Case(val selected: Int?, val space: HighlightSpacing, val expected: kotlin.collections.List<String>)
+        data class Case(
+            val selected: Int?,
+            val space: HighlightSpacing,
+            val expected: kotlin.collections.List<String>,
+        )
 
         val cases = listOf(
-            Case(null, HighlightSpacing.WhenSelected, listOf(
-                "┌─────────────┐",
-                "│Item 1       │",
-                "│Item 1a      │",
-                "│Item 2       │",
-                "│Item 2b      │",
-                "│Item 3       │",
-                "│Item 3c      │",
-                "└─────────────┘",
-            )),
-            Case(null, HighlightSpacing.Always, listOf(
-                "┌─────────────┐",
-                "│   Item 1    │",
-                "│   Item 1a   │",
-                "│   Item 2    │",
-                "│   Item 2b   │",
-                "│   Item 3    │",
-                "│   Item 3c   │",
-                "└─────────────┘",
-            )),
-            Case(null, HighlightSpacing.Never, listOf(
-                "┌─────────────┐",
-                "│Item 1       │",
-                "│Item 1a      │",
-                "│Item 2       │",
-                "│Item 2b      │",
-                "│Item 3       │",
-                "│Item 3c      │",
-                "└─────────────┘",
-            )),
-            Case(0, HighlightSpacing.WhenSelected, listOf(
-                "┌─────────────┐",
-                "│>> Item 1    │",
-                "│   Item 1a   │",
-                "│   Item 2    │",
-                "│   Item 2b   │",
-                "│   Item 3    │",
-                "│   Item 3c   │",
-                "└─────────────┘",
-            )),
-            Case(0, HighlightSpacing.Always, listOf(
-                "┌─────────────┐",
-                "│>> Item 1    │",
-                "│   Item 1a   │",
-                "│   Item 2    │",
-                "│   Item 2b   │",
-                "│   Item 3    │",
-                "│   Item 3c   │",
-                "└─────────────┘",
-            )),
-            Case(0, HighlightSpacing.Never, listOf(
-                "┌─────────────┐",
-                "│Item 1       │",
-                "│Item 1a      │",
-                "│Item 2       │",
-                "│Item 2b      │",
-                "│Item 3       │",
-                "│Item 3c      │",
-                "└─────────────┘",
-            )),
+            Case(
+                null, HighlightSpacing.WhenSelected,
+                listOf(
+                    "┌─────────────┐",
+                    "│Item 1       │",
+                    "│Item 1a      │",
+                    "│Item 2       │",
+                    "│Item 2b      │",
+                    "│Item 3       │",
+                    "│Item 3c      │",
+                    "└─────────────┘",
+                )
+            ),
+            Case(
+                null, HighlightSpacing.Always,
+                listOf(
+                    "┌─────────────┐",
+                    "│   Item 1    │",
+                    "│   Item 1a   │",
+                    "│   Item 2    │",
+                    "│   Item 2b   │",
+                    "│   Item 3    │",
+                    "│   Item 3c   │",
+                    "└─────────────┘",
+                )
+            ),
+            Case(
+                null, HighlightSpacing.Never,
+                listOf(
+                    "┌─────────────┐",
+                    "│Item 1       │",
+                    "│Item 1a      │",
+                    "│Item 2       │",
+                    "│Item 2b      │",
+                    "│Item 3       │",
+                    "│Item 3c      │",
+                    "└─────────────┘",
+                )
+            ),
+            Case(
+                0, HighlightSpacing.WhenSelected,
+                listOf(
+                    "┌─────────────┐",
+                    "│>> Item 1    │",
+                    "│   Item 1a   │",
+                    "│   Item 2    │",
+                    "│   Item 2b   │",
+                    "│   Item 3    │",
+                    "│   Item 3c   │",
+                    "└─────────────┘",
+                )
+            ),
+            Case(
+                0, HighlightSpacing.Always,
+                listOf(
+                    "┌─────────────┐",
+                    "│>> Item 1    │",
+                    "│   Item 1a   │",
+                    "│   Item 2    │",
+                    "│   Item 2b   │",
+                    "│   Item 3    │",
+                    "│   Item 3c   │",
+                    "└─────────────┘",
+                )
+            ),
+            Case(
+                0, HighlightSpacing.Never,
+                listOf(
+                    "┌─────────────┐",
+                    "│Item 1       │",
+                    "│Item 1a      │",
+                    "│Item 2       │",
+                    "│Item 2b      │",
+                    "│Item 3       │",
+                    "│Item 3c      │",
+                    "└─────────────┘",
+                )
+            ),
         )
 
         for (case in cases) {
@@ -350,11 +372,13 @@ class ListTest {
             val backend = TestBackend.new(15, 8)
             val terminal = Terminal(backend)
             terminal.draw { f ->
-                val list = List.new(listOf(
-                    ListItem.new(listOf(Line.from("Item 1"), Line.from("Item 1a"))),
-                    ListItem.new(listOf(Line.from("Item 2"), Line.from("Item 2b"))),
-                    ListItem.new(listOf(Line.from("Item 3"), Line.from("Item 3c"))),
-                ))
+                val list = List.new(
+                    listOf(
+                        ListItem.new(listOf(Line.from("Item 1"), Line.from("Item 1a"))),
+                        ListItem.new(listOf(Line.from("Item 2"), Line.from("Item 2b"))),
+                        ListItem.new(listOf(Line.from("Item 3"), Line.from("Item 3c"))),
+                    )
+                )
                     .block(Block.bordered())
                     .highlightSymbol(">> ")
                     .highlightSpacing(case.space)

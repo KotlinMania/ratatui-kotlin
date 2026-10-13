@@ -12,7 +12,6 @@ import kotlin.test.assertNotNull
  * Tests for the RatatuiLogo widget.
  */
 class RatatuiLogoTest {
-
     @Test
     fun logoDefault() {
         val logo = RatatuiLogo.default()
@@ -97,7 +96,6 @@ class RatatuiLogoTest {
  * Tests for the RatatuiMascot widget.
  */
 class RatatuiMascotTest {
-
     @Test
     fun mascotDefault() {
         val mascot = RatatuiMascot.default()
@@ -163,7 +161,6 @@ class RatatuiMascotTest {
  * Tests for MascotEyeColor enum.
  */
 class MascotEyeColorTest {
-
     @Test
     fun mascotEyeColorDefault() {
         assertEquals(MascotEyeColor.Default, MascotEyeColor.Default)

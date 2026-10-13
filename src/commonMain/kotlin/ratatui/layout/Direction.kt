@@ -21,7 +21,9 @@ enum class Direction {
     Horizontal,
 
     /** Layout segments are arranged top to bottom (default). */
-    Vertical;
+    Vertical,
+
+    ;
 
     /**
      * The perpendicular direction to this direction.

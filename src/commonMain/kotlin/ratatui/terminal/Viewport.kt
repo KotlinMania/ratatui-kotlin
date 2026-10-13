@@ -33,7 +33,9 @@ sealed class Viewport {
      *
      * @param height The height of the inline viewport in lines
      */
-    data class Inline(val height: UShort) : Viewport() {
+    data class Inline(
+        val height: UShort,
+    ) : Viewport() {
         override fun toString(): String = "Inline($height)"
     }
 
@@ -42,7 +44,9 @@ sealed class Viewport {
      *
      * @param area The fixed area to use for the viewport
      */
-    data class Fixed(val area: Rect) : Viewport() {
+    data class Fixed(
+        val area: Rect,
+    ) : Viewport() {
         override fun toString(): String = "Fixed($area)"
     }
 

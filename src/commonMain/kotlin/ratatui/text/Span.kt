@@ -5,7 +5,6 @@ import ratatui.buffer.Buffer
 import ratatui.buffer.cellWidth
 import ratatui.layout.Rect
 import ratatui.style.Color
-import ratatui.style.Modifier
 import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.widgets.Widget
@@ -70,9 +69,9 @@ data class Span(
     /** The content of the span. */
     val content: String = "",
     /** The style of the span. */
-    override val style: Style = Style.default()
-) : Styled<Span>, Widget {
-
+    override val style: Style = Style.default(),
+) : Styled<Span>,
+    Widget {
     /**
      * Sets the content of the span.
      *
@@ -370,7 +369,10 @@ internal fun graphemes(s: String): List<String> {
 
 private const val ZWJ: Int = 0x200D
 
-private data class CodePoint(val value: Int, val nextIndex: Int)
+private data class CodePoint(
+    val value: Int,
+    val nextIndex: Int,
+)
 
 private fun readCodePoint(s: String, index: Int): CodePoint {
     val ch = s[index]
@@ -403,10 +405,14 @@ private fun isVariationSelector(codePoint: Int): Boolean {
 }
 
 private fun isCombiningMark(codePoint: Int): Boolean {
-    return codePoint in 0x0300..0x036F || // Combining Diacritical Marks
-        codePoint in 0x1AB0..0x1AFF || // Combining Diacritical Marks Extended
-        codePoint in 0x1DC0..0x1DFF || // Combining Diacritical Marks Supplement
-        codePoint in 0x20D0..0x20FF || // Combining Diacritical Marks for Symbols
+    return codePoint in 0x0300..0x036F ||
+        // Combining Diacritical Marks
+        codePoint in 0x1AB0..0x1AFF ||
+        // Combining Diacritical Marks Extended
+        codePoint in 0x1DC0..0x1DFF ||
+        // Combining Diacritical Marks Supplement
+        codePoint in 0x20D0..0x20FF ||
+        // Combining Diacritical Marks for Symbols
         codePoint in 0xFE20..0xFE2F // Combining Half Marks
 }
 

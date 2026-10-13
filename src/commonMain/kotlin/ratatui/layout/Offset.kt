@@ -17,9 +17,8 @@ package ratatui.layout
  */
 data class Offset(
     val x: Int,
-    val y: Int
+    val y: Int,
 ) {
-
     companion object {
         /** A zero offset */
         val ZERO: Offset = Offset(0, 0)

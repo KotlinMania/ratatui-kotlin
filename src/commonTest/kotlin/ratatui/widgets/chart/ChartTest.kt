@@ -173,7 +173,10 @@ class ChartTest {
 
     @Test
     fun widgetsChartHandlesXAxisLabelsAlignments() {
-        data class Case(val alignment: HorizontalAlignment, val expected: List<String>)
+        data class Case(
+            val alignment: HorizontalAlignment,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
             Case(
@@ -219,7 +222,10 @@ class ChartTest {
 
     @Test
     fun widgetsChartHandlesYAxisLabelsAlignments() {
-        data class Case(val alignment: HorizontalAlignment, val expected: List<String>)
+        data class Case(
+            val alignment: HorizontalAlignment,
+            val expected: List<String>,
+        )
 
         val cases = listOf(
             Case(

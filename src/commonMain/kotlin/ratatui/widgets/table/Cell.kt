@@ -43,9 +43,8 @@ data class Cell(
     /** The content of the cell */
     val content: Text = Text.default(),
     /** The style of the cell */
-    private val cellStyle: Style = Style.default()
+    private val cellStyle: Style = Style.default(),
 ) : Styled<Cell> {
-
     /**
      * Set the content of the [Cell].
      */

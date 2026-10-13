@@ -21,7 +21,9 @@ enum class MapResolution {
      *
      * Contains about 5000 points, you likely want to use [ratatui.symbols.Marker.Braille] with this.
      */
-    High;
+    High,
+
+    ;
 
     /**
      * Get the coordinate data for this resolution.
@@ -46,9 +48,8 @@ enum class MapResolution {
  */
 data class Map(
     val resolution: MapResolution = MapResolution.Low,
-    val color: Color = Color.Reset
+    val color: Color = Color.Reset,
 ) : Shape {
-
     override fun draw(painter: Painter) {
         for ((x, y) in resolution.data()) {
             val point = painter.getPoint(x, y)

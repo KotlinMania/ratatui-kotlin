@@ -138,7 +138,9 @@ enum class Flex {
      *     └──────────────┘       └──────────────────┘       └──────────────────┘
      * ```
      */
-    SpaceAround;
+    SpaceAround,
+
+    ;
 
     companion object {
         /** The default flex mode (Start) */

@@ -11,9 +11,8 @@ import ratatui.style.Color
  */
 class Points internal constructor(
     internal val coords: List<Pair<Double, Double>> = emptyList(),
-    val color: Color = Color.Reset
+    val color: Color = Color.Reset,
 ) : Shape {
-
     /**
      * Create a new Points shape with the given coordinates and color.
      */

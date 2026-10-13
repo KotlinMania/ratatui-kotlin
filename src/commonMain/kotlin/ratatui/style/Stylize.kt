@@ -33,7 +33,7 @@ interface Styled<T> {
 enum class ColorDebugKind {
     Foreground,
     Background,
-    Underline
+    Underline,
 }
 
 /**
@@ -41,7 +41,7 @@ enum class ColorDebugKind {
  */
 data class ColorDebug(
     val kind: ColorDebugKind,
-    val color: Color
+    val color: Color,
 ) {
     override fun toString(): String {
         val isUnderline = kind == ColorDebugKind.Underline
@@ -209,7 +209,9 @@ interface Stylize<T> {
 /**
  * Default implementation of Stylize for any Styled type.
  */
-class StylizeImpl<T>(private val styled: Styled<T>) : Stylize<T> {
+class StylizeImpl<T>(
+    private val styled: Styled<T>,
+) : Stylize<T> {
     override fun bg(color: Color): T {
         val style = styled.style.bg(color)
         return styled.setStyle(style)
@@ -241,7 +243,9 @@ fun String.toStyled(): StringStyled = StringStyled(this)
 /**
  * Wrapper class to make String implement Styled.
  */
-class StringStyled(private val content: String) : Styled<Span> {
+class StringStyled(
+    private val content: String,
+) : Styled<Span> {
     override val style: Style get() = Style.default()
 
     override fun setStyle(style: Style): Span = Span.styled(content, style)

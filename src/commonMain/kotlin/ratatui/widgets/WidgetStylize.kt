@@ -2,7 +2,6 @@ package ratatui.widgets
 
 import ratatui.style.Color
 import ratatui.style.Modifier
-import ratatui.style.Style
 import ratatui.widgets.chart.Axis
 import ratatui.widgets.chart.Dataset
 import ratatui.widgets.sparkline.Sparkline

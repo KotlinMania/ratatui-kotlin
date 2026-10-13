@@ -39,9 +39,8 @@ import ratatui.widgets.Widget
  * ```
  */
 data class RatatuiLogo(
-    private val size: RatatuiLogoSize = RatatuiLogoSize.Tiny
+    private val size: RatatuiLogoSize = RatatuiLogoSize.Tiny,
 ) : Widget {
-
     /**
      * Set the size of the logo
      *
@@ -113,7 +112,9 @@ enum class RatatuiLogoSize {
      * █▀▀▄ █▀▀█ ▐▌ █▀▀█ ▐▌ ▀▄▄▀ █
      * ```
      */
-    Small;
+    Small,
+
+    ;
 
     /**
      * Get the logo as a string

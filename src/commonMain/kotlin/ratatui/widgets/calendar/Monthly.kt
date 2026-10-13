@@ -61,9 +61,8 @@ internal data class Monthly<DS : DateStyler>(
     /** Default style for calendar days */
     private val defaultStyle: Style = Style.default(),
     /** Optional block to wrap the calendar */
-    private val block: Block? = null
+    private val block: Block? = null,
 ) : Widget {
-
     /**
      * Fill the calendar slots for days not in the current month also, this causes each line to be
      * completely filled. If there is an event style for a date, this style will be patched with
@@ -175,11 +174,13 @@ internal data class Monthly<DS : DateStyler>(
     private fun renderMonthly(area: Rect, buf: Buffer) {
         val layout = Layout.default()
             .direction(Direction.Vertical)
-            .constraints(listOf(
-                Constraint.Length(if (showMonthStyle != null) 1 else 0),
-                Constraint.Length(if (showWeekdayStyle != null) 1 else 0),
-                Constraint.Fill(1)
-            ))
+            .constraints(
+                listOf(
+                    Constraint.Length(if (showMonthStyle != null) 1 else 0),
+                    Constraint.Length(if (showWeekdayStyle != null) 1 else 0),
+                    Constraint.Fill(1)
+                )
+            )
         val areas = layout.split(area)
         val monthHeader = areas[0]
         val daysHeader = areas[1]
@@ -253,7 +254,7 @@ internal interface DateStyler {
  * A simple [DateStyler] based on a [MutableMap].
  */
 internal class CalendarEventStore(
-    internal val events: MutableMap<LocalDate, Style> = mutableMapOf()
+    internal val events: MutableMap<LocalDate, Style> = mutableMapOf(),
 ) : DateStyler {
     /**
      * Add a date and style to the store.

@@ -35,7 +35,7 @@ interface Shape {
 data class Label(
     val x: Double = 0.0,
     val y: Double = 0.0,
-    val line: Line = Line()
+    val line: Line = Line(),
 )
 
 /**
@@ -48,7 +48,7 @@ data class Label(
 internal data class LayerCell(
     val symbol: String?,
     val fg: Color?,
-    val bg: Color?
+    val bg: Color?,
 )
 
 /**
@@ -58,7 +58,7 @@ internal data class LayerCell(
  * multiple shapes on the canvas in specific order.
  */
 internal data class Layer(
-    val contents: List<LayerCell>
+    val contents: List<LayerCell>,
 )
 
 /**
@@ -99,7 +99,7 @@ internal interface Grid {
  */
 private data class PatternCell(
     var pattern: Int = 0,
-    var color: Color? = null
+    var color: Color? = null,
 )
 
 /**
@@ -113,7 +113,7 @@ internal class PatternGrid(
     private val height: Int,
     private val cellWidth: Int,
     private val cellHeight: Int,
-    private val charTable: Array<String>
+    private val charTable: Array<String>,
 ) : Grid {
     private val cells: MutableList<PatternCell> = MutableList(width * height) { PatternCell() }
 
@@ -167,7 +167,7 @@ internal class CharGrid(
     private val width: Int,
     private val height: Int,
     private val cellChar: String,
-    private val applyColorToBg: Boolean = false
+    private val applyColorToBg: Boolean = false,
 ) : Grid {
     private val cells: MutableList<Color?> = MutableList(width * height) { null }
 
@@ -208,7 +208,7 @@ internal class CharGrid(
  */
 internal class HalfBlockGrid(
     private val width: Int,
-    private val height: Int
+    private val height: Int,
 ) : Grid {
     // Represents a single color for each "pixel" arranged in row, column order
     private val pixels: MutableList<MutableList<Color?>> = MutableList(height * 2) {
@@ -295,7 +295,7 @@ class Context internal constructor(
     internal var grid: Grid,
     private var dirty: Boolean = false,
     internal val layers: MutableList<Layer> = mutableListOf(),
-    internal val labels: MutableList<Label> = mutableListOf()
+    internal val labels: MutableList<Label> = mutableListOf(),
 ) {
     /**
      * Create a new Context with the given width and height measured in terminal columns and rows
@@ -313,7 +313,7 @@ class Context internal constructor(
         height: Int,
         xBounds: DoubleArray,
         yBounds: DoubleArray,
-        marker: Marker
+        marker: Marker,
     ) : this(
         width = width,
         height = height,
@@ -391,7 +391,7 @@ class Context internal constructor(
             height: Int,
             xBounds: DoubleArray,
             yBounds: DoubleArray,
-            marker: Marker
+            marker: Marker,
         ): Context = Context(width, height, xBounds, yBounds, marker)
     }
 }
@@ -404,7 +404,7 @@ class Context internal constructor(
  */
 class Painter internal constructor(
     private val context: Context,
-    private val resolution: Pair<Double, Double>
+    private val resolution: Pair<Double, Double>,
 ) {
     /**
      * Convert the `(x, y)` coordinates to location of a point on the grid.
@@ -507,9 +507,8 @@ class Canvas(
     private var yBounds: DoubleArray = doubleArrayOf(0.0, 0.0),
     private var paintFunc: ((Context) -> Unit)? = null,
     private var backgroundColor: Color = Color.Reset,
-    private var marker: Marker = Marker.Braille
+    private var marker: Marker = Marker.Braille,
 ) : Widget {
-
     /**
      * Wraps the canvas with a custom [Block] widget.
      */

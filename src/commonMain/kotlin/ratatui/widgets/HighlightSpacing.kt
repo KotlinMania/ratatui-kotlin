@@ -29,7 +29,9 @@ enum class HighlightSpacing {
      *
      * This means that the highlight symbol will never be drawn.
      */
-    Never;
+    Never,
+
+    ;
 
     /**
      * Determine if a selection column should be displayed.

@@ -20,9 +20,8 @@ data class Rectangle(
     val y: Double = 0.0,
     val width: Double = 0.0,
     val height: Double = 0.0,
-    val color: Color = Color.Reset
+    val color: Color = Color.Reset,
 ) : Shape {
-
     override fun draw(painter: Painter) {
         val lines = listOf(
             Line(

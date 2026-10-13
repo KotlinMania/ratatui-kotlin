@@ -38,9 +38,8 @@ package ratatui.layout
  */
 data class Margin(
     val horizontal: Int,
-    val vertical: Int
+    val vertical: Int,
 ) {
-
     companion object {
         /** A zero margin */
         val ZERO: Margin = Margin(0, 0)
@@ -55,5 +54,5 @@ data class Margin(
         fun from(value: Int): Margin = new(value, value)
     }
 
-    override fun toString(): String = "${horizontal}x${vertical}"
+    override fun toString(): String = "${horizontal}x$vertical"
 }

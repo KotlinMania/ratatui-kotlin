@@ -53,7 +53,7 @@ data class ScrollbarState(
      * but it will break serialization to change it.
      */
     @SerialName("viewport_content_length")
-    var viewportContentLength: Int = 0
+    var viewportContentLength: Int = 0,
 ) {
     /**
      * Sets the scroll position of the scrollbar.
@@ -146,7 +146,9 @@ enum class ScrollDirection {
     Forward,
 
     /** Backward scroll direction, usually corresponds to scrolling upwards or leftwards. */
-    Backward;
+    Backward,
+
+    ;
 
     companion object {
         /** The default scroll direction (Forward). */
@@ -186,7 +188,9 @@ enum class ScrollbarOrientation {
     HorizontalBottom,
 
     /** Positions the scrollbar on the top, scrolling horizontally. */
-    HorizontalTop;
+    HorizontalTop,
+
+    ;
 
     /** Returns true if the scrollbar is vertical. */
     fun isVertical(): Boolean = this == VerticalRight || this == VerticalLeft
@@ -242,9 +246,8 @@ data class Scrollbar(
     private val beginSymbol: String? = DOUBLE_VERTICAL.begin,
     private val beginStyle: Style = Style.default(),
     private val endSymbol: String? = DOUBLE_VERTICAL.end,
-    private val endStyle: Style = Style.default()
+    private val endStyle: Style = Style.default(),
 ) : StatefulWidget<ScrollbarState> {
-
     /**
      * Sets the position of the scrollbar.
      *
@@ -367,7 +370,7 @@ data class Scrollbar(
      */
     private fun barSymbols(
         area: Rect,
-        state: ScrollbarState
+        state: ScrollbarState,
     ): Sequence<Pair<String, Style>?> {
         val (trackStartLen, thumbLen, trackEndLen) = partLengths(area, state)
 

@@ -3,8 +3,6 @@ package ratatui
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.decodeFromString
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ratatui.backend.TestBackend
 import ratatui.layout.Constraint
@@ -34,7 +32,7 @@ class StateSerdeTest {
     private data class AppState(
         var list: ListState = ListState.default(),
         var table: TableState = TableState.default(),
-        var scrollbar: ScrollbarState = ScrollbarState.new(10)
+        var scrollbar: ScrollbarState = ScrollbarState.new(10),
     ) {
         fun select(index: Int) {
             list.select(index)

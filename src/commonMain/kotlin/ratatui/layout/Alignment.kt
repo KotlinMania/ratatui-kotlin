@@ -40,7 +40,8 @@ object Alignment {
 enum class HorizontalAlignment {
     Left,
     Center,
-    Right;
+    Right,
+    ;
 
     companion object {
         /** The default alignment (Left) */
@@ -67,7 +68,8 @@ enum class HorizontalAlignment {
 enum class VerticalAlignment {
     Top,
     Center,
-    Bottom;
+    Bottom,
+    ;
 
     companion object {
         /** The default alignment (Top) */

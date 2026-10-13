@@ -20,7 +20,9 @@ import ratatui.symbols.border.THICK
  *
  * Transliteration of Rust `ratatui-widgets/src/borders.rs`.
  */
-data class Borders(val bits: UByte) {
+data class Borders(
+    val bits: UByte,
+) {
     /** Returns true if no borders are set. */
     fun isEmpty(): Boolean = bits == 0.toUByte()
 
@@ -235,7 +237,9 @@ enum class BorderType {
      * ▙▄▄▄▄▄▄▄▟
      * ```
      */
-    QuadrantOutside;
+    QuadrantOutside,
+
+    ;
 
     /**
      * Convert this BorderType into the corresponding [BorderSet] of border symbols.

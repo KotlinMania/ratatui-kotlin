@@ -62,9 +62,8 @@ data class Rect(
     val x: Int,
     val y: Int,
     val width: Int,
-    val height: Int
+    val height: Int,
 ) {
-
     companion object {
         /** A zero sized Rect at position 0,0 */
         val ZERO: Rect = Rect(0, 0, 0, 0)
@@ -166,10 +165,14 @@ data class Rect(
     fun outer(margin: Margin): Rect {
         val newX = (x - margin.horizontal).coerceAtLeast(0)
         val newY = (y - margin.vertical).coerceAtLeast(0)
-        val newWidth = ((right().toLong() + margin.horizontal)
-            .coerceAtMost(Int.MAX_VALUE.toLong()) - newX).toInt()
-        val newHeight = ((bottom().toLong() + margin.vertical)
-            .coerceAtMost(Int.MAX_VALUE.toLong()) - newY).toInt()
+        val newWidth = (
+            (right().toLong() + margin.horizontal)
+                .coerceAtMost(Int.MAX_VALUE.toLong()) - newX
+        ).toInt()
+        val newHeight = (
+            (bottom().toLong() + margin.vertical)
+                .coerceAtMost(Int.MAX_VALUE.toLong()) - newY
+        ).toInt()
         return Rect(newX, newY, newWidth, newHeight)
     }
 
@@ -188,10 +191,14 @@ data class Rect(
      * The position is preserved.
      */
     fun resize(size: Size): Rect {
-        val newWidth = ((x.toLong() + size.width)
-            .coerceAtMost(Int.MAX_VALUE.toLong()) - x).toInt()
-        val newHeight = ((y.toLong() + size.height)
-            .coerceAtMost(Int.MAX_VALUE.toLong()) - y).toInt()
+        val newWidth = (
+            (x.toLong() + size.width)
+                .coerceAtMost(Int.MAX_VALUE.toLong()) - x
+        ).toInt()
+        val newHeight = (
+            (y.toLong() + size.height)
+                .coerceAtMost(Int.MAX_VALUE.toLong()) - y
+        ).toInt()
         return copy(width = newWidth, height = newHeight)
     }
 
@@ -230,9 +237,9 @@ data class Rect(
     /** Returns true if the two Rects intersect */
     fun intersects(other: Rect): Boolean {
         return x < other.right() &&
-                right() > other.x &&
-                y < other.bottom() &&
-                bottom() > other.y
+            right() > other.x &&
+            y < other.bottom() &&
+            bottom() > other.y
     }
 
     /**
@@ -242,9 +249,9 @@ data class Rect(
      */
     fun contains(position: Position): Boolean {
         return position.x >= x &&
-                position.x < right() &&
-                position.y >= y &&
-                position.y < bottom()
+            position.x < right() &&
+            position.y >= y &&
+            position.y < bottom()
     }
 
     /**
@@ -276,7 +283,7 @@ data class Rect(
     /** Convert to a pair of position and size */
     fun toPair(): Pair<Position, Size> = Pair(asPosition(), asSize())
 
-    override fun toString(): String = "${width}x${height}+${x}+${y}"
+    override fun toString(): String = "${width}x$height+$x+$y"
 
     /**
      * An iterator over columns within the Rect.

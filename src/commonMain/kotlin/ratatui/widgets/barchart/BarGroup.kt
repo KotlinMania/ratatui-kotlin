@@ -6,7 +6,6 @@ import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.text.Line
-import ratatui.widgets.Widget
 
 /**
  * A group of bars to be shown by the [BarChart].
@@ -21,9 +20,8 @@ data class BarGroup(
     /** Label of the group. It will be printed centered under this group of bars */
     internal val label: Line? = null,
     /** List of bars to be shown */
-    internal val bars: List<Bar> = emptyList()
+    internal val bars: List<Bar> = emptyList(),
 ) {
-
     /**
      * Set the group label.
      */

@@ -38,7 +38,7 @@ internal data class ChartLayout(
     /** Area of the legend */
     val legendArea: Rect? = null,
     /** Area of the graph */
-    val graphArea: Rect = Rect.ZERO
+    val graphArea: Rect = Rect.ZERO,
 )
 
 /**
@@ -117,9 +117,9 @@ data class Chart(
     /** Vertical constraint used to determine whether the legend should be shown or not */
     private val hiddenLegendConstraintsVertical: Constraint = Constraint.Ratio(1u, 4u),
     /** The position determine where the legend is shown or hide regardless of constraints */
-    private val legendPositionConfig: LegendPosition? = LegendPosition.default()
-) : Widget, Styled<Chart> {
-
+    private val legendPositionConfig: LegendPosition? = LegendPosition.default(),
+) : Widget,
+    Styled<Chart> {
     /**
      * Wraps the chart with the given [Block]
      *
@@ -349,7 +349,7 @@ data class Chart(
         labelWidth: Int,
         maxWidthAfterYAxis: Int,
         chartArea: Rect,
-        graphArea: Rect
+        graphArea: Rect,
     ): Rect {
         val (minX, maxX) = when (xAxisConfig.labelsAlign) {
             HorizontalAlignment.Left -> Pair(chartArea.left(), graphArea.left())
@@ -436,34 +436,40 @@ data class Chart(
                     val color = dataset.datasetStyle.fg ?: Color.Reset
 
                     // Draw points
-                    ctx.draw(Points(
-                        coords = dataset.dataPoints,
-                        color = color
-                    ))
+                    ctx.draw(
+                        Points(
+                            coords = dataset.dataPoints,
+                            color = color
+                        )
+                    )
 
                     // Draw lines or bars based on graph type
                     when (dataset.datasetGraphType) {
                         GraphType.Line -> {
                             dataset.dataPoints.windowed(2).forEach { window ->
                                 val (p1, p2) = window
-                                ctx.draw(CanvasLine(
-                                    x1 = p1.first,
-                                    y1 = p1.second,
-                                    x2 = p2.first,
-                                    y2 = p2.second,
-                                    color = color
-                                ))
+                                ctx.draw(
+                                    CanvasLine(
+                                        x1 = p1.first,
+                                        y1 = p1.second,
+                                        x2 = p2.first,
+                                        y2 = p2.second,
+                                        color = color
+                                    )
+                                )
                             }
                         }
                         GraphType.Bar -> {
                             for ((x, y) in dataset.dataPoints) {
-                                ctx.draw(CanvasLine(
-                                    x1 = x,
-                                    y1 = 0.0,
-                                    x2 = x,
-                                    y2 = y,
-                                    color = color
-                                ))
+                                ctx.draw(
+                                    CanvasLine(
+                                        x1 = x,
+                                        y1 = 0.0,
+                                        x2 = x,
+                                        y2 = y,
+                                        color = color
+                                    )
+                                )
                             }
                         }
                         GraphType.Scatter -> { /* Points already drawn */ }
