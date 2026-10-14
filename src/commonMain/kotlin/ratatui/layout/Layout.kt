@@ -8,6 +8,7 @@ import kasuari.Strength
 import kasuari.Term
 import kasuari.Variable
 import kasuari.WeightedRelation
+import io.github.kotlinmania.lru.LruCache
 
 /**
  * Represents the spacing between segments in a layout.
@@ -84,6 +85,27 @@ data class Layout(
         // Multiplier that decides floating point precision when rounding.
         private const val FLOAT_PRECISION_MULTIPLIER: Double = 100.0
         private const val EPSILON_SCALE: Double = 1e-6
+
+        // Default capacity for the layout cache.  Matches the upstream Rust constant.
+        private const val DEFAULT_CACHE_SIZE: Int = 500
+
+        // Cache key: (area, layout) — data class gives us equals/hashCode for free.
+        private data class CacheKey(val area: Rect, val layout: Layout)
+
+        // Cache value: (segments, spacers) — the result of a layout computation.
+        private data class CacheValue(val segments: List<Rect>, val spacers: List<Rect>)
+
+        // LRU cache for layout computations.  Avoids recomputing the Cassowary
+        // solver when the same (area, layout) pair is queried repeatedly.
+        private var cache: LruCache<CacheKey, CacheValue> = LruCache(DEFAULT_CACHE_SIZE)
+
+        /**
+         * Resizes the layout cache to the given capacity.
+         * Existing entries beyond the new capacity are evicted.
+         */
+        fun initCache(size: Int) {
+            cache = LruCache(size)
+        }
 
         /**
          * Creates a new layout with default values.
@@ -196,8 +218,20 @@ data class Layout(
      *
      * This method returns a pair of lists: the first list contains the segment areas,
      * and the second list contains the spacer areas between segments.
+     *
+     * Results are cached in an LRU cache keyed by (area, layout) to avoid recomputing
+     * the Cassowary solver when the same layout is queried repeatedly.
      */
-    fun splitWithSpacers(area: Rect): Pair<List<Rect>, List<Rect>> = trySplit(area)
+    fun splitWithSpacers(area: Rect): Pair<List<Rect>, List<Rect>> {
+        val key = CacheKey(area, this)
+        val cached = cache.get(key)
+        if (cached != null) {
+            return Pair(cached.segments, cached.spacers)
+        }
+        val result = trySplit(area)
+        cache.put(key, CacheValue(result.first, result.second))
+        return result
+    }
 
     private fun trySplit(area: Rect): Pair<List<Rect>, List<Rect>> {
         val solver = Solver.new()
