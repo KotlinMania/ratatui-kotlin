@@ -22,19 +22,26 @@ kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "ko
 [libraries]
 anstyle = { module = "io.github.kotlinmania:anstyle-kotlin", version = "0.1.5" }
 kasuari = { module = "io.github.kotlinmania:kasuari-kotlin", version = "0.1.6" }
+lru = { module = "io.github.kotlinmania:lru-kotlin", version = "0.1.1" }
 thiserror = { module = "io.github.kotlinmania:thiserror-kotlin", version = "0.2.0" }
+unicode-segmentation = { module = "io.github.kotlinmania:unicode-segmentation-kotlin", version = "0.1.1" }
+unicode-width = { module = "io.github.kotlinmania:unicode-width-kotlin", version = "0.1.1" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "collectionsImmutable" }
 kotlinx-benchmark-runtime = { module = "org.jetbrains.kotlinx:kotlinx-benchmark-runtime", version.ref = "kotlinxBenchmark" }
+crossterm = { module = "io.github.kotlinmania:crossterm-kotlin", version = "0.1.4" }
 
 [bundles]
 ratatui-commonMain = [
   "anstyle",
   "kasuari",
+  "lru",
   "thiserror",
+  "unicode-segmentation",
+  "unicode-width",
   "kotlinx-coroutines-core",
   "kotlinx-serialization-core",
   "kotlinx-serialization-json",
