@@ -98,7 +98,6 @@ import kotlin.native.HiddenFromObjC
 class Modifier private constructor(
     bits: ULong,
 ) : BitFlags<Modifier>(bits) {
-
     override fun flags(): List<Flag<Modifier>> = FLAGS
 
     override fun fromBitsRetain(bits: ULong): Modifier = Modifier(bits)

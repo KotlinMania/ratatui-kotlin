@@ -10,7 +10,7 @@ import ratatui.xtask.runCargo
  */
 data class Coverage(
     /** Only generate coverage for unit tests. */
-    val lib: Boolean = false
+    val lib: Boolean = false,
 ) {
     fun run() {
         run {

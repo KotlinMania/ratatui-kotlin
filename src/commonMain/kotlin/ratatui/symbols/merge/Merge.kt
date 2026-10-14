@@ -14,11 +14,13 @@ internal sealed class BorderSymbolError(
 ) : StdError {
     override fun toString(): String = displayMessage
 
-    data class CannotParse(val input: String) :
-        BorderSymbolError("cannot parse &str `$input` to BorderSymbol")
+    data class CannotParse(
+        val input: String,
+    ) : BorderSymbolError("cannot parse &str `$input` to BorderSymbol")
 
-    data class Unrepresentable(val symbol: BorderSymbol) :
-        BorderSymbolError("cannot convert BorderSymbol `$symbol` to &str: no such symbol exists")
+    data class Unrepresentable(
+        val symbol: BorderSymbol,
+    ) : BorderSymbolError("cannot convert BorderSymbol `$symbol` to &str: no such symbol exists")
 }
 
 /**

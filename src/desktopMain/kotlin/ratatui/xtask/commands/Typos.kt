@@ -10,7 +10,7 @@ import ratatui.xtask.cmd
  */
 data class Typos(
     /** Fix typos. */
-    val fix: Boolean = false
+    val fix: Boolean = false,
 ) {
     fun run() {
         if (fix) {

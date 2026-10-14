@@ -10,7 +10,7 @@ import ratatui.xtask.runCargoNightly
  */
 data class Docs(
     /** Open the documentation in the browser. */
-    val open: Boolean = false
+    val open: Boolean = false,
 ) {
     fun run() {
         // cargo +nightly hack --all --ignore-private docs-rs

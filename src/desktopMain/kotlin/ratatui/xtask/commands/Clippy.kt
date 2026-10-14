@@ -12,7 +12,7 @@ import ratatui.xtask.runCargo
  */
 data class Clippy(
     /** Fix clippy warnings. */
-    val fix: Boolean = false
+    val fix: Boolean = false,
 ) {
     fun run() {
         // Arguments that go before feature flags (e.g., "clippy", "--fix").

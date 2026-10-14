@@ -39,7 +39,7 @@ import ratatui.widgets.table.Table
 import ratatui.widgets.tabs.Tabs
 import kotlin.math.roundToInt
 
-fun render(frame: Frame, app: App) {
+internal fun render(frame: Frame, app: App) {
     val chunks = Layout.vertical(listOf(Constraint.Length(3), Constraint.Min(0))).split(frame.area())
 
     val titles = app.tabs.titles.map { t ->
@@ -405,7 +405,7 @@ private fun drawThirdTab(frame: Frame, app: App, area: Rect) {
     val items = colors.map { c ->
         Row.new(
             listOf(
-                Cell.new(Span.raw("${c}: ")),
+                Cell.new(Span.raw("$c: ")),
                 Cell.new(Span.styled("Foreground", Style.default().fg(c))),
                 Cell.new(Span.styled("Background", Style.default().bg(c)))
             )

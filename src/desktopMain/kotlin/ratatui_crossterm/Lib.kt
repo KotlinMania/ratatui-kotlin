@@ -43,7 +43,6 @@ import ratatui.backend.ClearType
 import ratatui.layout.Position
 import ratatui.layout.Size
 import ratatui.buffer.BufferDiff
-import ratatui.buffer.Cell
 import ratatui.style.Color
 import ratatui.style.Modifier
 import ratatui.style.Style
@@ -55,9 +54,8 @@ import ratatui.style.Style
  */
 class CrosstermBackend(
     private val writer: Appendable,
-    private val flushFn: () -> Unit = {}
+    private val flushFn: () -> Unit = {},
 ) : Backend {
-
     override fun draw(content: Iterator<BufferDiff.Item>) {
         var fg: Color = Color.Reset
         var bg: Color = Color.Reset
@@ -179,7 +177,7 @@ class CrosstermBackend(
  */
 data class UShortRange(
     val start: UShort,
-    val endExclusive: UShort
+    val endExclusive: UShort,
 )
 
 /**
@@ -187,7 +185,7 @@ data class UShortRange(
  */
 private data class ModifierDiff(
     val from: Modifier,
-    val to: Modifier
+    val to: Modifier,
 ) {
     fun queue(writer: Appendable) {
         val removed = from.difference(to)
@@ -234,7 +232,7 @@ private data class ModifierDiff(
 private data class ScrollUpInRegion(
     val firstRow: UShort,
     val lastRow: UShort,
-    val linesToScroll: UShort
+    val linesToScroll: UShort,
 ) : Command {
     override fun writeAnsi(writer: Appendable) {
         if (linesToScroll == 0.toUShort()) return
@@ -247,7 +245,7 @@ private data class ScrollUpInRegion(
 private data class ScrollDownInRegion(
     val firstRow: UShort,
     val lastRow: UShort,
-    val linesToScroll: UShort
+    val linesToScroll: UShort,
 ) : Command {
     override fun writeAnsi(writer: Appendable) {
         if (linesToScroll == 0.toUShort()) return
