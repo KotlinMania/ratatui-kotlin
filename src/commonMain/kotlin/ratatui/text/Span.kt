@@ -8,6 +8,7 @@ import ratatui.style.Color
 import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.widgets.Widget
+import io.github.kotlinmania.unicodesegmentation.UnicodeSegmentation
 
 /**
  * Represents a part of a line that is contiguous and where all characters share the same style.
@@ -324,99 +325,9 @@ interface ToSpan {
 fun Any.toSpan(): Span = Span.raw(this.toString())
 
 /**
- * Split a string into grapheme clusters.
+ * Split a string into grapheme clusters using the `unicode-segmentation-kotlin` library.
  *
  * Transliteration target: the upstream use of `unicodeSegmentation::UnicodeSegmentation::graphemes(true)`.
- *
- * This is a pragmatic, KMP-friendly implementation focused on the cases Ratatui relies on:
- * - surrogate pairs (non-BMP code points)
- * - combining marks / variation selectors (attach to the previous code point)
- * - emoji ZWJ sequences (keep the whole sequence in one cluster)
  */
-internal fun graphemes(s: String): List<String> {
-    if (s.isEmpty()) return emptyList()
-
-    val result = mutableListOf<String>()
-    var i = 0
-
-    while (i < s.length) {
-        val start = i
-
-        // Consume the first code point of the cluster.
-        val first = readCodePoint(s, i)
-        i = first.nextIndex
-
-        // Consume any immediate trailing marks / variation selectors / emoji modifiers.
-        i = consumeTrailingMarks(s, i)
-
-        // Consume any ZWJ sequences: (ZWJ + next code point + marks)*.
-        while (i < s.length) {
-            val cp = readCodePoint(s, i)
-            if (cp.value != ZWJ) break
-            i = cp.nextIndex
-
-            if (i >= s.length) break
-            val afterZwj = readCodePoint(s, i)
-            i = afterZwj.nextIndex
-            i = consumeTrailingMarks(s, i)
-        }
-
-        result.add(s.substring(start, i))
-    }
-
-    return result
-}
-
-private const val ZWJ: Int = 0x200D
-
-private data class CodePoint(
-    val value: Int,
-    val nextIndex: Int,
-)
-
-private fun readCodePoint(s: String, index: Int): CodePoint {
-    val ch = s[index]
-    return if (ch.isHighSurrogate() && index + 1 < s.length && s[index + 1].isLowSurrogate()) {
-        val high = ch.code - 0xD800
-        val low = s[index + 1].code - 0xDC00
-        CodePoint(0x10000 + ((high shl 10) or low), index + 2)
-    } else {
-        CodePoint(ch.code, index + 1)
-    }
-}
-
-private fun consumeTrailingMarks(s: String, startIndex: Int): Int {
-    var i = startIndex
-    while (i < s.length) {
-        val cp = readCodePoint(s, i)
-        if (!isTrailingMark(cp.value)) break
-        i = cp.nextIndex
-    }
-    return i
-}
-
-private fun isTrailingMark(codePoint: Int): Boolean {
-    return isCombiningMark(codePoint) || isVariationSelector(codePoint) || isEmojiModifier(codePoint)
-}
-
-private fun isVariationSelector(codePoint: Int): Boolean {
-    // Variation Selectors (U+FE00..U+FE0F) + Variation Selectors Supplement (U+E0100..U+E01EF).
-    return codePoint in 0xFE00..0xFE0F || codePoint in 0xE0100..0xE01EF
-}
-
-private fun isCombiningMark(codePoint: Int): Boolean {
-    return codePoint in 0x0300..0x036F ||
-        // Combining Diacritical Marks
-        codePoint in 0x1AB0..0x1AFF ||
-        // Combining Diacritical Marks Extended
-        codePoint in 0x1DC0..0x1DFF ||
-        // Combining Diacritical Marks Supplement
-        codePoint in 0x20D0..0x20FF ||
-        // Combining Diacritical Marks for Symbols
-        codePoint in 0xFE20..0xFE2F // Combining Half Marks
-}
-
-private fun isEmojiModifier(codePoint: Int): Boolean {
-    // Fitzpatrick skin tone modifiers.
-    return codePoint in 0x1F3FB..0x1F3FF
-}
+internal fun graphemes(s: String): List<String> =
+    UnicodeSegmentation.graphemes(s, isExtended = true).toList()
