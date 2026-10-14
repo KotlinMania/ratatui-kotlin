@@ -1,4 +1,4 @@
-// port-lint: ignore
+// port-lint: source upstream module root (ratatui-crossterm crate)
 // transliterated from upstream module root (ratatui-crossterm crate)
 /**
  * This crate provides [CrosstermBackend], an implementation of the [Backend] trait for the Ratatui

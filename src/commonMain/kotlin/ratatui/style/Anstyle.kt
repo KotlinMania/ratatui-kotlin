@@ -7,6 +7,7 @@ import ai.solace.tui.anstyle.Effects
 import ai.solace.tui.anstyle.RgbColor
 import ai.solace.tui.anstyle.Color as AnstyleColor
 import ai.solace.tui.anstyle.Style as AnstyleStyle
+import io.github.kotlinmania.thiserror.StdError
 
 /**
  * This module contains conversion functions for styles from the `anstyle` crate.
@@ -14,13 +15,21 @@ import ai.solace.tui.anstyle.Style as AnstyleStyle
  * Transliteration of `ratatui-core/src/style/anstyle.rs`.
  */
 
-/** Error type for converting between `anstyle` colors and [Color]. */
+/**
+ * Error type for converting between `anstyle` colors and [Color].
+ *
+ * Implements [StdError] from `thiserror-kotlin` to provide the standard error
+ * surface (display, source chaining) matching the upstream Rust `#[derive(Error)]`.
+ */
 enum class TryFromColorError(
     val message: String,
-) {
+) : StdError {
     Ansi256("cannot convert Ratatui Color to an Ansi256Color as it is not an indexed color"),
     Ansi("cannot convert Ratatui Color to AnsiColor as it is not a 4-bit color"),
     RgbColor("cannot convert Ratatui Color to RgbColor as it is not an RGB color"),
+    ;
+
+    override fun toString(): String = message
 }
 
 class TryFromColorException(

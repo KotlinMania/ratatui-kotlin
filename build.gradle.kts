@@ -57,6 +57,13 @@ val commonMainDependencyBundle =
         .findBundle(commonMainBundleName)
         .orElseThrow { GradleException("Missing libs bundle '$commonMainBundleName'") }
 
+val crosstermDependency =
+    extensions
+        .getByType(VersionCatalogsExtension::class.java)
+        .named("libs")
+        .findLibrary("crossterm")
+        .orElseThrow { GradleException("Missing libs library 'crossterm'") }
+
 fun csvProperty(name: String): Set<String> =
     providers
         .gradleProperty(name)
@@ -495,6 +502,19 @@ kotlin {
             implementation(kotlin("test"))
             commonTestDependencyBundle?.let { implementation(it) }
         }
+
+        // desktopMain: intermediate source set for desktop terminal backends
+        // (crossterm). Wired only to targets where crossterm-kotlin is published:
+        // macosArm64, macosX64, linuxX64, mingwX64, ios*, js, wasmJs, android.
+        // Not wired to jvm, tvos*, watchos*, androidNative*, or wasmWasi (no
+        // crossterm-kotlin artifact for those targets).
+        val desktopMain by creating {
+            dependsOn(commonMain.get())
+        }
+        desktopMain.dependencies {
+            implementation(crosstermDependency)
+        }
+
         if (benchmarkEnabled) {
             val commonBenchmark = maybeCreate("commonBenchmark")
             commonBenchmark.dependencies {
@@ -504,6 +524,12 @@ kotlin {
                 findByName("${targetName}Benchmark")?.dependsOn(commonBenchmark)
             }
         }
+    }
+
+    // Wire desktopMain into native desktop targets where crossterm-kotlin is published.
+    targets.withType<KotlinNativeTarget>().matching { it.name in setOf("macosArm64", "linuxX64", "mingwX64") }.configureEach {
+        val desktopMainSourceSet = kotlin.sourceSets.findByName("desktopMain")!!
+        compilations.getByName("main").defaultSourceSet.dependsOn(desktopMainSourceSet)
     }
 }
 
