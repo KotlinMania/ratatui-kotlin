@@ -12,6 +12,8 @@
  */
 package ratatui.layout
 
+import io.github.kotlinmania.strum.fromStringOrNull
+
 
 /**
  * Defines the direction of a layout.
@@ -39,11 +41,8 @@ enum class Direction {
         /** The default direction (Vertical) */
         val default: Direction = Vertical
 
-        /** Parse a direction from a string */
-        fun fromString(value: String): Direction = when (value) {
-            "Horizontal" -> Horizontal
-            "Vertical" -> Vertical
-            else -> throw IllegalArgumentException("Unknown direction: $value")
-        }
+        /** Parse a direction from a string (mirrors upstream `strum::EnumString`) */
+        fun fromString(value: String): Direction =
+            fromStringOrNull<Direction>(value) ?: throw IllegalArgumentException("Unknown direction: $value")
     }
 }

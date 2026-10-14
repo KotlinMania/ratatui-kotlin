@@ -88,6 +88,7 @@
  */
 package ratatui.backend
 
+import io.github.kotlinmania.strum.fromStringOrNull
 import ratatui.buffer.BufferDiff
 import ratatui.layout.Position
 import ratatui.layout.Size
@@ -123,16 +124,7 @@ enum class ClearType {
     ;
 
     companion object {
-        fun fromString(value: String): ClearType? {
-            return when (value) {
-                "All" -> All
-                "AfterCursor" -> AfterCursor
-                "BeforeCursor" -> BeforeCursor
-                "CurrentLine" -> CurrentLine
-                "UntilNewLine" -> UntilNewLine
-                else -> null
-            }
-        }
+        fun fromString(value: String): ClearType? = fromStringOrNull<ClearType>(value)
     }
 }
 
