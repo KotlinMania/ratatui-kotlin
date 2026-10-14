@@ -6,6 +6,8 @@
  */
 package ratatui.layout
 
+import io.github.kotlinmania.strum.fromStringOrNull
+
 /**
  * A backwards-compatible alias for [HorizontalAlignment].
  *
@@ -47,13 +49,9 @@ enum class HorizontalAlignment {
         /** The default alignment (Left) */
         val default: HorizontalAlignment = Left
 
-        /** Parse an alignment from a string */
-        fun fromString(value: String): HorizontalAlignment = when (value) {
-            "Left" -> Left
-            "Center" -> Center
-            "Right" -> Right
-            else -> throw IllegalArgumentException("Unknown alignment: $value")
-        }
+        /** Parse an alignment from a string (mirrors upstream `strum::EnumString`) */
+        fun fromString(value: String): HorizontalAlignment =
+            fromStringOrNull<HorizontalAlignment>(value) ?: throw IllegalArgumentException("Unknown alignment: $value")
     }
 }
 
@@ -75,12 +73,8 @@ enum class VerticalAlignment {
         /** The default alignment (Top) */
         val default: VerticalAlignment = Top
 
-        /** Parse an alignment from a string */
-        fun fromString(value: String): VerticalAlignment = when (value) {
-            "Top" -> Top
-            "Center" -> Center
-            "Bottom" -> Bottom
-            else -> throw IllegalArgumentException("Unknown alignment: $value")
-        }
+        /** Parse an alignment from a string (mirrors upstream `strum::EnumString`) */
+        fun fromString(value: String): VerticalAlignment =
+            fromStringOrNull<VerticalAlignment>(value) ?: throw IllegalArgumentException("Unknown alignment: $value")
     }
 }

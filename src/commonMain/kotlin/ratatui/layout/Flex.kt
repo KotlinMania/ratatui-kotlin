@@ -20,6 +20,8 @@
  */
 package ratatui.layout
 
+import io.github.kotlinmania.strum.fromStringOrNull
+
 /**
  * Defines the options for layout flex justify content in a container.
  */
@@ -145,6 +147,9 @@ enum class Flex {
     companion object {
         /** The default flex mode (Start) */
         val default: Flex = Start
+
+        /** Parse a flex mode from a string (mirrors upstream `strum::EnumString`) */
+        fun fromString(value: String): Flex? = fromStringOrNull<Flex>(value)
     }
 
     /** Check if this is [Legacy] */
