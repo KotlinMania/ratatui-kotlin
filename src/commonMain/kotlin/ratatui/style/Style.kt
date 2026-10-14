@@ -64,7 +64,13 @@
  *
  * [Span]: ratatui.text.Span
  */
+@file:OptIn(kotlin.experimental.ExperimentalObjCRefinement::class)
 package ratatui.style
+
+import io.github.kotlinmania.bitflags.BitFlags
+import io.github.kotlinmania.bitflags.Flag
+import io.github.kotlinmania.bitflags.toText
+import kotlin.native.HiddenFromObjC
 
 /**
  * Modifier changes the way a piece of text is displayed.
@@ -81,97 +87,86 @@ package ratatui.style
  * ```
  */
 /**
- * Value class wrapper for modifier bit flags.
- * The wrapper keeps modifier flags type-safe while preserving a clean API.
+ * Bit-flag set for text display modifiers, backed by `bitflags-kotlin`.
+ *
+ * Extends [BitFlags] to inherit the full bitflag operation surface (union,
+ * intersection, difference, contains, iter, fromName, fromBits, complement,
+ * toggle, etc.) while preserving the existing `infix or` / `infix and` API
+ * and companion constants for source compatibility.
  */
-data class Modifier(
-    val bits: UShort,
-) {
-    /** Check if the modifier is empty (no flags set) */
-    fun isEmpty(): Boolean = bits == 0.toUShort()
+@HiddenFromObjC
+class Modifier private constructor(
+    bits: ULong,
+) : BitFlags<Modifier>(bits) {
 
-    /** Check if the modifier contains all flags */
-    fun isAll(): Boolean = bits == ALL_BITS
+    override fun flags(): List<Flag<Modifier>> = FLAGS
 
-    /** Check if this modifier contains the given modifier */
-    fun contains(other: Modifier): Boolean = (bits and other.bits) == other.bits
+    override fun fromBitsRetain(bits: ULong): Modifier = Modifier(bits)
 
-    /** Union of two modifiers (bitwise OR) */
-    infix fun or(other: Modifier): Modifier = Modifier((bits.toInt() or other.bits.toInt()).toUShort())
+    override fun toString(): String =
+        if (isEmpty()) "NONE" else toText(this)
 
-    /** Alias for [or] */
-    fun union(other: Modifier): Modifier = this or other
+    override fun equals(other: Any?): Boolean =
+        other is Modifier && bits() == other.bits()
 
-    /** Intersection of two modifiers (bitwise AND) */
-    infix fun and(other: Modifier): Modifier = Modifier((bits.toInt() and other.bits.toInt()).toUShort())
+    override fun hashCode(): Int = bits().hashCode()
 
-    /** Alias for [and] */
-    fun intersection(other: Modifier): Modifier = this and other
+    /** Union of two modifiers (bitwise OR) — preserved as infix for source compatibility. */
+    infix fun or(other: Modifier): Modifier = union(other)
 
-    /** Difference of two modifiers (this AND NOT other) */
-    fun difference(other: Modifier): Modifier = Modifier((bits.toInt() and other.bits.toInt().inv()).toUShort())
+    /** Intersection of two modifiers (bitwise AND) — preserved as infix for source compatibility. */
+    infix fun and(other: Modifier): Modifier = intersection(other)
 
-    /** Insert flags from another modifier */
-    fun insert(other: Modifier): Modifier = this or other
-
-    /** Remove flags from another modifier */
-    fun remove(other: Modifier): Modifier = difference(other)
-
-    /** Iterate over all set flags */
-    fun iter(): List<Modifier> = ALL_FLAGS.filter { contains(it) }
-
-    /**
-     * Format the modifier as `NONE` if the modifier is empty or as a list of flags separated by
-     * `|` otherwise.
-     */
-    override fun toString(): String {
-        if (isEmpty()) return "NONE"
-        return iter().joinToString(" | ") { flag ->
-            when (flag) {
-                BOLD -> "BOLD"
-                DIM -> "DIM"
-                ITALIC -> "ITALIC"
-                UNDERLINED -> "UNDERLINED"
-                SLOW_BLINK -> "SLOW_BLINK"
-                RAPID_BLINK -> "RAPID_BLINK"
-                REVERSED -> "REVERSED"
-                HIDDEN -> "HIDDEN"
-                CROSSED_OUT -> "CROSSED_OUT"
-                else -> "0x${flag.bits.toString(16)}"
-            }
-        }
-    }
+    /** Iterate over all set flags as a list of individual [Modifier] values. */
+    fun iterFlags(): List<Modifier> = ALL_FLAGS.filter { contains(it) }
 
     companion object {
         /** Bold text modifier */
-        val BOLD = Modifier(0b0000_0000_0001u)
+        val BOLD = Modifier(0b0000_0000_0001uL)
         /** Dim/faint text modifier */
-        val DIM = Modifier(0b0000_0000_0010u)
+        val DIM = Modifier(0b0000_0000_0010uL)
         /** Italic text modifier */
-        val ITALIC = Modifier(0b0000_0000_0100u)
+        val ITALIC = Modifier(0b0000_0000_0100uL)
         /** Underlined text modifier */
-        val UNDERLINED = Modifier(0b0000_0000_1000u)
+        val UNDERLINED = Modifier(0b0000_0000_1000uL)
         /** Slow blink text modifier */
-        val SLOW_BLINK = Modifier(0b0000_0001_0000u)
+        val SLOW_BLINK = Modifier(0b0000_0001_0000uL)
         /** Rapid blink text modifier */
-        val RAPID_BLINK = Modifier(0b0000_0010_0000u)
+        val RAPID_BLINK = Modifier(0b0000_0010_0000uL)
         /** Reversed (inverse) text modifier */
-        val REVERSED = Modifier(0b0000_0100_0000u)
+        val REVERSED = Modifier(0b0000_0100_0000uL)
         /** Hidden text modifier */
-        val HIDDEN = Modifier(0b0000_1000_0000u)
+        val HIDDEN = Modifier(0b0000_1000_0000uL)
         /** Crossed out (strikethrough) text modifier */
-        val CROSSED_OUT = Modifier(0b0001_0000_0000u)
+        val CROSSED_OUT = Modifier(0b0001_0000_0000uL)
 
-        private const val ALL_BITS: UShort = 0b0001_1111_1111u
+        /** Named flag definitions for [BitFlags] iteration and text formatting. */
+        val FLAGS: List<Flag<Modifier>> = listOf(
+            Flag("BOLD", BOLD),
+            Flag("DIM", DIM),
+            Flag("ITALIC", ITALIC),
+            Flag("UNDERLINED", UNDERLINED),
+            Flag("SLOW_BLINK", SLOW_BLINK),
+            Flag("RAPID_BLINK", RAPID_BLINK),
+            Flag("REVERSED", REVERSED),
+            Flag("HIDDEN", HIDDEN),
+            Flag("CROSSED_OUT", CROSSED_OUT),
+        )
 
         /** All flags set */
-        fun all(): Modifier = Modifier(ALL_BITS)
+        fun all(): Modifier = empty().all()
 
         /** No flags set (empty modifier) */
-        fun empty(): Modifier = Modifier(0u)
+        fun empty(): Modifier = Modifier(0uL)
 
         /** Default modifier (empty) */
         fun default(): Modifier = empty()
+
+        /** Construct a [Modifier] from a raw bits value. */
+        fun fromBitsRetain(bits: ULong): Modifier = Modifier(bits)
+
+        /** Parse a [Modifier] from a flag name (e.g. "BOLD"). */
+        fun fromName(name: String): Modifier? = empty().fromName(name)
 
         /** List of all individual modifier flags */
         private val ALL_FLAGS = listOf(
@@ -549,10 +544,10 @@ data class Style(
         fg?.let { parts.add(".${colorToFgMethod(it)}") }
         bg?.let { parts.add(".${colorToBgMethod(it)}") }
         underlineColor?.let { parts.add(".underlineColor($it)") }
-        for (modifier in addModifier.iter()) {
+        for (modifier in addModifier.iterFlags()) {
             parts.add(".${modifierToAddMethod(modifier)}")
         }
-        for (modifier in subModifier.iter()) {
+        for (modifier in subModifier.iterFlags()) {
             parts.add(".${modifierToRemoveMethod(modifier)}")
         }
         return parts.joinToString("")
