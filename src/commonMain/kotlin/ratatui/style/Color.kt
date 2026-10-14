@@ -13,6 +13,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonDecoder
 import kotlinx.serialization.json.JsonObject
 import kotlinx.serialization.json.JsonPrimitive
+import io.github.kotlinmania.thiserror.StdError
 import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonPrimitive
 import kotlinx.serialization.json.int
@@ -323,8 +324,13 @@ sealed class Color {
         }
 }
 
-/** Error type indicating a failure to parse a color string. */
-class ParseColorError : Exception("Failed to parse Colors")
+/**
+ * Error type indicating a failure to parse a color string.
+ *
+ * Implements [StdError] from `thiserror-kotlin` to provide the standard error
+ * surface matching the upstream Rust `#[derive(Error)]`.
+ */
+class ParseColorError : Exception("Failed to parse Colors"), StdError
 
 private fun parseHexColor(input: String): Triple<UByte, UByte, UByte>? {
     if (!input.startsWith('#') || input.length != 7) {
