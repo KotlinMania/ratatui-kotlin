@@ -90,10 +90,16 @@ data class Layout(
         private const val DEFAULT_CACHE_SIZE: Int = 500
 
         // Cache key: (area, layout) — data class gives us equals/hashCode for free.
-        private data class CacheKey(val area: Rect, val layout: Layout)
+        private data class CacheKey(
+            val area: Rect,
+            val layout: Layout,
+        )
 
         // Cache value: (segments, spacers) — the result of a layout computation.
-        private data class CacheValue(val segments: List<Rect>, val spacers: List<Rect>)
+        private data class CacheValue(
+            val segments: List<Rect>,
+            val spacers: List<Rect>,
+        )
 
         // LRU cache for layout computations.  Avoids recomputing the Cassowary
         // solver when the same (area, layout) pair is queried repeatedly.

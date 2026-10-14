@@ -67,10 +67,10 @@ private val EVENTS: List<Pair<String, Long>> = listOf(
     Pair("B24", 5)
 )
 
-class RandomSignal private constructor(
+internal class RandomSignal private constructor(
     private val distributionLower: ULong,
     private val distributionUpper: ULong,
-    private val rng: Random
+    private val rng: Random,
 ) : Iterator<ULong> {
     companion object {
         fun new(lower: ULong, upper: ULong): RandomSignal {
@@ -93,11 +93,11 @@ class RandomSignal private constructor(
     }
 }
 
-class SinSignal private constructor(
+internal class SinSignal private constructor(
     private var x: Double,
     private val interval: Double,
     private val period: Double,
-    private val scale: Double
+    private val scale: Double,
 ) : Iterator<Pair<Double, Double>> {
     companion object {
         fun new(interval: Double, period: Double, scale: Double): SinSignal = SinSignal(
@@ -118,9 +118,9 @@ class SinSignal private constructor(
     }
 }
 
-class TabsState(
+internal class TabsState(
     val titles: List<String>,
-    var index: Int = 0
+    var index: Int = 0,
 ) {
     companion object {
         fun new(titles: List<String>): TabsState = TabsState(titles = titles, index = 0)
@@ -139,9 +139,9 @@ class TabsState(
     }
 }
 
-class StatefulList<T>(
+internal class StatefulList<T>(
     val state: ListState,
-    val items: MutableList<T>
+    val items: MutableList<T>,
 ) {
     companion object {
         fun <T> withItems(items: List<T>): StatefulList<T> = StatefulList(
@@ -171,10 +171,10 @@ class StatefulList<T>(
     }
 }
 
-class Signal<T>(
+internal class Signal<T>(
     private val source: Iterator<T>,
     val points: MutableList<T>,
-    private val tickRate: Int
+    private val tickRate: Int,
 ) {
     fun onTick() {
         val drain = minOf(tickRate, points.size).coerceAtLeast(0)
@@ -187,10 +187,10 @@ class Signal<T>(
     }
 }
 
-class Signals(
+internal class Signals(
     val sin1: Signal<Pair<Double, Double>>,
     val sin2: Signal<Pair<Double, Double>>,
-    val window: DoubleArray
+    val window: DoubleArray,
 ) {
     fun onTick() {
         sin1.onTick()
@@ -200,14 +200,14 @@ class Signals(
     }
 }
 
-data class Server(
+internal data class Server(
     val name: String,
     val location: String,
     val coords: Pair<Double, Double>,
-    val status: String
+    val status: String,
 )
 
-class App(
+internal class App(
     val title: String,
     var shouldQuit: Boolean,
     val tabs: TabsState,
@@ -219,7 +219,7 @@ class App(
     val signals: Signals,
     val barchart: MutableList<Pair<String, Long>>,
     val servers: List<Server>,
-    val enhancedGraphics: Boolean
+    val enhancedGraphics: Boolean,
 ) {
     companion object {
         fun new(title: String, enhancedGraphics: Boolean): App {

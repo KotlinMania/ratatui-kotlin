@@ -32,17 +32,17 @@ data class Theme(
     val logo: Logo,
     val email: Email,
     val traceroute: Traceroute,
-    val recipe: Recipe
+    val recipe: Recipe,
 )
 
 data class KeyBinding(
     val key: Style,
-    val description: Style
+    val description: Style,
 )
 
 data class Logo(
     val ratEye: Color,
-    val ratEyeAlt: Color
+    val ratEyeAlt: Color,
 )
 
 data class Email(
@@ -53,14 +53,14 @@ data class Email(
     val selectedItem: Style,
     val header: Style,
     val headerValue: Style,
-    val body: Style
+    val body: Style,
 )
 
 data class Traceroute(
     val header: Style,
     val selected: Style,
     val ping: Style,
-    val map: Map
+    val map: Map,
 )
 
 data class Map(
@@ -69,12 +69,12 @@ data class Map(
     val path: Color,
     val source: Color,
     val destination: Color,
-    val backgroundColor: Color
+    val backgroundColor: Color,
 )
 
 data class Recipe(
     val ingredients: Style,
-    val ingredientsHeader: Style
+    val ingredientsHeader: Style,
 )
 
 val THEME: Theme = Theme(

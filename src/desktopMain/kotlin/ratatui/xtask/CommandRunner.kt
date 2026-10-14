@@ -11,7 +11,7 @@ import platform.posix.system
  */
 internal data class Expression(
     val program: String,
-    val args: List<String>
+    val args: List<String>,
 ) {
     fun runWithTrace() {
         val command = (listOf(program) + args).joinToString(" ") { shellEscape(it) }

@@ -16,7 +16,7 @@ import ratatui.backend.Backend
 import ratatui.terminal.Terminal
 import ratatui_crossterm.CrosstermBackend
 
-fun runCrossterm(tickRate: Duration, enhancedGraphics: Boolean) {
+internal fun runCrossterm(tickRate: Duration, enhancedGraphics: Boolean) {
     enableRawMode()
     val stdout = StdoutBuffer()
     EnterAlternateScreen.writeAnsi(stdout)
@@ -43,7 +43,7 @@ fun runCrossterm(tickRate: Duration, enhancedGraphics: Boolean) {
 private fun <B : Backend> runApp(
     terminal: Terminal<B>,
     app: App,
-    tickRate: Duration
+    tickRate: Duration,
 ): Throwable? {
     var lastTick = TimeSource.Monotonic.markNow()
 

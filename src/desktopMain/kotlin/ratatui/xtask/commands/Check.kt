@@ -12,7 +12,7 @@ import ratatui.xtask.runCargo
  */
 data class Check(
     /** Check all features. */
-    val allFeatures: Boolean = false
+    val allFeatures: Boolean = false,
 ) {
     fun run() {
         if (allFeatures) {

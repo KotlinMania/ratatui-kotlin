@@ -24,7 +24,7 @@ import ratatui_crossterm.CrosstermBackend
  *
  * Transliteration target: `examples/apps/demo/src/termwiz.rs`.
  */
-fun runTermwiz(tickRate: Duration, enhancedGraphics: Boolean) {
+internal fun runTermwiz(tickRate: Duration, enhancedGraphics: Boolean) {
     enableRawMode()
     val stdout = StdoutBuffer()
     EnterAlternateScreen.writeAnsi(stdout)
@@ -53,7 +53,7 @@ fun runTermwiz(tickRate: Duration, enhancedGraphics: Boolean) {
 private fun <B : Backend> runApp(
     terminal: Terminal<B>,
     app: App,
-    tickRate: Duration
+    tickRate: Duration,
 ): Throwable? {
     var lastTick = TimeSource.Monotonic.markNow()
 

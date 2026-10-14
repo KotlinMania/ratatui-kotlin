@@ -330,7 +330,9 @@ sealed class Color {
  * Implements [StdError] from `thiserror-kotlin` to provide the standard error
  * surface matching the upstream Rust `#[derive(Error)]`.
  */
-class ParseColorError : Exception("Failed to parse Colors"), StdError
+class ParseColorError :
+    Exception("Failed to parse Colors"),
+    StdError
 
 private fun parseHexColor(input: String): Triple<UByte, UByte, UByte>? {
     if (!input.startsWith('#') || input.length != 7) {

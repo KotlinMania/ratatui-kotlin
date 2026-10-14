@@ -11,7 +11,7 @@ import ratatui.xtask.runCargoNightly
  */
 data class Format(
     /** Check formatting issues */
-    val check: Boolean = false
+    val check: Boolean = false,
 ) {
     fun run() {
         runRustfmt()
