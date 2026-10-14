@@ -1,6 +1,26 @@
 // port-lint: source ratatui-core/src/symbols/merge.rs
 package ratatui.symbols.merge
 
+import io.github.kotlinmania.thiserror.StdError
+
+/**
+ * Error type for parsing or representing [BorderSymbol] values.
+ *
+ * Transliteration of the upstream Rust `#[derive(thiserror::Error)] enum BorderSymbolError`.
+ * Implements [StdError] from `thiserror-kotlin` for the standard error surface.
+ */
+internal sealed class BorderSymbolError(
+    val displayMessage: String,
+) : StdError {
+    override fun toString(): String = displayMessage
+
+    data class CannotParse(val input: String) :
+        BorderSymbolError("cannot parse &str `$input` to BorderSymbol")
+
+    data class Unrepresentable(val symbol: BorderSymbol) :
+        BorderSymbolError("cannot convert BorderSymbol `$symbol` to &str: no such symbol exists")
+}
+
 /**
  * A strategy for merging two symbols into one.
  *

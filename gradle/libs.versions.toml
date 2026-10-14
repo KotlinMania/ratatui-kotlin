@@ -22,6 +22,7 @@ kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "ko
 [libraries]
 anstyle = { module = "io.github.kotlinmania:anstyle-kotlin", version = "0.1.5" }
 kasuari = { module = "io.github.kotlinmania:kasuari-kotlin", version = "0.1.6" }
+thiserror = { module = "io.github.kotlinmania:thiserror-kotlin", version = "0.2.0" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
@@ -33,6 +34,7 @@ kotlinx-benchmark-runtime = { module = "org.jetbrains.kotlinx:kotlinx-benchmark-
 ratatui-commonMain = [
   "anstyle",
   "kasuari",
+  "thiserror",
   "kotlinx-coroutines-core",
   "kotlinx-serialization-core",
   "kotlinx-serialization-json",
