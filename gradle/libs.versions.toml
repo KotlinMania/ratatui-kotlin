@@ -22,6 +22,7 @@ kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "ko
 [libraries]
 anstyle = { module = "io.github.kotlinmania:anstyle-kotlin", version = "0.1.5" }
 kasuari = { module = "io.github.kotlinmania:kasuari-kotlin", version = "0.1.6" }
+unicode-segmentation = { module = "io.github.kotlinmania:unicode-segmentation-kotlin", version = "0.1.1" }
 unicode-width = { module = "io.github.kotlinmania:unicode-width-kotlin", version = "0.1.1" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "serialization" }
@@ -35,6 +36,7 @@ crossterm = { module = "io.github.kotlinmania:crossterm-kotlin", version = "0.1.
 ratatui-commonMain = [
   "anstyle",
   "kasuari",
+  "unicode-segmentation",
   "unicode-width",
   "kotlinx-coroutines-core",
   "kotlinx-serialization-core",
