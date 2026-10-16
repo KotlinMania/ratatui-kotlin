@@ -97,8 +97,8 @@ Do not treat an earlier item as permission to skip a later one. The §0
 completion contract requires the whole chain, and §3 names source porting
 as the default next action when infra is clean.
 
-1. **Read this file** (you're in it). The §0 contract is non-negotiable.
-   Read the focused repo's `README.md` and any `NEXT_ACTIONS.md` /
+1. **Read this file (`AGENTS.md`) and `SWIFT.md` in full** (you're in `AGENTS.md`, but note that IDE/Antigravity rule injection truncates files after ~21KB, so you MUST explicitly read `/Volumes/stuff/Projects/kotlinmania/AGENTS.md` §3–§12 and `SWIFT.md`). The §0 contract is non-negotiable.
+   Read the focused repo's `README.md`, `SWIFT.md`, `RUST_CALLERS.md`, and any `NEXT_ACTIONS.md` /
    `PORT_REPORT.md`. There is no per-repo `CLAUDE.md` anymore (removed
    2026-05-24); the per-repo `AGENTS.md` is a copy of this file.
 2. **Audit + sync local main** (§11 step 1). `git fetch --prune`, inspect
@@ -116,7 +116,7 @@ as the default next action when infra is clean.
    patching (§9), Android SDK normalization (§8), publishing, or
    workflow defect. Local verification first; commit; push the branch;
    `gh pr create` + `gh pr merge --merge --delete-branch`.
-6. **Swift Export sweep** (§4) if `swiftExport { … }` is configured. The
+6. **Swift Export sweep** (§4 and `SWIFT.md`) if `swiftExport { … }` is configured. The
    five-class sweep, then `./gradlew test` which must include
    `swift test` locally (§6).
 7. **Source porting** (§3) is the default next action when infra is
@@ -125,9 +125,10 @@ as the default next action when infra is clean.
    blocker**; if a repo's `tools/ast_distance` is missing, copy the
    workspace binary in (§3 gives the exact `cp` + `.gitignore` lines).
    Translate from `tmp/` per the translation rules (one Rust file → one
-   Kotlin file, top-to-bottom, no stubs, no Rust syntax in
-   Kotlin/KDoc/comments, common sense applies). Check kotlinmania
-   siblings before declaring a dependency unportable.
+   Kotlin file **except `mod.rs` and `lib.rs`, which must NEVER be ported as
+   `Mod.kt` or `Lib.kt` and NEVER re-exported in Kotlin**, top-to-bottom, no
+   stubs, no Rust syntax in Kotlin/KDoc/comments, common sense applies). Check
+   kotlinmania siblings before declaring a dependency unportable.
 8. **Publish** if there's releasable code: bump version in
    `build.gradle.kts` + README install snippets, commit, push, `gh
    release create v<X.Y.Z>` to fire the `release[released]` publish
@@ -140,6 +141,10 @@ as the default next action when infra is clean.
 
 ### Hard constraints to remember while doing the above
 
+- **Do NOT port `mod.rs` or `lib.rs` as `Mod.kt` or `Lib.kt`, and NEVER re-export in Kotlin** (§3):
+  - **`lib.rs` must be split into focused `.kt` files** (functions, interfaces, and types in their proper package paths). Never create `Lib.kt` or `Mod.kt`, and never attach `// port-lint: source lib.rs`.
+  - **`mod.rs` is NOT allowed to re-export.** We do not follow Rust `mod.rs` / `pub use` re-export patterns in Kotlin (no `Mod.kt`, no `typealias` re-export bridges, no wrapper functions). Never attach `// port-lint: source .../mod.rs` (module-root `port-lint` headers trip `ast_distance` stub zeroing). If an upstream `mod.rs` contains real implementation code, split it into focused `.kt` files in the proper package path.
+  - **Update callers via `RUST_CALLERS.md`.** When upstream `mod.rs` or `lib.rs` re-exports symbols, inspect `RUST_CALLERS.md` and update callers directly to import the canonical Kotlin package and symbol name.
 - **`allWarningsAsErrors = true`** is the workspace default. Every warning
   is a build failure. Treat every warning as a real defect — never scope
   the flag down to silence Swift Export gate noise (§4 forbids it
@@ -426,25 +431,11 @@ These defaults apply unless a repo's own docs explicitly say otherwise.
   leave it unported with an honest one-line comment naming the specific
   semantic; never write a "simulation" that tests a different invariant.
 - **Translation happens in the main loop.** No subagent-driven `.kt` edits.
-- **One Rust file → one Kotlin file.** Translate top-to-bottom in upstream
-  order. Read the whole upstream file before editing the Kotlin file. Two
-  approved exceptions:
-  - An upstream `mod.rs` with real implementation may be parceled into
-    focused Kotlin files; the Kotlin `Mod.kt` stays a module-tracking
-    ledger. Each derived `.kt` carries
-    `// port-lint: source <that mod.rs path>` so `ast_distance` knows
-    what is tied to what.
-  - An upstream `lib.rs` with real implementation (not just re-exports)
-    follows the same parceling rule: per-symbol `.kt` files, `Mod.kt` as
-    a ledger only, never a typealias bridge.
-- **`mod.rs` / `lib.rs` re-exports → caller migration, not central
-  typealias.** When an upstream `mod.rs` only re-exports a symbol that
-  lives elsewhere, do **not** mint a central Kotlin `typealias` for it.
-  Rewrite callers to the original symbol; use `import <upstream-fq> as
-  <Name>` if the caller still needs the re-exported spelling. `Mod.kt`
-  records each migrated caller under a `// Callers migrated:` ledger
-  (append-only). Reference example: `serde-kotlin/.../private/Mod.kt`
-  vs `serde-kotlin/tmp/serde/serde_core/src/private/mod.rs`.
+- **One Rust file → one Kotlin file — except `mod.rs` and `lib.rs`, which must NEVER be ported as `Mod.kt` or `Lib.kt`.** Translate top-to-bottom in upstream order. Read the whole upstream file before editing the Kotlin file.
+- **Do NOT port `mod.rs` or `lib.rs`.**
+  - **`lib.rs` must be split into Kotlin functions and types in their proper package paths.** Never create a `Lib.kt` file or attach `// port-lint: source lib.rs`. Place top-level functions, traits/interfaces, and types from `lib.rs` into focused Kotlin files in the appropriate package hierarchy.
+  - **`mod.rs` is NOT allowed to be used to re-export.** We do not follow Rust `mod.rs` / `pub use` re-export patterns in Kotlin for a reason (no `Mod.kt`, no `typealias` bridges, no re-export wrappers). If an upstream `mod.rs` contains real implementation code (not module declarations or re-exports), split that implementation into focused `.kt` files in the proper package path (e.g., `Header.kt`, `Decoder.kt`).
+  - **Look at `RUST_CALLERS.md` and update the callers instead.** When upstream `mod.rs` or `lib.rs` re-exports symbols from submodules or other crates, do **not** re-export or alias them in Kotlin. Instead, inspect `RUST_CALLERS.md` to identify every caller across the workspace and update the callers directly to import the canonical Kotlin package and symbol name.
 
 ### Drift measurement — `ast_distance` is how we measure "how close to done"
 
@@ -487,6 +478,13 @@ repo whether or not it ships its own `tools/ast_distance/` binary.
   header is that it has no upstream Rust counterpart (Kotlin-side
   glue, repo-specific helpers, or new APIs), in which case it simply
   has no header — not a fake "ignore" directive.
+- **How `ast_distance` evaluates stubs and contamination (ground truth from `/Volumes/games/ASTDistance/`):**
+  - **Module-root headers trip stub zeroing:** In `include/ast_parser.hpp` (`has_stub_bodies`), any Kotlin file carrying a port-lint header pointing to a module root (`/mod.rs`, `/lib.rs`, `/main.rs`, or `/__init__.py`) is intentionally flagged as a stub (`has_stub_bodies == true`), which triggers: `"target contains TODO/stub/placeholder markers in function bodies"` and zeroes the score. Upstream `mod.rs` and `lib.rs` files represent Rust module/crate root syntax and must never be ported as `Mod.kt` or `Lib.kt`. Split real implementation from `lib.rs` or `mod.rs` into focused `.kt` files in their package paths, never re-export via `mod.rs`, and consult `RUST_CALLERS.md` to update callers directly.
+  - **Zero-tolerance contamination filters:** In `include/codebase.hpp` (`kotlin_contamination_reasons_for_text`), `ast_distance` scans Kotlin code and comments (outside of the exact single-line `// port-lint: (source|tests) <path>` header):
+    - **`snake_case` identifiers:** Any lowercase `snake_case` identifier in Kotlin code or comments trips the cheat detector (`snake_case identifier ... in Kotlin code/comments`).
+    - **Rust syntax in Kotlin/KDoc/comments:** Never leave Rust keywords or syntax in comments (`fn ...()`, `let (mut) ...`, `pub ...`, `impl ...`, `macro_rules!`, `#[...]`, `assert_eq!`, `format!`, `println!`, `match ... {`, `use ...::`).
+    - **Score-padding `@Suppress`:** Annotations like `@Suppress("UNUSED_VARIABLE")`, `@Suppress("unused")`, or `@Suppress("FunctionName")` are detected and zero the score.
+    - **Cheat comment patterns:** Phrases like `Kotlin:`, `(from impl ...)`, or Rust lifetime syntax (`'a`, `'static`) are flagged as comment contamination.
 
 A repo that no longer has upstream Rust under `tmp/` and has no
 `.ast_distance_config.json` is a mature Kotlin-first repo: it's
@@ -676,6 +674,13 @@ For repos that target Android, we use a Gradle-backed SDK installer. For complet
 
 For JS npm warning mitigation, resolutions, vendored karma-webpack setups, and Dependabot vulnerability resolutions, please refer to [JS_SECURITY.md](file:///Volumes/stuff/Projects/kotlinmania/JS_SECURITY.md).
 
+### Automated yarn lock upgrades — do NOT run manually
+`kotlinUpgradeYarnLock` and `kotlinWasmUpgradeYarnLock` are wired directly into `build.gradle.kts` as pre-requisite dependencies for all JS and WASM compile/test tasks (`jsTasksNeedingYarnLock`, `wasmTasksNeedingYarnLock`), `hostTests`, and `fullTargetBuildTaskNames` (`./gradlew build`).
+
+**Never run `./gradlew kotlinUpgradeYarnLock` or `./gradlew kotlinWasmUpgradeYarnLock` manually.**
+Running `./gradlew test` or `./gradlew build` automatically triggers lockfile upgrades before any compilation or testing begins. Running them manually is redundant and forbidden.
+
+
 ---
 
 ## 10. Kotlin/Native + Kotlin/JS gotchas
@@ -749,6 +754,34 @@ is the same; only the offending target list shrank.
 
 Wire Kotlin/Native `cinterop` and (where applicable) Node N-API in the
 same session. Never label FFI work "next pass."
+
+### Default hierarchy template — `nativeMain` covers all native targets
+
+The workspace uses `applyDefaultHierarchyTemplate()` (already in every
+repo's `build.gradle.kts`). This auto-creates intermediate source sets
+like `nativeMain`, `appleMain`, `iosMain`, `linuxMain`,
+`androidNativeMain`, etc. based on which targets are declared.
+
+For `expect`/`actual` declarations:
+
+- An `actual fun` in `nativeMain` satisfies the `expect fun` for **all**
+  native targets at once — no need to write one per target.
+- If a function's implementation differs between platforms (e.g. Linux
+  vs macOS), put that `actual fun` in the appropriate intermediate source
+  set (`linuxMain`, `appleMain`, etc.) or the leaf target source set.
+- The compiler matches `actual` declarations from the closest source set
+  in the hierarchy. A `nativeMain` actual is used by all native targets
+  unless a more specific source set overrides it.
+
+This means the FFI layer for a `*-sys-kotlin` port (like `libc-kotlin`)
+needs `actual fun` written once in `nativeMain` (delegating to
+`platform.posix.*` or a `cinterop` C++ wrapper), not duplicated across
+every individual native target.
+
+For JS/WASM targets: use a Node N-API C++ addon (no insecure NPM
+libraries). For JVM: JNA or JNI bindings. These are separate source
+sets (`jsMain`/`wasmJsMain`/`jvmMain`) and do not share the
+`nativeMain` actuals.
 
 ---
 
