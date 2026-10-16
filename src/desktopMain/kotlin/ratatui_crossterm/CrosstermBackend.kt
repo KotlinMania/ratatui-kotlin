@@ -1,20 +1,8 @@
-// port-lint: source upstream module root (ratatui-crossterm crate)
-// transliterated from upstream module root (ratatui-crossterm crate)
 /**
- * This crate provides [CrosstermBackend], an implementation of the [Backend] trait for the Ratatui
+ * This file provides [CrosstermBackend], an implementation of the [Backend] interface for the Ratatui
  * library. It uses the Crossterm library for all terminal manipulation.
  *
- * ## Crossterm Version and Re-export
- *
- * Rust `ratatui-crossterm` uses feature flags (`crossterm0Xx`) to select a Crossterm version and
- * re-exports it as `ratatuiCrossterm::crossterm` to avoid dependency graph version conflicts.
- *
  * This Kotlin port targets the published `io.github.kotlinmania:crossterm-kotlin` dependency.
- *
- * # Crate Organization
- *
- * `ratatui-crossterm` is part of the Ratatui workspace (modularized in 0.30.0). This file is a
- * “crate root” mirror for parity and will be split later.
  */
 package ratatui_crossterm
 
@@ -49,8 +37,6 @@ import ratatui.style.Style
 
 /**
  * A [Backend] implementation that uses Crossterm to render to the terminal.
- *
- * Transliteration target: `tmp/ratatui/ratatui-crossterm/src/lib.rs`.
  */
 class CrosstermBackend(
     private val writer: Appendable,

@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/src/buffer/buffer.rs
+// port-lint: source buffer/buffer.rs
 package ratatui.buffer
 
 import ratatui.layout.Position
@@ -155,16 +155,14 @@ class Buffer internal constructor(
     /** Returns the mutable cell at the given coordinates, or null if outside bounds */
     fun cellMut(x: Int, y: Int): Cell? = cellMut(Position(x, y))
 
-    @Suppress("unused")
-    private fun index(position: Position): Cell {
+    fun index(position: Position): Cell {
         val index = indexOf(position.x, position.y)
         return content[index]
     }
 
-    @Suppress("unused")
-    private fun index(position: Pair<Int, Int>): Cell {
-        val position = Position(position.first, position.second)
-        val index = indexOf(position.x, position.y)
+    fun index(position: Pair<Int, Int>): Cell {
+        val pos = Position(position.first, position.second)
+        val index = indexOf(pos.x, pos.y)
         return content[index]
     }
 
@@ -184,16 +182,14 @@ class Buffer internal constructor(
         return index(position)
     }
 
-    @Suppress("unused")
-    private fun indexMut(position: Position): Cell {
+    fun indexMut(position: Position): Cell {
         val index = indexOf(position.x, position.y)
         return content[index]
     }
 
-    @Suppress("unused")
-    private fun indexMut(position: Pair<Int, Int>): Cell {
-        val position = Position(position.first, position.second)
-        val index = indexOf(position.x, position.y)
+    fun indexMut(position: Pair<Int, Int>): Cell {
+        val pos = Position(position.first, position.second)
+        val index = indexOf(pos.x, pos.y)
         return content[index]
     }
 
