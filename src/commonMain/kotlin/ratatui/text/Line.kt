@@ -250,6 +250,8 @@ class Line internal constructor(
      */
     fun width(): Int = spans.sumOf { it.width() }
 
+    fun widthCjk(): Int = spans.sumOf { it.widthCjk() }
+
     /**
      * Returns a list of graphemes held by this line.
      *

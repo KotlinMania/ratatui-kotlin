@@ -164,6 +164,16 @@ data class Tabs(
         return titlesWidth + dividerWidth + leftPaddingWidth + rightPaddingWidth
     }
 
+    fun widthCjk(): Int {
+        val titlesWidth = titles.sumOf { it.widthCjk() }
+        val titleCount = titles.size
+        val dividerCount = (titleCount - 1).coerceAtLeast(0)
+        val dividerWidth = dividerCount * divider.widthCjk()
+        val leftPaddingWidth = titleCount * paddingLeft.widthCjk()
+        val rightPaddingWidth = titleCount * paddingRight.widthCjk()
+        return titlesWidth + dividerWidth + leftPaddingWidth + rightPaddingWidth
+    }
+
     // Widget implementation
     override fun render(area: Rect, buf: Buffer) {
         buf.setStyle(area, style)

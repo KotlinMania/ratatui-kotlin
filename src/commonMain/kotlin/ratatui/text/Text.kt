@@ -190,6 +190,8 @@ class Text internal constructor(
      */
     fun width(): Int = lines.maxOfOrNull { it.width() } ?: 0
 
+    fun widthCjk(): Int = lines.maxOfOrNull { it.widthCjk() } ?: 0
+
     /**
      * Returns the height.
      *

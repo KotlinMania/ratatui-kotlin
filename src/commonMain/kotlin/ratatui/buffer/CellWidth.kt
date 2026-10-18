@@ -1,6 +1,8 @@
 // port-lint: source ratatui-core/src/buffer/cell_width.rs
 package ratatui.buffer
 
+import io.github.kotlinmania.unicodewidth.unicodeWidth
+
 /**
  * Returns the display width in terminal cells.
  *
@@ -26,5 +28,5 @@ fun String.cellWidth(): UShort {
             return 1u
         }
     }
-    return width().toUShort()
+    return unicodeWidth().toUShort()
 }
