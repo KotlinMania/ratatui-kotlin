@@ -1,6 +1,7 @@
 // port-lint: source ratatui-core/src/text/text.rs
 package ratatui.text
 
+import io.github.kotlinmania.unicodewidth.UnicodeWidthStr
 import ratatui.buffer.Buffer
 import ratatui.layout.HorizontalAlignment
 import ratatui.layout.Rect
@@ -142,6 +143,7 @@ class Text internal constructor(
     val alignment: HorizontalAlignment?,
     internal val mutableLines: MutableList<Line>,
 ) : Styled<Text>,
+    UnicodeWidthStr,
     Widget,
     Iterable<Line> {
     /** The lines that make up this piece of text. */
@@ -188,9 +190,9 @@ class Text internal constructor(
      * assertEquals(15, text.width())
      * ```
      */
-    fun width(): Int = lines.maxOfOrNull { it.width() } ?: 0
+    override fun width(): Int = lines.maxOfOrNull { it.width() } ?: 0
 
-    fun widthCjk(): Int = lines.maxOfOrNull { it.widthCjk() } ?: 0
+    override fun widthCjk(): Int = lines.maxOfOrNull { it.widthCjk() } ?: 0
 
     /**
      * Returns the height.

@@ -1,6 +1,7 @@
 // port-lint: source ratatui-widgets/src/tabs.rs
 package ratatui.widgets.tabs
 
+import io.github.kotlinmania.unicodewidth.UnicodeWidthStr
 import ratatui.buffer.Buffer
 import ratatui.layout.Rect
 import ratatui.style.Modifier
@@ -53,6 +54,7 @@ data class Tabs(
     /** Tab right padding */
     private val paddingRight: Line = Line.from(" "),
 ) : Widget,
+    UnicodeWidthStr,
     Styled<Tabs> {
     /**
      * Sets the titles of the tabs.
@@ -154,7 +156,7 @@ data class Tabs(
      * The width includes the titles, dividers, and padding. It does not include any borders
      * added by the optional block.
      */
-    fun width(): Int {
+    override fun width(): Int {
         val titlesWidth = titles.sumOf { it.width() }
         val titleCount = titles.size
         val dividerCount = (titleCount - 1).coerceAtLeast(0)
@@ -164,7 +166,7 @@ data class Tabs(
         return titlesWidth + dividerWidth + leftPaddingWidth + rightPaddingWidth
     }
 
-    fun widthCjk(): Int {
+    override fun widthCjk(): Int {
         val titlesWidth = titles.sumOf { it.widthCjk() }
         val titleCount = titles.size
         val dividerCount = (titleCount - 1).coerceAtLeast(0)

@@ -9,6 +9,7 @@ import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.widgets.Widget
 import io.github.kotlinmania.unicodesegmentation.graphemes
+import io.github.kotlinmania.unicodewidth.UnicodeWidthStr
 
 /**
  * A line of text, consisting of one or more [Span]s.
@@ -118,6 +119,7 @@ class Line internal constructor(
     val alignment: HorizontalAlignment?,
     internal val mutableSpans: MutableList<Span>,
 ) : Styled<Line>,
+    UnicodeWidthStr,
     Widget,
     Iterable<Span> {
     /** The spans that make up this line of text. */
@@ -248,9 +250,9 @@ class Line internal constructor(
      * assertEquals(12, line.width())
      * ```
      */
-    fun width(): Int = spans.sumOf { it.width() }
+    override fun width(): Int = spans.sumOf { it.width() }
 
-    fun widthCjk(): Int = spans.sumOf { it.widthCjk() }
+    override fun widthCjk(): Int = spans.sumOf { it.widthCjk() }
 
     /**
      * Returns a list of graphemes held by this line.
