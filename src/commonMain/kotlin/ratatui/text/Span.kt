@@ -9,6 +9,7 @@ import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.widgets.Widget
 import io.github.kotlinmania.unicodesegmentation.graphemes
+import io.github.kotlinmania.unicodewidth.UnicodeWidthStr
 import io.github.kotlinmania.unicodewidth.unicodeWidth
 import io.github.kotlinmania.unicodewidth.unicodeWidthCjk
 
@@ -74,6 +75,7 @@ data class Span(
     /** The style of the span. */
     override val style: Style = Style.default(),
 ) : Styled<Span>,
+    UnicodeWidthStr,
     Widget {
     /**
      * Sets the content of the span.
@@ -144,9 +146,9 @@ data class Span(
     /**
      * Returns the unicode width of the content held by this span.
      */
-    fun width(): Int = content.unicodeWidth()
+    override fun width(): Int = content.unicodeWidth()
 
-    fun widthCjk(): Int = content.unicodeWidthCjk()
+    override fun widthCjk(): Int = content.unicodeWidthCjk()
 
     /**
      * Returns a list of graphemes held by this span.
