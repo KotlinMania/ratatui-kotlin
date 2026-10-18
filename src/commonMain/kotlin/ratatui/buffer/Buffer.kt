@@ -6,7 +6,7 @@ import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.text.Line
 import ratatui.text.Span
-import ratatui.text.graphemes
+import io.github.kotlinmania.unicodesegmentation.graphemes
 
 /**
  * A buffer that maps to the desired content of the terminal after the draw call.
@@ -224,7 +224,7 @@ class Buffer internal constructor(
         val maxWidthU16 = maxWidth.coerceAtLeast(0).coerceAtMost(UShort.MAX_VALUE.toInt())
         var remainingWidth = (area.right() - xVar).coerceAtLeast(0).coerceAtMost(maxWidthU16)
 
-        for (symbol in graphemes(string)) {
+        for (symbol in string.graphemes(isExtended = true)) {
             if (symbol.any { it.isISOControl() }) continue
 
             val width = symbol.cellWidth().toInt()

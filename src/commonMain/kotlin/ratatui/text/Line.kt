@@ -8,6 +8,7 @@ import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.widgets.Widget
+import io.github.kotlinmania.unicodesegmentation.graphemes
 
 /**
  * A line of text, consisting of one or more [Span]s.
@@ -545,7 +546,7 @@ private fun renderSpans(spans: List<Span>, area: Rect, buf: Buffer, spanSkipWidt
  */
 private fun unicodeTruncateStart(s: String, maxWidth: Int): String {
     if (maxWidth <= 0) return ""
-    val graphemes = graphemes(s)
+    val graphemes = s.graphemes(isExtended = true).toList()
     var totalWidth = graphemes.sumOf { it.cellWidth().toInt() }
 
     var startIndex = 0

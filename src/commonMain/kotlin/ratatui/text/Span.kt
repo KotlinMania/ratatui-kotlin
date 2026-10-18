@@ -8,7 +8,7 @@ import ratatui.style.Color
 import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.widgets.Widget
-import io.github.kotlinmania.unicodesegmentation.UnicodeSegmentation
+import io.github.kotlinmania.unicodesegmentation.graphemes
 
 /**
  * Represents a part of a line that is contiguous and where all characters share the same style.
@@ -168,9 +168,10 @@ data class Span(
      */
     fun styledGraphemes(baseStyle: Style = Style.default()): List<StyledGrapheme> {
         val patchedStyle = baseStyle.patch(style)
-        return graphemes(content)
+        return content.graphemes(isExtended = true)
             .filter { g -> !g.any { it.isISOControl() } }
             .map { g -> StyledGrapheme(g, patchedStyle) }
+            .toList()
     }
 
     /**
@@ -323,11 +324,3 @@ interface ToSpan {
 
 // Extension function to convert any type to a Span
 fun Any.toSpan(): Span = Span.raw(this.toString())
-
-/**
- * Split a string into grapheme clusters using the `unicode-segmentation-kotlin` library.
- *
- * Transliteration target: the upstream use of `unicodeSegmentation::UnicodeSegmentation::graphemes(true)`.
- */
-internal fun graphemes(s: String): List<String> =
-    UnicodeSegmentation.graphemes(s, isExtended = true).toList()
