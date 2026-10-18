@@ -9,6 +9,8 @@ import ratatui.style.Style
 import ratatui.style.Styled
 import ratatui.widgets.Widget
 import io.github.kotlinmania.unicodesegmentation.graphemes
+import io.github.kotlinmania.unicodewidth.unicodeWidth
+import io.github.kotlinmania.unicodewidth.unicodeWidthCjk
 
 /**
  * Represents a part of a line that is contiguous and where all characters share the same style.
@@ -142,7 +144,9 @@ data class Span(
     /**
      * Returns the unicode width of the content held by this span.
      */
-    fun width(): Int = content.cellWidth().toInt()
+    fun width(): Int = content.unicodeWidth()
+
+    fun widthCjk(): Int = content.unicodeWidthCjk()
 
     /**
      * Returns a list of graphemes held by this span.

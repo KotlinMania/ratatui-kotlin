@@ -1,6 +1,7 @@
 // port-lint: source ratatui-widgets/src/barchart/bar.rs
 package ratatui.widgets.barchart
 
+import io.github.kotlinmania.unicodewidth.unicodeWidth
 import ratatui.buffer.Buffer
 import ratatui.layout.Rect
 import ratatui.style.Style
@@ -130,7 +131,7 @@ data class Bar(
         if (value != 0L) {
             val ticksPerLine = 8L
             val valueLabel = textValue ?: value.toString()
-            val width = valueLabel.length
+            val width = valueLabel.unicodeWidth()
             // if we have enough space or the ticks are greater equal than 1 cell (8)
             // then print the value
             if (width < maxWidth || (width == maxWidth && ticks >= ticksPerLine)) {
