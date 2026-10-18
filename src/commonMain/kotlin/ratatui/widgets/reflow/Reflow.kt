@@ -4,7 +4,7 @@ package ratatui.widgets.reflow
 import ratatui.buffer.cellWidth
 import ratatui.layout.HorizontalAlignment
 import ratatui.text.StyledGrapheme
-import ratatui.text.graphemes
+import io.github.kotlinmania.unicodesegmentation.graphemes
 
 /**
  * A line that has been wrapped to a certain width.
@@ -317,7 +317,7 @@ internal class LineTruncator(
 private fun trimOffset(src: String, offset: Int): String {
     var remainingOffset = offset
     var startIndex = 0
-    for (grapheme in graphemes(src)) {
+    for (grapheme in src.graphemes(isExtended = true)) {
         val w = grapheme.cellWidth().toInt()
         if (w <= remainingOffset) {
             remainingOffset -= w
