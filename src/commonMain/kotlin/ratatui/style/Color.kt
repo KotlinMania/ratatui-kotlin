@@ -1,22 +1,20 @@
 // port-lint: source ratatui-core/src/style/color.rs
 package ratatui.style
 
-import kotlinx.serialization.KSerializer
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.SerializationException
-import kotlinx.serialization.descriptors.PrimitiveKind
-import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
-import kotlinx.serialization.descriptors.SerialDescriptor
-import kotlinx.serialization.encoding.Decoder
-import kotlinx.serialization.encoding.Encoder
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonDecoder
-import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.JsonPrimitive
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serde.serdeCatching
+import io.github.kotlinmania.serdecore.de.Deserialize
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.de.MapAccess
+import io.github.kotlinmania.serdecore.de.SeqAccess
+import io.github.kotlinmania.serdecore.de.StringDeserialize
+import io.github.kotlinmania.serdecore.de.U8Deserialize
+import io.github.kotlinmania.serdecore.de.Visitor
+import io.github.kotlinmania.serdecore.ser.Serialize
+import io.github.kotlinmania.serdecore.ser.Serializer
+import ratatui.serde.invalidSerde
+import ratatui.serde.requiredElement
 import io.github.kotlinmania.thiserror.StdError
-import kotlinx.serialization.json.jsonArray
-import kotlinx.serialization.json.jsonPrimitive
-import kotlinx.serialization.json.int
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -74,8 +72,9 @@ import kotlin.math.sin
  * assertEquals(Color.fromStr("white"), Color.White)
  * ```
  */
-@Serializable(with = ColorSerializer::class)
-sealed class Color {
+sealed class Color : Serialize {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> = serializer.serializeStr(toString())
+
     /** Resets the foreground or background color. */
     data object Reset : Color()
 
@@ -172,7 +171,10 @@ sealed class Color {
         override fun toString(): String = index.toString()
     }
 
-    companion object {
+    companion object : Deserialize<Color> {
+        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<Color> =
+            ColorSerializer.deserialize(deserializer)
+
         /** Default color (Reset). */
         fun default(): Color = Reset
 
@@ -374,109 +376,32 @@ data class Hsluv(
     }
 }
 
-/**
- * Kotlinx-serialization adapter that mirrors the upstream `serde` behavior.
- *
- * Rust serializes [Color] via its Display implementation (a string), and deserializes by parsing
- * that same string form. This serializer also supports the previous map-based encoding:
- * - `{"Rgb":[255,0,255]}`
- * - `{"Indexed":10}`
- */
-object ColorSerializer : KSerializer<Color> {
-    /**
-     * Helper type used to support the previous serde-derived serialization formats.
-     *
-     * Mirrors the local `ColorWrapper` enum in the upstream `impl serde::Deserialize for Color`.
-     */
-    private sealed interface ColorWrapper {
-        data class Rgb(
-            val red: UByte,
-            val green: UByte,
-            val blue: UByte,
-        ) : ColorWrapper
-
-        data class Indexed(
-            val index: UByte,
-        ) : ColorWrapper
-    }
-
-    /**
-     * Helper type used to support both the current string-based serialization format and the
-     * previous serde-derived formats.
-     *
-     * Mirrors the local untagged `ColorFormat` enum in Rust.
-     */
-    private sealed interface ColorFormat {
-        data class V2(
-            val value: String,
-        ) : ColorFormat
-
-        data class V1(
-            val wrapper: ColorWrapper,
-        ) : ColorFormat
-    }
-
-    override val descriptor: SerialDescriptor =
-        PrimitiveSerialDescriptor("ratatui.style.Color", PrimitiveKind.STRING)
-
-    override fun serialize(encoder: Encoder, value: Color) {
-        encoder.encodeString(value.toString())
-    }
-
-    override fun deserialize(decoder: Decoder): Color {
-        if (decoder is JsonDecoder) {
-            val multiType = decodeColorFormat(decoder.decodeJsonElement())
-            return when (multiType) {
-                is ColorFormat.V2 -> {
-                    try {
-                        Color.fromStr(multiType.value)
-                    } catch (e: ParseColorError) {
-                        throw SerializationException(e.message ?: "Failed to parse Colors")
-                    }
+/** Serde deserializer for the current Display string and the Rust ColorWrapper legacy variants. */
+object ColorSerializer : Deserialize<Color> {
+    override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<Color> =
+        deserializer.deserializeAny(object : Visitor<Color> {
+            override fun expecting(): String = "a color string or legacy Rgb/Indexed variant"
+            override fun visitStr(v: String): SerdeResult<Color> = serdeCatching { Color.fromStr(v) }
+            override fun <A : MapAccess> visitMap(access: A): SerdeResult<Color> = serdeCatching {
+                val variant = access.nextKey(StringDeserialize).getOrThrow() ?: invalidSerde("Failed to parse Colors")
+                val color = when (variant) {
+                    "Indexed" -> Color.Indexed(access.nextValue(U8Deserialize).getOrThrow())
+                    "Rgb" -> access.nextValue(object : Deserialize<Color> {
+                        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<Color> =
+                            deserializer.deserializeTuple(3, object : Visitor<Color> {
+                                override fun expecting(): String = "three u8 color channels"
+                                override fun <A : SeqAccess> visitSeq(access: A): SerdeResult<Color> = serdeCatching {
+                                    Color.Rgb(requiredElement(access, U8Deserialize), requiredElement(access, U8Deserialize),
+                                        requiredElement(access, U8Deserialize))
+                                }
+                            })
+                    }).getOrThrow()
+                    else -> invalidSerde("Failed to parse Colors: unknown variant `$variant`")
                 }
-                is ColorFormat.V1 -> {
-                    when (val wrapper = multiType.wrapper) {
-                        is ColorWrapper.Rgb -> Color.Rgb(wrapper.red, wrapper.green, wrapper.blue)
-                        is ColorWrapper.Indexed -> Color.Indexed(wrapper.index)
-                    }
-                }
+                if (access.nextKey(StringDeserialize).getOrThrow() != null) invalidSerde("expected a single color variant")
+                color
             }
-        }
-
-        return try {
-            Color.fromStr(decoder.decodeString())
-        } catch (e: ParseColorError) {
-            throw SerializationException(e.message ?: "Failed to parse Colors")
-        }
-    }
-
-    private fun decodeColorFormat(element: JsonElement): ColorFormat {
-        return when (element) {
-            is JsonPrimitive -> ColorFormat.V2(element.content)
-            is JsonObject -> ColorFormat.V1(decodeColorWrapper(element))
-            else -> throw SerializationException("Failed to parse Colors")
-        }
-    }
-
-    private fun decodeColorWrapper(obj: JsonObject): ColorWrapper {
-        obj["Rgb"]?.let { rgb ->
-            val arr = rgb.jsonArray
-            if (arr.size != 3) throw SerializationException("Failed to parse Colors")
-            val red = arr[0].jsonPrimitive.int
-            val green = arr[1].jsonPrimitive.int
-            val blue = arr[2].jsonPrimitive.int
-            if (red !in 0..255 || green !in 0..255 || blue !in 0..255) throw SerializationException("Failed to parse Colors")
-            return ColorWrapper.Rgb(red.toUByte(), green.toUByte(), blue.toUByte())
-        }
-
-        obj["Indexed"]?.let { indexed ->
-            val i = indexed.jsonPrimitive.int
-            if (i !in 0..255) throw SerializationException("Failed to parse Colors")
-            return ColorWrapper.Indexed(i.toUByte())
-        }
-
-        throw SerializationException("Failed to parse Colors")
-    }
+        })
 }
 
 private fun wrapHueDegrees(degrees: Double): Double {

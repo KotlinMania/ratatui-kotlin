@@ -35,7 +35,6 @@ import java.util.zip.ZipInputStream
 
 plugins {
     alias(libs.plugins.kotlin.multiplatform)
-    alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.android.kmp)
     alias(libs.plugins.detekt)
     alias(libs.plugins.ktlint)
@@ -493,10 +492,11 @@ kotlin {
             api(libs.bitflags)
             api(libs.thiserror)
             api(libs.unicode.width)
-            api(libs.kotlinx.serialization.core)
+            api(libs.serde.core)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
+            implementation(libs.serde.json)
             commonTestDependencyBundle?.let { implementation(it) }
         }
 

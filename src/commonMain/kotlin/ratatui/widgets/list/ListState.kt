@@ -1,7 +1,15 @@
 // port-lint: source ratatui-widgets/src/list/state.rs
 package ratatui.widgets.list
 
-import kotlinx.serialization.Serializable
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serdecore.de.Deserialize
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.ser.Serialize
+import io.github.kotlinmania.serdecore.ser.Serializer
+import ratatui.serde.ListStateDeserialize
+import ratatui.serde.indexValue
+import ratatui.serde.optionalIndexValue
+import ratatui.serde.serializeFields
 
 /**
  * State of the [List] widget.
@@ -30,13 +38,15 @@ import kotlinx.serialization.Serializable
  * list.render(area, buffer, state)
  * ```
  */
-@Serializable
 data class ListState(
     /** Index of the first item to be displayed */
     var offset: Int = 0,
     /** Index of the selected item, or null if no item is selected */
     var selected: Int? = null,
-) {
+) : Serialize {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> =
+        serializeFields(serializer, "ListState", "offset" to indexValue(offset), "selected" to optionalIndexValue(selected))
+
     /**
      * Sets the index of the first item to be displayed.
      *
@@ -143,7 +153,10 @@ data class ListState(
         select((current - amount).coerceAtLeast(0))
     }
 
-    companion object {
+    companion object : Deserialize<ListState> {
+        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<ListState> =
+            ListStateDeserialize.deserialize(deserializer)
+
         /** Creates a default ListState with no selection and offset at 0 */
         fun default(): ListState = ListState()
     }

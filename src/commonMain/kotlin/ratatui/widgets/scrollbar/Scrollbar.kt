@@ -1,8 +1,6 @@
 // port-lint: source ratatui-widgets/src/scrollbar.rs
 package ratatui.widgets.scrollbar
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import ratatui.buffer.Buffer
 import ratatui.buffer.cellWidth
 import ratatui.layout.Rect
@@ -11,6 +9,16 @@ import ratatui.symbols.scrollbar.DOUBLE_HORIZONTAL
 import ratatui.symbols.scrollbar.DOUBLE_VERTICAL
 import ratatui.symbols.scrollbar.Set as ScrollbarSet
 import ratatui.widgets.StatefulWidget
+
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serdecore.de.Deserialize
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.ser.Serialize
+import io.github.kotlinmania.serdecore.ser.Serializer
+import ratatui.serde.ScrollbarStateDeserialize
+import ratatui.serde.deserializeUnitEnum
+import ratatui.serde.indexValue
+import ratatui.serde.serializeFields
 
 /**
  * A struct representing the state of a Scrollbar widget.
@@ -39,10 +47,8 @@ import ratatui.widgets.StatefulWidget
  * If you do not have multi-line content, you can leave the `viewportContentLength` set to the
  * default and it'll use the track size as a `viewportContentLength`.
  */
-@Serializable
 data class ScrollbarState(
     /** The total length of the scrollable content. */
-    @SerialName("content_length")
     var contentLength: Int = 0,
     /** The current position within the scrollable content. */
     var position: Int = 0,
@@ -52,9 +58,11 @@ data class ScrollbarState(
      * Note: in the Rust implementation this is documented as `FIXME: this should be Option<usize>`,
      * but it will break serialization to change it.
      */
-    @SerialName("viewport_content_length")
     var viewportContentLength: Int = 0,
-) {
+) : Serialize {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> =
+        serializeFields(serializer, "ScrollbarState", "content_length" to indexValue(contentLength), "position" to indexValue(position), "viewport_content_length" to indexValue(viewportContentLength))
+
     /**
      * Sets the scroll position of the scrollbar.
      *
@@ -120,7 +128,10 @@ data class ScrollbarState(
 
 
 
-    companion object {
+    companion object : Deserialize<ScrollbarState> {
+        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<ScrollbarState> =
+            ScrollbarStateDeserialize.deserialize(deserializer)
+
         /**
          * Constructs a new [ScrollbarState] with the specified content length.
          *
@@ -140,8 +151,7 @@ data class ScrollbarState(
  *
  * It is useful for example when you want to store in which direction to scroll.
  */
-@Serializable
-enum class ScrollDirection {
+enum class ScrollDirection : Serialize {
     /** Forward scroll direction, usually corresponds to scrolling downwards or rightwards. */
     Forward,
 
@@ -150,7 +160,13 @@ enum class ScrollDirection {
 
     ;
 
-    companion object {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> =
+        serializer.serializeUnitVariant("ScrollDirection", ordinal.toUInt(), name)
+
+    companion object : Deserialize<ScrollDirection> {
+        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<ScrollDirection> =
+            deserializeUnitEnum(deserializer, "ScrollDirection", entries)
+
         /** The default scroll direction (Forward). */
         fun default(): ScrollDirection = Forward
 
@@ -176,8 +192,7 @@ enum class ScrollDirection {
  *          HorizontalBottom
  * ```
  */
-@Serializable
-enum class ScrollbarOrientation {
+enum class ScrollbarOrientation : Serialize {
     /** Positions the scrollbar on the right, scrolling vertically. */
     VerticalRight,
 
@@ -192,13 +207,19 @@ enum class ScrollbarOrientation {
 
     ;
 
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> =
+        serializer.serializeUnitVariant("ScrollbarOrientation", ordinal.toUInt(), name)
+
     /** Returns true if the scrollbar is vertical. */
     fun isVertical(): Boolean = this == VerticalRight || this == VerticalLeft
 
     /** Returns true if the scrollbar is horizontal. */
     fun isHorizontal(): Boolean = this == HorizontalBottom || this == HorizontalTop
 
-    companion object {
+    companion object : Deserialize<ScrollbarOrientation> {
+        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<ScrollbarOrientation> =
+            deserializeUnitEnum(deserializer, "ScrollbarOrientation", entries)
+
         /** The default scrollbar orientation (VerticalRight). */
         fun default(): ScrollbarOrientation = VerticalRight
     }

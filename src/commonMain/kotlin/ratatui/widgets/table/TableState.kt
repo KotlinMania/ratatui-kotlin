@@ -1,8 +1,15 @@
 // port-lint: source ratatui-widgets/src/table/state.rs
 package ratatui.widgets.table
 
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serdecore.de.Deserialize
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.ser.Serialize
+import io.github.kotlinmania.serdecore.ser.Serializer
+import ratatui.serde.TableStateDeserialize
+import ratatui.serde.indexValue
+import ratatui.serde.optionalIndexValue
+import ratatui.serde.serializeFields
 
 /**
  * State of a [Table] widget.
@@ -34,16 +41,17 @@ import kotlinx.serialization.Serializable
  * table.render(area, buffer, state)
  * ```
  */
-@Serializable
 data class TableState(
     /** Index of the first row to be displayed */
     var offset: Int = 0,
     /** Index of the selected row, or null if no row is selected */
     var selected: Int? = null,
     /** Index of the selected column, or null if no column is selected */
-    @SerialName("selected_column")
     var selectedColumn: Int? = null,
-) {
+) : Serialize {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> =
+        serializeFields(serializer, "TableState", "offset" to indexValue(offset), "selected" to optionalIndexValue(selected), "selected_column" to optionalIndexValue(selectedColumn))
+
     /**
      * Sets the index of the first row to be displayed.
      */
@@ -220,7 +228,10 @@ data class TableState(
         selectColumn((current - amount).coerceAtLeast(0))
     }
 
-    companion object {
+    companion object : Deserialize<TableState> {
+        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<TableState> =
+            TableStateDeserialize.deserialize(deserializer)
+
         /** Creates a default TableState with no selection and offset at 0 */
         fun default(): TableState = TableState()
     }

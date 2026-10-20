@@ -1,9 +1,20 @@
 // port-lint: source ratatui/tests/stateSerde.rs
 package ratatui
 
-import kotlinx.serialization.Serializable
-import kotlinx.serialization.ExperimentalSerializationApi
-import kotlinx.serialization.json.Json
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serde.serdeCatching
+import io.github.kotlinmania.serdecore.de.Deserialize
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.de.IgnoredAny
+import io.github.kotlinmania.serdecore.de.MapAccess
+import io.github.kotlinmania.serdecore.de.StringDeserialize
+import io.github.kotlinmania.serdecore.de.Visitor
+import io.github.kotlinmania.serdecore.ser.Serialize
+import io.github.kotlinmania.serdecore.ser.Serializer
+import io.github.kotlinmania.serdejson.fromStr
+import io.github.kotlinmania.serdejson.toStrPretty
+import ratatui.serde.invalidSerde
+import ratatui.serde.serializeFields
 import ratatui.backend.TestBackend
 import ratatui.layout.Constraint
 import ratatui.layout.Direction
@@ -28,25 +39,41 @@ import kotlin.test.assertEquals
  * Transliteration of `ratatui/tests/stateSerde.rs`.
  */
 class StateSerdeTest {
-    @Serializable
     private data class AppState(
         var list: ListState = ListState.default(),
         var table: TableState = TableState.default(),
         var scrollbar: ScrollbarState = ScrollbarState.new(10),
-    ) {
+    ) : Serialize {
+        override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> =
+            serializeFields(serializer, "AppState", "list" to list, "table" to table, "scrollbar" to scrollbar)
+
+        companion object : Deserialize<AppState> {
+            override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<AppState> =
+                deserializer.deserializeStruct("AppState", listOf("list", "table", "scrollbar"), object : Visitor<AppState> {
+                    override fun expecting(): String = "AppState"
+                    override fun <A : MapAccess> visitMap(access: A): SerdeResult<AppState> = serdeCatching {
+                        var list: ListState? = null
+                        var table: TableState? = null
+                        var scrollbar: ScrollbarState? = null
+                        while (true) {
+                            when (access.nextKey(StringDeserialize).getOrThrow() ?: break) {
+                                "list" -> { if (list != null) invalidSerde("duplicate list"); list = access.nextValue(ListState).getOrThrow() }
+                                "table" -> { if (table != null) invalidSerde("duplicate table"); table = access.nextValue(TableState).getOrThrow() }
+                                "scrollbar" -> { if (scrollbar != null) invalidSerde("duplicate scrollbar"); scrollbar = access.nextValue(ScrollbarState).getOrThrow() }
+                                else -> access.nextValue(IgnoredAny).getOrThrow()
+                            }
+                        }
+                        AppState(list ?: invalidSerde("missing list"), table ?: invalidSerde("missing table"),
+                            scrollbar ?: invalidSerde("missing scrollbar"))
+                    }
+                })
+        }
+
         fun select(index: Int) {
             list.select(index)
             table.selectCell(index to index)
             scrollbar = scrollbar.position(index)
         }
-    }
-
-    @OptIn(ExperimentalSerializationApi::class)
-    private val json = Json {
-        prettyPrint = true
-        prettyPrintIndent = "  "
-        explicitNulls = true
-        encodeDefaults = true
     }
 
     private fun assertBuffer(state: AppState, expected: List<String>) {
@@ -127,13 +154,13 @@ class StateSerdeTest {
     fun defaultStateSerialize() {
         val state = AppState()
         assertBuffer(state, defaultStateBuffer)
-        val serialized = json.encodeToString(state)
+        val serialized = toStrPretty(state).getOrThrow()
         assertEquals(defaultStateRepr, serialized)
     }
 
     @Test
     fun defaultStateDeserialize() {
-        val state = json.decodeFromString<AppState>(defaultStateRepr)
+        val state = fromStr(defaultStateRepr, AppState).getOrThrow()
         assertBuffer(state, defaultStateBuffer)
     }
 
@@ -171,13 +198,13 @@ class StateSerdeTest {
         val state = AppState()
         state.select(1)
         assertBuffer(state, selectedStateBuffer)
-        val serialized = json.encodeToString(state)
+        val serialized = toStrPretty(state).getOrThrow()
         assertEquals(selectedStateRepr, serialized)
     }
 
     @Test
     fun selectedStateDeserialize() {
-        val state = json.decodeFromString<AppState>(selectedStateRepr)
+        val state = fromStr(selectedStateRepr, AppState).getOrThrow()
         assertBuffer(state, selectedStateBuffer)
     }
 
@@ -215,13 +242,13 @@ class StateSerdeTest {
         val state = AppState()
         state.select(8)
         assertBuffer(state, scrolledStateBuffer)
-        val serialized = json.encodeToString(state)
+        val serialized = toStrPretty(state).getOrThrow()
         assertEquals(scrolledStateRepr, serialized)
     }
 
     @Test
     fun scrolledStateDeserialize() {
-        val state = json.decodeFromString<AppState>(scrolledStateRepr)
+        val state = fromStr(scrolledStateRepr, AppState).getOrThrow()
         assertBuffer(state, scrolledStateBuffer)
     }
 
@@ -244,8 +271,8 @@ class StateSerdeTest {
 
     @Test
     fun tableStateBackwardsCompatibility() {
-        val oldState = json.decodeFromString<TableState>(oldTableDeserialize)
-        val newState = json.decodeFromString<TableState>(newTableDeserialize)
+        val oldState = fromStr(oldTableDeserialize, TableState).getOrThrow()
+        val newState = fromStr(newTableDeserialize, TableState).getOrThrow()
         assertEquals(oldState, newState)
     }
 }

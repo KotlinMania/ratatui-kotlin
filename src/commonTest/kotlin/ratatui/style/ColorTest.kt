@@ -1,7 +1,8 @@
 // port-lint: source ratatui-core/src/style/color.rs
 package ratatui.style
 
-import kotlinx.serialization.json.Json
+import io.github.kotlinmania.serdejson.fromStr
+import io.github.kotlinmania.serdejson.toStr
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -138,18 +139,16 @@ class ColorTest {
 
     @Test
     fun serializeThenDeserialize() {
-        val json = Json
-        assertEquals("\"Red\"", json.encodeToString<Color>(Color.Red))
-        assertEquals(Color.Red, json.decodeFromString<Color>("\"Red\""))
-        assertEquals(Color.Rgb(255u, 0u, 255u), json.decodeFromString<Color>("\"#FF00FF\""))
-        assertEquals(Color.Indexed(10u), json.decodeFromString<Color>("\"10\""))
+        assertEquals("\"Red\"", toStr(Color.Red).getOrThrow())
+        assertEquals(Color.Red, fromStr("\"Red\"", Color).getOrThrow())
+        assertEquals(Color.Rgb(255u, 0u, 255u), fromStr("\"#FF00FF\"", Color).getOrThrow())
+        assertEquals(Color.Indexed(10u), fromStr("\"10\"", Color).getOrThrow())
     }
 
     @Test
     fun deserializeWithPreviousFormat() {
-        val json = Json
-        assertEquals(Color.Rgb(255u, 0u, 255u), json.decodeFromString<Color>("{\"Rgb\":[255,0,255]}"))
-        assertEquals(Color.Indexed(10u), json.decodeFromString<Color>("{\"Indexed\":10}"))
+        assertEquals(Color.Rgb(255u, 0u, 255u), fromStr("{\"Rgb\":[255,0,255]}", Color).getOrThrow())
+        assertEquals(Color.Indexed(10u), fromStr("{\"Indexed\":10}", Color).getOrThrow())
     }
 
     @Test

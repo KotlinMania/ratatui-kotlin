@@ -16,7 +16,7 @@ CLASSES = {"ratatui/text/Text.class", "ratatui/style/Modifier.class",
 EDGES = [(GROUP, "bitflags-kotlin", "bitflags-kotlin-android"),
          (GROUP, "thiserror-kotlin", "thiserror-kotlin-android"),
          (GROUP, "unicode-width-kotlin", "unicode-width-kotlin-android"),
-         ("org.jetbrains.kotlinx", "kotlinx-serialization-core", "kotlinx-serialization-core-jvm")]
+         (GROUP, "serde-core", "serde-core-android")]
 TESTS = {"publishedTextUsesUnicodeWidth", "publishedModifierExposesBitflags",
          "publishedErrorRetainsItsStandardErrorType", "publishedSerializerRetainsItsPublicInterface"}
 
