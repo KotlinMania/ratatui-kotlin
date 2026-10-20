@@ -960,7 +960,8 @@ val publishToCentralPortal =
 // lifecycle and adds the Android host + Swift Export parity tests.
 tasks.register("test") {
     group = "verification"
-    description = "Runs the commonTest-backed KMP suite, Android host tests, and Swift Export smoke test."
+    description = "Runs all host-runnable KMP platform tests, Android host tests, and Swift Export smoke test."
+    dependsOn("allTests")
     dependsOn("hostTests")
     dependsOn("swiftExportSmokeTest")
 }
