@@ -1,0 +1,70 @@
+name: Public API consumer
+on:
+  workflow_call:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v6.0.1
+        with:
+          distribution: zulu
+          java-version: '21'
+      - uses: gradle/actions/setup-gradle@v6.3.0
+      - uses: android-actions/setup-android@v4
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version: '24'
+      - name: Configure Yarn
+        run: |
+          corepack enable
+          corepack prepare yarn@1.22.22 --activate
+      - name: Read exact producer version
+        run: |
+          python3 - <<'PYCODE'
+          import os
+          from pathlib import Path
+          values = [line.split('=', 1)[1] for line in Path('gradle.properties').read_text().splitlines() if line.startswith('project.version=')]
+          assert len(values) == 1
+          with open(os.environ['GITHUB_ENV'], 'a') as output:
+              output.write('PRODUCER_VERSION=' + values[0] + '\n')
+          PYCODE
+      - name: Stage current root, Android and JVM coordinates
+        run: >
+          ./gradlew setupAndroidSdk
+          publishKotlinMultiplatformPublicationToCentralPortalStagingRepository
+          publishAndroidPublicationToCentralPortalStagingRepository
+          publishJvmPublicationToCentralPortalStagingRepository
+          --no-daemon --max-workers=2 --no-configuration-cache --console=plain
+      - name: Verify actual public bytecode and four metadata edges
+        run: >
+          python3 verification/check_publication_consumer.py
+          --receipt build/reports/publication/staged.json stage
+          --repository "$GITHUB_WORKSPACE/build/staging-deploy" --version "$PRODUCER_VERSION"
+          --bundle build/reports/publication/current.zip
+      - name: Compile and execute independent consumer
+        env:
+          ANDROID_HOME: ${{ github.workspace }}/.android-sdk
+        run: >
+          ./gradlew --project-dir verification/consumer
+          compileAndroidMain compileAndroidHostTest testAndroidHostTest jvmTest
+          -PproducerVersion="$PRODUCER_VERSION" -PproducerRepository="$GITHUB_WORKSPACE/build/staging-deploy"
+          --no-daemon --max-workers=2 --no-configuration-cache --console=plain
+      - name: Require eight executed tests and selected staged AAR
+        run: >
+          python3 verification/check_publication_consumer.py
+          --receipt build/reports/publication/consumer.json consumer
+          --build verification/consumer/build --publication build/reports/publication/staged.json
+      - name: Upload publication and consumer receipts
+        if: success() || failure()
+        uses: actions/upload-artifact@v7
+        with:
+          name: public-api-consumer
+          path: |
+            build/reports/publication/
+            verification/consumer/build/reports/
+            verification/consumer/build/test-results/
+          retention-days: 7
+          if-no-files-found: warn
