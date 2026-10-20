@@ -28,6 +28,7 @@ import io.github.kotlinmania.crossterm.terminal.sys.size as terminalSize
 import io.github.kotlinmania.crossterm.terminal.windowSize as crosstermWindowSize
 import ratatui.backend.Backend
 import ratatui.backend.ClearType
+import ratatui.backend.ScrollingRegionsBackend
 import ratatui.layout.Position
 import ratatui.layout.Size
 import ratatui.buffer.BufferDiff
@@ -41,7 +42,7 @@ import ratatui.style.Style
 class CrosstermBackend(
     private val writer: Appendable,
     private val flushFn: () -> Unit = {},
-) : Backend {
+) : ScrollingRegionsBackend {
     override fun draw(content: Iterator<BufferDiff.Item>) {
         var fg: Color = Color.Reset
         var bg: Color = Color.Reset
@@ -137,6 +138,14 @@ class CrosstermBackend(
             columnsRows = Size(ws.columns.toInt(), ws.rows.toInt()),
             pixels = Size(ws.width.toInt(), ws.height.toInt())
         )
+    }
+
+    override fun scrollRegionUp(region: IntRange, scrollBy: UShort) {
+        scrollRegionUp(UShortRange(region.first.toUShort(), (region.last + 1).toUShort()), scrollBy)
+    }
+
+    override fun scrollRegionDown(region: IntRange, scrollBy: UShort) {
+        scrollRegionDown(UShortRange(region.first.toUShort(), (region.last + 1).toUShort()), scrollBy)
     }
 
     fun scrollRegionUp(region: UShortRange, amount: UShort) {

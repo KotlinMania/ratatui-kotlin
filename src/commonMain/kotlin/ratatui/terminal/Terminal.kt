@@ -3,6 +3,7 @@ package ratatui.terminal
 
 import ratatui.backend.Backend
 import ratatui.backend.ClearType
+import ratatui.backend.ScrollingRegionsBackend
 import ratatui.buffer.Buffer
 import ratatui.buffer.BufferDiff
 import ratatui.buffer.Cell
@@ -319,17 +320,90 @@ class Terminal<B : Backend>(
      * Insert some content before the current inline viewport. This has no effect when the
      * viewport is not inline.
      *
-     * Transliteration of `Terminal::insertBefore` (non-scrolling-regions implementation).
+     * Selects the upstream scrolling-regions implementation when the backend declares that capability.
      */
     fun insertBefore(height: UShort, drawFn: (Buffer) -> Unit) {
         if (viewport !is Viewport.Inline) return
-        insertBeforeNoScrollingRegions(height, drawFn)
+        val regions = backend as? ScrollingRegionsBackend
+        if (regions != null) {
+            insertBeforeScrollingRegions(regions, height, drawFn)
+        } else {
+            insertBeforeNoScrollingRegions(height, drawFn)
+        }
     }
 
     /**
      * Queries the real size of the backend.
      */
     fun size(): Size = backend.size()
+
+    /** Transliteration of insert_before_scrolling_regions in ratatui-core/src/terminal/inline.rs. */
+    private fun insertBeforeScrollingRegions(
+        regions: ScrollingRegionsBackend,
+        height: UShort,
+        drawFn: (Buffer) -> Unit,
+    ) {
+        val area = Rect(0, 0, viewportArea.width, height.toInt())
+        val buffer = Buffer.empty(area)
+        drawFn(buffer)
+        val cells = buffer.content.toList()
+        var bufferIndex = 0
+        var remainingHeight = height.toInt()
+
+        if (viewportArea.height == lastKnownArea.height) {
+            var first = true
+            while (bufferIndex < cells.size) {
+                bufferIndex = if (first) {
+                    drawLines(0, 1, cells, bufferIndex)
+                } else {
+                    drawLinesOverCleared(0, 1, cells, bufferIndex)
+                }
+                first = false
+                regions.scrollRegionUp(0 until 1, 1u)
+            }
+            val topLine = buffers[1 - current].content.take(viewportArea.width).map { it.clone() }
+            drawLinesOverCleared(0, 1, topLine, 0)
+            return
+        }
+
+        val viewportTop = viewportArea.top()
+        val viewportBottom = viewportArea.bottom()
+        val screenBottom = lastKnownArea.bottom()
+        if (viewportBottom < screenBottom) {
+            val toDraw = minOf(remainingHeight, screenBottom - viewportBottom)
+            regions.scrollRegionDown(viewportTop until (viewportBottom + toDraw), toDraw.toUShort())
+            bufferIndex = drawLinesOverCleared(viewportTop, toDraw, cells, bufferIndex)
+            setViewportArea(viewportArea.copy(y = viewportTop + toDraw))
+            remainingHeight -= toDraw
+        }
+
+        val top = viewportArea.top()
+        while (remainingHeight > 0) {
+            val toDraw = minOf(remainingHeight, top)
+            regions.scrollRegionUp(0 until top, toDraw.toUShort())
+            bufferIndex = drawLinesOverCleared(top - toDraw, toDraw, cells, bufferIndex)
+            remainingHeight -= toDraw
+        }
+    }
+
+    /** Transliteration of draw_lines_over_cleared in ratatui-core/src/terminal/inline.rs. */
+    private fun drawLinesOverCleared(
+        yOffset: Int,
+        linesToDraw: Int,
+        cells: List<Cell>,
+        startIndex: Int,
+    ): Int {
+        val width = lastKnownArea.width
+        val endIndex = startIndex + width * linesToDraw
+        if (linesToDraw > 0) {
+            val area = Rect.new(0, yOffset, width, yOffset + linesToDraw)
+            val previous = Buffer.empty(area)
+            val next = Buffer(area, cells.subList(startIndex, endIndex).map { it.clone() }.toMutableList())
+            backend.draw(previous.diffIter(next))
+            backend.flush()
+        }
+        return endIndex
+    }
 
     private fun insertBeforeNoScrollingRegions(height: UShort, drawFn: (Buffer) -> Unit) {
         val area = Rect(

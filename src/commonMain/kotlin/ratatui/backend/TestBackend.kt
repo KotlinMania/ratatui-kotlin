@@ -18,7 +18,7 @@ class TestBackend private constructor(
     private val scrollback: Buffer,
     private var cursor: Boolean,
     private var pos: Position,
-) : Backend {
+) : ScrollingRegionsBackend {
     companion object {
         /** Creates a new [TestBackend] with the specified width and height. */
         fun new(width: Int, height: Int): TestBackend = TestBackend(
@@ -233,7 +233,7 @@ class TestBackend private constructor(
      *
      * Mirrors the upstream `scrolling-regions` feature in `TestBackend::scroll_region_up`.
      */
-    fun scrollRegionUp(region: IntRange, scrollBy: UShort) {
+    override fun scrollRegionUp(region: IntRange, scrollBy: UShort) {
         val width = buffer.area.width
         val height = buffer.area.height
         val cellRegionStart = width * minOf(region.first, height)
@@ -281,7 +281,7 @@ class TestBackend private constructor(
      *
      * Mirrors the upstream `scrolling-regions` feature in `TestBackend::scroll_region_down`.
      */
-    fun scrollRegionDown(region: IntRange, scrollBy: UShort) {
+    override fun scrollRegionDown(region: IntRange, scrollBy: UShort) {
         val width = buffer.area.width
         val height = buffer.area.height
         val cellRegionStart = width * minOf(region.first, height)

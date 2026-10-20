@@ -1,15 +1,18 @@
 // port-lint: source ratatui/tests/terminal.rs
 package ratatui.terminal
 
+import ratatui.backend.Backend
+import ratatui.backend.ScrollingRegionsBackend
 import ratatui.backend.TestBackend
 import ratatui.layout.Rect
 import ratatui.style.Style
 import ratatui.text.toLine
 import ratatui.widgets.block.Block
 import ratatui.widgets.paragraph.Paragraph
-import kotlin.test.Ignore
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertSame
 
 /**
  * Integration tests for [Terminal].
@@ -280,27 +283,126 @@ class TerminalTest {
         )
     }
 
-    // -------------------------------------------------------------------------
-    // "scrolling-regions" feature gated tests (Rust) — ignored in Kotlin for now.
-    // -------------------------------------------------------------------------
+    @Test
+    fun terminalInsertBeforePropagatesScrollingFailure() {
+        val backend = TestBackend.new(20, 5)
+        val failure = IllegalStateException("scrolling failed")
+        val failing = object : ScrollingRegionsBackend, Backend by backend {
+            override fun scrollRegionUp(region: IntRange, scrollBy: UShort) {
+                throw failure
+            }
 
-    @Ignore
+            override fun scrollRegionDown(region: IntRange, scrollBy: UShort) {
+                throw failure
+            }
+        }
+        val terminal = Terminal.withOptions(failing, TerminalOptions(viewport = Viewport.Inline(1u)))
+        terminal.draw { frame ->
+            frame.renderWidget(Paragraph.new("[---- Viewport ----]"), frame.area())
+        }
+        val actual = assertFailsWith<IllegalStateException> {
+            terminal.insertBefore(2u) { buffer ->
+                Paragraph.new("------ Line 1 ------").render(buffer.area, buffer)
+            }
+        }
+        assertSame(failure, actual)
+        backend.assertBufferLines(
+            "[---- Viewport ----]",
+            "                    ",
+            "                    ",
+            "                    ",
+            "                    ",
+        )
+        backend.assertScrollbackEmpty()
+    }
+
     @Test
     fun terminalInsertBeforeMovesViewportDoesNotClobber() {
+        val backend = TestBackend.new(20, 5)
+        val terminal = Terminal.withOptions(backend, TerminalOptions(viewport = Viewport.Inline(1u)))
+        terminal.draw { frame ->
+            frame.renderWidget(Paragraph.new("[---- Viewport ----]"), frame.area())
+        }
+        terminal.insertBefore(2u) { buffer ->
+            Paragraph.new(listOf("------ Line 1 ------".toLine(), "------ Line 2 ------".toLine()))
+                .render(buffer.area, buffer)
+        }
+        backend.assertScrollbackEmpty()
+        backend.assertBufferLines(
+            "------ Line 1 ------",
+            "------ Line 2 ------",
+            "[---- Viewport ----]",
+            "                    ",
+            "                    ",
+        )
     }
 
-    @Ignore
     @Test
     fun terminalInsertBeforeScrollsOnLargeInputDoesNotClobber() {
+        val backend = TestBackend.new(20, 5)
+        val terminal = Terminal.withOptions(backend, TerminalOptions(viewport = Viewport.Inline(1u)))
+        terminal.draw { frame ->
+            frame.renderWidget(Paragraph.new("[---- Viewport ----]"), frame.area())
+        }
+        terminal.insertBefore(5u) { buffer ->
+            Paragraph.new((1..5).map { "------ Line $it ------".toLine() }).render(buffer.area, buffer)
+        }
+        backend.assertScrollbackLines("------ Line 1 ------")
+        backend.assertBufferLines(
+            "------ Line 2 ------",
+            "------ Line 3 ------",
+            "------ Line 4 ------",
+            "------ Line 5 ------",
+            "[---- Viewport ----]",
+        )
     }
 
-    @Ignore
     @Test
     fun terminalInsertBeforeScrollsOnManyInsertsDoesNotClobber() {
+        val backend = TestBackend.new(20, 5)
+        val terminal = Terminal.withOptions(backend, TerminalOptions(viewport = Viewport.Inline(1u)))
+        terminal.draw { frame ->
+            frame.renderWidget(Paragraph.new("[---- Viewport ----]"), frame.area())
+        }
+        for (line in 1..5) {
+            terminal.insertBefore(1u) { buffer ->
+                Paragraph.new(listOf("------ Line $line ------".toLine())).render(buffer.area, buffer)
+            }
+        }
+        backend.assertScrollbackLines("------ Line 1 ------")
+        backend.assertBufferLines(
+            "------ Line 2 ------",
+            "------ Line 3 ------",
+            "------ Line 4 ------",
+            "------ Line 5 ------",
+            "[---- Viewport ----]",
+        )
     }
 
-    @Ignore
     @Test
     fun terminalInsertBeforeLargeViewportDoesNotClobber() {
+        val backend = TestBackend.new(20, 3)
+        val terminal = Terminal.withOptions(backend, TerminalOptions(viewport = Viewport.Inline(3u)))
+        terminal.draw { frame ->
+            frame.renderWidget(Paragraph.new("Viewport").centered().block(Block.bordered()), frame.area())
+        }
+        terminal.insertBefore(1u) { buffer ->
+            Paragraph.new(listOf("------ Line 1 ------".toLine())).render(buffer.area, buffer)
+        }
+        terminal.insertBefore(3u) { buffer ->
+            Paragraph.new((2..4).map { "------ Line $it ------".toLine() }).render(buffer.area, buffer)
+        }
+        val remaining = listOf(
+            "------ Line 5 ------", "------ Line 6 ------", "------ Line 7 ------",
+            "------ Line 8 ------", "------ Line 9 ------", "----- Line 10 ------", "----- Line 11 ------",
+        )
+        terminal.insertBefore(7u) { buffer ->
+            Paragraph.new(remaining.map { it.toLine() }).render(buffer.area, buffer)
+        }
+        backend.assertBufferLines("┌──────────────────┐", "│     Viewport     │", "└──────────────────┘")
+        backend.assertScrollbackLines(
+            "------ Line 1 ------", "------ Line 2 ------", "------ Line 3 ------", "------ Line 4 ------",
+            *remaining.toTypedArray(),
+        )
     }
 }
