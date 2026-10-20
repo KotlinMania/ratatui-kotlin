@@ -1,4 +1,3 @@
-#if canImport(Testing)
 import Testing
 import Ratatui
 
@@ -6,16 +5,7 @@ import Ratatui
 struct RatatuiExportTests {
     @Test("Swift module loads cleanly")
     func swiftModuleLoads() {
-        #expect(Bool(true), "Ratatui swift module imported cleanly")
+        #expect(ratatui.text.Text.Companion.shared.from(content: "green").width() == 5)
+        #expect(ratatui.text.Text.Companion.shared.from(content: "界").width() == 2)
     }
 }
-#elseif canImport(XCTest)
-import XCTest
-import Ratatui
-
-final class RatatuiExportTests: XCTestCase {
-    func testSwiftModuleLoads() {
-        XCTAssertTrue(true, "Ratatui swift module imported cleanly")
-    }
-}
-#endif

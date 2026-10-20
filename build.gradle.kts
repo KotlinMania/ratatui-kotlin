@@ -22,6 +22,7 @@ import org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension
 import org.jetbrains.kotlin.gradle.targets.wasm.nodejs.WasmNodeJsEnvSpec
 import org.jetbrains.kotlin.gradle.targets.wasm.yarn.WasmYarnRootEnvSpec
 import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
@@ -988,42 +989,28 @@ tasks.register("hostTests") {
     )
 }
 
-// Patch generated SPM Package.swift to include minimum macOS platform for Swift Concurrency
-tasks.matching { it.name.contains("GenerateSPMPackage") }.configureEach {
+// Require Swift 6 for every exported dependency module without deleting generated APIs.
+val strictSwiftConfiguration = layout.projectDirectory.file("verification/strict-swift.xcconfig")
+tasks.matching { it.name.endsWith("generateSPMPackage", ignoreCase = true) }.configureEach {
     doLast {
-        val spmDir =
-            layout.buildDirectory
-                .dir("SPMPackage")
-                .orNull
-                ?.asFile
-        if (spmDir != null && spmDir.exists()) {
-            spmDir.walkTopDown().filter { it.name == "Package.swift" }.forEach { file ->
-                var text = file.readText()
-                if (text.contains("swift-tools-version: 6.0")) {
-                    text = text.replace("swift-tools-version: 6.0", "swift-tools-version: 5.9")
-                }
-                if (!text.contains("platforms:")) {
-                    text =
-                        text.replaceFirst(
-                            Regex("""(let package = Package\s*\(\s*name:\s*"[^"]*",)"""),
-                            "$1\n    platforms: [.macOS(\"15.0\")],",
-                        )
-                } else if (text.contains(".macOS(.v15)") || text.contains(".macOS(.v14)")) {
-                    text = text.replace(".macOS(.v15)", ".macOS(\"15.0\")").replace(".macOS(.v14)", ".macOS(\"15.0\")")
-                }
-                file.writeText(text)
-            }
-            spmDir.walkTopDown().filter { it.name == "OrgJetbrainsKotlinxKotlinxSerializationCore.swift" }.forEach { file ->
-                val text = file.readText()
-                val cleaned =
-                    text.replace(
-                        Regex("""@_spi\([^)]+\)\s+public func (?:decodeSequentially|shouldEncodeElementDefault|encodeNotNullMark)\([^)]*\)(?:\s*->\s*[^\n{]+)?\s*\{\s*fatalError\([^)]+\)\s*\}"""),
-                        "",
-                    )
-                if (cleaned != text) {
-                    file.writeText(cleaned)
-                }
-            }
+        val manifests = layout.buildDirectory.dir("SPMPackage").get().asFile
+            .walkTopDown().filter { it.isFile && it.name == "Package.swift" }.toList()
+        check(manifests.isNotEmpty()) { "No generated Swift package manifests" }
+        val execOperations = serviceOf<ExecOperations>()
+        manifests.forEach { manifest ->
+            execOperations.exec {
+                commandLine("python3", layout.projectDirectory.file("verification/enforce_swift6.py").asFile,
+                    manifest, "--receipt", manifest.parentFile.resolve("swift6-manifest-receipt.json"))
+            }.assertNormalExitValue()
+        }
+    }
+}
+tasks.matching { it.name.endsWith("buildSPMPackage", ignoreCase = true) }.configureEach {
+    inputs.file(strictSwiftConfiguration)
+    doFirst {
+        val actual = providers.environmentVariable("XCODE_XCCONFIG_FILE").orNull
+        check(actual != null && file(actual).canonicalFile == strictSwiftConfiguration.asFile.canonicalFile) {
+            "Set XCODE_XCCONFIG_FILE=${strictSwiftConfiguration.asFile} for strict Swift 6 dependency compilation"
         }
     }
 }
@@ -1071,6 +1058,7 @@ tasks.register("swiftExportSmokeTest") {
                         "FRAMEWORKS_FOLDER_PATH" to "Frameworks",
                         "MACOSX_DEPLOYMENT_TARGET" to "15.0",
                         "DEPLOYMENT_TARGET_SETTING_NAME" to "MACOSX_DEPLOYMENT_TARGET",
+                        "XCODE_XCCONFIG_FILE" to strictSwiftConfiguration.asFile.absolutePath,
                     ),
                 )
             }.assertNormalExitValue()
@@ -1081,11 +1069,32 @@ tasks.register("swiftExportSmokeTest") {
                 commandLine("swift", "package", "reset")
             }.assertNormalExitValue()
 
-        execOperations
-            .exec {
+        val swiftTestOutput = ByteArrayOutputStream()
+        try {
+            execOperations.exec {
                 workingDir = layout.projectDirectory.dir("swift-test-harness").asFile
-                commandLine("swift", "test")
+                commandLine("swift", "test", "-v",
+                    "-Xswiftc", "-swift-version", "-Xswiftc", "6", "-Xswiftc", "-warnings-as-errors")
+                standardOutput = swiftTestOutput
+                errorOutput = swiftTestOutput
             }.assertNormalExitValue()
+        } finally {
+            val swiftTestLog = swiftTestOutput.toString()
+            println(swiftTestLog)
+            layout.buildDirectory.file("reports/swift/swift-test.log").get().asFile.apply {
+                parentFile.mkdirs()
+                writeText(swiftTestLog)
+            }
+        }
+        execOperations.exec {
+            commandLine(
+                "python3",
+                layout.projectDirectory.file("verification/verify_swift_test_output.py").asFile,
+                layout.buildDirectory.file("reports/swift/swift-test.log").get().asFile,
+                "--receipt",
+                layout.buildDirectory.file("reports/swift/execution.json").get().asFile,
+            )
+        }.assertNormalExitValue()
     }
 }
 
