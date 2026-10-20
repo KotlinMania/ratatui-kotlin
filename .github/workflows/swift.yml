@@ -104,5 +104,7 @@ jobs:
             build/swift-test/lib*.a
             build/swift-test/*.swiftmodule/
             build/SPMPackage/macosArm64/Debug/
+            build/swift-test.log
+            build/reports/swift/
           retention-days: 7
           if-no-files-found: warn
