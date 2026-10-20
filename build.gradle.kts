@@ -497,6 +497,11 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(commonMainDependencyBundle)
+            // Public supertypes and serializers require these on consumer compile classpaths.
+            api(libs.bitflags)
+            api(libs.thiserror)
+            api(libs.unicode.width)
+            api(libs.kotlinx.serialization.core)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
