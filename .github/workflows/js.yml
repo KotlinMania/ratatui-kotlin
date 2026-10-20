@@ -58,6 +58,8 @@ jobs:
           name: test-reports-js
           path: |
             build/reports/tests/
+            ratatui-*/build/reports/tests/
             build/test-results/
+            ratatui-*/build/test-results/
           retention-days: 7
           if-no-files-found: warn

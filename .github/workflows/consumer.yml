@@ -34,9 +34,7 @@ jobs:
       - name: Stage current root, Android and JVM coordinates
         run: >
           ./gradlew setupAndroidSdk
-          publishKotlinMultiplatformPublicationToCentralPortalStagingRepository
-          publishAndroidPublicationToCentralPortalStagingRepository
-          publishJvmPublicationToCentralPortalStagingRepository
+          stageConsumerPublications
           --no-daemon --max-workers=2 --no-configuration-cache --console=plain
       - name: Verify actual public bytecode and four metadata edges
         run: >
@@ -47,6 +45,7 @@ jobs:
       - name: Compile and execute independent consumer
         env:
           ANDROID_HOME: ${{ github.workspace }}/.android-sdk
+          ANDROID_SDK_ROOT: ${{ github.workspace }}/.android-sdk
         run: >
           ./gradlew --project-dir verification/consumer
           compileAndroidMain compileAndroidHostTest testAndroidHostTest jvmTest

@@ -1,6 +1,8 @@
 // port-lint: source ratatui/tests/stateSerde.rs
 package ratatui
 
+import io.github.kotlinmania.serde.SerdeError
+import io.github.kotlinmania.serde.SerdeException
 import io.github.kotlinmania.serde.SerdeResult
 import io.github.kotlinmania.serde.serdeCatching
 import io.github.kotlinmania.serdecore.de.Deserialize
@@ -13,8 +15,6 @@ import io.github.kotlinmania.serdecore.ser.Serialize
 import io.github.kotlinmania.serdecore.ser.Serializer
 import io.github.kotlinmania.serdejson.fromStr
 import io.github.kotlinmania.serdejson.toStrPretty
-import ratatui.serde.invalidSerde
-import ratatui.serde.serializeFields
 import ratatui.backend.TestBackend
 import ratatui.layout.Constraint
 import ratatui.layout.Direction
@@ -39,6 +39,16 @@ import kotlin.test.assertEquals
  * Transliteration of `ratatui/tests/stateSerde.rs`.
  */
 class StateSerdeTest {
+    private companion object {
+        fun invalidSerde(message: String): Nothing = throw SerdeException(SerdeError.custom(message))
+        fun <Ok> serializeFields(serializer: Serializer<Ok>, name: String, vararg fields: Pair<String, Serialize>): SerdeResult<Ok> =
+            serdeCatching {
+                val state = serializer.serializeStruct(name, fields.size).getOrThrow()
+                for ((key, value) in fields) state.serializeField(key, value).getOrThrow()
+                state.end().getOrThrow()
+            }
+    }
+
     private data class AppState(
         var list: ListState = ListState.default(),
         var table: TableState = TableState.default(),

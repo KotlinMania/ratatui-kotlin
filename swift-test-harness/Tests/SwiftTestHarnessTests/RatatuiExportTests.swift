@@ -1,5 +1,6 @@
 import Testing
 import Ratatui
+import RatatuiCore
 
 @Suite("Ratatui Swift Export Suite")
 struct RatatuiExportTests {

@@ -1,4 +1,5 @@
 pluginManagement {
+    includeBuild("build-logic")
     repositories {
         google()
         mavenCentral()
@@ -16,3 +17,6 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "ratatui-kotlin"
+
+// Real crate ownership matching the pinned upstream Cargo workspace.
+include(":ratatui-core", ":ratatui-widgets", ":ratatui-macros", ":ratatui-crossterm", ":xtask")

@@ -1,0 +1,5800 @@
+{
+  "upstream_revision": "c78fa2169401527cebe30bee2cbf305d916fb238",
+  "root_manifest_sha256": "9737a6061e069c4edc297ee052d123eb066467470df19bb7a1c9b724245608e7",
+  "workspace_members": [
+    "ratatui",
+    "ratatui-*",
+    "xtask",
+    "examples/apps/*",
+    "examples/concepts/*"
+  ],
+  "default_members": [
+    "ratatui",
+    "ratatui-core",
+    "ratatui-crossterm",
+    "ratatui-macros",
+    "ratatui-termwiz",
+    "ratatui-widgets",
+    "examples/apps/*",
+    "examples/concepts/*"
+  ],
+  "workspace_dependency_defaults": {
+    "anstyle": "1",
+    "bitflags": "2.11",
+    "clap": {
+      "version": "4.6",
+      "features": [
+        "derive"
+      ]
+    },
+    "color-eyre": "0.6",
+    "compact_str": {
+      "version": "0.9",
+      "default-features": false
+    },
+    "criterion": {
+      "version": "0.8",
+      "features": [
+        "html_reports"
+      ]
+    },
+    "critical-section": "1.2",
+    "crossterm": "0.29",
+    "document-features": "0.2",
+    "fakeit": "1",
+    "futures": "0.3",
+    "hashbrown": "0.16",
+    "indoc": "2",
+    "instability": "0.3",
+    "itertools": {
+      "version": "0.14",
+      "default-features": false,
+      "features": [
+        "use_alloc"
+      ]
+    },
+    "kasuari": {
+      "version": "0.4",
+      "default-features": false
+    },
+    "line-clipping": "0.3",
+    "lru": "0.16",
+    "octocrab": "0.49",
+    "palette": {
+      "version": "0.7.6",
+      "default-features": false,
+      "features": [
+        "libm"
+      ]
+    },
+    "pretty_assertions": "1",
+    "rand": "0.10",
+    "rand_chacha": "0.10",
+    "ratatui": {
+      "path": "ratatui",
+      "version": "0.30.0"
+    },
+    "ratatui-core": {
+      "path": "ratatui-core",
+      "version": "0.1.0"
+    },
+    "ratatui-crossterm": {
+      "path": "ratatui-crossterm",
+      "version": "0.1.0"
+    },
+    "ratatui-macros": {
+      "path": "ratatui-macros",
+      "version": "0.7.0"
+    },
+    "ratatui-termion": {
+      "path": "ratatui-termion",
+      "version": "0.1.0"
+    },
+    "ratatui-termwiz": {
+      "path": "ratatui-termwiz",
+      "version": "0.1.0"
+    },
+    "ratatui-widgets": {
+      "path": "ratatui-widgets",
+      "version": "0.3.0",
+      "default-features": false
+    },
+    "rstest": "0.26",
+    "serde": {
+      "version": "1",
+      "default-features": false,
+      "features": [
+        "derive"
+      ]
+    },
+    "serde_json": "1",
+    "strum": {
+      "version": "0.28",
+      "default-features": false,
+      "features": [
+        "derive"
+      ]
+    },
+    "termion": "4",
+    "termwiz": "0.23",
+    "thiserror": {
+      "version": "2",
+      "default-features": false
+    },
+    "time": {
+      "version": "0.3.47",
+      "default-features": false
+    },
+    "tokio": "1",
+    "tokio-stream": "0.1",
+    "tracing": "0.1",
+    "tracing-appender": "0.2",
+    "tracing-subscriber": "0.3",
+    "trybuild": "1",
+    "unicode-segmentation": "1",
+    "unicode-truncate": {
+      "version": "2",
+      "default-features": false
+    },
+    "unicode-width": ">=0.2.0, <=0.2.2"
+  },
+  "workspace_package_defaults": {
+    "authors": [
+      "Florian Dehau <work@fdehau.com>",
+      "The Ratatui Developers"
+    ],
+    "documentation": "https://docs.rs/ratatui/latest/ratatui/",
+    "repository": "https://github.com/ratatui/ratatui",
+    "homepage": "https://ratatui.rs",
+    "keywords": [
+      "tui",
+      "terminal",
+      "dashboard"
+    ],
+    "categories": [
+      "command-line-interface"
+    ],
+    "readme": "README.md",
+    "license": "MIT",
+    "exclude": [
+      "assets/*",
+      ".github",
+      "Makefile.toml",
+      "CONTRIBUTING.md",
+      "*.log",
+      "tags"
+    ],
+    "edition": "2024",
+    "rust-version": "1.88.0"
+  },
+  "manifest_count": 42,
+  "dependency_edges": 226,
+  "scope_counts": {
+    "dependencies": 196,
+    "dev-dependencies": 30
+  },
+  "target_specific_edges": 2,
+  "coverage": "All 42 manifests present at pinned checkout inventoried. Raw target cfg predicates retained, not assumed runnable. Workspace-inherited versions, additive features and default-feature/optional/path settings resolved per declaration; local feature default closures recorded. No claim of complete feature/platform behavior parity.",
+  "members": [
+    {
+      "manifest": "Cargo.toml",
+      "sha256": "9737a6061e069c4edc297ee052d123eb066467470df19bb7a1c9b724245608e7",
+      "package": null,
+      "version": null,
+      "kotlin_module": null,
+      "scope": "workspace policy / inherited defaults",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": []
+    },
+    {
+      "manifest": "examples/apps/advanced-widget-impl/Cargo.toml",
+      "sha256": "0132b0773095946c104993679d39f9d254284d6f90e1b2dce3532b4db434671a",
+      "package": "advanced-widget-impl",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "unstable-widget-ref"
+            ]
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [
+              "unstable-widget-ref"
+            ],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/async-github/Cargo.toml",
+      "sha256": "a627230ceb348a5b1f2346f543ea6f8de63552983af78069a312af83a1f0b10c",
+      "package": "async-github",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "event-stream"
+            ]
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [
+              "event-stream"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "octocrab",
+          "package": "octocrab",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.49",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "tokio",
+          "package": "tokio",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "rt-multi-thread",
+              "macros"
+            ]
+          },
+          "effective": {
+            "version": "1",
+            "features": [
+              "macros",
+              "rt-multi-thread"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "tokio-stream",
+          "package": "tokio-stream",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/calendar-explorer/Cargo.toml",
+      "sha256": "29adc094cf57b359f008b9a8ecf6db15f78aa102b2beff3d106841ae747bb057",
+      "package": "calendar-explorer",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "time",
+          "package": "time",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "formatting",
+              "parsing"
+            ]
+          },
+          "effective": {
+            "version": "0.3.47",
+            "default-features": false,
+            "features": [
+              "formatting",
+              "parsing"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "kotlinx-datetime",
+          "published_coordinate": "org.jetbrains.kotlinx:kotlinx-datetime:0.8.0",
+          "mapping": "UNRESOLVED sibling migration: actual calendar uses datetime; retained pending time-kotlin contract audit"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/canvas/Cargo.toml",
+      "sha256": "6144378438f5626fcce970af0438359faf9df5e08b28ab303ed2ea4f5e157c4b",
+      "package": "canvas",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "itertools",
+          "package": "itertools",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.14",
+            "default-features": false,
+            "features": [
+              "use_alloc"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "itertools",
+          "published_coordinate": "io.github.kotlinmania:itertools-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/chart/Cargo.toml",
+      "sha256": "af1fbaf029cf24697a5def526a9a38fdf23a896a535a55030600fed607b2c7ce",
+      "package": "chart",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/color-explorer/Cargo.toml",
+      "sha256": "e108ef1d5a989c99ae6098ea7211286e0c690d49a33d75bd17e1e873114396ab",
+      "package": "color-explorer",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "itertools",
+          "package": "itertools",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.14",
+            "default-features": false,
+            "features": [
+              "use_alloc"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "itertools",
+          "published_coordinate": "io.github.kotlinmania:itertools-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/colors-rgb/Cargo.toml",
+      "sha256": "e6eeb7d93bd1d55e6f9fe6bb577133da3f7d0628d4b28ab070ad3ba4ac494439",
+      "package": "colors-rgb",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "palette",
+          "package": "palette",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.7.6",
+            "default-features": false,
+            "features": [
+              "libm"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/constraint-explorer/Cargo.toml",
+      "sha256": "f16377286aab1e2ac2b09bd5108488342a33e38777efc0568205bc267f3df952",
+      "package": "constraint-explorer",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "itertools",
+          "package": "itertools",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.14",
+            "default-features": false,
+            "features": [
+              "use_alloc"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "itertools",
+          "published_coordinate": "io.github.kotlinmania:itertools-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "strum",
+          "package": "strum",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.28",
+            "default-features": false,
+            "features": [
+              "derive"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "strum",
+          "published_coordinate": "io.github.kotlinmania:strum-kotlin:0.2.0",
+          "mapping": "existing published KotlinMania sibling dependency"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/constraints/Cargo.toml",
+      "sha256": "4e54c30b62c94e612d9cb76d0c4a1c6788448ad571095480f20c74d7eab350f2",
+      "package": "constraints",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "strum",
+          "package": "strum",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.28",
+            "default-features": false,
+            "features": [
+              "derive"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "strum",
+          "published_coordinate": "io.github.kotlinmania:strum-kotlin:0.2.0",
+          "mapping": "existing published KotlinMania sibling dependency"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/custom-widget/Cargo.toml",
+      "sha256": "c124c9575916ac709fd1ae4eae9f547e1c53cbd8a8c0022af7d2aa63f68c81a6",
+      "package": "custom-widget",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/demo/Cargo.toml",
+      "sha256": "4550a2e9a74099da390e83e6ed4611e277970f2cf9b6b68a9d1cd53e0ea67e85",
+      "package": "demo",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {
+        "default": [
+          "crossterm"
+        ],
+        "crossterm": [
+          "ratatui/crossterm",
+          "dep:crossterm"
+        ],
+        "termion": [
+          "ratatui/termion",
+          "dep:termion"
+        ],
+        "termwiz": [
+          "ratatui/termwiz",
+          "dep:termwiz"
+        ]
+      },
+      "default_feature_local_expansion": [
+        "crossterm",
+        "dep:crossterm",
+        "ratatui/crossterm"
+      ],
+      "target_cfgs": [
+        "cfg(not(windows))"
+      ],
+      "dependencies": [
+        {
+          "alias": "clap",
+          "package": "clap",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "4.6",
+            "features": [
+              "derive"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.29",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "rand",
+          "package": "rand",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.10",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "termwiz",
+          "package": "termwiz",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.23",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "termion",
+          "package": "termion",
+          "scope": "dependencies",
+          "target_cfg": "cfg(not(windows))",
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "4",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/demo2/Cargo.toml",
+      "sha256": "a5bb54549affae8e759b5235f0f253f02c390eada1e9bf5f0b3e37f78f26d8ef",
+      "package": "demo2",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "indoc",
+          "package": "indoc",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "2",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "itertools",
+          "package": "itertools",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.14",
+            "default-features": false,
+            "features": [
+              "use_alloc"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "itertools",
+          "published_coordinate": "io.github.kotlinmania:itertools-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "palette",
+          "package": "palette",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.7.6",
+            "default-features": false,
+            "features": [
+              "libm"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "rand",
+          "package": "rand",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.10",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "rand_chacha",
+          "package": "rand_chacha",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.10",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "all-widgets"
+            ]
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [
+              "all-widgets"
+            ],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "strum",
+          "package": "strum",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.28",
+            "default-features": false,
+            "features": [
+              "derive"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "strum",
+          "published_coordinate": "io.github.kotlinmania:strum-kotlin:0.2.0",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "time",
+          "package": "time",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.3.47",
+            "default-features": false,
+            "features": [],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "kotlinx-datetime",
+          "published_coordinate": "org.jetbrains.kotlinx:kotlinx-datetime:0.8.0",
+          "mapping": "UNRESOLVED sibling migration: actual calendar uses datetime; retained pending time-kotlin contract audit"
+        },
+        {
+          "alias": "unicode-width",
+          "package": "unicode-width",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": ">=0.2.0, <=0.2.2",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "unicode-width",
+          "published_coordinate": "io.github.kotlinmania:unicode-width-kotlin:0.1.2",
+          "mapping": "existing published KotlinMania sibling dependency"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/flex/Cargo.toml",
+      "sha256": "761813aa593a10fb729e6101ea83562b7ba34b2eeae2c4b6e229834105ed3f35",
+      "package": "flex",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "strum",
+          "package": "strum",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.28",
+            "default-features": false,
+            "features": [
+              "derive"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "strum",
+          "published_coordinate": "io.github.kotlinmania:strum-kotlin:0.2.0",
+          "mapping": "existing published KotlinMania sibling dependency"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/gauge/Cargo.toml",
+      "sha256": "97402a358f85f4b1a5452c7cff4a172b4ef8ad19333073aab2c05af83bee174f",
+      "package": "gauge",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/hello-world/Cargo.toml",
+      "sha256": "e31bae7fcaeaa1e7a52256f995897d3b997d69b7339385685336a685762257d9",
+      "package": "hello-world",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/hyperlink/Cargo.toml",
+      "sha256": "085933b4057d11ad2b7a01271c0dd7dac49de5b74cd780dfc71b87a1034837c2",
+      "package": "hyperlink",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "itertools",
+          "package": "itertools",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.14",
+            "default-features": false,
+            "features": [
+              "use_alloc"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "itertools",
+          "published_coordinate": "io.github.kotlinmania:itertools-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/inline/Cargo.toml",
+      "sha256": "70d019f277e49ccdd774302901c6cb367aaadbb4c359fd81c342fd0112417328",
+      "package": "inline",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "rand",
+          "package": "rand",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.10",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/input-form/Cargo.toml",
+      "sha256": "a8984edcdf1ae2a2b2b00d9d6f024e43cb0c3e5e26183fea8aa931c11e1a962b",
+      "package": "input-form",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "serde",
+          "package": "serde",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "default-features": false,
+            "features": [
+              "derive"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "serde-core",
+          "published_coordinate": "io.github.kotlinmania:serde-core:0.1.11",
+          "mapping": "published Serde runtime traits; Kotlin manual derive equivalent; serde optional surface currently enabled"
+        },
+        {
+          "alias": "serde_json",
+          "package": "serde_json",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "serde-json",
+          "published_coordinate": "io.github.kotlinmania:serde-json-kotlin:0.1.1",
+          "mapping": "published JSON format test dependency, no Ratatui runtime edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/minimal/Cargo.toml",
+      "sha256": "e143961505ae7bbb616c8ee232e0ccd82c1376b7f574e21a779cff0bd72b2344",
+      "package": "minimal",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/modifiers/Cargo.toml",
+      "sha256": "65a952bf0ad19f2d5085ac5ed85ffa02381e2dae5b5936790a60eb85bc3bd75e",
+      "package": "modifiers",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "itertools",
+          "package": "itertools",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.14",
+            "default-features": false,
+            "features": [
+              "use_alloc"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "itertools",
+          "published_coordinate": "io.github.kotlinmania:itertools-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/mouse-drawing/Cargo.toml",
+      "sha256": "1f61a82cff66de3e4322898c4312552a2271d39deacbcfb3c29bef7ffc69587d",
+      "package": "mouse-drawing",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "line_drawing",
+          "package": "line_drawing",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": false,
+          "declaration": {
+            "version": "1"
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "rand",
+          "package": "rand",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.10",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/panic/Cargo.toml",
+      "sha256": "9d338014d1c7d4467c4e2728ee170ab328651ac779f593479a7b2a8f125abec1",
+      "package": "panic",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/popup/Cargo.toml",
+      "sha256": "37cc06c0dc428e962a143014c788e100a1e8db3b02f6c4b57515414b8c97d1fa",
+      "package": "popup",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/release-header/Cargo.toml",
+      "sha256": "6d490733f1b8217f86ef07e125e4f00f6096f9406ed4426d5046a80e2e264413",
+      "package": "release-header",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/scrollbar/Cargo.toml",
+      "sha256": "a03beb92b811f8ba07e7b9abd5b5c2d0398af1a566a2dec113b6da89c4241a2e",
+      "package": "scrollbar",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/table/Cargo.toml",
+      "sha256": "10507274ce3daea6323f2eaeaaf1664232baa3943ace56ec7ebf967417d5c3c9",
+      "package": "table",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "fakeit",
+          "package": "fakeit",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "itertools",
+          "package": "itertools",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.14",
+            "default-features": false,
+            "features": [
+              "use_alloc"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "itertools",
+          "published_coordinate": "io.github.kotlinmania:itertools-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "unicode-width",
+          "package": "unicode-width",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": ">=0.2.0, <=0.2.2",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "unicode-width",
+          "published_coordinate": "io.github.kotlinmania:unicode-width-kotlin:0.1.2",
+          "mapping": "existing published KotlinMania sibling dependency"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/todo-list/Cargo.toml",
+      "sha256": "de8f7d6286dad8a7ec1027a6663dec3ac1168bc8788d47d2331309913321360f",
+      "package": "todo-list",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/tracing/Cargo.toml",
+      "sha256": "06b8153b6ce8861ae4e28b20d7dad98d348b6627addebb9248a1e3635af96455",
+      "package": "tracing",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "tracing",
+          "package": "tracing",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "tracing-appender",
+          "package": "tracing-appender",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.2",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "tracing-subscriber",
+          "package": "tracing-subscriber",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "env-filter"
+            ]
+          },
+          "effective": {
+            "version": "0.3",
+            "features": [
+              "env-filter"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/user-input/Cargo.toml",
+      "sha256": "20e492f651e45f44260c43d25434da43681822545f079239dc2a0bc76dd60511",
+      "package": "user-input",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/volatility-surface/Cargo.toml",
+      "sha256": "bd67888fcc8c20c5253e5445d95fc4d053640263573c17ade20c78fa97bd731b",
+      "package": "volatility-surface",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "colorgrad",
+          "package": "colorgrad",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": false,
+          "declaration": {
+            "version": "0.8",
+            "features": [
+              "preset"
+            ]
+          },
+          "effective": {
+            "version": "0.8",
+            "features": [
+              "preset"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "rand",
+          "package": "rand",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.10",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/weather/Cargo.toml",
+      "sha256": "df1dd398ed3cde9da29816445a941808e024657c2c53a9bdb215502976e26800",
+      "package": "weather",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "rand",
+          "package": "rand",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.10",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/apps/widget-ref-container/Cargo.toml",
+      "sha256": "52ab5bf1c7208a88e6ee3990fcd6e65265e1661cbf5fadc4a5477241990973a3",
+      "package": "widget-ref-container",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "unstable-widget-ref"
+            ]
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [
+              "unstable-widget-ref"
+            ],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "examples/concepts/state/Cargo.toml",
+      "sha256": "1c036eedbc11fcd1fdc61cd5e79163d7007fd5f9f0537125cbc6a3160fb80fd7",
+      "package": "ratatui-state-examples",
+      "version": null,
+      "kotlin_module": null,
+      "scope": "example member; existing Kotlin examples compiled separately, member parity incomplete",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "unstable-widget-ref"
+            ]
+          },
+          "effective": {
+            "path": "ratatui",
+            "version": "0.30.0",
+            "features": [
+              "unstable-widget-ref"
+            ],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        }
+      ]
+    },
+    {
+      "manifest": "ratatui/Cargo.toml",
+      "sha256": "f9dc983f647d0e7bd66f4870027bff6941bc0abe5042f4b0881edb479fd480c5",
+      "package": "ratatui",
+      "version": "0.30.0",
+      "kotlin_module": ":",
+      "scope": "implemented crate / tooling module",
+      "declared_features": {
+        "default": [
+          "crossterm",
+          "underline-color",
+          "all-widgets",
+          "macros",
+          "layout-cache"
+        ],
+        "crossterm": [
+          "std",
+          "dep:ratatui-crossterm"
+        ],
+        "crossterm_0_28": [
+          "crossterm",
+          "ratatui-crossterm/crossterm_0_28"
+        ],
+        "crossterm_0_29": [
+          "crossterm",
+          "ratatui-crossterm/crossterm_0_29"
+        ],
+        "termion": [
+          "std",
+          "dep:ratatui-termion"
+        ],
+        "termwiz": [
+          "std",
+          "dep:ratatui-termwiz"
+        ],
+        "std": [
+          "ratatui-core/std",
+          "ratatui-widgets/std",
+          "serde?/std"
+        ],
+        "serde": [
+          "dep:serde",
+          "ratatui-core/serde",
+          "ratatui-widgets/serde",
+          "ratatui-crossterm?/serde",
+          "ratatui-termion?/serde",
+          "ratatui-termwiz?/serde"
+        ],
+        "layout-cache": [
+          "ratatui-core/layout-cache"
+        ],
+        "palette": [
+          "ratatui-core/palette",
+          "dep:palette"
+        ],
+        "portable-atomic": [
+          "ratatui-core/portable-atomic"
+        ],
+        "scrolling-regions": [
+          "ratatui-core/scrolling-regions",
+          "ratatui-crossterm?/scrolling-regions",
+          "ratatui-termion?/scrolling-regions",
+          "ratatui-termwiz?/scrolling-regions"
+        ],
+        "macros": [
+          "dep:ratatui-macros"
+        ],
+        "all-widgets": [
+          "widget-calendar"
+        ],
+        "widget-calendar": [
+          "ratatui-widgets/calendar"
+        ],
+        "underline-color": [
+          "ratatui-core/underline-color",
+          "ratatui-crossterm?/underline-color",
+          "ratatui-termwiz?/underline-color"
+        ],
+        "unstable": [
+          "unstable-rendered-line-info",
+          "unstable-widget-ref",
+          "unstable-backend-writer"
+        ],
+        "unstable-rendered-line-info": [
+          "ratatui-widgets/unstable-rendered-line-info"
+        ],
+        "unstable-widget-ref": [],
+        "unstable-backend-writer": [
+          "ratatui-crossterm?/unstable-backend-writer",
+          "ratatui-termion?/unstable-backend-writer"
+        ]
+      },
+      "default_feature_local_expansion": [
+        "all-widgets",
+        "crossterm",
+        "dep:ratatui-crossterm",
+        "dep:ratatui-macros",
+        "layout-cache",
+        "macros",
+        "ratatui-core/layout-cache",
+        "ratatui-core/std",
+        "ratatui-core/underline-color",
+        "ratatui-crossterm?/underline-color",
+        "ratatui-termwiz?/underline-color",
+        "ratatui-widgets/calendar",
+        "ratatui-widgets/std",
+        "serde?/std",
+        "std",
+        "underline-color",
+        "widget-calendar"
+      ],
+      "target_cfgs": [
+        "cfg(not(windows))"
+      ],
+      "dependencies": [
+        {
+          "alias": "document-features",
+          "package": "document-features",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.2",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "instability",
+          "package": "instability",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.3",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "palette",
+          "package": "palette",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.7.6",
+            "default-features": false,
+            "features": [
+              "libm"
+            ],
+            "optional": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED runtime/optional dependency or local algorithm; incomplete porting"
+        },
+        {
+          "alias": "ratatui-core",
+          "package": "ratatui-core",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui-core",
+            "version": "0.1.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui-core",
+            "path_member": "ratatui-core"
+          },
+          "kotlin_module": ":ratatui-core",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "ratatui-crossterm",
+          "package": "ratatui-crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "path": "ratatui-crossterm",
+            "version": "0.1.0",
+            "optional": true,
+            "features": [],
+            "default-features": true,
+            "resolved_path": "ratatui-crossterm",
+            "path_member": "ratatui-crossterm"
+          },
+          "kotlin_module": ":ratatui-crossterm",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "ratatui-macros",
+          "package": "ratatui-macros",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "path": "ratatui-macros",
+            "version": "0.7.0",
+            "optional": true,
+            "features": [],
+            "default-features": true,
+            "resolved_path": "ratatui-macros",
+            "path_member": "ratatui-macros"
+          },
+          "kotlin_module": ":ratatui-macros",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "ratatui-termwiz",
+          "package": "ratatui-termwiz",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "path": "ratatui-termwiz",
+            "version": "0.1.0",
+            "optional": true,
+            "features": [],
+            "default-features": true,
+            "resolved_path": "ratatui-termwiz",
+            "path_member": "ratatui-termwiz"
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED: no real backend implementation; never substitute Crossterm"
+        },
+        {
+          "alias": "ratatui-widgets",
+          "package": "ratatui-widgets",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui-widgets",
+            "version": "0.3.0",
+            "default-features": false,
+            "features": [],
+            "optional": false,
+            "resolved_path": "ratatui-widgets",
+            "path_member": "ratatui-widgets"
+          },
+          "kotlin_module": ":ratatui-widgets",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "serde",
+          "package": "serde",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "1",
+            "default-features": false,
+            "features": [
+              "derive"
+            ],
+            "optional": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": "serde-core",
+          "published_coordinate": "io.github.kotlinmania:serde-core:0.1.11",
+          "mapping": "published Serde runtime traits; Kotlin manual derive equivalent; serde optional surface currently enabled"
+        },
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "criterion",
+          "package": "criterion",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.8",
+            "features": [
+              "html_reports"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "event-stream"
+            ]
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [
+              "event-stream"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "fakeit",
+          "package": "fakeit",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "futures",
+          "package": "futures",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.3",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "indoc",
+          "package": "indoc",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "2",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "pretty_assertions",
+          "package": "pretty_assertions",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "rand",
+          "package": "rand",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.10",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "rand_chacha",
+          "package": "rand_chacha",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.10",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "rstest",
+          "package": "rstest",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.26",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "serde_json",
+          "package": "serde_json",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "serde-json",
+          "published_coordinate": "io.github.kotlinmania:serde-json-kotlin:0.1.1",
+          "mapping": "published JSON format test dependency, no Ratatui runtime edge"
+        },
+        {
+          "alias": "time",
+          "package": "time",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "local-offset"
+            ]
+          },
+          "effective": {
+            "version": "0.3.47",
+            "default-features": false,
+            "features": [
+              "local-offset"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "kotlinx-datetime",
+          "published_coordinate": "org.jetbrains.kotlinx:kotlinx-datetime:0.8.0",
+          "mapping": "UNRESOLVED sibling migration: actual calendar uses datetime; retained pending time-kotlin contract audit"
+        },
+        {
+          "alias": "tokio",
+          "package": "tokio",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "rt",
+              "macros",
+              "time",
+              "rt-multi-thread"
+            ]
+          },
+          "effective": {
+            "version": "1",
+            "features": [
+              "macros",
+              "rt",
+              "rt-multi-thread",
+              "time"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "tracing",
+          "package": "tracing",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "tracing-appender",
+          "package": "tracing-appender",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.2",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "tracing-subscriber",
+          "package": "tracing-subscriber",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "env-filter"
+            ]
+          },
+          "effective": {
+            "version": "0.3",
+            "features": [
+              "env-filter"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "ratatui-termion",
+          "package": "ratatui-termion",
+          "scope": "dependencies",
+          "target_cfg": "cfg(not(windows))",
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "path": "ratatui-termion",
+            "version": "0.1.0",
+            "optional": true,
+            "features": [],
+            "default-features": true,
+            "resolved_path": "ratatui-termion",
+            "path_member": "ratatui-termion"
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED: no real backend implementation; never substitute Crossterm"
+        }
+      ]
+    },
+    {
+      "manifest": "ratatui-core/Cargo.toml",
+      "sha256": "2a457eb898f85c38e26eae1d6fb0cca10794486a074ae3c1fb711c63e8743549",
+      "package": "ratatui-core",
+      "version": "0.1.0",
+      "kotlin_module": ":ratatui-core",
+      "scope": "implemented crate / tooling module",
+      "declared_features": {
+        "default": [],
+        "std": [
+          "itertools/use_std",
+          "thiserror/std",
+          "kasuari/std",
+          "bitflags/std",
+          "compact_str/std",
+          "unicode-truncate/std",
+          "strum/std",
+          "serde?/std",
+          "palette?/std"
+        ],
+        "layout-cache": [
+          "dep:critical-section"
+        ],
+        "anstyle": [
+          "dep:anstyle"
+        ],
+        "palette": [
+          "dep:palette"
+        ],
+        "portable-atomic": [
+          "kasuari/portable-atomic"
+        ],
+        "underline-color": [],
+        "scrolling-regions": [],
+        "serde": [
+          "dep:serde",
+          "bitflags/serde",
+          "compact_str/serde"
+        ]
+      },
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "anstyle",
+          "package": "anstyle",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "1",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": "anstyle",
+          "published_coordinate": "io.github.kotlinmania:anstyle-kotlin:0.1.5",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "bitflags",
+          "package": "bitflags",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "2.11",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "bitflags",
+          "published_coordinate": "io.github.kotlinmania:bitflags-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "compact_str",
+          "package": "compact_str",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.9",
+            "default-features": false,
+            "features": [],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "existing Kotlin String/collections; sibling gap and full parity unproved"
+        },
+        {
+          "alias": "critical-section",
+          "package": "critical-section",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "1.2",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED runtime/optional dependency or local algorithm; incomplete porting"
+        },
+        {
+          "alias": "document-features",
+          "package": "document-features",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.2",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "hashbrown",
+          "package": "hashbrown",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.16",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "existing Kotlin String/collections; sibling gap and full parity unproved"
+        },
+        {
+          "alias": "indoc",
+          "package": "indoc",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "2",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "itertools",
+          "package": "itertools",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.14",
+            "default-features": false,
+            "features": [
+              "use_alloc"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "itertools",
+          "published_coordinate": "io.github.kotlinmania:itertools-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "kasuari",
+          "package": "kasuari",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "default-features": false
+          },
+          "effective": {
+            "version": "0.4",
+            "default-features": false,
+            "features": [],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "kasuari",
+          "published_coordinate": "io.github.kotlinmania:kasuari-kotlin:0.1.6",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "lru",
+          "package": "lru",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.16",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "lru",
+          "published_coordinate": "io.github.kotlinmania:lru-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "palette",
+          "package": "palette",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.7.6",
+            "default-features": false,
+            "features": [
+              "libm"
+            ],
+            "optional": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED runtime/optional dependency or local algorithm; incomplete porting"
+        },
+        {
+          "alias": "serde",
+          "package": "serde",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "1",
+            "default-features": false,
+            "features": [
+              "derive"
+            ],
+            "optional": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": "serde-core",
+          "published_coordinate": "io.github.kotlinmania:serde-core:0.1.11",
+          "mapping": "published Serde runtime traits; Kotlin manual derive equivalent; serde optional surface currently enabled"
+        },
+        {
+          "alias": "strum",
+          "package": "strum",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.28",
+            "default-features": false,
+            "features": [
+              "derive"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "strum",
+          "published_coordinate": "io.github.kotlinmania:strum-kotlin:0.2.0",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "thiserror",
+          "package": "thiserror",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "default-features": false
+          },
+          "effective": {
+            "version": "2",
+            "default-features": false,
+            "features": [],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "thiserror",
+          "published_coordinate": "io.github.kotlinmania:thiserror-kotlin:0.2.0",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "unicode-segmentation",
+          "package": "unicode-segmentation",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "unicode-segmentation",
+          "published_coordinate": "io.github.kotlinmania:unicode-segmentation-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "unicode-truncate",
+          "package": "unicode-truncate",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "default-features": false
+          },
+          "effective": {
+            "version": "2",
+            "default-features": false,
+            "features": [],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED runtime/optional dependency or local algorithm; incomplete porting"
+        },
+        {
+          "alias": "unicode-width",
+          "package": "unicode-width",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": ">=0.2.0, <=0.2.2",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "unicode-width",
+          "published_coordinate": "io.github.kotlinmania:unicode-width-kotlin:0.1.2",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "critical-section",
+          "package": "critical-section",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "std"
+            ]
+          },
+          "effective": {
+            "version": "1.2",
+            "features": [
+              "std"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "pretty_assertions",
+          "package": "pretty_assertions",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "rstest",
+          "package": "rstest",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.26",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "serde_json",
+          "package": "serde_json",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "serde-json",
+          "published_coordinate": "io.github.kotlinmania:serde-json-kotlin:0.1.1",
+          "mapping": "published JSON format test dependency, no Ratatui runtime edge"
+        }
+      ]
+    },
+    {
+      "manifest": "ratatui-crossterm/Cargo.toml",
+      "sha256": "87b359a2b9cc11c02d1632228de739aeed9a5f157c25705c19882b53ece61234",
+      "package": "ratatui-crossterm",
+      "version": "0.1.0",
+      "kotlin_module": ":ratatui-crossterm",
+      "scope": "implemented crate / tooling module",
+      "declared_features": {
+        "default": [
+          "underline-color",
+          "crossterm_0_29"
+        ],
+        "crossterm_0_28": [
+          "dep:crossterm_0_28"
+        ],
+        "crossterm_0_29": [
+          "dep:crossterm_0_29"
+        ],
+        "serde": [
+          "crossterm_0_28?/serde",
+          "crossterm_0_29?/serde"
+        ],
+        "underline-color": [
+          "ratatui-core/underline-color"
+        ],
+        "scrolling-regions": [
+          "ratatui-core/scrolling-regions"
+        ],
+        "unstable": [
+          "unstable-backend-writer"
+        ],
+        "unstable-backend-writer": []
+      },
+      "default_feature_local_expansion": [
+        "crossterm_0_29",
+        "dep:crossterm_0_29",
+        "ratatui-core/underline-color",
+        "underline-color"
+      ],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "cfg-if",
+          "package": "cfg-if",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": false,
+          "declaration": {
+            "version": "1.0.1"
+          },
+          "effective": {
+            "version": "1.0.1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "crossterm_0_28",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": false,
+          "declaration": {
+            "version": "0.28",
+            "package": "crossterm",
+            "optional": true
+          },
+          "effective": {
+            "version": "0.28",
+            "package": "crossterm",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "crossterm_0_29",
+          "package": "crossterm",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": false,
+          "declaration": {
+            "version": "0.29",
+            "package": "crossterm",
+            "optional": true
+          },
+          "effective": {
+            "version": "0.29",
+            "package": "crossterm",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "document-features",
+          "package": "document-features",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.2",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "instability",
+          "package": "instability",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.3",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "ratatui-core",
+          "package": "ratatui-core",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui-core",
+            "version": "0.1.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui-core",
+            "path_member": "ratatui-core"
+          },
+          "kotlin_module": ":ratatui-core",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "rstest",
+          "package": "rstest",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.26",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        }
+      ]
+    },
+    {
+      "manifest": "ratatui-macros/Cargo.toml",
+      "sha256": "5d431b8131fc27bcd6d4889a4618408539d1a7acb7dd259c2ce6a4002244273d",
+      "package": "ratatui-macros",
+      "version": "0.7.0",
+      "kotlin_module": ":ratatui-macros",
+      "scope": "implemented crate / tooling module",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "ratatui-core",
+          "package": "ratatui-core",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui-core",
+            "version": "0.1.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui-core",
+            "path_member": "ratatui-core"
+          },
+          "kotlin_module": ":ratatui-core",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "ratatui-widgets",
+          "package": "ratatui-widgets",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui-widgets",
+            "version": "0.3.0",
+            "default-features": false,
+            "features": [],
+            "optional": false,
+            "resolved_path": "ratatui-widgets",
+            "path_member": "ratatui-widgets"
+          },
+          "kotlin_module": ":ratatui-widgets",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "trybuild",
+          "package": "trybuild",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "features": [
+              "diff"
+            ]
+          },
+          "effective": {
+            "version": "1",
+            "features": [
+              "diff"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        }
+      ]
+    },
+    {
+      "manifest": "ratatui-termion/Cargo.toml",
+      "sha256": "2808239ce444b6357f599643c8a1b5011da5c7b8e16f08dd9d0f6628d57425cc",
+      "package": "ratatui-termion",
+      "version": "0.1.0",
+      "kotlin_module": null,
+      "scope": "optional backend NOT implemented; incomplete port",
+      "declared_features": {
+        "default": [],
+        "serde": [
+          "termion/serde"
+        ],
+        "scrolling-regions": [
+          "ratatui-core/scrolling-regions"
+        ],
+        "unstable": [
+          "unstable-backend-writer"
+        ],
+        "unstable-backend-writer": []
+      },
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "document-features",
+          "package": "document-features",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.2",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "instability",
+          "package": "instability",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.3",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "ratatui-core",
+          "package": "ratatui-core",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui-core",
+            "version": "0.1.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui-core",
+            "path_member": "ratatui-core"
+          },
+          "kotlin_module": ":ratatui-core",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "termion",
+          "package": "termion",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "4",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED runtime/optional dependency or local algorithm; incomplete porting"
+        },
+        {
+          "alias": "rstest",
+          "package": "rstest",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.26",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        }
+      ]
+    },
+    {
+      "manifest": "ratatui-termwiz/Cargo.toml",
+      "sha256": "b560180467141cd4abe298885dea3e4f50139561a23568a3d032283f72c9c8d0",
+      "package": "ratatui-termwiz",
+      "version": "0.1.0",
+      "kotlin_module": null,
+      "scope": "optional backend NOT implemented; incomplete port",
+      "declared_features": {
+        "default": [],
+        "serde": [
+          "termwiz/use_serde"
+        ],
+        "underline-color": [
+          "ratatui-core/underline-color"
+        ],
+        "scrolling-regions": [
+          "ratatui-core/scrolling-regions"
+        ]
+      },
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "document-features",
+          "package": "document-features",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.2",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "ratatui-core",
+          "package": "ratatui-core",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui-core",
+            "version": "0.1.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui-core",
+            "path_member": "ratatui-core"
+          },
+          "kotlin_module": ":ratatui-core",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "termwiz",
+          "package": "termwiz",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.23",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED runtime/optional dependency or local algorithm; incomplete porting"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": false,
+          "declaration": {
+            "path": "../ratatui",
+            "features": [
+              "termwiz"
+            ],
+            "default-features": false
+          },
+          "effective": {
+            "path": "../ratatui",
+            "features": [
+              "termwiz"
+            ],
+            "default-features": false,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project development/tooling edge"
+        },
+        {
+          "alias": "rstest",
+          "package": "rstest",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.26",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        }
+      ]
+    },
+    {
+      "manifest": "ratatui-widgets/Cargo.toml",
+      "sha256": "d70725b7d5c46c7479fcb258cd5ab49255c47536682dbe170e764fa90b91d2f4",
+      "package": "ratatui-widgets",
+      "version": "0.3.0",
+      "kotlin_module": ":ratatui-widgets",
+      "scope": "implemented crate / tooling module",
+      "declared_features": {
+        "default": [
+          "all-widgets"
+        ],
+        "std": [
+          "serde?/std",
+          "time?/local-offset"
+        ],
+        "serde": [
+          "dep:serde",
+          "ratatui-core/serde"
+        ],
+        "all-widgets": [
+          "calendar"
+        ],
+        "calendar": [
+          "dep:time"
+        ],
+        "unstable": [
+          "unstable-rendered-line-info"
+        ],
+        "unstable-rendered-line-info": []
+      },
+      "default_feature_local_expansion": [
+        "all-widgets",
+        "calendar",
+        "dep:time"
+      ],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "bitflags",
+          "package": "bitflags",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "2.11",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "bitflags",
+          "published_coordinate": "io.github.kotlinmania:bitflags-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "document-features",
+          "package": "document-features",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.2",
+            "optional": true,
+            "features": [],
+            "default-features": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "hashbrown",
+          "package": "hashbrown",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.16",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "existing Kotlin String/collections; sibling gap and full parity unproved"
+        },
+        {
+          "alias": "indoc",
+          "package": "indoc",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "2",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "instability",
+          "package": "instability",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.3",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "itertools",
+          "package": "itertools",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.14",
+            "default-features": false,
+            "features": [
+              "use_alloc"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "itertools",
+          "published_coordinate": "io.github.kotlinmania:itertools-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "line-clipping",
+          "package": "line-clipping",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.3",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED runtime/optional dependency or local algorithm; incomplete porting"
+        },
+        {
+          "alias": "ratatui-core",
+          "package": "ratatui-core",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "path": "ratatui-core",
+            "version": "0.1.0",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui-core",
+            "path_member": "ratatui-core"
+          },
+          "kotlin_module": ":ratatui-core",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project API crate edge"
+        },
+        {
+          "alias": "serde",
+          "package": "serde",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "1",
+            "default-features": false,
+            "features": [
+              "derive"
+            ],
+            "optional": true
+          },
+          "kotlin_module": null,
+          "catalog_alias": "serde-core",
+          "published_coordinate": "io.github.kotlinmania:serde-core:0.1.11",
+          "mapping": "published Serde runtime traits; Kotlin manual derive equivalent; serde optional surface currently enabled"
+        },
+        {
+          "alias": "strum",
+          "package": "strum",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.28",
+            "default-features": false,
+            "features": [
+              "derive"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "strum",
+          "published_coordinate": "io.github.kotlinmania:strum-kotlin:0.2.0",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "time",
+          "package": "time",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true,
+            "optional": true
+          },
+          "effective": {
+            "version": "0.3.47",
+            "default-features": false,
+            "optional": true,
+            "features": []
+          },
+          "kotlin_module": null,
+          "catalog_alias": "kotlinx-datetime",
+          "published_coordinate": "org.jetbrains.kotlinx:kotlinx-datetime:0.8.0",
+          "mapping": "UNRESOLVED sibling migration: actual calendar uses datetime; retained pending time-kotlin contract audit"
+        },
+        {
+          "alias": "unicode-segmentation",
+          "package": "unicode-segmentation",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "unicode-segmentation",
+          "published_coordinate": "io.github.kotlinmania:unicode-segmentation-kotlin:0.1.1",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "unicode-width",
+          "package": "unicode-width",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": ">=0.2.0, <=0.2.2",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "unicode-width",
+          "published_coordinate": "io.github.kotlinmania:unicode-width-kotlin:0.1.2",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "crossterm",
+          "package": "crossterm",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.29",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": "crossterm",
+          "published_coordinate": "io.github.kotlinmania:crossterm-kotlin:0.1.4",
+          "mapping": "existing published KotlinMania sibling dependency"
+        },
+        {
+          "alias": "pretty_assertions",
+          "package": "pretty_assertions",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        },
+        {
+          "alias": "ratatui",
+          "package": "ratatui",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": false,
+          "declaration": {
+            "path": "../ratatui"
+          },
+          "effective": {
+            "path": "../ratatui",
+            "features": [],
+            "default-features": true,
+            "optional": false,
+            "resolved_path": "ratatui",
+            "path_member": "ratatui"
+          },
+          "kotlin_module": ":",
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "project development/tooling edge"
+        },
+        {
+          "alias": "rstest",
+          "package": "rstest",
+          "scope": "dev-dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.26",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "Kotlin language/test/documentation tooling equivalent; behavioral coverage must be audited separately"
+        }
+      ]
+    },
+    {
+      "manifest": "xtask/Cargo.toml",
+      "sha256": "59e3e05cbff62c4b700274a05c186c817087acc4edfe4aec83b93a26c515c915",
+      "package": "xtask",
+      "version": null,
+      "kotlin_module": ":xtask",
+      "scope": "implemented crate / tooling module",
+      "declared_features": {},
+      "default_feature_local_expansion": [],
+      "target_cfgs": [],
+      "dependencies": [
+        {
+          "alias": "clap",
+          "package": "clap",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "4.6",
+            "features": [
+              "derive"
+            ],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "clap-verbosity-flag",
+          "package": "clap-verbosity-flag",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": false,
+          "declaration": {
+            "version": "3",
+            "default-features": false,
+            "features": [
+              "tracing"
+            ]
+          },
+          "effective": {
+            "version": "3",
+            "default-features": false,
+            "features": [
+              "tracing"
+            ],
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "color-eyre",
+          "package": "color-eyre",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.6",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "duct",
+          "package": "duct",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": false,
+          "declaration": {
+            "version": "1"
+          },
+          "effective": {
+            "version": "1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "tracing",
+          "package": "tracing",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.1",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        },
+        {
+          "alias": "tracing-subscriber",
+          "package": "tracing-subscriber",
+          "scope": "dependencies",
+          "target_cfg": null,
+          "workspace_inherited": true,
+          "declaration": {
+            "workspace": true
+          },
+          "effective": {
+            "version": "0.3",
+            "features": [],
+            "default-features": true,
+            "optional": false
+          },
+          "kotlin_module": null,
+          "catalog_alias": null,
+          "published_coordinate": null,
+          "mapping": "UNRESOLVED development/example/tool dependency mapping; excluded from runtime publication, not completed porting"
+        }
+      ]
+    }
+  ]
+}

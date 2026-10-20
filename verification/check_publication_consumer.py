@@ -11,12 +11,25 @@ from verify_android_publication import require, verify
 
 GROUP = "io.github.kotlinmania"
 MODULE = "ratatui-kotlin"
-CLASSES = {"ratatui/text/Text.class", "ratatui/style/Modifier.class",
-           "ratatui/style/ParseColorError.class", "ratatui/style/ColorSerializer.class"}
-EDGES = [(GROUP, "bitflags-kotlin", "bitflags-kotlin-android"),
-         (GROUP, "thiserror-kotlin", "thiserror-kotlin-android"),
-         (GROUP, "unicode-width-kotlin", "unicode-width-kotlin-android"),
-         (GROUP, "serde-core", "serde-core-android")]
+CLASSES = set()  # The facade exposes real crate classes through api(project(...)).
+CORE_EDGES = [(GROUP, "bitflags-kotlin", "bitflags-kotlin-android"),
+              (GROUP, "thiserror-kotlin", "thiserror-kotlin-android"),
+              (GROUP, "unicode-width-kotlin", "unicode-width-kotlin-android"),
+              (GROUP, "serde-core", "serde-core-android")]
+EDGES = [(GROUP, module, module + "-android")
+         for module in ["ratatui-core", "ratatui-widgets", "ratatui-macros"]]
+COMPONENTS = {
+    MODULE: (CLASSES, EDGES),
+    "ratatui-core": ({"ratatui/text/Text.class", "ratatui/style/Modifier.class",
+                      "ratatui/style/ParseColorError.class", "ratatui/style/ColorSerializer.class"}, CORE_EDGES),
+    "ratatui-widgets": ({"ratatui/widgets/list/ListState.class", "ratatui/widgets/table/TableState.class",
+                         "ratatui/widgets/scrollbar/ScrollbarState.class"},
+                        [(GROUP, "ratatui-core", "ratatui-core-android")]),
+    "ratatui-macros": ({"ratatui_macros/SpanKt.class", "ratatui_macros/RowKt.class"},
+                       [(GROUP, "ratatui-core", "ratatui-core-android"),
+                        (GROUP, "ratatui-widgets", "ratatui-widgets-android")]),
+}
+
 TESTS = {"publishedTextUsesUnicodeWidth", "publishedModifierExposesBitflags",
          "publishedErrorRetainsItsStandardErrorType", "publishedSerializerRetainsItsPublicInterface"}
 
@@ -25,13 +38,17 @@ def stage(repository, version, bundle):
     require(re.fullmatch(r"[A-Za-z0-9_.+-]+", version), "Invalid version")
     bundle.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(bundle, "w", zipfile.ZIP_DEFLATED) as archive:
-        for module in [MODULE, MODULE + "-android"]:
+        for module in [name for owner in COMPONENTS for name in [owner, owner + "-android"]]:
             root = repository / GROUP.replace(".", "/") / module / version
             require(root.is_dir(), f"Missing current publication: {root}")
             for path in sorted(root.rglob("*")):
                 if path.is_file():
                     archive.write(path, path.relative_to(repository))
-    return verify(bundle, GROUP, MODULE, version, CLASSES, EDGES)
+    receipts = {module: verify(bundle, GROUP, module, version, classes, edges)
+                for module, (classes, edges) in COMPONENTS.items()}
+    result = dict(receipts[MODULE])
+    result["components"] = receipts
+    return result
 
 
 def executed_tests(results):

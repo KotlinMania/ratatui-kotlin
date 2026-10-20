@@ -49,20 +49,6 @@ version = providers.gradleProperty("project.version").getOrElse("0.1.0-SNAPSHOT"
 val frameworkName = providers.gradleProperty("project.frameworkName").getOrElse("Unnamed")
 val projectNamespace = providers.gradleProperty("project.namespace").getOrElse("io.github.kotlinmania")
 val kotlinVersion = providers.gradleProperty("versions.kotlin").getOrElse("2.4.0")
-val commonMainBundleName = providers.gradleProperty("project.dependencies.commonMainBundle").get()
-val commonMainDependencyBundle =
-    extensions
-        .getByType(VersionCatalogsExtension::class.java)
-        .named("libs")
-        .findBundle(commonMainBundleName)
-        .orElseThrow { GradleException("Missing libs bundle '$commonMainBundleName'") }
-
-val crosstermDependency =
-    extensions
-        .getByType(VersionCatalogsExtension::class.java)
-        .named("libs")
-        .findLibrary("crossterm")
-        .orElseThrow { GradleException("Missing libs library 'crossterm'") }
 
 fun csvProperty(name: String): Set<String> =
     providers
@@ -164,7 +150,7 @@ val androidSdkOsName =
         "linux" in osName -> "linux"
         else -> throw GradleException("Unsupported Android SDK setup OS: ${providers.systemProperty("os.name").get()}")
     }
-val projectAndroidSdkDir = layout.projectDirectory.dir(".android-sdk").asFile
+val projectAndroidSdkDir = rootProject.layout.projectDirectory.dir(".android-sdk").asFile
 val androidSdkManager =
     projectAndroidSdkDir.resolve(
         if (isWindowsHost) {
@@ -184,10 +170,9 @@ val requiredAndroidSdkPackageDirs =
 fun writeAndroidLocalProperties() {
     projectAndroidSdkDir.mkdirs()
     val sdkDirPropertyValue = projectAndroidSdkDir.absolutePath.replace("\\", "/")
-    layout.projectDirectory
-        .file("local.properties")
-        .asFile
-        .writeText("sdk.dir=$sdkDirPropertyValue\n")
+    (listOf(project) + subprojects).forEach { owner ->
+        owner.layout.projectDirectory.file("local.properties").asFile.writeText("sdk.dir=$sdkDirPropertyValue\n")
+    }
 }
 
 fun isProjectAndroidSdkInstalled(): Boolean =
@@ -376,7 +361,12 @@ kotlin {
 
     // Local helper: attach this target's framework to the XCFramework.
     fun KotlinNativeTarget.addToXcf(static: Boolean = false) {
+        val ownerTarget = name
         binaries.framework {
+            export(project(":ratatui-core"))
+            export(project(":ratatui-widgets"))
+            export(project(":ratatui-macros"))
+            if (ownerTarget == "macosArm64") export(project(":ratatui-crossterm"))
             baseName = frameworkName
             if (static) isStatic = true
             xcf.add(this)
@@ -461,6 +451,10 @@ kotlin {
     // arrive via KotlinToolingDiagnostics, not @RequiresOptIn.
     swiftExport {
         moduleName = frameworkName
+        export(project(":ratatui-core")) { moduleName = "RatatuiCore" }
+        export(project(":ratatui-widgets")) { moduleName = "RatatuiWidgets" }
+        export(project(":ratatui-macros")) { moduleName = "RatatuiMacros" }
+        export(project(":ratatui-crossterm")) { moduleName = "RatatuiCrossterm" }
         flattenPackage = projectNamespace
         @OptIn(org.jetbrains.kotlin.gradle.swiftexport.ExperimentalSwiftExportDsl::class)
         configure {
@@ -487,12 +481,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(commonMainDependencyBundle)
-            // Public supertypes and serializers require these on consumer compile classpaths.
-            api(libs.bitflags)
-            api(libs.thiserror)
-            api(libs.unicode.width)
-            api(libs.serde.core)
+            api(project(":ratatui-core"))
+            api(project(":ratatui-widgets"))
+            api(project(":ratatui-macros"))
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
@@ -509,7 +500,7 @@ kotlin {
             dependsOn(commonMain.get())
         }
         desktopMain.dependencies {
-            implementation(crosstermDependency)
+            api(project(":ratatui-crossterm"))
         }
 
         if (benchmarkEnabled) {
@@ -581,7 +572,7 @@ detekt {
     buildUponDefaultConfig.set(true)
     allRules.set(false)
     autoCorrect.set(false)
-    source.setFrom(files("src"))
+    source.setFrom(files("src", "ratatui-core/src", "ratatui-widgets/src", "ratatui-macros/src", "ratatui-crossterm/src", "xtask/src"))
     config.setFrom(files("detekt.yml"))
     parallel.set(true)
 }
@@ -1044,6 +1035,7 @@ tasks.register("swiftExportSmokeTest") {
                 commandLine(
                     "./gradlew",
                     "embedSwiftExportForXcode",
+                    "--max-workers=2",
                     "-Dorg.gradle.jvmargs=-Xmx6g -XX:MaxMetaspaceSize=1g",
                     "--no-configuration-cache",
                     "--no-daemon",
@@ -1157,4 +1149,53 @@ val fullTargetBuildTaskNames =
 
 tasks.named("build") {
     dependsOn(fullTargetBuildTaskNames)
+}
+
+val fullCrates = listOf("ratatui-core", "ratatui-widgets", "ratatui-macros")
+val desktopCrates = listOf("ratatui-crossterm", "xtask")
+val publishedCrates = fullCrates + "ratatui-crossterm"
+val desktopTargets = setOf("macosArm64", "linuxX64", "mingwX64")
+
+// Compile examples separately, with main association for existing internal stdout glue.
+// These files are not included in any published KMP main source set.
+kotlin {
+    val examples = sourceSets.create("desktopExamples")
+    targets.withType<KotlinNativeTarget>().matching { it.name in desktopTargets }.configureEach {
+        compilations.create("examples") {
+            associateWith(compilations.getByName("main"))
+            defaultSourceSet.dependsOn(examples)
+        }
+    }
+}
+
+// Every platform job's existing root selector includes the corresponding real crate tasks.
+val platformSelectors = listOf("jvmMainClasses", "jvmTestClasses", "jvmTest", "compileAndroidMain",
+    "compileAndroidHostTest", "testAndroidHostTest", "compileAndroidDeviceTest", "assembleAndroidMain",
+    "assembleUnitTest", "assembleAndroidTest", "assembleAndroidDeviceTest", "androidSourcesJar",
+    "jsMainClasses", "jsTestClasses", "jsBrowserTest", "jsNodeTest", "wasmJsMainClasses",
+    "wasmJsTestClasses", "wasmJsBrowserTest", "wasmJsNodeTest", "wasmWasiMainClasses", "wasmWasiTestClasses", "wasmWasiNodeTest") +
+    nativeTargetNames.flatMap { listOf("${it}Binaries", "${it}TestBinaries", "${it}Test", "compileKotlin${it.replaceFirstChar { c -> c.uppercase() }}") }
+for (selector in platformSelectors) {
+    tasks.matching { it.name == selector }.configureEach {
+        dependsOn(fullCrates.map { ":$it:$selector" })
+        val native = desktopTargets.firstOrNull { selector.startsWith(it) || selector == "compileKotlin${it.replaceFirstChar { c -> c.uppercase() }}" }
+        if (native != null) dependsOn(desktopCrates.map { ":$it:$selector" })
+    }
+}
+tasks.named("test") { dependsOn((fullCrates + desktopCrates).map { ":$it:test" }) }
+tasks.named("allTests") { dependsOn((fullCrates + desktopCrates).map { ":$it:allTests" }) }
+tasks.named("build") {
+    dependsOn((fullCrates + desktopCrates).map { ":$it:build" })
+    dependsOn(desktopTargets.map { "compileExamplesKotlin${it.replaceFirstChar { c -> c.uppercase() }}" })
+}
+// A single signed deployment must contain every newly referenced sibling coordinate.
+tasks.named("centralPortalBundle") {
+    dependsOn(publishedCrates.map { ":$it:publishAllPublicationsToCentralPortalStagingRepository" })
+}
+tasks.register("stageConsumerPublications") {
+    group = "publishing"
+    val owners = listOf("") + fullCrates.map { ":$it" }
+    dependsOn(owners.flatMap { owner -> listOf("KotlinMultiplatform", "Android", "Jvm").map {
+        "$owner:publish${it}PublicationToCentralPortalStagingRepository"
+    } })
 }

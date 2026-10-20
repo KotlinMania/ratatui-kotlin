@@ -1,6 +1,8 @@
 // port-lint: source ratatui-core/src/style/color.rs
 package ratatui.style
 
+import io.github.kotlinmania.serde.SerdeError
+import io.github.kotlinmania.serde.SerdeException
 import io.github.kotlinmania.serde.SerdeResult
 import io.github.kotlinmania.serde.serdeCatching
 import io.github.kotlinmania.serdecore.de.Deserialize
@@ -12,8 +14,6 @@ import io.github.kotlinmania.serdecore.de.U8Deserialize
 import io.github.kotlinmania.serdecore.de.Visitor
 import io.github.kotlinmania.serdecore.ser.Serialize
 import io.github.kotlinmania.serdecore.ser.Serializer
-import ratatui.serde.invalidSerde
-import ratatui.serde.requiredElement
 import io.github.kotlinmania.thiserror.StdError
 import kotlin.math.PI
 import kotlin.math.abs
@@ -383,7 +383,7 @@ object ColorSerializer : Deserialize<Color> {
             override fun expecting(): String = "a color string or legacy Rgb/Indexed variant"
             override fun visitStr(v: String): SerdeResult<Color> = serdeCatching { Color.fromStr(v) }
             override fun <A : MapAccess> visitMap(access: A): SerdeResult<Color> = serdeCatching {
-                val variant = access.nextKey(StringDeserialize).getOrThrow() ?: invalidSerde("Failed to parse Colors")
+                val variant = access.nextKey(StringDeserialize).getOrThrow() ?: invalidColor("Failed to parse Colors")
                 val color = when (variant) {
                     "Indexed" -> Color.Indexed(access.nextValue(U8Deserialize).getOrThrow())
                     "Rgb" -> access.nextValue(object : Deserialize<Color> {
@@ -391,14 +391,14 @@ object ColorSerializer : Deserialize<Color> {
                             deserializer.deserializeTuple(3, object : Visitor<Color> {
                                 override fun expecting(): String = "three u8 color channels"
                                 override fun <A : SeqAccess> visitSeq(access: A): SerdeResult<Color> = serdeCatching {
-                                    Color.Rgb(requiredElement(access, U8Deserialize), requiredElement(access, U8Deserialize),
-                                        requiredElement(access, U8Deserialize))
+                                    Color.Rgb(nextColorChannel(access), nextColorChannel(access),
+                                        nextColorChannel(access))
                                 }
                             })
                     }).getOrThrow()
-                    else -> invalidSerde("Failed to parse Colors: unknown variant `$variant`")
+                    else -> invalidColor("Failed to parse Colors: unknown variant `$variant`")
                 }
-                if (access.nextKey(StringDeserialize).getOrThrow() != null) invalidSerde("expected a single color variant")
+                if (access.nextKey(StringDeserialize).getOrThrow() != null) invalidColor("expected a single color variant")
                 color
             }
         })
@@ -553,3 +553,7 @@ private fun fromLinear(c: Double): Double {
         1.055 * clamped.pow(1.0 / 2.4) - 0.055
     }
 }
+
+private fun invalidColor(message: String): Nothing = throw SerdeException(SerdeError.custom(message))
+private fun nextColorChannel(access: SeqAccess): UByte =
+    access.nextElement(U8Deserialize).getOrThrow() ?: invalidColor("missing color channel")
