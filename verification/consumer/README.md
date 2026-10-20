@@ -16,7 +16,7 @@ A successful result must include the four named tests on JVM and Android host wi
 
 Repeat without producerRepository after the new immutable version is published. This fixture proves public dependency compile selection and host runtime behavior; Android device, Native, Apple, JS and Wasm platform tests remain separate required gates.
 
-Status: source candidate only; no producer staging, Gradle consumer compilation or test execution has run yet.
+Focused validation on 2026-10-20 passed: root/Android/JVM filesystem staging, all four GMM/POM API edges and AAR public classes, independent Android/JVM consumer compilation, and four executed tests on each host with zero failures, errors or skips. The selected Android AAR hash matched the staged payload. Compile and runtime raw classpaths were checked independently with no duplicate classes. Full KMP, Swift, Android device, remote CI and immutable external publication remain separate pending gates.
 
 The producer-local guard is verification/verify_android_publication.py. Supply the actual deployment ZIP with --group io.github.kotlinmania --module ratatui-kotlin --version VERSION --receipt RECEIPT.json, the --public-class paths ratatui/text/Text.class, ratatui/style/Modifier.class, ratatui/style/ParseColorError.class and ratatui/style/ColorSerializer.class, and four --api-dependency triples. Each triple is group:root-module:actual-Android-POM-module; use bitflags-kotlin, thiserror-kotlin, unicode-width-kotlin and kotlinx-serialization-core roots with their verified selected Android POM module names.
 
