@@ -132,3 +132,10 @@ current Kotlin build still exposes a chosen enabled feature surface rather than
 Cargo's full feature-toggle matrix. Unresolved runtime, optional, example and
 tooling mappings are explicitly marked in the JSON inventory and mean incomplete
 porting. The inventory does not convert them to completed dependency parity.
+
+The widgets crate directly implements reflow using the published Unicode
+segmentation API, matching `ratatui-widgets/Cargo.toml`
+`unicode-segmentation.workspace = true`. This is a widgets `implementation`
+dependency: its grapheme iterator is used only inside internal reflow functions
+and does not occur in exported widget signatures. Core retains its independent
+segmentation implementation dependency for text operations.

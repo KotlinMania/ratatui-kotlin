@@ -5,6 +5,7 @@ kotlin.sourceSets {
         dependencies {
             api(project(":ratatui-core"))
             implementation(libs.kotlinx.datetime)
+            implementation(libs.unicode.segmentation)
         }
     }
 }

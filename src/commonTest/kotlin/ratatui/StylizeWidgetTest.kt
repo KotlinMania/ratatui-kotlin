@@ -14,6 +14,7 @@ import ratatui.style.onWhite
 import ratatui.text.Line
 import ratatui.text.Text
 import ratatui.terminal.Terminal
+import ratatui.widgets.barchart.Bar
 import ratatui.widgets.barchart.BarChart
 import ratatui.widgets.barchart.BarGroup
 import ratatui.widgets.block.Block
@@ -28,7 +29,7 @@ class StylizeWidgetTest {
             .barWidth(2)
             .valueStyle(Style.new().green())
             .labelStyle(Style.new().blue())
-            .data(BarGroup.from("A" to 1L, "B" to 2L, "C" to 3L))
+            .data(BarGroup.new(Bar.withLabel("A", 1L), Bar.withLabel("B", 2L), Bar.withLabel("C", 3L)))
             .max(3)
 
         val area = Rect.new(0, 0, 9, 5)
