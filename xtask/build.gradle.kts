@@ -1,7 +1,9 @@
 plugins { id("ratatui.crate") }
 
 kotlin.sourceSets {
-    commonMain.dependencies {
+    named("commonMain") {
+        dependencies {
 
+        }
     }
 }
