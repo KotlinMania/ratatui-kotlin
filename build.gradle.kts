@@ -449,6 +449,7 @@ kotlin {
     // Swift Export bridge — Experimental per Kotlin 2.4.0 release notes.
     // KGP 2.4.0 does not expose a public opt-in annotation; warnings (if any)
     // arrive via KotlinToolingDiagnostics, not @RequiresOptIn.
+    @OptIn(org.jetbrains.kotlin.gradle.swiftexport.ExperimentalSwiftExportDsl::class)
     swiftExport {
         moduleName = frameworkName
         export(project(":ratatui-core")) { moduleName = "RatatuiCore" }
@@ -496,7 +497,7 @@ kotlin {
         // macosArm64, macosX64, linuxX64, mingwX64, ios*, js, wasmJs, android.
         // Not wired to jvm, tvos*, watchos*, androidNative*, or wasmWasi (no
         // crossterm-kotlin artifact for those targets).
-        val desktopMain by creating {
+        create("desktopMain") {
             dependsOn(commonMain.get())
         }
         desktopMain.dependencies {
@@ -1161,8 +1162,9 @@ val desktopTargets = setOf("macosArm64", "linuxX64", "mingwX64")
 kotlin {
     val examples = sourceSets.create("desktopExamples")
     targets.withType<KotlinNativeTarget>().matching { it.name in desktopTargets }.configureEach {
+        val mainCompilation = compilations.getByName("main")
         compilations.create("examples") {
-            associateWith(compilations.getByName("main"))
+            associateWith(mainCompilation)
             defaultSourceSet.dependsOn(examples)
         }
     }
