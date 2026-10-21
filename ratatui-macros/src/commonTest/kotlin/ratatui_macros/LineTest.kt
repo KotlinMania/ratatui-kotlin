@@ -1,6 +1,9 @@
-// port-lint: source ratatui-macros/src/line.rs
+// port-lint: tests ratatui-macros/src/line.rs
 package ratatui_macros
 
+import ratatui.style.Color
+import ratatui.style.Modifier
+import ratatui.style.Style
 import ratatui.text.Line
 import ratatui.text.Span
 import kotlin.test.Test
@@ -54,4 +57,19 @@ class LineTest {
         val expected = Line.from(listOf(Span.from("foo"), Span.from("foo")))
         assertEquals(expected, actual)
     }
+
+    @Test
+    fun lineRepeatedStyledSpan() {
+        val style = Style.new().fg(Color.Red).addModifier(Modifier.BOLD)
+        val original = Span.styled("styled", style)
+        val actual = line(original, 2)
+        assertEquals(2, actual.spans.size)
+        for (span in actual.spans) {
+            assertEquals("styled", span.content)
+            assertEquals(style, span.style)
+        }
+        assertEquals("styled", original.content)
+        assertEquals(style, original.style)
+    }
+
 }
