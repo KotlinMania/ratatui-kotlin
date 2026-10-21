@@ -90,15 +90,25 @@ dependencies and enabled by the `anstyle` feature. Kotlin currently compiles
 these conversion declarations unconditionally; that is the enabled feature
 surface, not a claim of equivalent Cargo feature-toggle selection.
 Public conversion signatures directly use its color/style/effect types. Its
-existing published Kotlin `anstyle-kotlin:0.1.5` is therefore API, not private
-implementation. Actual Central root/Android/JVM module metadata and Android POM
-HTTP200 receipts are in workspace automation-artifacts/2026-10-20-ansi-pr99/
-diagnostic-contracts/published-anstyle-evidence.json. The selected published JVM bytecode confirms only Ansi256Color and Effects
-companions. AnsiColor, RgbColor, Color and Style companions are absent from
-0.1.5, so the current conversion declarations cannot compile against that
-publication. All six companions exist in Anstyle 0.1.6 source and private staged
-Android/JVM artifacts, which is distinct from immutable Central availability.
-No sibling source or unpublished consumer pin is substituted.
+published Kotlin `anstyle-kotlin:0.1.6` is therefore API, not private
+implementation. Version 0.1.5 lacked AnsiColor, RgbColor, Color and Style
+companions and could not compile these conversion declarations. After Sydney
+merged Anstyle PR99, release workflow 39596102333 published 0.1.6 from
+`caffe41a4a7b4e4c9b28f1de5daaba12fdcd94e3`. Independent Central inspection
+verified 18 module metadata documents and all 43 referenced payloads against
+their recorded sizes and hashes, including Android AAR, JVM JAR and Native
+KLIBs. Published JVM signatures contain the four previously absent companions.
+The exact receipt is workspace automation-artifacts/2026-10-20-ansi-pr99/
+pr121-review/anstyle-central-payloads.json. Ratatui now selects that immutable
+published coordinate, without sibling source or private staging substitution.
+
+Artifact availability and JVM signature inspection do not prove Native runtime
+or Swift interoperability. Anstyle's preceding exact-source CI39534019684 had
+11 passing jobs and a failing required strict Swift job; release publication
+success does not change that result. Ratatui's new dependency selection requires
+its own rebuilt tests and artifact consumers. Visible Flags and corrected Serde
+publication remain separately tracked prerequisites on Kanban kotlinmania cards
+`t_ccb84c1e`, `t_6c4d8c88`, `t_5893a3f8`, `t_10fdbe6f` and `t_d7d732b7`.
 
 Thiserror remains recorded at its unchanged catalog pin as upstream derive
 provenance; handwritten concrete implementations do not depend on its runtime

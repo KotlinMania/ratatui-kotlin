@@ -4275,7 +4275,7 @@
           },
           "kotlin_module": null,
           "catalog_alias": "anstyle",
-          "published_coordinate": "io.github.kotlinmania:anstyle-kotlin:0.1.5",
+          "published_coordinate": "io.github.kotlinmania:anstyle-kotlin:0.1.6",
           "mapping": "existing published KotlinMania sibling dependency"
         },
         {
