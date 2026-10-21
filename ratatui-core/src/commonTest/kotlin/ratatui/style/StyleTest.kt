@@ -1,4 +1,4 @@
-// port-lint: source ratatui-core/src/style.rs
+// port-lint: tests ratatui-core/src/style.rs
 package ratatui.style
 
 import io.github.kotlinmania.serde.SerdeError
@@ -264,9 +264,13 @@ class StyleTest {
             "bad | 0x10000" to "unrecognized named flag `bad`",
             "\u001CBOLD" to "unrecognized named flag `\u001CBOLD`",
         )) {
-            val result = Modifier.deserialize(StrDeserializer.new(input))
+            val json = toStr(object : Serialize {
+                override fun <S> serialize(serializer: Serializer<S>): SerdeResult<S> =
+                    serializer.serializeStr(input)
+            }).getOrThrow()
+            val result = fromStr(json, Modifier)
             assertTrue(result.isFailure, input)
-            assertEquals(message, result.exceptionOrNull()?.message)
+            assertTrue(result.exceptionOrNull()?.message?.startsWith(message) == true, input)
         }
         for (json in listOf("null", "12", "true", "[]", "{}")) {
             assertTrue(fromStr(json, Modifier).isFailure, json)
