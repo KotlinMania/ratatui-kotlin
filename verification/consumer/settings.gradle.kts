@@ -13,9 +13,11 @@ dependencyResolutionManagement {
             exclusiveContent {
                 forRepository { maven { url = uri(stagedRepository) } }
                 filter {
-                    includeModule("io.github.kotlinmania", "ratatui-kotlin")
-                    includeModule("io.github.kotlinmania", "ratatui-kotlin-android")
-                    includeModule("io.github.kotlinmania", "ratatui-kotlin-jvm")
+                    listOf("ratatui-kotlin", "ratatui-core", "ratatui-widgets", "ratatui-macros").forEach { owner ->
+                        listOf("", "-android", "-jvm").forEach { suffix ->
+                            includeModule("io.github.kotlinmania", owner + suffix)
+                        }
+                    }
                 }
             }
         }

@@ -94,3 +94,31 @@ kotlin.targets.named("android") {
         hostTests.configureEach { finalizedBy(checkClasspath) }
     }
 }
+
+// Retain selected JVM bytes independently of the Android classpath receipt.
+kotlin.targets.named("jvm") {
+    compilations.named("main") {
+        val compileDependencies = configurations.getByName(compileDependencyConfigurationName)
+        val runtimeDependencies = configurations.named(
+            compileDependencyConfigurationName.replace("CompileClasspath", "RuntimeClasspath"),
+        )
+        val receipt = layout.buildDirectory.file("reports/publication/jvm-classpaths.json")
+        val writeJvmClasspath = tasks.register("writeJvmPublicationClasspath") {
+            outputs.file(receipt)
+            outputs.upToDateWhen { false }
+            doLast {
+                val paths = mapOf("compile" to compileDependencies, "runtime" to runtimeDependencies.get())
+                    .mapValues { (_, configuration) ->
+                        configuration.incoming.artifacts.artifacts.map { it.file }.distinct()
+                            .also { artifacts -> check(artifacts.isNotEmpty() && artifacts.all { it.extension == "jar" }) }
+                            .sortedBy { it.absolutePath }.map { it.absolutePath }
+                    }
+                receipt.get().asFile.apply {
+                    parentFile.mkdirs()
+                    writeText(JsonOutput.prettyPrint(JsonOutput.toJson(paths)) + "\n")
+                }
+            }
+        }
+        tasks.named("jvmTest") { finalizedBy(writeJvmClasspath) }
+    }
+}

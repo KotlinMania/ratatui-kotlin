@@ -26,8 +26,10 @@ def related_path(origin, relative):
     return path
 
 
-def verify(bundle, group, module, version, required_classes, api_dependencies):
-    require(bool(required_classes), "Declare publicClasses to verify real public bytecode")
+def verify(bundle, group, module, version, required_classes, api_dependencies, *, api_facade=False):
+    require(bool(required_classes) or (api_facade and bool(api_dependencies)),
+            "Declare publicClasses to verify real public bytecode")
+    require(not api_facade or not required_classes, "An API facade must not claim owned public classes")
     # Each reviewed edge supplies its actual Android POM module; external KMP
     # libraries may legitimately select a JVM artifact instead of an AAR.
     api_modules = {(g, root) for g, root, android in api_dependencies}
@@ -118,12 +120,15 @@ def verify(bundle, group, module, version, required_classes, api_dependencies):
             require(len(entries) == len(set(entries)), "Duplicate AAR entries")
             require("AndroidManifest.xml" in entries and aar.read("AndroidManifest.xml"),
                     "AAR has no Android manifest")
-            require("classes.jar" in entries, "AAR has no classes.jar")
-            with zipfile.ZipFile(io.BytesIO(aar.read("classes.jar"))) as classes:
-                for name in required_classes:
-                    require(name in classes.namelist(), f"AAR is missing public API class: {name}")
-                    require(classes.read(name).startswith(bytes.fromhex("cafebabe")),
-                            f"AAR entry is not JVM bytecode: {name}")
+            require("classes.jar" in entries or api_facade, "AAR has no classes.jar")
+            if "classes.jar" in entries:
+                with zipfile.ZipFile(io.BytesIO(aar.read("classes.jar"))) as classes:
+                    require(not api_facade or not any(n.endswith(".class") for n in classes.namelist()),
+                            "API facade unexpectedly contains owned bytecode")
+                    for name in required_classes:
+                        require(name in classes.namelist(), f"AAR is missing public API class: {name}")
+                        require(classes.read(name).startswith(bytes.fromhex("cafebabe")),
+                                f"AAR entry is not JVM bytecode: {name}")
         return {
             "status": "passed",
             "bundle": str(Path(bundle).resolve()),
@@ -133,6 +138,7 @@ def verify(bundle, group, module, version, required_classes, api_dependencies):
             "aar_sha256": payload_hash,
             "aar_bytes": len(payload),
             "required_classes": sorted(required_classes),
+            "api_facade": api_facade,
             "variants": [v["name"] for v in variants],
             "api_dependencies": sorted(":".join(edge) for edge in api_dependencies),
             "consumer_compilation": "Separate Gradle consumer must still resolve and compile this publication.",
