@@ -312,7 +312,9 @@ sealed class Color : Serialize {
                 "white" -> White
                 else -> {
                     // Try parsing as indexed color (0-255)
-                    s.toUByteOrNull()?.let { return ColorParseResult.ok(Indexed(it)) }
+                    if (s.all { it.code <= 0x7F }) {
+                        s.toUByteOrNull()?.let { return ColorParseResult.ok(Indexed(it)) }
+                    }
 
                     // Try parsing as hex color
                     parseHexColor(s)?.let { (r, g, b) -> return ColorParseResult.ok(Rgb(r, g, b)) }
@@ -364,7 +366,7 @@ class ParseColorError {
 }
 
 private fun parseHexColor(input: String): Triple<UByte, UByte, UByte>? {
-    if (!input.startsWith('#') || input.length != 7) {
+    if (!input.startsWith('#') || input.length != 7 || input.any { it.code > 0x7F }) {
         return null
     }
     val r = input.substring(1, 3).toUByteOrNull(16) ?: return null

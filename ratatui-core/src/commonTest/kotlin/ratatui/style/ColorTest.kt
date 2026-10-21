@@ -5,6 +5,11 @@ import io.github.kotlinmania.serdejson.fromStr
 import io.github.kotlinmania.serdejson.toStr
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
+import kotlin.test.assertNull
+import kotlin.test.assertSame
+import kotlin.test.assertTrue
 
 class ColorTest {
     @Test
@@ -94,6 +99,34 @@ class ColorTest {
         for (badColor in badColors) {
             kotlin.test.assertTrue(Color.fromStr(badColor).isErr, "bad color: '$badColor'")
         }
+    }
+
+    @Test
+    fun fromNonAsciiNumericColors() {
+        for (input in listOf("１２", "١٢", "#ＦＦ００ＡＡ", "#١٢٣٤٥٦")) {
+            val result = Color.fromStr(input)
+            assertTrue(result.isErr, input)
+            assertNull(result.value, input)
+            val error = assertIs<ParseColorError>(result.error, input)
+            assertEquals("Failed to parse Colors", error.message)
+            assertNull(error.source())
+            val thrown = assertFailsWith<ColorParseException> { result.unwrap() }
+            assertSame(error, thrown.error)
+        }
+    }
+
+    @Test
+    fun fromAsciiNumericColors() {
+        assertEquals(Color.Indexed(12u), Color.fromStr("+12").unwrap())
+        assertEquals(Color.Indexed(255u), Color.fromStr("000255").unwrap())
+        assertTrue(Color.fromStr("256").isErr)
+        assertEquals(Color.Rgb(1u, 2u, 3u), Color.fromStr("#+1+2+3").unwrap())
+        assertEquals(Color.Rgb(255u, 0u, 170u), Color.fromStr("#FF00aa").unwrap())
+    }
+
+    @Test
+    fun fromUnicodeColorName() {
+        assertEquals(Color.Black, Color.fromStr("blacK").unwrap())
     }
 
     @Test

@@ -93,8 +93,12 @@ Public conversion signatures directly use its color/style/effect types. Its
 existing published Kotlin `anstyle-kotlin:0.1.5` is therefore API, not private
 implementation. Actual Central root/Android/JVM module metadata and Android POM
 HTTP200 receipts are in workspace automation-artifacts/2026-10-20-ansi-pr99/
-diagnostic-contracts/published-anstyle-evidence.json. The selected published JVM
-bytecode confirms the source types/companions; no sibling source is substituted.
+diagnostic-contracts/published-anstyle-evidence.json. The selected published JVM bytecode confirms only Ansi256Color and Effects
+companions. AnsiColor, RgbColor, Color and Style companions are absent from
+0.1.5, so the current conversion declarations cannot compile against that
+publication. All six companions exist in Anstyle 0.1.6 source and private staged
+Android/JVM artifacts, which is distinct from immutable Central availability.
+No sibling source or unpublished consumer pin is substituted.
 
 Thiserror remains recorded at its unchanged catalog pin as upstream derive
 provenance; handwritten concrete implementations do not depend on its runtime
@@ -108,3 +112,24 @@ source change. Current Kotlin runtime tests, regenerated Swift declarations,
 strict dependency/harness compilation, exact artifact/source checks and rebuilt
 independent consumers must provide separate evidence for the new ABI. The known
 published JSON and Swift-runtime failures remain visible release gates.
+
+
+## Numeric grammar and public Modifier
+
+Color.fromStr retains the pinned Rust operation, named-color normalization and
+indexed-before-hex parsing order. Its numeric paths now reject non-ASCII input:
+Kotlin JVM unsigned parsing accepts fullwidth and Arabic-Indic digits that Rust
+u8 parsing rejects. ASCII checks retain Rust's accepted leading plus sign,
+including each two-byte hexadecimal component. Named Unicode lowercasing remains
+independent of numeric validation. Common tests assert rejection through the real
+ParseColorError result and preserve that diagnostic's identity through unwrap.
+The JVM-stdlib/Rust witness records the grammar defect; it is not execution of
+the repaired Kotlin common source on Native, JS, Wasm, Android or JVM.
+
+Modifier is public in the pinned Rust style module. The inherited
+HiddenFromObjC annotation and its otherwise-unused opt-in/import are removed;
+no alternative type replaces its public contract. The existing BitFlags base
+still uses ULong while upstream Modifier stores u16, so this does not certify
+width, generic export, unknown-bit behavior or optional Serde parity. Real
+Native export and strict Swift compilation must assess the visible contract.
+These changes introduce no public operation/type renames or dependency pin changes.

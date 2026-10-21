@@ -64,13 +64,11 @@
  *
  * [Span]: ratatui.text.Span
  */
-@file:OptIn(kotlin.experimental.ExperimentalObjCRefinement::class)
 package ratatui.style
 
 import io.github.kotlinmania.bitflags.BitFlags
 import io.github.kotlinmania.bitflags.Flag
 import io.github.kotlinmania.bitflags.toText
-import kotlin.native.HiddenFromObjC
 
 /**
  * Modifier changes the way a piece of text is displayed.
@@ -94,7 +92,6 @@ import kotlin.native.HiddenFromObjC
  * toggle, etc.) while preserving the existing `infix or` / `infix and` API
  * and companion constants for source compatibility.
  */
-@HiddenFromObjC
 class Modifier private constructor(
     bits: ULong,
 ) : BitFlags<Modifier>(bits) {
