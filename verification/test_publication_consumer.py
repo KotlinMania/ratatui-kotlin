@@ -27,12 +27,12 @@ class ExecutionGateTests(unittest.TestCase):
         change(document.getroot())
         document.write(path)
 
-    def test_requires_all_eight_actual_cases(self):
-        self.assertEqual(sum(v["executed"] for v in executed_tests(self.root).values()), 8)
+    def test_requires_all_twelve_actual_cases(self):
+        self.assertEqual(sum(v["executed"] for v in executed_tests(self.root).values()), 12)
 
     def test_zero_cases_rejected(self):
         self.edit_android(lambda suite: suite.clear())
-        with self.assertRaisesRegex(ValueError, "four actual"):
+        with self.assertRaisesRegex(ValueError, "6 actual"):
             executed_tests(self.root)
 
     def test_duplicate_name_cannot_replace_missing_behavior(self):

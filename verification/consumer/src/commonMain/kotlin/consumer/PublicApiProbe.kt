@@ -4,6 +4,8 @@ import io.github.kotlinmania.bitflags.Flag
 import io.github.kotlinmania.unicodewidth.UnicodeWidthStr
 import io.github.kotlinmania.serdecore.de.Deserialize
 import ratatui.style.Color
+import ratatui.style.Style
+import io.github.kotlinmania.serdecore.ser.Serialize
 import ratatui.style.Modifier
 import ratatui.style.ParseColorError
 import ratatui.style.tryFrom
@@ -22,3 +24,8 @@ fun publicColorDeserializer(): Deserialize<Color> = Color
 
 fun publicAnsiConversion(): ai.solace.tui.anstyle.Ansi256Color =
     ai.solace.tui.anstyle.Ansi256Color.tryFrom(Color.Indexed(42u)).unwrap()
+
+fun publicModifierSerializer(): Serialize = Modifier.fromBitsRetain(0x8001uL)
+fun publicModifierDeserializer(): Deserialize<Modifier> = Modifier
+fun publicStyleSerializer(): Serialize = Style.default()
+fun publicStyleDeserializer(): Deserialize<Style> = Style

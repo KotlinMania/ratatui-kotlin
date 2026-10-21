@@ -1,9 +1,24 @@
 // port-lint: source ratatui-core/src/style.rs
 package ratatui.style
 
+import io.github.kotlinmania.serde.SerdeError
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.de.Visitor
+import io.github.kotlinmania.serdecore.de.value.StrDeserializer
+import io.github.kotlinmania.serdecore.de.value.U16Deserializer
+import io.github.kotlinmania.serdecore.de.value.U64Deserializer
+import io.github.kotlinmania.serdecore.ser.FormatterSerializer
+import io.github.kotlinmania.serdecore.ser.Serialize
+import io.github.kotlinmania.serdecore.ser.SerializeStruct
+import io.github.kotlinmania.serdecore.ser.Serializer
+import io.github.kotlinmania.serdejson.fromStr
+import io.github.kotlinmania.serdejson.toStr
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertFailsWith
+import kotlin.test.assertSame
 import kotlin.test.assertTrue
 
 class StyleTest {
@@ -209,4 +224,188 @@ class StyleTest {
             Style.from(Color.Red, Color.Blue, Modifier.BOLD or Modifier.ITALIC, Modifier.DIM)
         )
     }
+
+    @Test
+    fun modifierWidth() {
+        val flags = Modifier.fromBitsRetain(0xFFFFuL)
+        assertEquals(0xFFFFuL, flags.bits())
+        assertEquals(0xFE00uL, flags.unknownBits())
+        assertEquals(0x1FFuL, flags.truncate().bits())
+        assertEquals(0xFFFFuL, flags.union(Modifier.BOLD).bits())
+        assertEquals(0xFFFEuL, flags.difference(Modifier.BOLD).bits())
+        assertFailsWith<IllegalArgumentException> { Modifier.fromBitsRetain(0x10000uL) }
+        assertFailsWith<IllegalArgumentException> { Modifier.BOLD.fromBitsRetain(ULong.MAX_VALUE) }
+    }
+
+    @Test
+    fun modifierSerializeThenDeserialize() {
+        for ((flags, json) in listOf(
+            Modifier.empty() to "\"\"",
+            (Modifier.BOLD or Modifier.ITALIC) to "\"BOLD | ITALIC\"",
+            Modifier.fromBitsRetain(0x8001uL) to "\"BOLD | 0x8000\"",
+            Modifier.fromBitsRetain(0xFFFFuL) to
+                "\"BOLD | DIM | ITALIC | UNDERLINED | SLOW_BLINK | RAPID_BLINK | REVERSED | HIDDEN | CROSSED_OUT | 0xfe00\"",
+        )) {
+            assertEquals(json, toStr(flags).getOrThrow())
+            assertEquals(flags, fromStr(json, Modifier).getOrThrow())
+        }
+        assertEquals(Modifier.BOLD, fromStr("\"0x+1\"", Modifier).getOrThrow())
+        assertEquals(Modifier.BOLD, fromStr("\"BOLD | BOLD\"", Modifier).getOrThrow())
+        assertEquals(Modifier.BOLD, fromStr("\"\u0085BOLD\u0085\"", Modifier).getOrThrow())
+    }
+
+    @Test
+    fun modifierDeserializeErrors() {
+        for ((input, message) in listOf(
+            "NONE" to "unrecognized named flag `NONE`",
+            "BOLD || DIM" to "encountered empty flag",
+            "0x10000" to "invalid hex flag `10000`",
+            "0xＦＦ" to "invalid hex flag `ＦＦ`",
+            "bad | 0x10000" to "unrecognized named flag `bad`",
+            "\u001CBOLD" to "unrecognized named flag `\u001CBOLD`",
+        )) {
+            val result = Modifier.deserialize(StrDeserializer.new(input))
+            assertTrue(result.isFailure, input)
+            assertEquals(message, result.exceptionOrNull()?.message)
+        }
+        for (json in listOf("null", "12", "true", "[]", "{}")) {
+            assertTrue(fromStr(json, Modifier).isFailure, json)
+        }
+    }
+
+    @Test
+    fun modifierCompactUsesU16() {
+        var value: UShort? = null
+        var text: String? = null
+        val serializer = object : Serializer<Unit> by FormatterSerializer(StringBuilder()) {
+            override fun isHumanReadable(): Boolean = false
+            override fun <T : Serialize> serializeNewtypeStruct(name: String, value: T): SerdeResult<Unit> {
+                assertEquals("Modifier", name)
+                return value.serialize(this)
+            }
+            override fun serializeU16(v: UShort): SerdeResult<Unit> {
+                value = v
+                return SerdeResult.success(Unit)
+            }
+            override fun serializeStr(v: String): SerdeResult<Unit> {
+                text = v
+                return SerdeResult.success(Unit)
+            }
+        }
+        val flags = Modifier.fromBitsRetain(0xFFFFuL)
+        flags.serialize(serializer).getOrThrow()
+        assertEquals(UShort.MAX_VALUE, value)
+        assertEquals(null, text)
+        val deserializer = object : Deserializer by U16Deserializer.new(UShort.MAX_VALUE) {
+            override fun isHumanReadable(): Boolean = false
+            override fun <V> deserializeNewtypeStruct(name: String, visitor: Visitor<V>): SerdeResult<V> {
+                assertEquals("Modifier", name)
+                return visitor.visitNewtypeStruct(this)
+            }
+        }
+        assertEquals(flags, Modifier.deserialize(deserializer).getOrThrow())
+        val overflow = object : Deserializer by U64Deserializer.new(0x10000uL) {
+            override fun isHumanReadable(): Boolean = false
+            override fun <V> deserializeNewtypeStruct(name: String, visitor: Visitor<V>): SerdeResult<V> {
+                assertEquals("Modifier", name)
+                return visitor.visitNewtypeStruct(this)
+            }
+        }
+        assertTrue(Modifier.deserialize(overflow).isFailure)
+    }
+
+    @Test
+    fun modifierDeserializePreservesFailure() {
+        val error = SerdeError.custom("input failed")
+        val deserializer = object : Deserializer by StrDeserializer.new("") {
+            override fun <V> deserializeNewtypeStruct(name: String, visitor: Visitor<V>): SerdeResult<V> =
+                SerdeResult.failure(error)
+        }
+        assertSame(error, Modifier.deserialize(deserializer).exceptionOrNull())
+    }
+
+    @Test
+    fun serializeThenDeserialize() {
+        val style = Style(
+            fg = Color.Rgb(255u, 0u, 255u), bg = Color.White, underlineColor = Color.Indexed(3u),
+            addModifier = Modifier.UNDERLINED, subModifier = Modifier.CROSSED_OUT,
+        )
+        val json = "{\"fg\":\"#FF00FF\",\"bg\":\"White\",\"underline_color\":\"3\",\"add_modifier\":\"UNDERLINED\",\"sub_modifier\":\"CROSSED_OUT\"}"
+        assertEquals(json, toStr(style).getOrThrow())
+        assertEquals(style, fromStr(json, Style).getOrThrow())
+    }
+
+    @Test
+    fun deserializeDefaults() {
+        assertEquals("{}", toStr(Style.default()).getOrThrow())
+        assertEquals(Style.default(), fromStr("{}", Style).getOrThrow())
+    }
+
+    @Test
+    fun deserializeNullModifiers() {
+        val json = "{\"add_modifier\":null,\"sub_modifier\":null}"
+        assertEquals(Style.default(), fromStr(json, Style).getOrThrow())
+    }
+
+    @Test
+    fun styleDeserializeErrorsAndUnknownFields() {
+        assertEquals(Style.default(), fromStr("{\"unknown\":{\"nested\":[1,null,true]}}", Style).getOrThrow())
+        for (json in listOf(
+            "{\"fg\":null,\"fg\":\"Red\"}",
+            "{\"add_modifier\":null,\"add_modifier\":\"BOLD\"}",
+            "{\"add_modifier\":\"bad\"}", "{\"fg\":\"invalid_color\"}",
+        )) {
+            assertTrue(fromStr(json, Style).isFailure, json)
+        }
+        for (json in listOf("[null,null,null]", "[null,null,null,null]", "[null,null,null,null,null]")) {
+            assertEquals(Style.default(), fromStr(json, Style).getOrThrow())
+        }
+        assertTrue(fromStr("[null,null]", Style).isFailure)
+        assertTrue(fromStr("[null,null,null,null,null,null]", Style).isFailure)
+    }
+
+    @Test
+    fun styleSerializeKeepsOptionalColorTags() {
+        val present = mutableListOf<String>()
+        val serializer = object : Serializer<Unit> by FormatterSerializer(StringBuilder()) {
+            override fun serializeStruct(name: String, len: Int): SerdeResult<SerializeStruct<Unit>> {
+                assertEquals("Style", name)
+                assertEquals(3, len)
+                return SerdeResult.success(object : SerializeStruct<Unit> {
+                    override fun <T : Serialize> serializeField(key: String, value: T): SerdeResult<Unit> {
+                        val fieldSerializer = object : Serializer<Unit> by FormatterSerializer(StringBuilder()) {
+                            override fun <T : Serialize> serializeSome(value: T): SerdeResult<Unit> {
+                                present.add(key)
+                                return SerdeResult.success(Unit)
+                            }
+                        }
+                        return value.serialize(fieldSerializer)
+                    }
+                    override fun end(): SerdeResult<Unit> = SerdeResult.success(Unit)
+                })
+            }
+        }
+        Style(fg = Color.Red, bg = Color.Blue, underlineColor = Color.Green).serialize(serializer).getOrThrow()
+        assertEquals(listOf("fg", "bg", "underline_color"), present)
+    }
+
+    @Test
+    fun styleSerializePreservesFailure() {
+        val error = SerdeError.custom("field failed")
+        var finished = false
+        val serializer = object : Serializer<Unit> by FormatterSerializer(StringBuilder()) {
+            override fun serializeStruct(name: String, len: Int): SerdeResult<SerializeStruct<Unit>> =
+                SerdeResult.success(object : SerializeStruct<Unit> {
+                    override fun <T : Serialize> serializeField(key: String, value: T): SerdeResult<Unit> =
+                        SerdeResult.failure(error)
+                    override fun end(): SerdeResult<Unit> {
+                        finished = true
+                        return SerdeResult.success(Unit)
+                    }
+                })
+        }
+        assertSame(error, Style(fg = Color.Red).serialize(serializer).exceptionOrNull())
+        assertFalse(finished)
+    }
+
 }

@@ -129,7 +129,57 @@ the repaired Kotlin common source on Native, JS, Wasm, Android or JVM.
 Modifier is public in the pinned Rust style module. The inherited
 HiddenFromObjC annotation and its otherwise-unused opt-in/import are removed;
 no alternative type replaces its public contract. The existing BitFlags base
-still uses ULong while upstream Modifier stores u16, so this does not certify
-width, generic export, unknown-bit behavior or optional Serde parity. Real
+still exposes final ULong bit access while upstream Modifier stores u16. The
+construction invariant and Serde behavior below address the value domain without
+claiming that wider public sibling signature matches Rust. Real
 Native export and strict Swift compilation must assess the visible contract.
 These changes introduce no public operation/type renames or dependency pin changes.
+
+
+## Modifier width and Style Serde contracts
+
+The private Modifier constructor now accepts UShort. Both existing public
+fromBitsRetain(ULong) entry points validate the 16-bit domain before conversion;
+values above 65535 fail rather than silently truncating or remaining in the set.
+All 16 valid bits, including the seven unnamed bits, survive retained-bit
+construction and serialization. Published BitFlags 0.1.1 still owns final
+bits(): ULong and other wide generic operations. This is a checked domain
+adaptation, not complete public UShort signature parity or a BitFlags producer
+repair. No existing public operation is renamed; accepting invalid wider values
+is an intentional behavior change.
+
+Modifier implements the real Serialize trait; its companion implements
+Deserialize. The generated Rust outer Modifier newtype is retained. Inside it,
+human-readable formats use collectStr and the sibling's flag text machinery;
+compact formats use unsigned 16-bit values. Empty flag text is the empty string,
+not debug's NONE. Validation retains Rust ASCII hex grammar, u16 bounds, flag
+error order and Rust Unicode White_Space trimming before calling published
+BitFlags.fromText. That artifact's exported operation is named fromText, while
+its upstream parser operation is from_str; no compatibility alias is introduced.
+
+Style implements Serialize and its companion Deserialize. The enabled
+underline-color surface has five ordered fields. Color fields retain Some tags
+when present and are skipped when absent. Empty modifier fields are skipped;
+missing or explicit null modifier fields deserialize as empty. Known duplicate
+fields fail, unknown fields are consumed, and original Serde errors propagate.
+In sequence form, all three color positions are required, even if null, while
+the two trailing modifier fields have defaults. The actual Rust oracle caught
+and corrected an initial assumption that those trailing fields were required.
+
+Eleven added common tests include the three upstream Style serialization tests,
+unknown-bit round-trips, range/grammar checks, compact newtype/u16 dispatch,
+Option tags, duplicates, sequence defaults and error identity. Two added
+independent root-only consumer tests preserve the original four and raise the
+required Android-host/JVM count to twelve. Current Kotlin tests and regenerated
+Native/Swift interfaces remain unexecuted for this source change; the unchanged
+published Anstyle 0.1.5 companion prerequisite prevents a passing core build.
+No new immutable dependency pin, API hiding or alternate implementation is used.
+
+Eight reference tests executed the actual pinned Rust ratatui-core crate with
+std/serde/underline-color enabled, using bitflags 2.11.0, serde 1.0.228 and
+serde_json 1.0.149. They passed after correcting the oracle's newtype and sequence
+expectations. An initial no_std reference also demonstrated shorter parser error
+messages without the offending flag; that optional feature variant is not
+claimed by the current Kotlin feature surface. Reference logs, source hashes,
+feature selection and the initial failed oracle are retained in workspace
+`automation-artifacts/2026-10-20-ansi-pr99/ratatui-modifier-serde/`.

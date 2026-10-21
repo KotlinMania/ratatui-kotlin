@@ -6,6 +6,10 @@ import kotlin.test.assertNull
 import kotlin.test.assertSame
 import kotlin.test.assertTrue
 import ratatui.style.Color
+import ratatui.style.Modifier
+import ratatui.style.Style
+import io.github.kotlinmania.serdecore.ser.FormatterSerializer
+import io.github.kotlinmania.serdecore.de.value.intoDeserializer
 import io.github.kotlinmania.serdecore.de.value.StrDeserializer
 import ratatui.style.ParseColorError
 import ratatui.style.tryFrom
@@ -44,4 +48,23 @@ class PublicApiConsumerTest {
         assertSame(Color, publicColorDeserializer())
         assertEquals(Color.Red, publicColorDeserializer().deserialize(StrDeserializer.new("Red")).getOrThrow())
     }
+
+    @Test
+    fun publishedModifierRetainsSerdeContracts() {
+        val text = StringBuilder()
+        publicModifierSerializer().serialize(FormatterSerializer(text)).getOrThrow()
+        assertEquals("BOLD | 0x8000", text.toString())
+        val flags = publicModifierDeserializer().deserialize(StrDeserializer.new(text.toString())).getOrThrow()
+        assertEquals(0x8001uL, flags.bits())
+        assertSame(Modifier, publicModifierDeserializer())
+    }
+
+    @Test
+    fun publishedStyleRetainsSerdeContracts() {
+        assertEquals(Style.default(), publicStyleSerializer())
+        val empty = emptyMap<StrDeserializer, StrDeserializer>().intoDeserializer()
+        assertEquals(Style.default(), publicStyleDeserializer().deserialize(empty).getOrThrow())
+        assertSame(Style, publicStyleDeserializer())
+    }
+
 }

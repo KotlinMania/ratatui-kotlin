@@ -24,6 +24,8 @@ COMPONENTS = {
     MODULE: (CLASSES, EDGES),
     "ratatui-core": ({"ratatui/text/Text.class", "ratatui/style/Modifier.class",
                       "ratatui/style/ParseColorError.class", "ratatui/style/Color$Companion.class",
+                      "ratatui/style/Style.class", "ratatui/style/Style$Companion.class",
+                      "ratatui/style/Modifier$Companion.class",
                       "ratatui/style/TryFromColorError.class", "ratatui/style/ColorParseResult.class",
                       "ratatui/style/Ansi256ColorResult.class", "ratatui/style/AnsiColorResult.class",
                       "ratatui/style/RgbColorResult.class"}, CORE_EDGES),
@@ -36,7 +38,8 @@ COMPONENTS = {
 }
 
 TESTS = {"publishedTextUsesUnicodeWidth", "publishedModifierExposesBitflags",
-         "publishedErrorsRetainRustDiagnostics", "publishedColorRetainsItsDeserializeContract"}
+         "publishedErrorsRetainRustDiagnostics", "publishedColorRetainsItsDeserializeContract",
+         "publishedModifierRetainsSerdeContracts", "publishedStyleRetainsSerdeContracts"}
 
 
 def class_hierarchy(payload):
@@ -93,6 +96,32 @@ def verify_diagnostic_payloads(archive, version):
                 shape = class_hierarchy(jar.read("ratatui/style/" + name + ".class"))
                 require(shape["class"] == "ratatui/style/" + name and shape["superclass"] == parent
                         and not shape["interfaces"], f"Leaked diagnostic inheritance: {name}")
+                result[platform][name] = shape
+    return result
+
+
+SERDE_INTERFACES = {
+    "ratatui/style/Modifier": "io/github/kotlinmania/serdecore/ser/Serialize",
+    "ratatui/style/Style": "io/github/kotlinmania/serdecore/ser/Serialize",
+    "ratatui/style/Modifier$Companion": "io/github/kotlinmania/serdecore/de/Deserialize",
+    "ratatui/style/Style$Companion": "io/github/kotlinmania/serdecore/de/Deserialize",
+    "ratatui/style/Color$Companion": "io/github/kotlinmania/serdecore/de/Deserialize",
+}
+
+
+def verify_serde_payloads(archive, version):
+    android = archive.read(metadata_path("ratatui-core", version, "-android") + ".aar")
+    with zipfile.ZipFile(io.BytesIO(android)) as aar:
+        android_jar = aar.read("classes.jar")
+    result = {}
+    for platform, payload in [("android", android_jar),
+                              ("jvm", archive.read(metadata_path("ratatui-core", version, "-jvm") + ".jar"))]:
+        result[platform] = {}
+        with zipfile.ZipFile(io.BytesIO(payload)) as jar:
+            for name, interface in SERDE_INTERFACES.items():
+                shape = class_hierarchy(jar.read(name + ".class"))
+                require(shape["class"] == name and interface in shape["interfaces"],
+                        f"Missing real Serde contract: {platform}/{name}")
                 result[platform][name] = shape
     return result
 
@@ -220,9 +249,11 @@ def verify_components(bundle, version):
             receipts[module]["jvm"] = verify_jvm(archive, module, version, classes, edges)
             verify_project_edges(archive, module, version, edges)
         diagnostics = verify_diagnostic_payloads(archive, version)
+        serde = verify_serde_payloads(archive, version)
     result = dict(receipts[MODULE])
     result["components"] = receipts
     result["diagnostics"] = diagnostics
+    result["serde"] = serde
     return result
 
 
@@ -232,7 +263,7 @@ def executed_tests(results):
         files = sorted((results / task).glob("*.xml"))
         require(bool(files), f"No execution XML for {task}")
         cases = [case for path in files for case in ET.parse(path).getroot().iter("testcase")]
-        require(len(cases) == len(TESTS), f"Expected four actual consumer tests in {task}")
+        require(len(cases) == len(TESTS), f"Expected {len(TESTS)} actual consumer tests in {task}")
         names = []
         for case in cases:
             require(case.get("classname", "").endswith("PublicApiConsumerTest"), "Unexpected test class")

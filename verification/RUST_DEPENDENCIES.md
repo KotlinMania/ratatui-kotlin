@@ -77,8 +77,11 @@ published time-kotlin API/behavior audit (`time` is the Rust calendar feature).
 | critical-section (optional layout cache), portable-atomic forwarding | Rust feature-specific synchronization; unchanged by this Serde repair |
 
 This audit is not a claim that every Cargo feature has complete Kotlin parity.
-In particular, Rust Style/Modifier serialization beyond the preexisting Kotlin
-serialization surface requires its own explicit parity review.
+Style/Modifier now have explicit real Serde implementations and regression
+contracts documented in DIAGNOSTIC_CONTRACTS.md. The actual std/serde/
+underline-color Rust reference passes eight tests; current Kotlin runtime and
+optional feature variants require their own evidence. BitFlags' published final
+ULong API remains wider than Rust Modifier's u16 signature.
 
 ## Complete workspace inventory and structured build
 

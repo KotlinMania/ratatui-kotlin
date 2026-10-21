@@ -9,7 +9,7 @@ import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
 
-from check_publication_consumer import COMPONENTS, GROUP, MODULE, metadata_path, verify_components
+from check_publication_consumer import COMPONENTS, GROUP, MODULE, SERDE_INTERFACES, metadata_path, verify_components
 
 VERSION = "0.1.12"
 
@@ -49,7 +49,8 @@ def fixture():
         ]:
             base = metadata_path(module, VERSION, suffix)
             path = base + ".module"
-            class_jar = zip_bytes({name: class_bytes(name[:-6], "java/lang/Enum" if name.endswith("/TryFromColorError.class") else "java/lang/Object") for name in classes})
+            class_jar = zip_bytes({name: class_bytes(name[:-6], "java/lang/Enum" if name.endswith("/TryFromColorError.class") else "java/lang/Object",
+                                      [SERDE_INTERFACES[name[:-6]]] if name[:-6] in SERDE_INTERFACES else []) for name in classes})
             payload = zip_bytes({"AndroidManifest.xml": b"<manifest/>", "classes.jar": class_jar}) if suffix == "-android" else class_jar
             entries[base + "." + element] = payload
             attrs = {"org.gradle.category": "library", "org.gradle.libraryelements": element,
@@ -191,6 +192,30 @@ class FacadePublicationTests(unittest.TestCase):
         self.entries[path] = json.dumps(metadata).encode()
         with self.assertRaisesRegex(ValueError, "Derive tooling"):
             self.verify()
+
+    def test_missing_public_serde_contract_rejected(self):
+        for suffix in ["-jvm", "-android"]:
+            for name in SERDE_INTERFACES:
+                with self.subTest(platform=suffix, owner=name):
+                    self.entries = fixture()
+                    base = metadata_path("ratatui-core", VERSION, suffix)
+                    payload = self.entries[base + (".aar" if suffix == "-android" else ".jar")]
+                    if suffix == "-android":
+                        with zipfile.ZipFile(io.BytesIO(payload)) as aar:
+                            payload = aar.read("classes.jar")
+                    with zipfile.ZipFile(io.BytesIO(payload)) as jar:
+                        entries = {path: jar.read(path) for path in jar.namelist()}
+                    entries[name + ".class"] = class_bytes(name)
+                    payload = zip_bytes(entries)
+                    if suffix == "-android":
+                        payload = zip_bytes({"AndroidManifest.xml": b"<manifest/>", "classes.jar": payload})
+                    self.entries[base + (".aar" if suffix == "-android" else ".jar")] = payload
+                    metadata = json.loads(self.entries[base + ".module"])
+                    for variant in metadata["variants"]:
+                        variant["files"][0].update(size=len(payload), sha256=hashlib.sha256(payload).hexdigest())
+                    self.entries[base + ".module"] = json.dumps(metadata).encode()
+                    with self.assertRaisesRegex(ValueError, "Missing real Serde contract"):
+                        self.verify()
 
 
 if __name__ == "__main__":

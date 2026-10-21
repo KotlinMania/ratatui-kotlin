@@ -2,7 +2,7 @@
 
 This separate Gradle project declares only `io.github.kotlinmania:ratatui-kotlin`
 in commonMain. It imports Text's width trait, Modifier's bitflags trait,
-ParseColorError's standard-error trait and Color's Serde Deserialize contract.
+ParseColorError's concrete diagnostic and the Color/Modifier/Style Serde contracts.
 It has no direct workaround dependencies, sibling source/composite substitutions
 or mavenLocal repository. The real root metadata must expose owning crate APIs.
 
@@ -25,7 +25,7 @@ and verifies Android API/runtime redirects, owning component URLs, AAR hashes,
 POM packaging and compile-scope dependencies for every component:
 
 - facade: API core/widgets/macros project-coordinate edges;
-- core: actual Text/Modifier/ParseColorError/ColorSerializer bytecode and four
+- core: actual Text/Modifier/Style/ParseColorError/result/companion bytecode and four
   API edges to bitflags, anstyle, unicode-width and serde-core;
 - widgets: actual ListState/TableState/ScrollbarState bytecode and core API edge;
 - macros: actual SpanKt/RowKt bytecode and core/widgets API edges.
@@ -35,11 +35,14 @@ manually assembled second AAR is published. The root is an API facade; concrete
 class ownership stays in the appropriate crate archive, never duplicate sources
 or Kotlin wrapper/typealias reexports.
 
-`check_publication_consumer.py consumer` requires all four named tests on BOTH
-JVM and Android host (eight actual cases), no missing/duplicate/failed/skipped
+`check_publication_consumer.py consumer` requires all six named tests on BOTH
+JVM and Android host (twelve actual cases), no missing/duplicate/failed/skipped
 cases, empty duplicate receipts and the selected staged AAR's exact hash. Tests
 exercise actual public contracts, including a Serde string decode through the
-facade's transitive API edge. Android device/native runtime remains separate;
+facade's transitive API edge, Modifier unknown-bit text round-trip and Style
+empty-struct deserialization through the published Serde value deserializer.
+The guard checks real Serialize/Deserialize interfaces on Android/JVM payloads.
+Android device/native runtime remains separate;
 consumer host proof cannot substitute for those platform gates.
 
 Historical eight-pass receipts at the earlier flattened source head are retained

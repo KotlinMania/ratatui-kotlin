@@ -224,3 +224,24 @@ recorded in `rust-workspace.json` and explained in `RUST_DEPENDENCIES.md`.
 No missing feature is waived by a similarity score, Kotlin compilation, or a
 passing subset of tests. Per-coordinate staged metadata, consumer execution,
 strict Swift and complete platform CI remain release gates.
+
+
+## Modifier and Style follow-up
+
+The current owned source adds checked 16-bit Modifier construction and real
+Modifier/Style Serialize/Deserialize implementations. The public type and
+operation names remain unchanged. Eleven common regressions include the pinned
+Style serializeThenDeserialize, deserializeDefaults and deserializeNullModifiers
+operations; two independent root-only consumers extend the original four.
+
+The actual Rust reference uses the existing pinned ratatui-core checkout with
+std/serde/underline-color and passes eight tests. It revealed the generated
+Modifier newtype tag and defaulted trailing sequence modifiers before the source
+was committed. Function comparisons and exact input hashes are retained under
+`automation-artifacts/2026-10-20-ansi-pr99/ratatui-modifier-serde/`.
+
+These are source/reference/verifier results. No current Kotlin runtime,
+per-coordinate producer payload, rebuilt consumer or regenerated strict Swift
+pass is inferred. The published BitFlags ULong signature, no_std feature
+selection, palette/time mappings and missing Termion/Termwiz members remain
+separate contract issues.

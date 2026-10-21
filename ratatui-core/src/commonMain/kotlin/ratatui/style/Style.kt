@@ -69,6 +69,26 @@ package ratatui.style
 import io.github.kotlinmania.bitflags.BitFlags
 import io.github.kotlinmania.bitflags.Flag
 import io.github.kotlinmania.bitflags.toText
+import io.github.kotlinmania.bitflags.fromText
+import io.github.kotlinmania.bitflags.ParseError
+import io.github.kotlinmania.bitflags.ParseErrorKind
+import io.github.kotlinmania.serde.SerdeError
+import io.github.kotlinmania.serde.SerdeException
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serde.serdeCatching
+import io.github.kotlinmania.serdecore.de.Deserialize
+import io.github.kotlinmania.serdecore.de.DeserializeSeed
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.de.Expected
+import io.github.kotlinmania.serdecore.de.IgnoredAny
+import io.github.kotlinmania.serdecore.de.MapAccess
+import io.github.kotlinmania.serdecore.de.SeqAccess
+import io.github.kotlinmania.serdecore.de.StringDeserialize
+import io.github.kotlinmania.serdecore.de.U16Deserialize
+import io.github.kotlinmania.serdecore.de.Visitor
+import io.github.kotlinmania.serdecore.de.nullableDeserialize
+import io.github.kotlinmania.serdecore.ser.Serialize
+import io.github.kotlinmania.serdecore.ser.Serializer
 
 /**
  * Modifier changes the way a piece of text is displayed.
@@ -84,20 +104,19 @@ import io.github.kotlinmania.bitflags.toText
  * val m = Modifier.BOLD or Modifier.ITALIC
  * ```
  */
-/**
- * Bit-flag set for text display modifiers, backed by `bitflags-kotlin`.
- *
- * Extends [BitFlags] to inherit the full bitflag operation surface (union,
- * intersection, difference, contains, iter, fromName, fromBits, complement,
- * toggle, etc.) while preserving the existing `infix or` / `infix and` API
- * and companion constants for source compatibility.
- */
 class Modifier private constructor(
-    bits: ULong,
-) : BitFlags<Modifier>(bits) {
+    bits: UShort,
+) : BitFlags<Modifier>(bits.toULong()), Serialize {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> =
+        serializer.serializeNewtypeStruct("Modifier", object : Serialize {
+            override fun <O> serialize(serializer: Serializer<O>): SerdeResult<O> =
+                if (serializer.isHumanReadable()) serializer.collectStr(toText(this@Modifier))
+                else serializer.serializeU16(bits().toUShort())
+        })
+
     override fun flags(): List<Flag<Modifier>> = FLAGS
 
-    override fun fromBitsRetain(bits: ULong): Modifier = Modifier(bits)
+    override fun fromBitsRetain(bits: ULong): Modifier = Companion.fromBitsRetain(bits)
 
     override fun toString(): String =
         if (isEmpty()) "NONE" else toText(this)
@@ -107,34 +126,74 @@ class Modifier private constructor(
 
     override fun hashCode(): Int = bits().hashCode()
 
-    /** Union of two modifiers (bitwise OR) — preserved as infix for source compatibility. */
+    /** The union of two modifiers. */
     infix fun or(other: Modifier): Modifier = union(other)
 
-    /** Intersection of two modifiers (bitwise AND) — preserved as infix for source compatibility. */
+    /** The intersection of two modifiers. */
     infix fun and(other: Modifier): Modifier = intersection(other)
 
     /** Iterate over all set flags as a list of individual [Modifier] values. */
     fun iterFlags(): List<Modifier> = ALL_FLAGS.filter { contains(it) }
 
-    companion object {
+    companion object : Deserialize<Modifier> {
+        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<Modifier> =
+            deserializer.deserializeNewtypeStruct("Modifier", object : Visitor<Modifier> {
+                override fun expecting(): String = "tuple struct Modifier"
+                override fun <D : Deserializer> visitNewtypeStruct(deserializer: D): SerdeResult<Modifier> =
+                    deserializeModifierBits(deserializer)
+            })
+
+        private fun deserializeModifierBits(deserializer: Deserializer): SerdeResult<Modifier> =
+            if (deserializer.isHumanReadable()) {
+                deserializer.deserializeStr(object : Visitor<Modifier> {
+                    override fun expecting(): String = "a string value of `|` separated flags"
+
+                    override fun visitStr(v: String): SerdeResult<Modifier> = serdeCatching {
+                        val input = v.trim(::isModifierWhitespace)
+                        if (input.isEmpty()) return@serdeCatching empty()
+                        val flags = input.split('|').map { it.trim(::isModifierWhitespace) }
+                        for (flag in flags) {
+                            if (flag.isEmpty()) {
+                                throw IllegalArgumentException(ParseError(ParseErrorKind.EMPTY_FLAG).toString())
+                            }
+                            if (flag.startsWith("0x")) {
+                                val hex = flag.substring(2)
+                                if (hex.any { it.code > 0x7F } || hex.toUShortOrNull(16) == null) {
+                                    throw IllegalArgumentException(
+                                        ParseError(ParseErrorKind.INVALID_HEX_FLAG, hex).toString(),
+                                    )
+                                }
+                            } else if (fromName(flag) == null) {
+                                throw IllegalArgumentException(
+                                    ParseError(ParseErrorKind.INVALID_NAMED_FLAG, flag).toString(),
+                                )
+                            }
+                        }
+                        fromText(flags.joinToString(" | "), empty())
+                    }
+                })
+            } else {
+                U16Deserialize.deserialize(deserializer).map { Modifier(it) }
+            }
+
         /** Bold text modifier */
-        val BOLD = Modifier(0b0000_0000_0001uL)
+        val BOLD = Modifier(0b0000_0000_0001u)
         /** Dim/faint text modifier */
-        val DIM = Modifier(0b0000_0000_0010uL)
+        val DIM = Modifier(0b0000_0000_0010u)
         /** Italic text modifier */
-        val ITALIC = Modifier(0b0000_0000_0100uL)
+        val ITALIC = Modifier(0b0000_0000_0100u)
         /** Underlined text modifier */
-        val UNDERLINED = Modifier(0b0000_0000_1000uL)
+        val UNDERLINED = Modifier(0b0000_0000_1000u)
         /** Slow blink text modifier */
-        val SLOW_BLINK = Modifier(0b0000_0001_0000uL)
+        val SLOW_BLINK = Modifier(0b0000_0001_0000u)
         /** Rapid blink text modifier */
-        val RAPID_BLINK = Modifier(0b0000_0010_0000uL)
+        val RAPID_BLINK = Modifier(0b0000_0010_0000u)
         /** Reversed (inverse) text modifier */
-        val REVERSED = Modifier(0b0000_0100_0000uL)
+        val REVERSED = Modifier(0b0000_0100_0000u)
         /** Hidden text modifier */
-        val HIDDEN = Modifier(0b0000_1000_0000uL)
+        val HIDDEN = Modifier(0b0000_1000_0000u)
         /** Crossed out (strikethrough) text modifier */
-        val CROSSED_OUT = Modifier(0b0001_0000_0000uL)
+        val CROSSED_OUT = Modifier(0b0001_0000_0000u)
 
         /** Named flag definitions for [BitFlags] iteration and text formatting. */
         val FLAGS: List<Flag<Modifier>> = listOf(
@@ -153,13 +212,16 @@ class Modifier private constructor(
         fun all(): Modifier = empty().all()
 
         /** No flags set (empty modifier) */
-        fun empty(): Modifier = Modifier(0uL)
+        fun empty(): Modifier = Modifier(0u)
 
         /** Default modifier (empty) */
         fun default(): Modifier = empty()
 
         /** Construct a [Modifier] from a raw bits value. */
-        fun fromBitsRetain(bits: ULong): Modifier = Modifier(bits)
+        fun fromBitsRetain(bits: ULong): Modifier {
+            require(bits <= UShort.MAX_VALUE.toULong()) { "modifier bits exceed u16" }
+            return Modifier(bits.toUShort())
+        }
 
         /** Parse a [Modifier] from a flag name (e.g. "BOLD"). */
         fun fromName(name: String): Modifier? = empty().fromName(name)
@@ -270,7 +332,22 @@ data class Style(
     val addModifier: Modifier = Modifier.empty(),
     /** The modifiers to remove. */
     val subModifier: Modifier = Modifier.empty(),
-) {
+) : Serialize {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> = serdeCatching {
+        val length = listOf(fg, bg, underlineColor).count { it != null } +
+            (if (addModifier.isEmpty()) 0 else 1) + (if (subModifier.isEmpty()) 0 else 1)
+        val state = serializer.serializeStruct("Style", length).getOrThrow()
+        if (fg != null) state.serializeField("fg", optionalStyleColor(fg)).getOrThrow() else state.skipField("fg").getOrThrow()
+        if (bg != null) state.serializeField("bg", optionalStyleColor(bg)).getOrThrow() else state.skipField("bg").getOrThrow()
+        if (underlineColor != null) state.serializeField("underline_color", optionalStyleColor(underlineColor)).getOrThrow()
+        else state.skipField("underline_color").getOrThrow()
+        if (!addModifier.isEmpty()) state.serializeField("add_modifier", addModifier).getOrThrow()
+        else state.skipField("add_modifier").getOrThrow()
+        if (!subModifier.isEmpty()) state.serializeField("sub_modifier", subModifier).getOrThrow()
+        else state.skipField("sub_modifier").getOrThrow()
+        state.end().getOrThrow()
+    }
+
     /**
      * Returns a copy with the foreground color changed.
      *
@@ -549,7 +626,51 @@ data class Style(
         return parts.joinToString("")
     }
 
-    companion object {
+    companion object : Deserialize<Style> {
+        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<Style> =
+            deserializer.deserializeStruct(
+                "Style", listOf("fg", "bg", "underline_color", "add_modifier", "sub_modifier"),
+                object : Visitor<Style> {
+                    override fun expecting(): String = "struct Style"
+
+                    override fun <A : MapAccess> visitMap(access: A): SerdeResult<Style> = serdeCatching {
+                        var fg: Color? = null
+                        var bg: Color? = null
+                        var underlineColor: Color? = null
+                        var addModifier = Modifier.empty()
+                        var subModifier = Modifier.empty()
+                        val seen = mutableSetOf<String>()
+                        while (true) {
+                            val field = access.nextKey(StringDeserialize).getOrThrow() ?: break
+                            if (field !in listOf("fg", "bg", "underline_color", "add_modifier", "sub_modifier")) {
+                                access.nextValue(IgnoredAny).getOrThrow()
+                                continue
+                            }
+                            if (!seen.add(field)) throw SerdeException(SerdeError.duplicateField(field))
+                            when (field) {
+                                "fg" -> fg = access.nextValue(nullableDeserialize(Color)).getOrThrow()
+                                "bg" -> bg = access.nextValue(nullableDeserialize(Color)).getOrThrow()
+                                "underline_color" -> underlineColor = access.nextValue(nullableDeserialize(Color)).getOrThrow()
+                                "add_modifier" -> addModifier = access.nextValue(styleModifierDeserialize).getOrThrow()
+                                "sub_modifier" -> subModifier = access.nextValue(styleModifierDeserialize).getOrThrow()
+                            }
+                        }
+                        Style(fg, bg, underlineColor, addModifier, subModifier)
+                    }
+
+                    override fun <A : SeqAccess> visitSeq(access: A): SerdeResult<Style> = serdeCatching {
+                        val fg = requiredStyleElement(access, nullableDeserialize(Color), 0, this)
+                        val bg = requiredStyleElement(access, nullableDeserialize(Color), 1, this)
+                        val underlineColor = requiredStyleElement(access, nullableDeserialize(Color), 2, this)
+                        val addModifier = access.nextElement(styleModifierDeserialize).getOrThrow()
+                            ?: Modifier.empty()
+                        val subModifier = access.nextElement(styleModifierDeserialize).getOrThrow()
+                            ?: Modifier.empty()
+                        Style(fg, bg, underlineColor, addModifier, subModifier)
+                    }
+                },
+            )
+
         /** Returns a `Style` with default properties (no modifications). */
         fun new(): Style = Style()
 
@@ -748,4 +869,35 @@ private fun modifierToRemoveMethod(modifier: Modifier): String = when (modifier)
     Modifier.HIDDEN -> "notHidden()"
     Modifier.CROSSED_OUT -> "notCrossedOut()"
     else -> "removeModifier($modifier)"
+}
+
+private class StyleElement<T>(val value: T)
+
+private fun <T> requiredStyleElement(
+    access: SeqAccess, value: Deserialize<T>, index: Int, expected: Expected,
+): T {
+    val seed = object : DeserializeSeed<StyleElement<T>> {
+        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<StyleElement<T>> =
+            value.deserialize(deserializer).map { StyleElement(it) }
+    }
+    val element = access.nextElementSeed(seed).getOrThrow()
+        ?: throw SerdeException(SerdeError.invalidLength(index, expected))
+    return element.value
+}
+
+private fun isModifierWhitespace(value: Char): Boolean =
+    value in '\u0009'..'\u000D' || value == ' ' || value == '\u0085' || value == '\u00A0' ||
+        value == '\u1680' || value in '\u2000'..'\u200A' || value == '\u2028' || value == '\u2029' ||
+        value == '\u202F' || value == '\u205F' || value == '\u3000'
+
+private fun optionalStyleColor(value: Color): Serialize = object : Serialize {
+    override fun <Ok> serialize(serializer: Serializer<Ok>): SerdeResult<Ok> = serializer.serializeSome(value)
+}
+
+private fun <D : Deserializer> deserializeModifier(deserializer: D): SerdeResult<Modifier> =
+    nullableDeserialize(Modifier).deserialize(deserializer).map { it ?: Modifier.empty() }
+
+private val styleModifierDeserialize: Deserialize<Modifier> = object : Deserialize<Modifier> {
+    override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<Modifier> =
+        deserializeModifier(deserializer)
 }
