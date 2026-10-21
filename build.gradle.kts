@@ -497,7 +497,7 @@ kotlin {
         // macosArm64, macosX64, linuxX64, mingwX64, ios*, js, wasmJs, android.
         // Not wired to jvm, tvos*, watchos*, androidNative*, or wasmWasi (no
         // crossterm-kotlin artifact for those targets).
-        create("desktopMain") {
+        val desktopMain = create("desktopMain") {
             dependsOn(commonMain.get())
         }
         desktopMain.dependencies {
