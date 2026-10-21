@@ -6,7 +6,7 @@
     "lang": "rust"
   },
   "target": {
-    "path": "src/commonMain/kotlin/ratatui/buffer/Buffer.kt",
+    "path": "ratatui-core/src/commonMain/kotlin/ratatui/buffer/Buffer.kt",
     "lang": "kotlin"
   },
   "checks": {
