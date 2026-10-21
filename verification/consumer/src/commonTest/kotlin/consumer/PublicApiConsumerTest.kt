@@ -8,6 +8,9 @@ import kotlin.test.assertTrue
 import ratatui.style.Color
 import ratatui.style.Modifier
 import ratatui.style.Style
+import io.github.kotlinmania.serde.SerdeResult
+import io.github.kotlinmania.serdecore.de.Deserializer
+import io.github.kotlinmania.serdecore.de.Visitor
 import io.github.kotlinmania.serdecore.ser.FormatterSerializer
 import io.github.kotlinmania.serdecore.de.value.intoDeserializer
 import io.github.kotlinmania.serdecore.de.value.StrDeserializer
@@ -54,7 +57,13 @@ class PublicApiConsumerTest {
         val text = StringBuilder()
         publicModifierSerializer().serialize(FormatterSerializer(text)).getOrThrow()
         assertEquals("BOLD | 0x8000", text.toString())
-        val flags = publicModifierDeserializer().deserialize(StrDeserializer.new(text.toString())).getOrThrow()
+        val input = object : Deserializer by StrDeserializer.new(text.toString()) {
+            override fun <V> deserializeNewtypeStruct(name: String, visitor: Visitor<V>): SerdeResult<V> {
+                assertEquals("Modifier", name)
+                return visitor.visitNewtypeStruct(this)
+            }
+        }
+        val flags = publicModifierDeserializer().deserialize(input).getOrThrow()
         assertEquals(0x8001uL, flags.bits())
         assertSame(Modifier, publicModifierDeserializer())
     }
