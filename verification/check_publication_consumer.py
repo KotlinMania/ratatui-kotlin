@@ -4,6 +4,7 @@ import hashlib
 import io
 import json
 import re
+import struct
 import xml.etree.ElementTree as ET
 import zipfile
 from pathlib import Path
@@ -14,7 +15,7 @@ GROUP = "io.github.kotlinmania"
 MODULE = "ratatui-kotlin"
 CLASSES = set()  # The facade exposes real crate classes through api(project(...)).
 CORE_EDGES = [(GROUP, "bitflags-kotlin", "bitflags-kotlin-android"),
-              (GROUP, "thiserror-kotlin", "thiserror-kotlin-android"),
+              (GROUP, "anstyle-kotlin", "anstyle-kotlin-android"),
               (GROUP, "unicode-width-kotlin", "unicode-width-kotlin-android"),
               (GROUP, "serde-core", "serde-core-android")]
 EDGES = [(GROUP, module, module + "-android")
@@ -22,7 +23,10 @@ EDGES = [(GROUP, module, module + "-android")
 COMPONENTS = {
     MODULE: (CLASSES, EDGES),
     "ratatui-core": ({"ratatui/text/Text.class", "ratatui/style/Modifier.class",
-                      "ratatui/style/ParseColorError.class", "ratatui/style/ColorSerializer.class"}, CORE_EDGES),
+                      "ratatui/style/ParseColorError.class", "ratatui/style/Color$Companion.class",
+                      "ratatui/style/TryFromColorError.class", "ratatui/style/ColorParseResult.class",
+                      "ratatui/style/Ansi256ColorResult.class", "ratatui/style/AnsiColorResult.class",
+                      "ratatui/style/RgbColorResult.class"}, CORE_EDGES),
     "ratatui-widgets": ({"ratatui/widgets/list/ListState.class", "ratatui/widgets/table/TableState.class",
                          "ratatui/widgets/scrollbar/ScrollbarState.class"},
                         [(GROUP, "ratatui-core", "ratatui-core-android")]),
@@ -32,7 +36,65 @@ COMPONENTS = {
 }
 
 TESTS = {"publishedTextUsesUnicodeWidth", "publishedModifierExposesBitflags",
-         "publishedErrorRetainsItsStandardErrorType", "publishedSerializerRetainsItsPublicInterface"}
+         "publishedErrorsRetainRustDiagnostics", "publishedColorRetainsItsDeserializeContract"}
+
+
+def class_hierarchy(payload):
+    require(payload[:4] == bytes.fromhex("cafebabe"), "Invalid class payload")
+    cursor = 8
+    def number():
+        nonlocal cursor
+        value = struct.unpack_from(">H", payload, cursor)[0]
+        cursor += 2
+        return value
+    count = number()
+    pool = {}
+    index = 1
+    while index < count:
+        tag = payload[cursor]
+        cursor += 1
+        if tag == 1:
+            size = number()
+            pool[index] = payload[cursor:cursor + size].decode("utf-8", errors="replace")
+            cursor += size
+        elif tag == 7:
+            pool[index] = number()
+        elif tag in [8, 16, 19, 20]:
+            cursor += 2
+        elif tag in [3, 4, 9, 10, 11, 12, 17, 18]:
+            cursor += 4
+        elif tag in [5, 6]:
+            cursor += 8
+            index += 1
+        elif tag == 15:
+            cursor += 3
+        else:
+            raise ValueError(f"Unknown class constant tag: {tag}")
+        index += 1
+    number()  # access flags
+    own = number()
+    parent = number()
+    interfaces = [number() for _ in range(number())]
+    return {"class": pool[pool[own]], "superclass": pool[pool[parent]],
+            "interfaces": [pool[pool[i]] for i in interfaces]}
+
+
+def verify_diagnostic_payloads(archive, version):
+    expected = {"ParseColorError": "java/lang/Object", "TryFromColorError": "java/lang/Enum"}
+    result = {}
+    android = archive.read(metadata_path("ratatui-core", version, "-android") + ".aar")
+    with zipfile.ZipFile(io.BytesIO(android)) as aar:
+        android_jar = aar.read("classes.jar")
+    for platform, payload in [("android", android_jar),
+                              ("jvm", archive.read(metadata_path("ratatui-core", version, "-jvm") + ".jar"))]:
+        result[platform] = {}
+        with zipfile.ZipFile(io.BytesIO(payload)) as jar:
+            for name, parent in expected.items():
+                shape = class_hierarchy(jar.read("ratatui/style/" + name + ".class"))
+                require(shape["class"] == "ratatui/style/" + name and shape["superclass"] == parent
+                        and not shape["interfaces"], f"Leaked diagnostic inheritance: {name}")
+                result[platform][name] = shape
+    return result
 
 
 def metadata_path(module, version, suffix=""):
@@ -59,6 +121,9 @@ def verify_project_edges(archive, module, version, edges):
         metadata = json.loads(archive.read(base + ".module"))
         for variant in selected_variants(metadata, platform):
             dependencies = {(d["group"], d["module"]): d for d in variant.get("dependencies", [])}
+            if module == "ratatui-core" and variant["attributes"]["org.gradle.usage"] == "java-api":
+                require((GROUP, "thiserror-kotlin") not in dependencies,
+                        "Derive tooling must not be a direct public core dependency")
             for child in internal:
                 edge = dependencies.get((GROUP, child))
                 require(edge is not None and edge.get("version", {}).get("requires") == version,
@@ -154,8 +219,10 @@ def verify_components(bundle, version):
         for module, (classes, edges) in COMPONENTS.items():
             receipts[module]["jvm"] = verify_jvm(archive, module, version, classes, edges)
             verify_project_edges(archive, module, version, edges)
+        diagnostics = verify_diagnostic_payloads(archive, version)
     result = dict(receipts[MODULE])
     result["components"] = receipts
+    result["diagnostics"] = diagnostics
     return result
 
 

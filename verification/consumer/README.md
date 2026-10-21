@@ -26,7 +26,7 @@ POM packaging and compile-scope dependencies for every component:
 
 - facade: API core/widgets/macros project-coordinate edges;
 - core: actual Text/Modifier/ParseColorError/ColorSerializer bytecode and four
-  API edges to bitflags, thiserror, unicode-width and serde-core;
+  API edges to bitflags, anstyle, unicode-width and serde-core;
 - widgets: actual ListState/TableState/ScrollbarState bytecode and core API edge;
 - macros: actual SpanKt/RowKt bytecode and core/widgets API edges.
 

@@ -5,7 +5,6 @@ import io.github.kotlinmania.serdejson.fromStr
 import io.github.kotlinmania.serdejson.toStr
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFailsWith
 
 class ColorTest {
     @Test
@@ -19,65 +18,65 @@ class ColorTest {
 
     @Test
     fun fromRgbColor() {
-        val color: Color = Color.fromStr("#FF0000")
+        val color: Color = Color.fromStr("#FF0000").unwrap()
         assertEquals(Color.Rgb(255u, 0u, 0u), color)
     }
 
     @Test
     fun fromIndexedColor() {
-        val color: Color = Color.fromStr("10")
+        val color: Color = Color.fromStr("10").unwrap()
         assertEquals(Color.Indexed(10u), color)
     }
 
     @Test
     fun fromAnsiColor() {
-        assertEquals(Color.Reset, Color.fromStr("reset"))
-        assertEquals(Color.Black, Color.fromStr("black"))
-        assertEquals(Color.Red, Color.fromStr("red"))
-        assertEquals(Color.Green, Color.fromStr("green"))
-        assertEquals(Color.Yellow, Color.fromStr("yellow"))
-        assertEquals(Color.Blue, Color.fromStr("blue"))
-        assertEquals(Color.Magenta, Color.fromStr("magenta"))
-        assertEquals(Color.Cyan, Color.fromStr("cyan"))
-        assertEquals(Color.Gray, Color.fromStr("gray"))
-        assertEquals(Color.DarkGray, Color.fromStr("darkgray"))
-        assertEquals(Color.LightRed, Color.fromStr("lightred"))
-        assertEquals(Color.LightGreen, Color.fromStr("lightgreen"))
-        assertEquals(Color.LightYellow, Color.fromStr("lightyellow"))
-        assertEquals(Color.LightBlue, Color.fromStr("lightblue"))
-        assertEquals(Color.LightMagenta, Color.fromStr("lightmagenta"))
-        assertEquals(Color.LightCyan, Color.fromStr("lightcyan"))
-        assertEquals(Color.White, Color.fromStr("white"))
+        assertEquals(Color.Reset, Color.fromStr("reset").unwrap())
+        assertEquals(Color.Black, Color.fromStr("black").unwrap())
+        assertEquals(Color.Red, Color.fromStr("red").unwrap())
+        assertEquals(Color.Green, Color.fromStr("green").unwrap())
+        assertEquals(Color.Yellow, Color.fromStr("yellow").unwrap())
+        assertEquals(Color.Blue, Color.fromStr("blue").unwrap())
+        assertEquals(Color.Magenta, Color.fromStr("magenta").unwrap())
+        assertEquals(Color.Cyan, Color.fromStr("cyan").unwrap())
+        assertEquals(Color.Gray, Color.fromStr("gray").unwrap())
+        assertEquals(Color.DarkGray, Color.fromStr("darkgray").unwrap())
+        assertEquals(Color.LightRed, Color.fromStr("lightred").unwrap())
+        assertEquals(Color.LightGreen, Color.fromStr("lightgreen").unwrap())
+        assertEquals(Color.LightYellow, Color.fromStr("lightyellow").unwrap())
+        assertEquals(Color.LightBlue, Color.fromStr("lightblue").unwrap())
+        assertEquals(Color.LightMagenta, Color.fromStr("lightmagenta").unwrap())
+        assertEquals(Color.LightCyan, Color.fromStr("lightcyan").unwrap())
+        assertEquals(Color.White, Color.fromStr("white").unwrap())
 
         // aliases
-        assertEquals(Color.DarkGray, Color.fromStr("lightblack"))
-        assertEquals(Color.White, Color.fromStr("lightwhite"))
-        assertEquals(Color.White, Color.fromStr("lightgray"))
+        assertEquals(Color.DarkGray, Color.fromStr("lightblack").unwrap())
+        assertEquals(Color.White, Color.fromStr("lightwhite").unwrap())
+        assertEquals(Color.White, Color.fromStr("lightgray").unwrap())
 
         // silver = grey = gray
-        assertEquals(Color.Gray, Color.fromStr("grey"))
-        assertEquals(Color.Gray, Color.fromStr("silver"))
+        assertEquals(Color.Gray, Color.fromStr("grey").unwrap())
+        assertEquals(Color.Gray, Color.fromStr("silver").unwrap())
 
         // spaces are ignored
-        assertEquals(Color.DarkGray, Color.fromStr("light black"))
-        assertEquals(Color.White, Color.fromStr("light white"))
-        assertEquals(Color.White, Color.fromStr("light gray"))
+        assertEquals(Color.DarkGray, Color.fromStr("light black").unwrap())
+        assertEquals(Color.White, Color.fromStr("light white").unwrap())
+        assertEquals(Color.White, Color.fromStr("light gray").unwrap())
 
         // dashes are ignored
-        assertEquals(Color.DarkGray, Color.fromStr("light-black"))
-        assertEquals(Color.White, Color.fromStr("light-white"))
-        assertEquals(Color.White, Color.fromStr("light-gray"))
+        assertEquals(Color.DarkGray, Color.fromStr("light-black").unwrap())
+        assertEquals(Color.White, Color.fromStr("light-white").unwrap())
+        assertEquals(Color.White, Color.fromStr("light-gray").unwrap())
 
         // underscores are ignored
-        assertEquals(Color.DarkGray, Color.fromStr("light_black"))
-        assertEquals(Color.White, Color.fromStr("light_white"))
-        assertEquals(Color.White, Color.fromStr("light_gray"))
+        assertEquals(Color.DarkGray, Color.fromStr("light_black").unwrap())
+        assertEquals(Color.White, Color.fromStr("light_white").unwrap())
+        assertEquals(Color.White, Color.fromStr("light_gray").unwrap())
 
         // bright = light
-        assertEquals(Color.DarkGray, Color.fromStr("bright-black"))
-        assertEquals(Color.White, Color.fromStr("bright-white"))
-        assertEquals(Color.DarkGray, Color.fromStr("brightblack"))
-        assertEquals(Color.White, Color.fromStr("brightwhite"))
+        assertEquals(Color.DarkGray, Color.fromStr("bright-black").unwrap())
+        assertEquals(Color.White, Color.fromStr("bright-white").unwrap())
+        assertEquals(Color.DarkGray, Color.fromStr("brightblack").unwrap())
+        assertEquals(Color.White, Color.fromStr("brightwhite").unwrap())
     }
 
     @Test
@@ -93,9 +92,7 @@ class ColorTest {
         )
 
         for (badColor in badColors) {
-            assertFailsWith<ParseColorError>("bad color: '$badColor'") {
-                Color.fromStr(badColor)
-            }
+            kotlin.test.assertTrue(Color.fromStr(badColor).isErr, "bad color: '$badColor'")
         }
     }
 

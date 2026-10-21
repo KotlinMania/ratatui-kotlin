@@ -14,7 +14,6 @@ import io.github.kotlinmania.serdecore.de.U8Deserialize
 import io.github.kotlinmania.serdecore.de.Visitor
 import io.github.kotlinmania.serdecore.ser.Serialize
 import io.github.kotlinmania.serdecore.ser.Serializer
-import io.github.kotlinmania.thiserror.StdError
 import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.cos
@@ -61,15 +60,15 @@ import kotlin.math.sin
  *
  * Example:
  * ```kotlin
- * assertEquals(Color.fromStr("red"), Color.Red)
- * assertEquals(Color.fromStr("lightred"), Color.LightRed)
- * assertEquals(Color.fromStr("light red"), Color.LightRed)
- * assertEquals(Color.fromStr("light-red"), Color.LightRed)
- * assertEquals(Color.fromStr("lightRed"), Color.LightRed)
- * assertEquals(Color.fromStr("bright red"), Color.LightRed)
- * assertEquals(Color.fromStr("silver"), Color.Gray)
- * assertEquals(Color.fromStr("dark-grey"), Color.DarkGray)
- * assertEquals(Color.fromStr("white"), Color.White)
+ * assertEquals(Color.fromStr("red").unwrap(), Color.Red)
+ * assertEquals(Color.fromStr("lightred").unwrap(), Color.LightRed)
+ * assertEquals(Color.fromStr("light red").unwrap(), Color.LightRed)
+ * assertEquals(Color.fromStr("light-red").unwrap(), Color.LightRed)
+ * assertEquals(Color.fromStr("lightRed").unwrap(), Color.LightRed)
+ * assertEquals(Color.fromStr("bright red").unwrap(), Color.LightRed)
+ * assertEquals(Color.fromStr("silver").unwrap(), Color.Gray)
+ * assertEquals(Color.fromStr("dark-grey").unwrap(), Color.DarkGray)
+ * assertEquals(Color.fromStr("white").unwrap(), Color.White)
  * ```
  */
 sealed class Color : Serialize {
@@ -173,7 +172,33 @@ sealed class Color : Serialize {
 
     companion object : Deserialize<Color> {
         override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<Color> =
-            ColorSerializer.deserialize(deserializer)
+            deserializer.deserializeAny(object : Visitor<Color> {
+                override fun expecting(): String = "a color string or legacy Rgb/Indexed variant"
+                override fun visitStr(v: String): SerdeResult<Color> {
+                    val parsed = Color.fromStr(v)
+                    return parsed.value?.let { SerdeResult.Success(it) }
+                        ?: SerdeResult.Failure(SerdeError.custom(checkNotNull(parsed.error).message))
+                }
+                override fun <A : MapAccess> visitMap(access: A): SerdeResult<Color> = serdeCatching {
+                    val variant = access.nextKey(StringDeserialize).getOrThrow() ?: invalidColor("Failed to parse Colors")
+                    val color = when (variant) {
+                        "Indexed" -> Color.Indexed(access.nextValue(U8Deserialize).getOrThrow())
+                        "Rgb" -> access.nextValue(object : Deserialize<Color> {
+                            override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<Color> =
+                                deserializer.deserializeTuple(3, object : Visitor<Color> {
+                                    override fun expecting(): String = "three u8 color channels"
+                                    override fun <A : SeqAccess> visitSeq(access: A): SerdeResult<Color> = serdeCatching {
+                                        Color.Rgb(nextColorChannel(access), nextColorChannel(access),
+                                            nextColorChannel(access))
+                                    }
+                                })
+                        }).getOrThrow()
+                        else -> invalidColor("Failed to parse Colors: unknown variant `$variant`")
+                    }
+                    if (access.nextKey(StringDeserialize).getOrThrow() != null) invalidColor("expected a single color variant")
+                    color
+                }
+            })
 
         /** Default color (Reset). */
         fun default(): Color = Reset
@@ -191,7 +216,7 @@ sealed class Color : Serialize {
         /**
          * Converts `(r, g, b, a)` values to a [Color.Rgb] instance (ignoring alpha).
          */
-        fun from(r: UByte, g: UByte, b: UByte, @Suppress("UNUSED_PARAMETER") a: UByte): Color =
+        fun from(r: UByte, g: UByte, b: UByte, a: UByte): Color =
             Rgb(r, g, b)
 
         /**
@@ -253,7 +278,7 @@ sealed class Color : Serialize {
          * Supports named colors, RGB hex values, and indexed colors. If the string cannot be
          * parsed, a [ParseColorError] is returned.
          */
-        fun fromStr(s: String): Color {
+        fun fromStr(s: String): ColorParseResult {
             // There is a mix of different color names and formats in the wild.
             // This is an attempt to support as many as possible.
             val normalized = s.lowercase()
@@ -267,7 +292,7 @@ sealed class Color : Serialize {
                 .replace("lightwhite", "white")
                 .replace("lightgray", "white")
 
-            return when (normalized) {
+            val color = when (normalized) {
                 "reset" -> Reset
                 "black" -> Black
                 "red" -> Red
@@ -287,22 +312,21 @@ sealed class Color : Serialize {
                 "white" -> White
                 else -> {
                     // Try parsing as indexed color (0-255)
-                    s.toUByteOrNull()?.let { return Indexed(it) }
+                    s.toUByteOrNull()?.let { return ColorParseResult.ok(Indexed(it)) }
 
                     // Try parsing as hex color
-                    parseHexColor(s)?.let { (r, g, b) -> return Rgb(r, g, b) }
+                    parseHexColor(s)?.let { (r, g, b) -> return ColorParseResult.ok(Rgb(r, g, b)) }
 
-                    throw ParseColorError()
+                    return ColorParseResult.err(ParseColorError())
                 }
             }
+            return ColorParseResult.ok(color)
         }
     }
 
     internal fun stylizeDebug(kind: ColorDebugKind): ColorDebug = ColorDebug(kind = kind, color = this)
 
     override fun toString(): String =
-        // Most variants are `data object`s which already use their name as `toString()`.
-        // Keep an explicit match here to mirror the upstream `fmt::Display` arms.
         when (this) {
             is Reset -> "Reset"
             is Black -> "Black"
@@ -326,15 +350,18 @@ sealed class Color : Serialize {
         }
 }
 
-/**
- * Error type indicating a failure to parse a color string.
- *
- * Implements [StdError] from `thiserror-kotlin` to provide the standard error
- * surface matching the upstream Rust `#[derive(Error)]`.
- */
-class ParseColorError :
-    Exception("Failed to parse Colors"),
-    StdError
+/** Error type indicating a failure to parse a color string. */
+class ParseColorError {
+    val message: String get() = "Failed to parse Colors"
+
+    fun source(): ParseColorError? = null
+
+    override fun toString(): String = message
+
+    override fun equals(other: Any?): Boolean = other is ParseColorError
+
+    override fun hashCode(): Int = 0
+}
 
 private fun parseHexColor(input: String): Triple<UByte, UByte, UByte>? {
     if (!input.startsWith('#') || input.length != 7) {
@@ -376,33 +403,6 @@ data class Hsluv(
     }
 }
 
-/** Serde deserializer for the current Display string and the Rust ColorWrapper legacy variants. */
-object ColorSerializer : Deserialize<Color> {
-    override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<Color> =
-        deserializer.deserializeAny(object : Visitor<Color> {
-            override fun expecting(): String = "a color string or legacy Rgb/Indexed variant"
-            override fun visitStr(v: String): SerdeResult<Color> = serdeCatching { Color.fromStr(v) }
-            override fun <A : MapAccess> visitMap(access: A): SerdeResult<Color> = serdeCatching {
-                val variant = access.nextKey(StringDeserialize).getOrThrow() ?: invalidColor("Failed to parse Colors")
-                val color = when (variant) {
-                    "Indexed" -> Color.Indexed(access.nextValue(U8Deserialize).getOrThrow())
-                    "Rgb" -> access.nextValue(object : Deserialize<Color> {
-                        override fun <D : Deserializer> deserialize(deserializer: D): SerdeResult<Color> =
-                            deserializer.deserializeTuple(3, object : Visitor<Color> {
-                                override fun expecting(): String = "three u8 color channels"
-                                override fun <A : SeqAccess> visitSeq(access: A): SerdeResult<Color> = serdeCatching {
-                                    Color.Rgb(nextColorChannel(access), nextColorChannel(access),
-                                        nextColorChannel(access))
-                                }
-                            })
-                    }).getOrThrow()
-                    else -> invalidColor("Failed to parse Colors: unknown variant `$variant`")
-                }
-                if (access.nextKey(StringDeserialize).getOrThrow() != null) invalidColor("expected a single color variant")
-                color
-            }
-        })
-}
 
 private fun wrapHueDegrees(degrees: Double): Double {
     val wrapped = ((degrees % 360.0) + 360.0) % 360.0

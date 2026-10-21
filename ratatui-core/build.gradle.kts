@@ -4,10 +4,9 @@ kotlin.sourceSets {
     named("commonMain") {
         dependencies {
             api(libs.bitflags)
-            api(libs.thiserror)
+            api(libs.anstyle)
             api(libs.unicode.width)
             api(libs.serde.core)
-            implementation(libs.anstyle)
             implementation(libs.kasuari)
             implementation(libs.itertools)
             implementation(libs.lru)

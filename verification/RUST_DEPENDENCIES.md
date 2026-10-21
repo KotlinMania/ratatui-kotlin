@@ -24,8 +24,8 @@ serialization implementation inside Ratatui. JSON `serde-json-kotlin:0.1.1`
 is a commonTest dependency only, matching Rust's dev dependency.
 
 This changes the Kotlin-specific public serialization API: values implement
-`Serialize`, companions implement `Deserialize<T>`, and `ColorSerializer`
-implements `Deserialize<Color>`. For example:
+`Serialize` and companions implement `Deserialize<T>`. Color owns its
+deserializer directly; the former public ColorSerializer object is removed. For example:
 
 ```kotlin
 val encoded = toStr(Color.Red).getOrThrow() // serdejson, application/test format
@@ -66,7 +66,8 @@ published time-kotlin API/behavior audit (`time` is the Rust calendar feature).
 
 | Rust dependency | Existing Kotlin mapping / disposition |
 | --- | --- |
-| anstyle, bitflags, itertools, kasuari, lru, strum, thiserror | Existing published KotlinMania catalog dependencies retained |
+| anstyle, bitflags, itertools, kasuari, lru, strum | Existing published KotlinMania dependencies retained; public Anstyle conversion types require API exposure |
+| thiserror | Cargo derive tooling; concrete standard-error implementations must not expose derive helper runtime interfaces; see DIAGNOSTIC_CONTRACTS.md |
 | unicode-segmentation, unicode-width, crossterm | Existing published KotlinMania dependencies retained |
 | serde / serde_json | Published serde-core runtime API / serde-json test-only; repaired here |
 | time (optional calendar) | datetime implementation currently retained; sibling migration pending evidence |
@@ -139,3 +140,7 @@ segmentation API, matching `ratatui-widgets/Cargo.toml`
 dependency: its grapheme iterator is used only inside internal reflow functions
 and does not occur in exported widget signatures. Core retains its independent
 segmentation implementation dependency for text operations.
+
+The concrete color/error source and operation corrections, intentional ABI
+changes, exact name mappings and current consumer requirements are recorded in
+[DIAGNOSTIC_CONTRACTS.md](DIAGNOSTIC_CONTRACTS.md).

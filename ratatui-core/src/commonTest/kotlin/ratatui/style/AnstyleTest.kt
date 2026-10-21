@@ -17,70 +17,73 @@ class AnstyleTest {
     @Test
     fun anstyleToColor() {
         val anstyleColor = Ansi256Color(42u)
-        val color = anstyleColor.toRatatuiColor()
+        val color = Color.from(anstyleColor)
         assertEquals(Color.Indexed(42u), color)
     }
 
     @Test
     fun colorToAnsi256Color() {
         val color = Color.Indexed(42u)
-        val anstyleColor = color.toAnsi256Color()
+        val anstyleColor = Ansi256Color.tryFrom(color).unwrap()
         assertEquals(Ansi256Color(42u), anstyleColor)
     }
 
     @Test
     fun colorToAnsi256ColorError() {
         val color = Color.Rgb(0u, 0u, 0u)
-        val ex = assertFailsWith<TryFromColorException> { color.toAnsi256Color() }
-        assertEquals(TryFromColorError.Ansi256, ex.error)
+        val result = Ansi256Color.tryFrom(color)
+        assertTrue(result.isErr)
+        assertEquals(TryFromColorError.Ansi256, result.error)
     }
 
     @Test
     fun ansiColorToColor() {
         val ansiColor = AnsiColor.Red
-        val color = ansiColor.toRatatuiColor()
+        val color = Color.from(ansiColor)
         assertEquals(Color.Red, color)
     }
 
     @Test
     fun colorToAnsiColor() {
         val color = Color.Red
-        val ansiColor = color.toAnsiColor()
+        val ansiColor = AnsiColor.tryFrom(color).unwrap()
         assertEquals(AnsiColor.Red, ansiColor)
     }
 
     @Test
     fun colorToAnsiColorError() {
         val color = Color.Rgb(0u, 0u, 0u)
-        val ex = assertFailsWith<TryFromColorException> { color.toAnsiColor() }
-        assertEquals(TryFromColorError.Ansi, ex.error)
+        val result = AnsiColor.tryFrom(color)
+        assertTrue(result.isErr)
+        assertEquals(TryFromColorError.Ansi, result.error)
     }
 
     @Test
     fun rgbColorToColor() {
         val rgbColor = RgbColor(255u, 0u, 0u)
-        val color = rgbColor.toRatatuiColor()
+        val color = Color.from(rgbColor)
         assertEquals(Color.Rgb(255u, 0u, 0u), color)
     }
 
     @Test
     fun colorToRgbColor() {
         val color = Color.Rgb(255u, 0u, 0u)
-        val rgbColor = color.toRgbColor()
+        val rgbColor = RgbColor.tryFrom(color).unwrap()
         assertEquals(RgbColor(255u, 0u, 0u), rgbColor)
     }
 
     @Test
     fun colorToRgbColorError() {
         val color = Color.Indexed(42u)
-        val ex = assertFailsWith<TryFromColorException> { color.toRgbColor() }
-        assertEquals(TryFromColorError.RgbColor, ex.error)
+        val result = RgbColor.tryFrom(color)
+        assertTrue(result.isErr)
+        assertEquals(TryFromColorError.RgbColor, result.error)
     }
 
     @Test
     fun effectsToModifier() {
         val effects = Effects.BOLD or Effects.ITALIC
-        val modifier = effects.toModifier()
+        val modifier = Modifier.from(effects)
         assertTrue(modifier.contains(Modifier.BOLD))
         assertTrue(modifier.contains(Modifier.ITALIC))
     }
@@ -88,7 +91,7 @@ class AnstyleTest {
     @Test
     fun modifierToEffects() {
         val modifier = Modifier.BOLD or Modifier.ITALIC
-        val effects = modifier.toEffects()
+        val effects = Effects.from(modifier)
         assertTrue(effects.contains(Effects.BOLD))
         assertTrue(effects.contains(Effects.ITALIC))
     }
@@ -101,7 +104,7 @@ class AnstyleTest {
             .underlineColor(AnstyleColor.Ansi(AnsiColor.Green))
             .effects(Effects.BOLD or Effects.ITALIC)
 
-        val style = anstyleStyle.toRatatuiStyle()
+        val style = Style.from(anstyleStyle)
 
         assertEquals(Color.Red, style.fg)
         assertEquals(Color.Blue, style.bg)
@@ -119,7 +122,7 @@ class AnstyleTest {
             addModifier = Modifier.BOLD or Modifier.ITALIC
         )
 
-        val anstyleStyle = style.toAnstyleStyle()
+        val anstyleStyle = AnstyleStyle.from(style)
 
         assertEquals(AnstyleColor.Ansi(AnsiColor.Red), anstyleStyle.getFgColor())
         assertEquals(AnstyleColor.Ansi(AnsiColor.Blue), anstyleStyle.getBgColor())
@@ -130,7 +133,7 @@ class AnstyleTest {
 
     @Test
     fun convertingResetPanicsExplicitly() {
-        val ex = assertFailsWith<IllegalStateException> { Color.Reset.toAnstyleColor() }
+        val ex = assertFailsWith<IllegalStateException> { AnstyleColor.from(Color.Reset) }
         assertEquals("Color::Reset has no equivalent in anstyle", ex.message)
     }
 }

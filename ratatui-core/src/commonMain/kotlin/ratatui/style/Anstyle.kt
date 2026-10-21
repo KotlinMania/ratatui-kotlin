@@ -7,46 +7,33 @@ import ai.solace.tui.anstyle.Effects
 import ai.solace.tui.anstyle.RgbColor
 import ai.solace.tui.anstyle.Color as AnstyleColor
 import ai.solace.tui.anstyle.Style as AnstyleStyle
-import io.github.kotlinmania.thiserror.StdError
 
-/**
- * This module contains conversion functions for styles from the `anstyle` crate.
- *
- * Transliteration of `ratatui-core/src/style/anstyle.rs`.
- */
+/** Conversion functions for styles from the anstyle library. */
 
-/**
- * Error type for converting between `anstyle` colors and [Color].
- *
- * Implements [StdError] from `thiserror-kotlin` to provide the standard error
- * surface (display, source chaining) matching the upstream Rust `#[derive(Error)]`.
- */
+/** Error type for converting between anstyle colors and Color. */
 enum class TryFromColorError(
     val message: String,
-) : StdError {
+) {
     Ansi256("cannot convert Ratatui Color to an Ansi256Color as it is not an indexed color"),
     Ansi("cannot convert Ratatui Color to AnsiColor as it is not a 4-bit color"),
     RgbColor("cannot convert Ratatui Color to RgbColor as it is not an RGB color"),
     ;
 
+    fun source(): TryFromColorError? = null
+
     override fun toString(): String = message
 }
 
-class TryFromColorException(
-    val error: TryFromColorError,
-) : IllegalArgumentException(error.message)
+fun Color.Companion.from(color: Ansi256Color): Color = Color.Indexed(color.index)
 
-fun Ansi256Color.toRatatuiColor(): Color = Color.Indexed(index)
-
-@Throws(TryFromColorException::class)
-fun Color.toAnsi256Color(): Ansi256Color =
-    when (this) {
-        is Color.Indexed -> Ansi256Color(index)
-        else -> throw TryFromColorException(TryFromColorError.Ansi256)
+fun Ansi256Color.Companion.tryFrom(color: Color): Ansi256ColorResult =
+    when (color) {
+        is Color.Indexed -> Ansi256ColorResult.ok(Ansi256Color(color.index))
+        else -> Ansi256ColorResult.err(TryFromColorError.Ansi256)
     }
 
-fun AnsiColor.toRatatuiColor(): Color =
-    when (this) {
+fun Color.Companion.from(color: AnsiColor): Color =
+    when (color) {
         AnsiColor.Black -> Color.Black
         AnsiColor.Red -> Color.Red
         AnsiColor.Green -> Color.Green
@@ -65,9 +52,8 @@ fun AnsiColor.toRatatuiColor(): Color =
         AnsiColor.BrightWhite -> Color.White
     }
 
-@Throws(TryFromColorException::class)
-fun Color.toAnsiColor(): AnsiColor =
-    when (this) {
+fun AnsiColor.Companion.tryFrom(color: Color): AnsiColorResult {
+    val converted = when (color) {
         Color.Black -> AnsiColor.Black
         Color.Red -> AnsiColor.Red
         Color.Green -> AnsiColor.Green
@@ -84,23 +70,24 @@ fun Color.toAnsiColor(): AnsiColor =
         Color.LightMagenta -> AnsiColor.BrightMagenta
         Color.LightCyan -> AnsiColor.BrightCyan
         Color.White -> AnsiColor.BrightWhite
-        else -> throw TryFromColorException(TryFromColorError.Ansi)
+        else -> return AnsiColorResult.err(TryFromColorError.Ansi)
+    }
+    return AnsiColorResult.ok(converted)
+}
+
+fun Color.Companion.from(color: RgbColor): Color = Color.Rgb(color.r, color.g, color.b)
+
+fun RgbColor.Companion.tryFrom(color: Color): RgbColorResult =
+    when (color) {
+        is Color.Rgb -> RgbColorResult.ok(RgbColor(color.r, color.g, color.b))
+        else -> RgbColorResult.err(TryFromColorError.RgbColor)
     }
 
-fun RgbColor.toRatatuiColor(): Color = Color.Rgb(r, g, b)
-
-@Throws(TryFromColorException::class)
-fun Color.toRgbColor(): RgbColor =
-    when (this) {
-        is Color.Rgb -> RgbColor(r, g, b)
-        else -> throw TryFromColorException(TryFromColorError.RgbColor)
-    }
-
-fun AnstyleColor.toRatatuiColor(): Color =
-    when (this) {
-        is AnstyleColor.Ansi -> color.toRatatuiColor()
-        is AnstyleColor.Ansi256 -> color.toRatatuiColor()
-        is AnstyleColor.Rgb -> color.toRatatuiColor()
+fun Color.Companion.from(color: AnstyleColor): Color =
+    when (color) {
+        is AnstyleColor.Ansi -> from(color.color)
+        is AnstyleColor.Ansi256 -> from(color.color)
+        is AnstyleColor.Rgb -> from(color.color)
     }
 
 /**
@@ -111,104 +98,104 @@ fun AnstyleColor.toRatatuiColor(): Color =
  * This method will throw if the input is [Color.Reset], as there is no equivalent representation
  * for a reset color in `anstyle`.
  */
-fun Color.toAnstyleColor(): AnstyleColor =
-    when (this) {
+fun AnstyleColor.Companion.from(color: Color): AnstyleColor =
+    when (color) {
         Color.Reset -> error("Color::Reset has no equivalent in anstyle")
-        is Color.Rgb -> AnstyleColor.Rgb(toRgbColor())
-        is Color.Indexed -> AnstyleColor.Ansi256(toAnsi256Color())
-        else -> AnstyleColor.Ansi(toAnsiColor())
+        is Color.Rgb -> AnstyleColor.Rgb(RgbColor.tryFrom(color).unwrap())
+        is Color.Indexed -> AnstyleColor.Ansi256(Ansi256Color.tryFrom(color).unwrap())
+        else -> AnstyleColor.Ansi(AnsiColor.tryFrom(color).unwrap())
     }
 
-fun Effects.toModifier(): Modifier {
+fun Modifier.Companion.from(effect: Effects): Modifier {
     var modifier = Modifier.empty()
 
-    if (contains(Effects.BOLD)) {
+    if (effect.contains(Effects.BOLD)) {
         modifier = modifier or Modifier.BOLD
     }
-    if (contains(Effects.DIMMED)) {
+    if (effect.contains(Effects.DIMMED)) {
         modifier = modifier or Modifier.DIM
     }
-    if (contains(Effects.ITALIC)) {
+    if (effect.contains(Effects.ITALIC)) {
         modifier = modifier or Modifier.ITALIC
     }
     if (
-        contains(Effects.UNDERLINE) ||
-        contains(Effects.DOUBLE_UNDERLINE) ||
-        contains(Effects.CURLY_UNDERLINE) ||
-        contains(Effects.DOTTED_UNDERLINE) ||
-        contains(Effects.DASHED_UNDERLINE)
+        effect.contains(Effects.UNDERLINE) ||
+        effect.contains(Effects.DOUBLE_UNDERLINE) ||
+        effect.contains(Effects.CURLY_UNDERLINE) ||
+        effect.contains(Effects.DOTTED_UNDERLINE) ||
+        effect.contains(Effects.DASHED_UNDERLINE)
     ) {
         modifier = modifier or Modifier.UNDERLINED
     }
-    if (contains(Effects.BLINK)) {
+    if (effect.contains(Effects.BLINK)) {
         modifier = modifier or Modifier.SLOW_BLINK
     }
-    if (contains(Effects.INVERT)) {
+    if (effect.contains(Effects.INVERT)) {
         modifier = modifier or Modifier.REVERSED
     }
-    if (contains(Effects.HIDDEN)) {
+    if (effect.contains(Effects.HIDDEN)) {
         modifier = modifier or Modifier.HIDDEN
     }
-    if (contains(Effects.STRIKETHROUGH)) {
+    if (effect.contains(Effects.STRIKETHROUGH)) {
         modifier = modifier or Modifier.CROSSED_OUT
     }
 
     return modifier
 }
 
-fun Modifier.toEffects(): Effects {
+fun Effects.Companion.from(modifier: Modifier): Effects {
     var effects = Effects.new()
 
-    if (contains(Modifier.BOLD)) {
+    if (modifier.contains(Modifier.BOLD)) {
         effects = effects.insert(Effects.BOLD)
     }
-    if (contains(Modifier.DIM)) {
+    if (modifier.contains(Modifier.DIM)) {
         effects = effects.insert(Effects.DIMMED)
     }
-    if (contains(Modifier.ITALIC)) {
+    if (modifier.contains(Modifier.ITALIC)) {
         effects = effects.insert(Effects.ITALIC)
     }
-    if (contains(Modifier.UNDERLINED)) {
+    if (modifier.contains(Modifier.UNDERLINED)) {
         effects = effects.insert(Effects.UNDERLINE)
     }
-    if (contains(Modifier.SLOW_BLINK) || contains(Modifier.RAPID_BLINK)) {
+    if (modifier.contains(Modifier.SLOW_BLINK) || modifier.contains(Modifier.RAPID_BLINK)) {
         effects = effects.insert(Effects.BLINK)
     }
-    if (contains(Modifier.REVERSED)) {
+    if (modifier.contains(Modifier.REVERSED)) {
         effects = effects.insert(Effects.INVERT)
     }
-    if (contains(Modifier.HIDDEN)) {
+    if (modifier.contains(Modifier.HIDDEN)) {
         effects = effects.insert(Effects.HIDDEN)
     }
-    if (contains(Modifier.CROSSED_OUT)) {
+    if (modifier.contains(Modifier.CROSSED_OUT)) {
         effects = effects.insert(Effects.STRIKETHROUGH)
     }
 
     return effects
 }
 
-fun AnstyleStyle.toRatatuiStyle(): Style =
+fun Style.Companion.from(style: AnstyleStyle): Style =
     Style(
-        fg = getFgColor()?.toRatatuiColor(),
-        bg = getBgColor()?.toRatatuiColor(),
-        underlineColor = getUnderlineColor()?.toRatatuiColor(),
-        addModifier = getEffects().toModifier()
+        fg = style.getFgColor()?.let { Color.from(it) },
+        bg = style.getBgColor()?.let { Color.from(it) },
+        underlineColor = style.getUnderlineColor()?.let { Color.from(it) },
+        addModifier = Modifier.from(style.getEffects())
     )
 
-fun Style.toAnstyleStyle(): AnstyleStyle {
+fun AnstyleStyle.Companion.from(style: Style): AnstyleStyle {
     var anstyleStyle = AnstyleStyle()
 
-    fg?.let { fg ->
-        anstyleStyle = anstyleStyle.fgColor(fg.toAnstyleColor())
+    style.fg?.let { fg ->
+        anstyleStyle = anstyleStyle.fgColor(AnstyleColor.from(fg))
     }
-    bg?.let { bg ->
-        anstyleStyle = anstyleStyle.bgColor(bg.toAnstyleColor())
+    style.bg?.let { bg ->
+        anstyleStyle = anstyleStyle.bgColor(AnstyleColor.from(bg))
     }
-    underlineColor?.let { underline ->
-        anstyleStyle = anstyleStyle.underlineColor(underline.toAnstyleColor())
+    style.underlineColor?.let { underline ->
+        anstyleStyle = anstyleStyle.underlineColor(AnstyleColor.from(underline))
     }
 
-    anstyleStyle = anstyleStyle.effects(addModifier.toEffects())
+    anstyleStyle = anstyleStyle.effects(Effects.from(style.addModifier))
 
     return anstyleStyle
 }

@@ -2,6 +2,7 @@
 import hashlib
 import io
 import json
+import struct
 import tempfile
 import unittest
 import xml.etree.ElementTree as ET
@@ -21,6 +22,21 @@ def zip_bytes(entries):
     return output.getvalue()
 
 
+def class_bytes(name, parent="java/lang/Object", interfaces=()):
+    def utf8(text):
+        encoded = text.encode()
+        return b"\x01" + struct.pack(">H", len(encoded)) + encoded
+    pool = [utf8(name), b"\x07\x00\x01", utf8(parent), b"\x07\x00\x03"]
+    indices = []
+    for interface in interfaces:
+        index = len(pool) + 1
+        pool.extend([utf8(interface), b"\x07" + struct.pack(">H", index)])
+        indices.append(index + 1)
+    return (bytes.fromhex("cafebabe00000034") + struct.pack(">H", len(pool) + 1) + b"".join(pool)
+            + struct.pack(">HHHH", 0x31, 2, 4, len(indices))
+            + b"".join(struct.pack(">H", index) for index in indices) + b"\x00\x00" * 3)
+
+
 def fixture():
     entries = {}
     for module, (classes, edges) in COMPONENTS.items():
@@ -33,7 +49,7 @@ def fixture():
         ]:
             base = metadata_path(module, VERSION, suffix)
             path = base + ".module"
-            class_jar = zip_bytes({name: bytes.fromhex("cafebabe") for name in classes})
+            class_jar = zip_bytes({name: class_bytes(name[:-6], "java/lang/Enum" if name.endswith("/TryFromColorError.class") else "java/lang/Object") for name in classes})
             payload = zip_bytes({"AndroidManifest.xml": b"<manifest/>", "classes.jar": class_jar}) if suffix == "-android" else class_jar
             entries[base + "." + element] = payload
             attrs = {"org.gradle.category": "library", "org.gradle.libraryelements": element,
@@ -134,6 +150,46 @@ class FacadePublicationTests(unittest.TestCase):
             variant["files"][0].update(size=len(payload), sha256=hashlib.sha256(payload).hexdigest())
         self.entries[base + ".module"] = json.dumps(data).encode()
         with self.assertRaisesRegex(ValueError, "Missing real JVM public API bytecode"):
+            self.verify()
+
+
+    def test_public_throwable_diagnostic_rejected(self):
+        base = metadata_path("ratatui-core", VERSION, "-jvm")
+        with zipfile.ZipFile(io.BytesIO(self.entries[base + ".jar"])) as jar:
+            entries = {name: jar.read(name) for name in jar.namelist()}
+        entries["ratatui/style/ParseColorError.class"] = class_bytes("ratatui/style/ParseColorError", "java/lang/Exception")
+        payload = zip_bytes(entries)
+        self.entries[base + ".jar"] = payload
+        metadata = json.loads(self.entries[base + ".module"])
+        for variant in metadata["variants"]:
+            variant["files"][0].update(size=len(payload), sha256=hashlib.sha256(payload).hexdigest())
+        self.entries[base + ".module"] = json.dumps(metadata).encode()
+        with self.assertRaisesRegex(ValueError, "Leaked diagnostic inheritance"):
+            self.verify()
+
+    def test_public_derive_helper_diagnostic_rejected(self):
+        base = metadata_path("ratatui-core", VERSION, "-jvm")
+        with zipfile.ZipFile(io.BytesIO(self.entries[base + ".jar"])) as jar:
+            entries = {name: jar.read(name) for name in jar.namelist()}
+        entries["ratatui/style/ParseColorError.class"] = class_bytes("ratatui/style/ParseColorError", interfaces=("io/github/kotlinmania/thiserror/StdError",))
+        payload = zip_bytes(entries)
+        self.entries[base + ".jar"] = payload
+        metadata = json.loads(self.entries[base + ".module"])
+        for variant in metadata["variants"]:
+            variant["files"][0].update(size=len(payload), sha256=hashlib.sha256(payload).hexdigest())
+        self.entries[base + ".module"] = json.dumps(metadata).encode()
+        with self.assertRaisesRegex(ValueError, "Leaked diagnostic inheritance"):
+            self.verify()
+
+
+    def test_accidental_public_derive_edge_rejected(self):
+        path = metadata_path("ratatui-core", VERSION, "-jvm") + ".module"
+        metadata = json.loads(self.entries[path])
+        metadata["variants"][0]["dependencies"].append({
+            "group": GROUP, "module": "thiserror-kotlin", "version": {"requires": "0.2.0"},
+        })
+        self.entries[path] = json.dumps(metadata).encode()
+        with self.assertRaisesRegex(ValueError, "Derive tooling"):
             self.verify()
 
 
